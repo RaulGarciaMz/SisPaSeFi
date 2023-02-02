@@ -11,14 +11,13 @@ namespace Domain.Ports.Driving
 {
     public interface IPuntosPatrullaje
     {
-        IEnumerable<PuntoPatrullaje> ObtenerPorOpcion(FiltroPunto opcion, string valor);
+        
         void Agrega(PuntoPatrullaje pp);
         void Update(PuntoPatrullaje pp);
         void Delete(int id);
-        /*
-        IEnumerable<puntospatrullaje> Obtener();        
-        IEnumerable<puntospatrullaje> ObtenerPorEstado(int id_estado);
-        IEnumerable<puntospatrullaje> ObtenerPorUbicacion(string ubicacion);
-        */
+
+        List<PuntoPatrullaje> ObtenerPorEstado(int id_estado);
+        List<PuntoPatrullaje> ObtenerPorUbicacion(string ubicacion);
+        int ObtenerItinerariosPorPunto(int id);
     }
 }

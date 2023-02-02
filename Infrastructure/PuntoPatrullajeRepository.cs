@@ -23,19 +23,10 @@ namespace SqlServerAdapter
         }
 
         /// <summary>
-        /// Método <c>Obtener</c> Obtiene todos los puntos de patrullaje
-        /// </summary>
-        private IEnumerable<PuntoPatrullaje> Obtener()
-        {
-            return _patrullajeContext.puntospatrullaje.ToList();
-        }
-
-        /// <summary>
         /// Método <c>ObtenerPorEstado</c> Obtiene puntos de patrullaje pertenecientes al estado indicado
         /// </summary>
-        private IEnumerable<PuntoPatrullaje> ObtenerPorEstado(int id_estado)
+        public List<PuntoPatrullaje> ObtenerPorEstado(int id_estado)
         {
-
             return _patrullajeContext.puntospatrullaje
                 .Where(c => c.Municipio.id_estado == id_estado)
                 .ToList();
@@ -44,38 +35,11 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ObtenerPorUbicacion</c> Obtiene puntos de patrullaje cuya ubicación (nombre) coincida con el parámetro
         /// </summary>
-        private IEnumerable<PuntoPatrullaje> ObtenerPorUbicacion(string ubicacion)
+        public List<PuntoPatrullaje> ObtenerPorUbicacion(string ubicacion)
         {
             return _patrullajeContext.puntospatrullaje
                 .Where(e => e.ubicacion == ubicacion)
                 .ToList();
-        }
-
-        /// <summary>
-        /// Método <c>ObtenerPorOpcion</c> implementa la interface para obtener puntos de patrullaje por estado o por ubicación.
-        /// </summary>
-        public IEnumerable<PuntoPatrullaje> ObtenerPorOpcion(FiltroPunto opcion, string valor)
-        {
-            List<PuntoPatrullaje> l = null;
-
-            switch (opcion)
-            {
-                case FiltroPunto.Estado:
-                    var b = int.TryParse(valor, out int j);
-                    if (!b)
-                    {
-                        //Mandar error
-                    }
-
-                    l = ObtenerPorEstado(j).ToList();
-                    break;
-
-                case FiltroPunto.Ubicacion:
-                    l = ObtenerPorUbicacion(valor).ToList();
-                    break;
-            }
-
-            return l;
         }
 
         /// <summary>
@@ -97,26 +61,24 @@ namespace SqlServerAdapter
         }
 
         /// <summary>
-        /// Método <c>Delete</c> implementa la interface para eliminar el punto de patrullaje indicado, siempre y cuando no esté bloqueado y no esté en algún itinerario
+        /// Método <c>Delete</c> implementa la interface para eliminar el punto de patrullaje indicado, siempre y cuando no esté bloqueado
         /// </summary>
         public void Delete(int id)
         {
-            int numItinerarios = _patrullajeContext.Itinerarios
-                .Where(x => x.id_punto == id)
-                .Count();
+            var pp = _patrullajeContext.puntospatrullaje
+                .Where(x => x.id_punto == id && x.bloqueado == 0)
+                .FirstOrDefault();
 
-            if (numItinerarios == 0)
+            if (pp != null)
             {
-                var pp = _patrullajeContext.puntospatrullaje
-                    .Where(x => x.id_punto == id && x.bloqueado == 0)
-                    .FirstOrDefault();
+                _patrullajeContext.Remove(pp);
+                _patrullajeContext.SaveChanges();
+            }            
+        }
 
-                if (pp != null)
-                {
-                    _patrullajeContext.Remove(pp);
-                    _patrullajeContext.SaveChanges();
-                }
-            }
+        public int ObtenerItinerariosPorPunto(int id)
+        {
+            return _patrullajeContext.Itinerarios.Where(x => x.id_punto == id).Count();
         }
     }
 

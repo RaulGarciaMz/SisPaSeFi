@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Ports.Driving;
+using DomainServices.DomServ;
 using Microsoft.AspNetCore.Mvc;
 using SqlServerAdapter.Data;
 
@@ -13,39 +14,31 @@ namespace WebApiSSF.Controllers
     [ApiController]
     public class PuntosPatrullajesController : ControllerBase
     {
-        private readonly IPuntosPatrullaje _pp;
+        private readonly IPuntosService _pp;
 
         public PuntosPatrullajesController()
         {
-            _pp = new SqlServerAdapter.PuntoPatrullajeRepository(new PatrullajeContext());
+            _pp = new PuntosService(new SqlServerAdapter.PuntoPatrullajeRepository(new PatrullajeContext()));
         }
 
         // GET: api/<PuntosPatrullajesController>
         [HttpGet]
         public IEnumerable<PuntoDto> GetValues(int opcion, string valor)
         {
-
             FiltroPunto filtro=(FiltroPunto) opcion;
-            List<PuntoPatrullaje> l = _pp.ObtenerPorOpcion(filtro, valor).ToList();
-
-            var p = new List<PuntoDto>();
-            if (l.Count >0 ) { 
-            // covertir de Domai To Dto
-            }
-
-            return p;
+            return _pp.ObtenerPorOpcion(filtro, valor);
         }
 
         // POST api/<PuntosPatrullajesController>
         [HttpPost]
-        public void PostValue([FromBody] PuntoPatrullaje pto)
+        public void PostValue([FromBody] PuntoDto pto)
         {
             _pp.Agrega(pto);
         }
 
         // PUT api/<PuntosPatrullajesController>/5
         [HttpPut("{id}")]
-        public void PutValue(int id, [FromBody] PuntoPatrullaje pto)
+        public void PutValue(int id, [FromBody] PuntoDto pto)
         {
            _pp.Update(pto);
         }
