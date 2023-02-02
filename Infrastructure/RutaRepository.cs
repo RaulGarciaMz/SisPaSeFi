@@ -176,11 +176,17 @@ namespace SqlServerAdapter
             return _rutaContext.Propuestas.Where(x => x.id_ruta == idRuta).Count();
         }
 
+        /// <summary>
+        /// Método <c>ObtenerUsuarioConfigurador</c> implementa la interfaz para obtener al usuario indicado sólo si es configurador configurador, 
+        /// </summary>
         public Usuario? ObtenerUsuarioConfigurador(string usuario) 
         {
            return _rutaContext.Usuarios.Where(x => x.usuario_nom == usuario && x.configurador == 1).FirstOrDefault();
-        }       
+        }
 
+        /// <summary>
+        /// Método <c>ObtenerRutasPorRegionSsf</c> implementa la interfaz para obtener rutas filtradas por tipo y región SSF
+        /// </summary>
         public List<RutaVista> ObtenerRutasPorRegionSsf(string tipo, int regionSsf)
         {
             string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
@@ -203,6 +209,9 @@ namespace SqlServerAdapter
             return _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToList();
         }
 
+        /// <summary>
+        /// Método <c>ObtenerRutasPorRegionMilitar</c> implementa la interfaz para obtener rutas filtradas por Región Militar
+        /// </summary>
         public List<RutaVista> ObtenerRutasPorRegionMilitar(string tipo, string regionMilitar)
         {
             string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
@@ -225,6 +234,9 @@ namespace SqlServerAdapter
             return _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToList();
         }
 
+        /// <summary>
+        /// Método <c>ObtenerRutasPorCombinacionFiltros</c> implementa la interfaz para obtener rutas filtradas tipo, clave, observaciones e itinerario
+        /// </summary>
         public List<RutaVista> ObtenerRutasPorCombinacionFiltros(string tipo, string criterio)
         {
             criterio = "%" + criterio + "%";
@@ -253,6 +265,9 @@ namespace SqlServerAdapter
             return _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToList();
         }
 
+        /// <summary>
+        /// Método <c>ObtenerPropuestasPorRegionMilitarAndRegionSsf</c> implementa la interfaz para obtener propuestas de patrullaje (rutas) filtradas tipo, región militar y región SSF
+        /// </summary>
         public List<RutaVista> ObtenerPropuestasPorRegionMilitarAndRegionSsf(string tipo, string regionMilitar, int regionSsf)
         {
             string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
@@ -276,6 +291,9 @@ namespace SqlServerAdapter
             return _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToList();
         }
 
+        /// <summary>
+        /// Método <c>ObtenerPropuestasPorCombinacionFiltrosConRegionSsf</c> implementa la interfaz para obtener propuestas de patrullaje (rutas) filtradas tipo, región SSF,  clave, observaciones e itinerario
+        /// </summary>
         public List<RutaVista> ObtenerPropuestasPorCombinacionFiltrosConRegionSsf(string tipo, string criterio, int regionSsf)
         {
             criterio = "%" + criterio + "%";
