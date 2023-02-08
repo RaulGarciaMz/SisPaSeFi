@@ -69,7 +69,7 @@ namespace SqlServerAdapter
         /// </summary>
         public List<Ruta> ObtenerPorFiltro(int opcion, string tipo, string criterio, string actividad)
         {
-            throw new NotImplementedException();
+             throw new NotImplementedException();
         }
 
         /// <summary>
