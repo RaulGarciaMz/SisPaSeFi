@@ -10,24 +10,34 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NetTopologySuite.Geometries;
+using NetTopologySuite;
 
 namespace DomainServices.DomServ
 {
     public class PuntosService : IPuntosService
     {
         private readonly IPuntoPatrullajeRepo _repo;
+        private readonly GeometryFactory _geometryFactory;
 
         public PuntosService(IPuntoPatrullajeRepo repo)
         {
             _repo = repo;
+            _geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
         }
 
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de agregar un punto de patrullaje
         /// </summary>
         public void Agrega(PuntoDto pp)
-        {
-            var p = ConvierteDtoToDominio(pp);
+        {           
+            if (_repo.CoordenadasEnUso(pp.latitud, pp.longitud) == true)
+            {
+                return;
+            }
+
+            var p = ConvierteDtoToDominio(pp);           
+
             _repo.Agrega(p);
         }
 
@@ -48,8 +58,14 @@ namespace DomainServices.DomServ
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de actualizar un punto de patrullaje
         /// </summary>
         public void Update(PuntoDto pp)
-        {
-            var p = ConvierteDtoToDominio(pp);
+        {           
+            if (_repo.CoordenadasEnUsoEnPuntoDiferente(pp.latitud, pp.longitud, pp.id_punto) == true)
+            {
+                return;
+            }
+
+            var p = ConvierteDtoToDominio(pp); 
+
             _repo.Update(p);
         }
 
@@ -108,15 +124,13 @@ namespace DomainServices.DomServ
             {
                 Id = p.id_punto,
                 Ubicacion = p.ubicacion,
-                //CoordenadasSrid = p.coordenadas,
+                CoordenadasSrid = _geometryFactory.CreatePoint(new Coordinate(p.latitud, p.longitud)),
                 EsInstalacion = p.esInstalacion,
                 IdNivelRiesgo = p.id_nivelRiesgo,
                 IdComandancia = p.id_comandancia,
                 IdProcesoResponsable = p.id_ProcesoResponsable,
-                //id_GerenciaDivision = p.id_GerenciaDivision,
+                UltimaActualizacion = DateTime.UtcNow,
                 Bloqueado = p.bloqueado,
-                //latitud =  ,
-                //longitud = ,
                 IdMunicipio = p.id_municipio
             };
         }
@@ -130,15 +144,13 @@ namespace DomainServices.DomServ
             {
                 id_punto = p.Id,
                 ubicacion = p.Ubicacion,
-                //coordenadas = p.CoordenadasSrid,
                 esInstalacion = p.EsInstalacion,
                 id_nivelRiesgo = p.IdNivelRiesgo,
                 id_comandancia = p.IdComandancia,
                 id_ProcesoResponsable = p.IdProcesoResponsable,
-                //id_GerenciaDivision = p.Id,
                 bloqueado = p.Bloqueado,
-                //latitud =  ,
-                //longitud = ,
+                latitud =  p.CoordenadasSrid.X,
+                longitud = p.CoordenadasSrid.X,
                 id_municipio = p.IdMunicipio,
                 id_estado = p.IdMunicipioNavigation.IdEstado,
                 municipio = p.IdMunicipioNavigation.Nombre,

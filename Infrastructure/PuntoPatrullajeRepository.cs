@@ -10,16 +10,20 @@ using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Drawing;
 using Domain.Enums;
+using NetTopologySuite.Geometries;
+using NetTopologySuite;
 
 namespace SqlServerAdapter
 {
     public class PuntoPatrullajeRepository : IPuntoPatrullajeRepo
     {
-        protected readonly PatrullajeContext _patrullajeContext;
+        protected readonly PuntoPatrullajeContext _patrullajeContext;
+        private readonly GeometryFactory _geometryFactory;
 
-        public PuntoPatrullajeRepository(PatrullajeContext patrullajeContext) 
+        public PuntoPatrullajeRepository(PuntoPatrullajeContext patrullajeContext) 
         {
             _patrullajeContext = patrullajeContext;
+            _geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
         }
 
         /// <summary>
@@ -82,6 +86,35 @@ namespace SqlServerAdapter
         {
             return _patrullajeContext.Itinerarios.Where(x => x.IdPunto == id).Count();
         }
+
+        public bool CoordenadasEnUso(double x, double y) 
+        {
+            var c = _geometryFactory.CreatePoint(new Coordinate(x, y));
+
+            var cuantos =_patrullajeContext.PuntosPatrullaje.Where(x => x.CoordenadasSrid.Coordinate.Equals(c.Coordinate)).Count();
+
+            if (cuantos > 0) 
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CoordenadasEnUsoEnPuntoDiferente(double x, double y, int idPunto)
+        {
+            var c = _geometryFactory.CreatePoint(new Coordinate(x, y));
+
+            var cuantos = _patrullajeContext.PuntosPatrullaje.Where(x => x.CoordenadasSrid.Coordinate.Equals(c.Coordinate) && x.Id != idPunto).Count();
+
+            if (cuantos > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
     }
 
 

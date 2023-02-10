@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SqlServerAdapter.Data
 {
-    public class PatrullajeContext : DbContext
+    public class PuntoPatrullajeContext : DbContext
     {
     /*    public PatrullajeContext(DbContextOptions<PatrullajeContext> options) : base(options)
         {

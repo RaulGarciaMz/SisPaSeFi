@@ -25,8 +25,6 @@ namespace Domain.DTOs
 
         public short id_ProcesoResponsable { get; set; }
 
-        public short id_GerenciaDivision { get; set; }    
-
         public bool bloqueado { get; set; }
 
         public short id_municipio { get; set; }
@@ -34,5 +32,8 @@ namespace Domain.DTOs
         public string municipio { get; set; }
         public short id_estado { get; set; }
         public string estado { get; set; }
+
+        public double latitud { get; set; }
+        public double longitud { get; set; }
     }
 }

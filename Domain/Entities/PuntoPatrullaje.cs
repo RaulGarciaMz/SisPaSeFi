@@ -74,7 +74,7 @@ public partial class PuntoPatrullaje
     /// Coordenadas geoespaciales de la ubicación del punto
     /// </summary>
     [Column("coordenadas_srid", TypeName = "geometry")]
-    public Geometry CoordenadasSrid { get; set; } = null!;
+    public Point CoordenadasSrid { get; set; } = null!;
 
     [ForeignKey("IdComandancia")]
     [InverseProperty("PuntoPatrullajes")]
