@@ -34,19 +34,31 @@ namespace SqlServerAdapter
 
             foreach (var item in itin)
             {
-                item.id_ruta = r.id_ruta;
+                item.IdRuta = r.Id;
             }
 
             _rutaContext.Itinerarios.AddRange(itin); 
             _rutaContext.SaveChanges();
         }
 
+
+        /// <summary>
+        /// Método <c>Agrega</c> Implementa la interfaz para agregar una ruta junto con sus itinerarios, que deben venir en el objeto ruta
+        /// </summary>
+        public void Agrega2(Ruta r)
+        {
+            //TODO Tratar de implementar transacción
+            _rutaContext.Rutas.Add(r);
+            _rutaContext.SaveChanges();
+        }
+
+
         /// <summary>
         /// Método <c>Update</c> Implementa la interfaz para actualizar una ruta junto con sus itinerarios
         /// </summary>
         public void Update(Ruta pp)
         {
-            _rutaContext.Rutas.Remove(pp);
+            _rutaContext.Rutas.Update(pp);
             _rutaContext.SaveChanges();
         }
 
@@ -55,9 +67,9 @@ namespace SqlServerAdapter
         /// </summary>
         public void Delete(int id)
         {
-            var r = _rutaContext.Rutas.Where(x => x.id_ruta == id).First();
+            var r = _rutaContext.Rutas.Where(x => x.Id == id).First();
 
-            if (r.bloqueado == 0)
+            if (r.Bloqueado == false)
             {
                 _rutaContext.Rutas.Remove(r);
                 _rutaContext.SaveChanges();
@@ -77,9 +89,9 @@ namespace SqlServerAdapter
         /// </summary>
         public string ObtenerDescripcionTipoPatrullaje(int tipoPatrullaje)
         {
-            var t = _rutaContext.TiposPatrullaje.Where(x => x.id_tipoPatrullaje == tipoPatrullaje).First();
+            var t = _rutaContext.TiposPatrullaje.Where(x => x.Id == tipoPatrullaje).First();
 
-            return t.descripcion;
+            return t.Nombre;
         }
 
         /// <summary>
@@ -149,15 +161,15 @@ namespace SqlServerAdapter
         /// </summary>
         public int ObtenerNumeroRutasPorFiltro(string clave, int idRuta)
         {
-            return _rutaContext.Rutas.Where(x => x.clave == clave && x.id_ruta == idRuta).Count();
+            return _rutaContext.Rutas.Where(x => x.Clave == clave && x.Id == idRuta).Count();
         }
 
         /// <summary>
         /// Método <c>ObtenerNumeroRutasPorTipoAndRegionMilitar</c> implementa la interfaz para obtener el número de rutas por tipo de patrullaje y región militar
         /// </summary>
-        public int ObtenerNumeroRutasPorTipoAndRegionMilitar(int tipoPatrullaje, string regionMilitar)
+        public int ObtenerNumeroRutasPorTipoAndRegionMilitar(int tipoPatrullaje, short regionMilitar)
         {
-            return _rutaContext.Rutas.Where(x => x.id_tipoPatrullaje == tipoPatrullaje && x.regionMilitarSDN == regionMilitar).Count();
+            return _rutaContext.Rutas.Where(x => x.IdTipoPatrullaje == tipoPatrullaje && x.RegionMilitarSdn == regionMilitar).Count();
         }
 
         /// <summary>
@@ -165,7 +177,7 @@ namespace SqlServerAdapter
         /// </summary>
         public int ObtenerNumeroProgramasPorRuta(int idRuta)
         {
-            return _rutaContext.Programas.Where(x => x.id_ruta == idRuta).Count();
+            return _rutaContext.Programas.Where(x => x.Id == idRuta).Count();
         }
 
         /// <summary>
@@ -173,7 +185,7 @@ namespace SqlServerAdapter
         /// </summary>
         public int ObtenerNumeroPropuestasPorRuta(int idRuta)
         {
-            return _rutaContext.Propuestas.Where(x => x.id_ruta == idRuta).Count();
+            return _rutaContext.Propuestas.Where(x => x.Id == idRuta).Count();
         }
 
         /// <summary>
@@ -181,7 +193,7 @@ namespace SqlServerAdapter
         /// </summary>
         public Usuario? ObtenerUsuarioConfigurador(string usuario) 
         {
-           return _rutaContext.Usuarios.Where(x => x.usuario_nom == usuario && x.configurador == 1).FirstOrDefault();
+           return _rutaContext.Usuarios.Where(x => x.Nombre == usuario && x.EsConfigurador == true).FirstOrDefault();
         }
 
         /// <summary>

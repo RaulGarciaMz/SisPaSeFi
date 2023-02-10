@@ -537,7 +537,7 @@ namespace SqlServerAdapter
         }
 
 
-        public List<PatrullajesProgYExtRegistradosVista> ObtenerCaso0Ordinario(string tipo, int region,  int mes, int anio) 
+   /*     public List<PatrullajesProgYExtRegistradosVista> ObtenerCaso0Ordinario(string tipo, int region,  int mes, int anio) 
         {
             string sqlQuery = @"SELECT a.id_programa IdPrograma, a.id_ruta IdRuta, a.fechapatrullaje FechaPatrullaje, a.inicio Inicio
                                       ,a.id_puntoresponsable IdPuntoResponsable, b.clave Clave, b.regionmilitarsdn RegionMilitarSDN
@@ -570,6 +570,6 @@ namespace SqlServerAdapter
 
             return _programaContext.ProgramasVistas.FromSqlRaw(sqlQuery, parametros).ToList();
             
-        }
+        }*/
     }
 }

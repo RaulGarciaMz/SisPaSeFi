@@ -2,28 +2,42 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+/// <summary>
+/// Almacén del detalle de puntos a visitar en la ruta
+/// </summary>
+[PrimaryKey("IdRuta", "IdPunto")]
+[Table("Itinerario", Schema = "dmn")]
+public partial class Itinerario
 {
-    [Table("itinerario", Schema = "ssf")]
-    public class Itinerario
-    {
-        [Key]
-        public int id_itinerario { get; set; }
+    /// <summary>
+    /// Identificador único de la ruta a realizar en el itinerario
+    /// </summary>
+    [Key]
+    [Column("id_ruta")]
+    public int IdRuta { get; set; }
 
-        [Required]
-        public int id_ruta { get; set; }
+    /// <summary>
+    /// Identificador único del punto de patrullaje a visitar en la ruta
+    /// </summary>
+    [Key]
+    [Column("id_punto")]
+    public int IdPunto { get; set; }
 
-        [Required]
-        public int id_punto { get; set; }
+    /// <summary>
+    /// Indicador del orden de visita de los puntos de patrullaje
+    /// </summary>
+    [Column("posicion")]
+    public byte Posicion { get; set; }
 
-        [Required]
-        public int posicion { get; set; }
+    [ForeignKey("IdPunto")]
+    [InverseProperty("Itinerarios")]
+    public virtual PuntoPatrullaje IdPuntoNavigation { get; set; } = null!;
 
-        public DateTime ultimaActualizacion { get; set; }
-
-    }
+    [ForeignKey("IdRuta")]
+    [InverseProperty("Itinerarios")]
+    public virtual Ruta IdRutaNavigation { get; set; } = null!;
 }

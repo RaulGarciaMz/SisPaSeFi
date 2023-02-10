@@ -2,66 +2,109 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+/// <summary>
+/// Listado de Programas de patrullaje creado mediante la autorización de la propuesta de patrullaje
+/// </summary>
+[Table("Programa_Patrullaje", Schema = "dmn")]
+public partial class ProgramaPatrullaje
 {
-    [Table("programapatrullajes", Schema = "ssf")]
-    public class ProgramaPatrullaje
-    {
-        [Key]
-        public int id_programa { get; set; }
+    /// <summary>
+    /// Identificador único del Programa de Patrullaje
+    /// </summary>
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
 
-        [Required]
-        public int id_ruta { get; set; }
+    /// <summary>
+    /// Identificador de la ruta sobre la que se realizará el patrullaje
+    /// </summary>
+    [Column("id_ruta")]
+    public int IdRuta { get; set; }
 
-        [Required]
-        public int id_usuario { get; set; }
+    /// <summary>
+    /// Identificador de la propuesta de patrullaje; si es null, es  una ruta que se agregó durante la autorización.
+    /// </summary>
+    [Column("id_propuesta_patrullaje")]
+    public int? IdPropuestaPatrullaje { get; set; }
 
-        public DateTime ultimaActualizacion { get; set; }
+    /// <summary>
+    /// Identificador del número de usuario que autoriza la propuesta
+    /// </summary>
+    [Column("id_usuario")]
+    public int IdUsuario { get; set; }
 
-        public DateTime? fechaPatrullaje { get; set; }
+    /// <summary>
+    /// Identificador de la instalación (punto de patrullaje) que es el responsable del patrullaje
+    /// </summary>
+    [Column("id_punto_responsable")]
+    public int IdPuntoResponsable { get; set; }
 
-        public TimeSpan? inicio { get; set; }
+    /// <summary>
+    /// Identificador de la ruta de patrullaje que originalmente se solicitó autorizar
+    /// </summary>
+    [Column("id_ruta_original")]
+    public int? IdRutaOriginal { get; set; }
 
-        public TimeSpan? termino { get; set; }
+    /// <summary>
+    /// Identificador del estado que guarda la propuesta de patrullaje en el momento actual
+    /// </summary>
+    [Column("id_estado_patrullaje")]
+    public byte IdEstadoPatrullaje { get; set; }
 
-        [Required]
-        public int id_estadoPatrullaje { get; set; }
+    /// <summary>
+    /// Identificador de la agencia de seguridad encargada de aocmpañar durante el patrullaje
+    /// </summary>
+    [Column("id_apoyo_patrullaje")]
+    public byte IdApoyoPatrullaje { get; set; }
 
-        [StringLength(100)]
-        public string? observaciones { get; set; }
+    /// <summary>
+    /// Identificador del nivel de riesgo asociado a la propuesta de patrullaje 
+    /// </summary>
+    [Column("id_nivel_riesgo")]
+    public short IdNivelRiesgo { get; set; }
 
-        [Required]
-        public int riesgoPatrullaje { get; set; }
+    /// <summary>
+    /// Fecha del programa de patrullaje. Para extraordinarios sólo se pondra la fecha inicial del rango autorizado
+    /// </summary>
+    [Column("fecha", TypeName = "date")]
+    public DateTime Fecha { get; set; }
 
-        [Required]
-        public int id_usuarioResponsablePatrullaje { get; set; }
+    /// <summary>
+    /// Notas asociadas al programa de patrullaje durante su autorización
+    /// </summary>
+    [Column("observaciones")]
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? Observaciones { get; set; }
 
-        [Required]
-        public int id_propuestaPatrullaje { get; set; }
+    [ForeignKey("IdApoyoPatrullaje")]
+    [InverseProperty("ProgramaPatrullajes")]
+    public virtual ApoyoPatrullaje IdApoyoPatrullajeNavigation { get; set; } = null!;
 
-        [Required]
-        public int id_puntoResponsable { get; set; }
+    [ForeignKey("IdEstadoPatrullaje")]
+    [InverseProperty("ProgramaPatrullajes")]
+    public virtual EstadoPatrullaje IdEstadoPatrullajeNavigation { get; set; } = null!;
 
-        [Required]
-        public int id_ruta_original { get; set; }
+    [ForeignKey("IdNivelRiesgo")]
+    [InverseProperty("ProgramaPatrullajes")]
+    public virtual NivelRiesgo IdNivelRiesgoNavigation { get; set; } = null!;
 
-        [Required]
-        public int id_apoyoPatrullaje { get; set; }
+    [ForeignKey("IdPuntoResponsable")]
+    [InverseProperty("ProgramaPatrullajes")]
+    public virtual PuntoPatrullaje IdPuntoResponsableNavigation { get; set; } = null!;
 
-        [StringLength(25)]
-        public string? latitud { get; set; }
+    [ForeignKey("IdRuta")]
+    [InverseProperty("ProgramaPatrullajes")]
+    public virtual Ruta IdRutaNavigation { get; set; } = null!;
 
-        [StringLength(25)]
-        public string? longitud { get; set; }
+    [ForeignKey("IdUsuario")]
+    [InverseProperty("ProgramaPatrullajes")]
+    public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
 
-        [StringLength(50)]
-        public string? solicitudOficioComision { get; set; }
-
-        [StringLength(50)]
-        public string? oficioComision { get; set; }
-    }
+    [InverseProperty("IdProgramaNavigation")]
+    public virtual ICollection<TarjetaInformativa> TarjetaInformativas { get; } = new List<TarjetaInformativa>();
 }

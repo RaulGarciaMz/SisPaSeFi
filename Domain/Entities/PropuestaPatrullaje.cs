@@ -1,53 +1,44 @@
-﻿using Domain.Ports.Driving;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+/// <summary>
+/// Listado de propuestas de patrullaje a realizar
+/// </summary>
+[Table("Propuesta_Patrullaje", Schema = "dmn")]
+public partial class PropuestaPatrullaje
 {
-    [Table("propuestaspatrullajes", Schema = "ssf")]
-    public class PropuestaPatrullaje
-    {
-        [Key]
-        public int id_propuestaPatrullaje { get; set; }
+    /// <summary>
+    /// Identificador único de la propuesta de patrullaje
+    /// </summary>
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
 
-        [Required]
-        public int id_ruta { get; set; }
+    /// <summary>
+    /// Id del usuario que da de alta la propuesta
+    /// </summary>
+    [Column("id_usuario")]
+    public int IdUsuario { get; set; }
 
-        [Required]
-        public int id_usuario { get; set; }
+    /// <summary>
+    /// Id de la clase de patrullaje (Programado o extraordinario)
+    /// </summary>
+    [Column("id_clase_patrullaje")]
+    public byte IdClasePatrullaje { get; set; }
 
-        public DateTime ultimaActualizacion { get; set; }
+    [ForeignKey("IdClasePatrullaje")]
+    [InverseProperty("PropuestaPatrullajes")]
+    public virtual ClasePatrullaje IdClasePatrullajeNavigation { get; set; } = null!;
 
-        public DateTime? fechaPatrullaje { get; set; }
+    [ForeignKey("IdUsuario")]
+    [InverseProperty("PropuestaPatrullajes")]
+    public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
 
-        [Required]
-        [StringLength(50)]
-        public string observaciones { get; set; }
-
-        [Required]
-        public int riesgoPatrullaje { get; set; }
-
-        [Required]
-        public int id_puntoResponsable { get; set; }
-
-        [Required]
-        public int id_estadoPropuesta { get; set; }
-
-        [Required]
-        public int id_apoyoPatrullaje { get; set; }
-
-        [Required]
-        public int id_clasePatrullaje { get; set; }
-
-        [StringLength(50)]
-        public string? solicitudOficioAutorizacion { get; set; }
-
-        [StringLength(50)]
-        public string? oficioAutorizacion { get; set; }
-    }
+    [InverseProperty("IdPropuestaPatrullajeNavigation")]
+    public virtual ICollection<PropuestaPatrullajeRutaContenedor> PropuestaPatrullajeRutaContenedors { get; } = new List<PropuestaPatrullajeRutaContenedor>();
 }

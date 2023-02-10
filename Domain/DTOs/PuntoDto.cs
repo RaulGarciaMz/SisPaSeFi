@@ -17,22 +17,22 @@ namespace Domain.DTOs
 
         public string coordenadas { get; set; }
 
-        public int esInstalacion { get; set; }
+        public bool esInstalacion { get; set; }
 
-        public int? id_nivelRiesgo { get; set; }
+        public short id_nivelRiesgo { get; set; }
 
-        public int? id_comandancia { get; set; }
+        public short id_comandancia { get; set; }
 
-        public int id_ProcesoResponsable { get; set; }
+        public short id_ProcesoResponsable { get; set; }
 
-        public int id_GerenciaDivision { get; set; }    
+        public short id_GerenciaDivision { get; set; }    
 
-        public int bloqueado { get; set; }
+        public bool bloqueado { get; set; }
 
-        public int id_municipio { get; set; }
+        public short id_municipio { get; set; }
 
         public string municipio { get; set; }
-        public int id_estado { get; set; }
+        public short id_estado { get; set; }
         public string estado { get; set; }
     }
 }
