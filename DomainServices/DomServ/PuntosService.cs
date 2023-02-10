@@ -142,7 +142,7 @@ namespace DomainServices.DomServ
                 id_municipio = p.id_municipio,
                 id_estado = p.Municipio.id_estado,
                 municipio = p.Municipio.nombre,
-                //estado = p.Municipio.id_estado,  // Falta relación Municipio- estado en Dominio
+                estado = p.Municipio.Estados.nombre  
             };
         }
 

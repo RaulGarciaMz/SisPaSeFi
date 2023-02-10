@@ -28,6 +28,7 @@ namespace SqlServerAdapter
         public List<PuntoPatrullaje> ObtenerPorEstado(int id_estado)
         {
             return _patrullajeContext.puntospatrullaje
+                .Include(m => m.Municipio.Estados)
                 .Where(c => c.Municipio.id_estado == id_estado)
                 .ToList();
         }
@@ -38,6 +39,7 @@ namespace SqlServerAdapter
         public List<PuntoPatrullaje> ObtenerPorUbicacion(string ubicacion)
         {
             return _patrullajeContext.puntospatrullaje
+                .Include(m => m.Municipio.Estados)
                 .Where(e => e.ubicacion == ubicacion)
                 .ToList();
         }

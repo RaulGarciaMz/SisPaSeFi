@@ -29,6 +29,8 @@ namespace Domain.Entities
         List<PuntoPatrullaje> Puntos { get; set; }
 
         public int id_estado { get; set; }
- 
+
+        [ForeignKey("id_estado")]
+        public EstadosPais? Estados { get; set; }
     }
 }

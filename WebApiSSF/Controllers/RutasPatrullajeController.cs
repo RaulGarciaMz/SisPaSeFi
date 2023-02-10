@@ -22,10 +22,9 @@ namespace WebApiSSF.Controllers
 
         // GET: api/<RutasPatrullajeController>
         [HttpGet]
-        public IEnumerable<string> GetValues()
+        public IEnumerable<RutaDto> GetValues(string usuario, int opcion, string tipo, string criterio, string actividad)
         {
-            //_rp.ObtenerPorFiltro();
-            return "value";
+            return _rp.ObtenerPorFiltro(usuario,  opcion,  tipo,  criterio,  actividad);        
         }
 
         // POST api/<RutasPatrullajeController>

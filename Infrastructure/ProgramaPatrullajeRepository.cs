@@ -16,38 +16,13 @@ namespace SqlServerAdapter
     {
 
         protected readonly ProgramaContext _programaContext;
-        private string _ordinarias;
         private string _extraordinarias;
 
         public ProgramaPatrullajeRepository(ProgramaContext programaContext)
         {
             _programaContext = programaContext;
 
-            _ordinarias = @"SELECT a.id_propuestapatrullaje id_programa,a.id_ruta,a.fechapatrullaje,a.fechapatrullaje a.fechapatrullaje fechatermino, a.id_puntoresponsable,b.clave,
-                   b.regionmilitarsdn,b.regionssf,b.observaciones,a.ultimaactualizacion,a.id_usuario,d.descripcionnivel descripcionnivelriesgo,
-                   COALESCE(a.solicitudoficioautorizacion, '') SolicitudOficioComision,
-                   COALESCE(a.oficioautorizacion, '') as OficioComision,
-                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
-                             FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
-                             WHERE f.id_ruta = a.id_ruta),'') as itinerario,
-                   COALESCE((SELECT top 1 f.inicio FROM ssf.programapatrullajes f
-                             WHERE f.id_propuestapatrullaje = a.id_propuestapatrullaje
-                             AND YEAR(f.fechapatrullaje) = YEAR(getutcdate()) 
-                             AND MONTH(f.fechapatrullaje) = MONTH(getutcdate()) 
-                             AND DAY(f.fechapatrullaje) = DAY(getutcdate())),'00:00:00') inicio,
-                   COALESCE((SELECT top 1 g.descripcionestadopatrullaje 
-                             FROM ssf.programapatrullajes f
-                             JOIN ssf.estadopatrullaje g ON f.id_estadopatrullaje = g.id_estadopatrullaje
-                             WHERE f.id_propuestapatrullaje = a.id_propuestapatrullaje
-                             AND YEAR(f.fechapatrullaje) = YEAR(getutcdate()) 
-                             AND MONTH(f.fechapatrullaje) = MONTH(getutcdate()) 
-                             AND DAY(f.fechapatrullaje) = DAY(getutcdate())),c.descripcionestadopropuesta)	descripcionestadopatrullaje
-            FROM ssf.propuestaspatrullajes a
-            JOIN ssf.rutas b ON a.id_ruta = b.id_ruta            
-            JOIN SSF.clasepatrullaje m ON a.id_clasepatrullaje = m.id_clasepatrullaje
-            JOIN ssf.estadopropuesta c ON a.id_estadopropuesta = c.id_estadopropuesta
-            JOIN ssf.niveles d ON a.riesgopatrullaje=d.id_nivel
-            JOIN ssf.tipopatrullaje k ON b.id_tipopatrullaje = k.id_tipopatrullaje";
+
 
             _extraordinarias = @"SELECT a.id_propuestapatrullaje id_programa,a.id_ruta,a.fechapatrullaje,e.fechatermino,a.id_puntoresponsable,b.clave,
                    b.regionmilitarsdn,b.regionssf,b.observaciones,a.ultimaactualizacion,a.id_usuario,d.descripcionnivel descripcionnivelriesgo,
@@ -559,6 +534,42 @@ namespace SqlServerAdapter
             };
 
             return _programaContext.ProgramasVistas.FromSqlRaw(sqlQuery, parametros).ToList();
+        }
+
+
+        public List<PatrullajesProgYExtRegistradosVista> ObtenerCaso0Ordinario(string tipo, int region,  int mes, int anio) 
+        {
+            string sqlQuery = @"SELECT a.id_programa IdPrograma, a.id_ruta IdRuta, a.fechapatrullaje FechaPatrullaje, a.inicio Inicio
+                                      ,a.id_puntoresponsable IdPuntoResponsable, b.clave Clave, b.regionmilitarsdn RegionMilitarSDN
+                                      ,b.regionssf RegionSSF, b.observaciones ObservacionesRuta, c.descripcionestadopatrullaje DescripcionEstadoPatrullaje
+                                      ,a.observaciones ObservacionesPrograma, a.riesgopatrullaje IdRiesgoPatrullaje
+                                      ,COALESCE(a.solicitudoficiocomision, '') SolicitudOficioComision
+                                      ,COALESCE(a.oficiocomision, '') OficioComision
+                                      ,d.descripcionnivel DescripcionNivelRiesgo
+                                      ,COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
+                                                 FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
+                                                 WHERE f.id_ruta = a.id_ruta),'') as Itinerario
+                                      ,a.ultimaactualizacion UltimaActualizacion
+                                      ,a.id_usuario IdUsuario
+                                      ,a.id_usuarioresponsablepatrullaje UsuarioResponsablePatrullaje
+                                 FROM ssf.programapatrullajes a
+                                 JOIN ssf.rutas b ON a.id_ruta = b.id_ruta
+                                 JOIN ssf.estadopatrullaje c ON a.id_estadopatrullaje = c.id_estadopatrullaje
+                                 JOIN ssf.niveles d ON a.riesgopatrullaje = d.id_nivel
+                                 JOIN ssf.tipopatrullaje e ON b.id_tipopatrullaje = e.id_tipopatrullaje
+                                 WHERE e.descripcion = @pTipo AND b.regionssf = @pRegion AND MONTH(a.fechapatrullaje)=@pMes AND YEAR(a.fechapatrullaje)= @pAnio 
+                                 ORDER BY a.fechapatrullaje";
+
+            object[] parametros = new object[]
+            {              
+                new SqlParameter("@pTipo", tipo),
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pAnio", anio),
+                new SqlParameter("@pMes", mes)
+             };
+
+            return _programaContext.ProgramasVistas.FromSqlRaw(sqlQuery, parametros).ToList();
+            
         }
     }
 }
