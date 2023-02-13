@@ -7,6 +7,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Intrinsics.X86;
@@ -100,15 +101,13 @@ namespace SqlServerAdapter
         public int ObtenerNumeroItinerariosConfiguradosPorZonasRuta(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, string ruta)
         {
             string sqlQuery = @"SELECT itinerarioruta FROM (
-                     SELECT a.id_ruta,a.clave,a.regionmilitarsdn as regiondelasdn,a.regionssf as regiondelassf,
-                            a.zonamilitarsdn,a.observaciones,a.consecutivoregionmilitarsdn,
-                            a.totalrutasregionmilitarsdn,a.bloqueado,a.habilitado,
-                            COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC) 
-                                     FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto=g.id_punto
-                                     WHERE f.id_ruta=a.id_ruta),'') as itinerarioruta
-                    FROM ssf.rutas a 
-                    WHERE a.id_tipopatrullaje=@parTipoPatrullaje AND a.regionssf=@parRegionSsf  
-                    AND a.regionmilitarsdn=@parRegionMilitar AND a.zonamilitarsdn=@parZonaMilitar
+                     SELECT 
+                            COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY i.posicion ASC)
+                                     FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                                     WHERE i.id_ruta = a.id), '') as itinerarioruta
+                    FROM dmn.Ruta a 
+                    WHERE a.id_tipo_patrullaje@parTipoPatrullaje AND a.id_comandancia_regional_SSF=@parRegionSsf  
+                    AND a.region_militar_SDN=@parRegionMilitar AND a.zona_militar_SDN=@parZonaMilitar
             ) as resultado
             WHERE itinerarioruta=@parRuta";
 
@@ -130,18 +129,16 @@ namespace SqlServerAdapter
         public int ObtenerNumeroItinerariosConfiguradosEnOtraRuta(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, int ruta, string rutaItinerario)
         {
             string sqlQuery = @"SELECT itinerarioruta FROM (
-                     SELECT a.id_ruta,a.clave,a.regionmilitarsdn as regiondelasdn,a.regionssf as regiondelassf,
-                            a.zonamilitarsdn,a.observaciones,a.consecutivoregionmilitarsdn,
-                            a.totalrutasregionmilitarsdn,a.bloqueado,a.habilitado,
-                            COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC) 
-                                     FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto=g.id_punto
-                                     WHERE f.id_ruta=a.id_ruta),'') as itinerarioruta
-                    FROM ssf.rutas a 
-                    WHERE a.id_tipopatrullaje=@parTipoPatrullaje AND a.regionssf=@parRegionSsf  
-                    AND a.regionmilitarsdn=@parRegionMilitar AND a.zonamilitarsdn=@parZonaMilitar
-                    AND a.id_ruta <> @parRuta
+                     SELECT 
+                            COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY i.posicion ASC)
+                                     FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                                     WHERE i.id_ruta = a.id), '') as itinerarioruta
+                    FROM dmn.Ruta a 
+                    WHERE a.id_tipo_patrullaje@parTipoPatrullaje AND a.id_comandancia_regional_SSF=@parRegionSsf  
+                    AND a.region_militar_SDN=@parRegionMilitar AND a.zona_militar_SDN=@parZonaMilitar
+                    AND a.id <> @parRuta
             ) as resultado
-            WHERE itinerarioruta=@parRutaItinerario";
+            WHERE itinerarioruta=@parRuta";
 
             object[] parametros = new object[]
             {
@@ -177,7 +174,7 @@ namespace SqlServerAdapter
         /// </summary>
         public int ObtenerNumeroProgramasPorRuta(int idRuta)
         {
-            return _rutaContext.Programas.Where(x => x.Id == idRuta).Count();
+            return _rutaContext.Programas.Where(x => x.IdRuta == idRuta).Count();
         }
 
         /// <summary>
@@ -185,7 +182,7 @@ namespace SqlServerAdapter
         /// </summary>
         public int ObtenerNumeroPropuestasPorRuta(int idRuta)
         {
-            return _rutaContext.Propuestas.Where(x => x.Id == idRuta).Count();
+            return _rutaContext.Propuestas.Where(x => x.IdRuta == idRuta).Count();
         }
 
         /// <summary>
@@ -201,16 +198,17 @@ namespace SqlServerAdapter
         /// </summary>
         public List<RutaVista> ObtenerRutasPorRegionSsf(string tipo, int regionSsf)
         {
-            string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
-                   a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
-                   a.bloqueado,a.habilitado,
-                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
-                             FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
-                             WHERE f.id_ruta = a.id_ruta),'') as itinerarioruta
-            FROM ssf.rutas a
-            join ssf.tipopatrullaje t on a.id_tipoPatrullaje = t.id_tipoPatrullaje
-            WHERE a.habilitado = 1 AND a.regionssf = @parRegionSsf AND t.descripcion = @parDescripcion
-            ORDER BY regionssf,regionmilitarsdn,zonamilitarsdn,consecutivoregionmilitarsdn";
+            string sqlQuery = @"SELECT a.id, a.clave, a.region_militar_SDN, a.id_comandancia_regional_SSF,
+                   a.zona_militar_SDN, a.observaciones, a.consecutivo_region_militar_SDN,
+                   a.bloqueado, a.habilitado,
+                   COUNT(a.id) OVER(PARTITION BY a.region_militar_SDN) total_rutas_region,
+                   COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY i.posicion ASC)
+                            FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                            WHERE i.id_ruta = a.id),'') as itinerarioruta
+            FROM dmn.Ruta a
+            JOIN cat.Tipo_Patrullaje t ON a.id_tipo_patrullaje = t.id
+            WHERE a.habilitado = 1 AND a.id_comandancia_regional_SSF = @parRegionSsf AND t.nombre = @parDescripcion
+            ORDER BY a.id_comandancia_regional_SSF, a.region_militar_SDN, a.zona_militar_SDN, a.consecutivo_region_militar_SDN";
 
             object[] parametros = new object[]
             {
@@ -226,16 +224,17 @@ namespace SqlServerAdapter
         /// </summary>
         public List<RutaVista> ObtenerRutasPorRegionMilitar(string tipo, string regionMilitar)
         {
-            string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
-                   a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
-                   a.bloqueado,a.habilitado,
-                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
-                             FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
-                             WHERE f.id_ruta = a.id_ruta),'') as itinerarioruta
-            FROM ssf.rutas a
-            join ssf.tipopatrullaje t on a.id_tipoPatrullaje = t.id_tipoPatrullaje
-            WHERE a.habilitado = 1 AND a.regionmilitarsdn = @parRegionMilitar AND t.descripcion = @parDescripcion
-            ORDER BY regionssf,regionmilitarsdn,zonamilitarsdn,consecutivoregionmilitarsdn";
+            string sqlQuery = @"SELECT a.id, a.clave, a.region_militar_SDN, a.id_comandancia_regional_SSF,
+                   a.zona_militar_SDN, a.observaciones, a.consecutivo_region_militar_SDN,
+                   a.bloqueado, a.habilitado,
+	               COUNT(a.id) OVER(PARTITION BY a.region_militar_SDN) totalrutasregionmilitarsdn,
+                   COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY i.posicion ASC)
+                            FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                            WHERE i.id_ruta = a.id),'') as itinerarioruta
+                   FROM dmn.Ruta a
+                   JOIN cat.Tipo_Patrullaje t ON a.id_tipo_patrullaje = t.id
+            WHERE a.habilitado = 1 AND a.region_militar_SDN = @parRegionMilitar AND t.nombre = @parDescripcion
+            ORDER BY a.id_comandancia_regional_SSF, a.region_militar_SDN, a.zona_militar_SDN, a.consecutivo_region_militar_SDN";
 
             object[] parametros = new object[]
             {
@@ -253,20 +252,21 @@ namespace SqlServerAdapter
         {
             criterio = "%" + criterio + "%";
 
-            string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
-                   a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
-                   a.bloqueado,a.habilitado,
-                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
-                             FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
-                             WHERE f.id_ruta = a.id_ruta),'') as itinerarioruta
-            FROM ssf.rutas a
-            join ssf.tipopatrullaje t on a.id_tipoPatrullaje = t.id_tipoPatrullaje
-            WHERE a.habilitado = 1 AND t.descripcion = @parDescripcion   
-            AND ( a.clave like @parCriterio OR a.observaciones like @parCriterio OR 
-                  COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
-                            FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
-                            WHERE f.id_ruta = a.id_ruta),'') like @parCriterio )
-            ORDER BY regionssf,regionmilitarsdn,zonamilitarsdn,consecutivoregionmilitarsdn";
+            string sqlQuery = @"SELECT a.id, a.clave, a.region_militar_SDN, a.id_comandancia_regional_SSF,
+                   a.zona_militar_SDN, a.observaciones, a.consecutivo_region_militar_SDN,
+                   a.bloqueado, a.habilitado,
+	               COUNT(a.id) OVER(PARTITION BY a.region_militar_SDN) totalrutasregionmilitarsdn,
+                   COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY i.posicion ASC)
+                            FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                            WHERE i.id_ruta = a.id),'') as itinerarioruta
+            FROM dmn.Ruta a
+            JOIN cat.Tipo_Patrullaje t ON a.id_tipo_patrullaje = t.id
+            WHERE a.habilitado = 1 AND t.nombre = @parDescripcion   
+            AND(a.clave like like @parCriterio OR a.observaciones like @parCriterio OR
+            COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY i.posicion ASC)
+                      FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                      WHERE i.id_ruta = a.id), '') like @parCriterio )
+            ORDER BY a.id_comandancia_regional_SSF, a.region_militar_SDN, a.zona_militar_SDN, a.consecutivo_region_militar_SDN";
 
             object[] parametros = new object[]
             {
@@ -282,16 +282,19 @@ namespace SqlServerAdapter
         /// </summary>
         public List<RutaVista> ObtenerPropuestasPorRegionMilitarAndRegionSsf(string tipo, string regionMilitar, int regionSsf)
         {
-            string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
-                   a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
-                   a.bloqueado,a.habilitado,
-                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
-                             FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
-                             WHERE f.id_ruta = a.id_ruta),'') as itinerarioruta
-            FROM ssf.rutas a
-            join ssf.tipopatrullaje t on a.id_tipoPatrullaje = t.id_tipoPatrullaje
-            WHERE a.habilitado = 1 AND a.regionssf = @parRegionSsf AND t.descripcion = @parDescripcion AND a.regionmilitarsdn = @parRegionMilitar
-            ORDER BY regionssf,regionmilitarsdn,zonamilitarsdn,consecutivoregionmilitarsdn";
+            string sqlQuery = @"SELECT r.id, r.clave, r.region_militar_SDN, r.id_comandancia_regional_SSF,
+                                 r.zona_militar_SDN, r.observaciones, r.consecutivo_region_militar_SDN,
+	                             r.bloqueado, r.habilitado,
+	                             COUNT(r.id) OVER(PARTITION BY r.region_militar_SDN) totalrutasregionmilitarsdn,
+                                 COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY i.posicion ASC)
+                                          FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                                          WHERE i.id_ruta = r.id),'') as itinerarioruta
+                                 FROM dmn.Propuesta_Patrullaje_Ruta_Contenedor p
+                                 JOIN dmn.Ruta r ON p.id_ruta = r.id
+                                 JOIN cat.Tipo_Patrullaje t ON r.id_tipo_patrullaje = t.id
+                                 WHERE r.habilitado = 1 AND r.id_comandancia_regional_SSF = @parRegionSsf
+                                 AND r.region_militar_SDN = @parRegionMilitar t.nombre = @parDescripcion
+                                 ORDER BY r.id_comandancia_regional_SSF, r.region_militar_SDN, r.zona_militar_SDN, r.consecutivo_region_militar_SDN";
 
             object[] parametros = new object[]
             {
@@ -310,20 +313,23 @@ namespace SqlServerAdapter
         {
             criterio = "%" + criterio + "%";
 
-            string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
-                   a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
-                   a.bloqueado,a.habilitado,
-                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
-                             FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
-                             WHERE f.id_ruta = a.id_ruta),'') as itinerarioruta
-            FROM ssf.rutas a
-            join ssf.tipopatrullaje t on a.id_tipoPatrullaje = t.id_tipoPatrullaje
-            WHERE a.habilitado = 1 AND t.descripcion = @parDescripcion AND a.regionssf = @parRegionSsf  
-            AND ( a.clave like @parCriterio OR a.observaciones like @parCriterio OR 
-                  COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
-                            FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
-                            WHERE f.id_ruta = a.id_ruta),'') like @parCriterio )
-            ORDER BY regionssf,regionmilitarsdn,zonamilitarsdn,consecutivoregionmilitarsdn";
+            string sqlQuery = @"SELECT r.id, r.clave, r.region_militar_SDN, r.id_comandancia_regional_SSF,
+                                       r.zona_militar_SDN, r.observaciones, r.consecutivo_region_militar_SDN,
+	                                   r.bloqueado, r.habilitado,
+	                                   COUNT(r.id) OVER(PARTITION BY r.region_militar_SDN) totalrutasregionmilitarsdn,
+                                       COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY i.posicion ASC)
+                                                FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                                                WHERE i.id_ruta = r.id),'') as itinerarioruta
+                                FROM dmn.Propuesta_Patrullaje_Ruta_Contenedor p
+                                JOIN dmn.Ruta r ON p.id_ruta = r.id
+                                JOIN cat.Tipo_Patrullaje t ON r.id_tipo_patrullaje = t.id
+                                WHERE r.habilitado = 1 AND r.id_comandancia_regional_SSF = @parRegionSsf
+                                AND t.nombre = @parDescripcion
+                                AND(r.clave like like @parCriterio OR r.observaciones like @parCriterio OR
+                                COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY i.posicion ASC)
+                                                FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                                                WHERE i.id_ruta = a.id), '') like @parCriterio )
+                                ORDER BY r.id_comandancia_regional_SSF, r.region_militar_SDN, r.zona_militar_SDN, r.consecutivo_region_militar_SDN";
 
             object[] parametros = new object[]
             {
