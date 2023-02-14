@@ -537,39 +537,312 @@ namespace SqlServerAdapter
         }
 
 
-   /*     public List<PatrullajesProgYExtRegistradosVista> ObtenerCaso0Ordinario(string tipo, int region,  int mes, int anio) 
+        /*     public List<PatrullajesProgYExtRegistradosVista> ObtenerCaso0Ordinario(string tipo, int region,  int mes, int anio) 
+             {
+                 string sqlQuery = @"SELECT a.id_programa IdPrograma, a.id_ruta IdRuta, a.fechapatrullaje FechaPatrullaje, a.inicio Inicio
+                                           ,a.id_puntoresponsable IdPuntoResponsable, b.clave Clave, b.regionmilitarsdn RegionMilitarSDN
+                                           ,b.regionssf RegionSSF, b.observaciones ObservacionesRuta, c.descripcionestadopatrullaje DescripcionEstadoPatrullaje
+                                           ,a.observaciones ObservacionesPrograma, a.riesgopatrullaje IdRiesgoPatrullaje
+                                           ,COALESCE(a.solicitudoficiocomision, '') SolicitudOficioComision
+                                           ,COALESCE(a.oficiocomision, '') OficioComision
+                                           ,d.descripcionnivel DescripcionNivelRiesgo
+                                           ,COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
+                                                      FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
+                                                      WHERE f.id_ruta = a.id_ruta),'') as Itinerario
+                                           ,a.ultimaactualizacion UltimaActualizacion
+                                           ,a.id_usuario IdUsuario
+                                           ,a.id_usuarioresponsablepatrullaje UsuarioResponsablePatrullaje
+                                      FROM ssf.programapatrullajes a
+                                      JOIN ssf.rutas b ON a.id_ruta = b.id_ruta
+                                      JOIN ssf.estadopatrullaje c ON a.id_estadopatrullaje = c.id_estadopatrullaje
+                                      JOIN ssf.niveles d ON a.riesgopatrullaje = d.id_nivel
+                                      JOIN ssf.tipopatrullaje e ON b.id_tipopatrullaje = e.id_tipopatrullaje
+                                      WHERE e.descripcion = @pTipo AND b.regionssf = @pRegion AND MONTH(a.fechapatrullaje)=@pMes AND YEAR(a.fechapatrullaje)= @pAnio 
+                                      ORDER BY a.fechapatrullaje";
+
+                 object[] parametros = new object[]
+                 {              
+                     new SqlParameter("@pTipo", tipo),
+                     new SqlParameter("@pRegion", region),
+                     new SqlParameter("@pAnio", anio),
+                     new SqlParameter("@pMes", mes)
+                  };
+
+                 return _programaContext.ProgramasVistas.FromSqlRaw(sqlQuery, parametros).ToList();
+
+             }*/
+
+
+
+        public List<PropuestaVista> Caso0Ordinario(string tipo, int mes, int anio, int region)
         {
-            string sqlQuery = @"SELECT a.id_programa IdPrograma, a.id_ruta IdRuta, a.fechapatrullaje FechaPatrullaje, a.inicio Inicio
-                                      ,a.id_puntoresponsable IdPuntoResponsable, b.clave Clave, b.regionmilitarsdn RegionMilitarSDN
-                                      ,b.regionssf RegionSSF, b.observaciones ObservacionesRuta, c.descripcionestadopatrullaje DescripcionEstadoPatrullaje
-                                      ,a.observaciones ObservacionesPrograma, a.riesgopatrullaje IdRiesgoPatrullaje
-                                      ,COALESCE(a.solicitudoficiocomision, '') SolicitudOficioComision
-                                      ,COALESCE(a.oficiocomision, '') OficioComision
-                                      ,d.descripcionnivel DescripcionNivelRiesgo
-                                      ,COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
-                                                 FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
-                                                 WHERE f.id_ruta = a.id_ruta),'') as Itinerario
-                                      ,a.ultimaactualizacion UltimaActualizacion
-                                      ,a.id_usuario IdUsuario
-                                      ,a.id_usuarioresponsablepatrullaje UsuarioResponsablePatrullaje
-                                 FROM ssf.programapatrullajes a
-                                 JOIN ssf.rutas b ON a.id_ruta = b.id_ruta
-                                 JOIN ssf.estadopatrullaje c ON a.id_estadopatrullaje = c.id_estadopatrullaje
-                                 JOIN ssf.niveles d ON a.riesgopatrullaje = d.id_nivel
-                                 JOIN ssf.tipopatrullaje e ON b.id_tipopatrullaje = e.id_tipopatrullaje
-                                 WHERE e.descripcion = @pTipo AND b.regionssf = @pRegion AND MONTH(a.fechapatrullaje)=@pMes AND YEAR(a.fechapatrullaje)= @pAnio 
-                                 ORDER BY a.fechapatrullaje";
+            string sqlQuery = @"SELECT p.id, p.fecha,  p.id_punto_responsable, p.id_ruta, r.clave, r.id_comandancia_regional_SSF, 
+                                       r.region_militar_SDN, r.observaciones, p.id_nivel_riesgo, p.id_usuario, n.descripcion,
+                                       COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY i.posicion ASC)
+                                                FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                                                WHERE i.id_ruta = r.id),'') as itinerario
+                                FROM dmn.Programa_Patrullaje p
+                                JOIN dmn.Ruta r ON p.id_ruta = r.id
+                                JOIN cat.Estado_Patrullaje e ON p.id_estado_patrullaje = e.id
+                                JOIN cat.Tipo_Patrullaje t ON r.id_tipo_patrullaje = t.id
+                                JOIN cat.Nivel_Riesgo n ON p.id_nivel_riesgo = n.id
+                                WHERE YEAR(p.fecha) = @pAnio AND MONTH(p.fecha) = @pMes
+                                AND r.id_comandancia_regional_SSF = @pRegion
+                                AND t.nombre = @pTipo
+                                ORDER BY p.fecha";
 
             object[] parametros = new object[]
-            {              
-                new SqlParameter("@pTipo", tipo),
-                new SqlParameter("@pRegion", region),
+            {
                 new SqlParameter("@pAnio", anio),
-                new SqlParameter("@pMes", mes)
-             };
+                new SqlParameter("@pMes", mes),
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pTipo", tipo)
+            };
 
-            return _programaContext.ProgramasVistas.FromSqlRaw(sqlQuery, parametros).ToList();
-            
-        }*/
+            return _programaContext.PropuestasVistas.FromSqlRaw(sqlQuery, parametros).ToList();
+        }
+        public List<PropuestaVista> Caso5Ordinario(string tipo, int mes, int anio, int region, string clase)
+        {
+            string sqlQuery = @"SELECT p.id, p.id_usuario, pf.fecha, pc.id_punto_responsable, 
+                                       r.id id_ruta, r.clave, r.id_comandancia_regional_SSF, r.region_militar_SDN, r.observaciones, n.descripcion,
+                                       COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY i.posicion ASC) 
+                                                FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                                                WHERE i.id_ruta=r.id),'') as itinerario,
+                                       COALESCE((SELECT MIN(pg.fecha) FROM dmn.Programa_Patrullaje pg
+                                                 WHERE pg.id_propuesta_patrullaje = p.id
+                                                AND YEAR(pg.fecha) = YEAR(getutcdate()) 
+                                                AND MONTH(pg.fecha) = MONTH(getutcdate()) 
+                                                AND DAY(pg.fecha) = DAY(getutcdate()))
+                                	            ,DATEADD(hh, 0, DATEADD(dd, DATEDIFF(dd, 0, GETDATE()), 0))) inicio,
+                                       COALESCE((SELECT TOP 1 e.estado FROM dmn.Programa_Patrullaje pg
+                                                 JOIN cat.Estado_Patrullaje e ON pg.id_estado_patrullaje = e.id
+                                                 WHERE pg.id_propuesta_patrullaje = p.id
+                                                 AND YEAR(pg.fecha) = YEAR(getutcdate()) 
+                                                 AND MONTH(pg.fecha) = MONTH(getutcdate()) 
+                                                 AND DAY(pg.fecha) = DAY(getutcdate()) )
+                                                 ,e.estado) estadopatrullaje
+                                FROM dmn.Propuesta_patrullaje p
+                                JOIN dmn.Propuesta_Patrullaje_Ruta_Contenedor pc ON p.id = pc.id_propuesta_patrullaje
+                                JOIN dmn.Propuesta_Patrullaje_Fecha pf ON pc.id_propuesta_patrullaje = pf.id_propuesta_patrullaje AND pc.id_ruta = pf.id_ruta
+                                JOIN dmn.Ruta r ON pc.id_ruta = r.id
+                                JOIN cat.Clase_Patrullaje c ON p.id_clase_patrullaje = c.id
+                                JOIN cat.Estado_Propuesta e ON pf.id_estado_propuesta = e.id
+                                JOIN cat.Tipo_Patrullaje t ON r.id_tipo_patrullaje = t.id
+                                JOIN cat.Nivel_Riesgo n ON pc.id_nivel_riesgo = n.id
+                                WHERE YEAR(PF.fecha) = @pAnio AND MONTH(PF.fecha) = @pMes
+                                AND r.id_comandancia_regional_SSF = @pRegion
+                                AND t.nombre = @pTipo
+                                AND c.nombre = @pClase
+                                ORDER BY pf.fecha";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pAnio", anio),
+                new SqlParameter("@pMes", mes),
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pTipo", tipo),
+                new SqlParameter("@pClase", clase)
+            };
+
+            return _programaContext.PropuestasVistas.FromSqlRaw(sqlQuery, parametros).ToList();
+        }
+
+
+       // Del 6 al 9 sn lo mismo en ordinario
+        public List<PropuestaVista> Caso6Ordinario(string tipo, int mes, int anio, int region, string clase, string estado)
+        {
+            // estado = "Pendiente de autorizacion por la SSF"
+            string sqlQuery = @"SELECT p.id, p.id_usuario, pf.fecha, pc.id_punto_responsable, 
+                                       r.id id_ruta, r.clave, r.id_comandancia_regional_SSF, r.region_militar_SDN, r.observaciones, d.descripcion,
+                                       COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY i.posicion ASC) 
+                                                FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                                                WHERE i.id_ruta=r.id),'') as itinerario,
+                                       COALESCE((SELECT MIN(pg.fecha) FROM dmn.Programa_Patrullaje pg
+                                                 WHERE pg.id_propuesta_patrullaje = p.id
+                                                AND YEAR(pg.fecha) = YEAR(getutcdate()) 
+                                                AND MONTH(pg.fecha) = MONTH(getutcdate()) 
+                                                AND DAY(pg.fecha) = DAY(getutcdate()))
+                                	            ,DATEADD(hh, 0, DATEADD(dd, DATEDIFF(dd, 0, GETDATE()), 0))) inicio,
+                                       COALESCE((SELECT TOP 1 e.estado FROM dmn.Programa_Patrullaje pg
+                                                 JOIN cat.Estado_Patrullaje e ON pg.id_estado_patrullaje = e.id
+                                                 WHERE pg.id_propuesta_patrullaje = p.id
+                                                 AND YEAR(pg.fecha) = YEAR(getutcdate()) 
+                                                 AND MONTH(pg.fecha) = MONTH(getutcdate()) 
+                                                 AND DAY(pg.fecha) = DAY(getutcdate()) )
+                                                 ,e.estado) estadopatrullaje
+                                FROM dmn.Propuesta_patrullaje p
+                                JOIN dmn.Propuesta_Patrullaje_Ruta_Contenedor pc ON p.id = pc.id_propuesta_patrullaje
+                                JOIN dmn.Propuesta_Patrullaje_Fecha pf ON pc.id_propuesta_patrullaje = pf.id_propuesta_patrullaje AND pc.id_ruta = pf.id_ruta
+                                JOIN dmn.Ruta r ON pc.id_ruta = r.id
+                                JOIN cat.Clase_Patrullaje c ON p.id_clase_patrullaje = c.id
+                                JOIN cat.Estado_Propuesta e ON pf.id_estado_propuesta = e.id
+                                JOIN cat.Tipo_Patrullaje t ON r.id_tipo_patrullaje = t.id
+                                JOIN cat.Nivel_Riesgo n ON pc.id_nivel_riesgo = n.id
+                                WHERE YEAR(PF.fecha) = @pAnio AND MONTH(PF.fecha) = @pMes
+                                AND r.id_comandancia_regional_SSF = @pRegion
+                                AND t.nombre = @pTipo
+                                AND c.nombre = @pClase
+                                AND e.estado = @pEstado
+                                ORDER BY pf.fecha";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pAnio", anio),               
+                new SqlParameter("@pMes", mes),
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pTipo", tipo),
+                new SqlParameter("@pClase", clase),
+                new SqlParameter("@pEstado", estado),
+            };
+
+            return _programaContext.PropuestasVistas.FromSqlRaw(sqlQuery, parametros).ToList();
+        }
+
+         public List<PropuestaVista> Caso7Ordinario(string tipo, int mes, int anio, int region, string clase, string estado)
+        {
+            // estado = "Autorizada"
+            string sqlQuery = @"SELECT p.id, p.id_usuario, pf.fecha, pc.id_punto_responsable, 
+                                       r.id id_ruta, r.clave, r.id_comandancia_regional_SSF, r.region_militar_SDN, r.observaciones, n.descripcion,
+                                       COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY i.posicion ASC) 
+                                                FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                                                WHERE i.id_ruta=r.id),'') as itinerario,
+                                       COALESCE((SELECT MIN(pg.fecha) FROM dmn.Programa_Patrullaje pg
+                                                 WHERE pg.id_propuesta_patrullaje = p.id
+                                                AND YEAR(pg.fecha) = YEAR(getutcdate()) 
+                                                AND MONTH(pg.fecha) = MONTH(getutcdate()) 
+                                                AND DAY(pg.fecha) = DAY(getutcdate()))
+                                	            ,DATEADD(hh, 0, DATEADD(dd, DATEDIFF(dd, 0, GETDATE()), 0))) inicio,
+                                       COALESCE((SELECT TOP 1 e.estado FROM dmn.Programa_Patrullaje pg
+                                                 JOIN cat.Estado_Patrullaje e ON pg.id_estado_patrullaje = e.id
+                                                 WHERE pg.id_propuesta_patrullaje = p.id
+                                                 AND YEAR(pg.fecha) = YEAR(getutcdate()) 
+                                                 AND MONTH(pg.fecha) = MONTH(getutcdate()) 
+                                                 AND DAY(pg.fecha) = DAY(getutcdate()) )
+                                                 ,e.estado) estadopatrullaje
+                                FROM dmn.Propuesta_patrullaje p
+                                JOIN dmn.Propuesta_Patrullaje_Ruta_Contenedor pc ON p.id = pc.id_propuesta_patrullaje
+                                JOIN dmn.Propuesta_Patrullaje_Fecha pf ON pc.id_propuesta_patrullaje = pf.id_propuesta_patrullaje AND pc.id_ruta = pf.id_ruta
+                                JOIN dmn.Ruta r ON pc.id_ruta = r.id
+                                JOIN cat.Clase_Patrullaje c ON p.id_clase_patrullaje = c.id
+                                JOIN cat.Estado_Propuesta e ON pf.id_estado_propuesta = e.id
+                                JOIN cat.Tipo_Patrullaje t ON r.id_tipo_patrullaje = t.id
+                                JOIN cat.Nivel_Riesgo n ON pc.id_nivel_riesgo = n.id
+                                WHERE YEAR(PF.fecha) = @pAnio AND MONTH(PF.fecha) = @pMes
+                                AND r.id_comandancia_regional_SSF = @pRegion
+                                AND t.nombre = @pTipo
+                                AND c.nombre = @pClase
+                                AND e.estado = @pEstado
+                                ORDER BY pf.fecha";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pAnio", anio),
+                new SqlParameter("@pMes", mes),
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pTipo", tipo),
+                new SqlParameter("@pClase", clase),
+                new SqlParameter("@pEstado", estado),
+            };
+
+            return _programaContext.PropuestasVistas.FromSqlRaw(sqlQuery, parametros).ToList();
+        }
+
+        public List<PropuestaVista> Caso8Ordinario(string tipo, int mes, int anio, int region, string clase, string estado)
+        {
+            // estado = "Rechazada"
+            string sqlQuery = @"SELECT p.id, p.id_usuario, pf.fecha, pc.id_punto_responsable, 
+                                       r.id id_ruta, r.clave, r.id_comandancia_regional_SSF, r.region_militar_SDN, r.observaciones, n.descripcion,
+                                       COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY i.posicion ASC) 
+                                                FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                                                WHERE i.id_ruta=r.id),'') as itinerario,
+                                       COALESCE((SELECT MIN(pg.fecha) FROM dmn.Programa_Patrullaje pg
+                                                 WHERE pg.id_propuesta_patrullaje = p.id
+                                                AND YEAR(pg.fecha) = YEAR(getutcdate()) 
+                                                AND MONTH(pg.fecha) = MONTH(getutcdate()) 
+                                                AND DAY(pg.fecha) = DAY(getutcdate()))
+                                	            ,DATEADD(hh, 0, DATEADD(dd, DATEDIFF(dd, 0, GETDATE()), 0))) inicio,
+                                       COALESCE((SELECT TOP 1 e.estado FROM dmn.Programa_Patrullaje pg
+                                                 JOIN cat.Estado_Patrullaje e ON pg.id_estado_patrullaje = e.id
+                                                 WHERE pg.id_propuesta_patrullaje = p.id
+                                                 AND YEAR(pg.fecha) = YEAR(getutcdate()) 
+                                                 AND MONTH(pg.fecha) = MONTH(getutcdate()) 
+                                                 AND DAY(pg.fecha) = DAY(getutcdate()) )
+                                                 ,e.estado) estadopatrullaje
+                                FROM dmn.Propuesta_patrullaje p
+                                JOIN dmn.Propuesta_Patrullaje_Ruta_Contenedor pc ON p.id = pc.id_propuesta_patrullaje
+                                JOIN dmn.Propuesta_Patrullaje_Fecha pf ON pc.id_propuesta_patrullaje = pf.id_propuesta_patrullaje AND pc.id_ruta = pf.id_ruta
+                                JOIN dmn.Ruta r ON pc.id_ruta = r.id
+                                JOIN cat.Clase_Patrullaje c ON p.id_clase_patrullaje = c.id
+                                JOIN cat.Estado_Propuesta e ON pf.id_estado_propuesta = e.id
+                                JOIN cat.Tipo_Patrullaje t ON r.id_tipo_patrullaje = t.id
+                                JOIN cat.Nivel_Riesgo n ON pc.id_nivel_riesgo = n.id
+                                WHERE YEAR(PF.fecha) = @pAnio AND MONTH(PF.fecha) = @pMes
+                                AND r.id_comandancia_regional_SSF = @pRegion
+                                AND t.nombre = @pTipo
+                                AND c.nombre = @pClase
+                                AND e.estado = @pEstado
+                                ORDER BY pf.fecha";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pAnio", anio),
+                new SqlParameter("@pMes", mes),
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pTipo", tipo),
+                new SqlParameter("@pClase", clase),
+                new SqlParameter("@pEstado", estado),
+            };
+
+            return _programaContext.PropuestasVistas.FromSqlRaw(sqlQuery, parametros).ToList();
+        }
+
+        public List<PropuestaVista> Caso9Ordinario(string tipo, int mes, int anio, int region, string clase, string estado)
+        {
+            // estado = "Aprobada por comandancia regional"
+            string sqlQuery = @"SELECT p.id, p.id_usuario, pf.fecha, pc.id_punto_responsable, 
+                                       r.id id_ruta, r.clave, r.id_comandancia_regional_SSF, r.region_militar_SDN, r.observaciones, n.descripcion
+                                       COALESCE((SELECT STRING_AGG(CAST(p.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY i.posicion ASC) 
+                                                FROM dmn.Itinerario i JOIN dmn.Punto_Patrullaje p ON i.id_punto = p.id
+                                                WHERE i.id_ruta=r.id),'') as itinerario,
+                                       COALESCE((SELECT MIN(pg.fecha) FROM dmn.Programa_Patrullaje pg
+                                                 WHERE pg.id_propuesta_patrullaje = p.id
+                                                AND YEAR(pg.fecha) = YEAR(getutcdate()) 
+                                                AND MONTH(pg.fecha) = MONTH(getutcdate()) 
+                                                AND DAY(pg.fecha) = DAY(getutcdate()))
+                                	            ,DATEADD(hh, 0, DATEADD(dd, DATEDIFF(dd, 0, GETDATE()), 0))) inicio,
+                                       COALESCE((SELECT TOP 1 e.estado FROM dmn.Programa_Patrullaje pg
+                                                 JOIN cat.Estado_Patrullaje e ON pg.id_estado_patrullaje = e.id
+                                                 WHERE pg.id_propuesta_patrullaje = p.id
+                                                 AND YEAR(pg.fecha) = YEAR(getutcdate()) 
+                                                 AND MONTH(pg.fecha) = MONTH(getutcdate()) 
+                                                 AND DAY(pg.fecha) = DAY(getutcdate()) )
+                                                 ,e.estado) estadopatrullaje
+                                FROM dmn.Propuesta_patrullaje p
+                                JOIN dmn.Propuesta_Patrullaje_Ruta_Contenedor pc ON p.id = pc.id_propuesta_patrullaje
+                                JOIN dmn.Propuesta_Patrullaje_Fecha pf ON pc.id_propuesta_patrullaje = pf.id_propuesta_patrullaje AND pc.id_ruta = pf.id_ruta
+                                JOIN dmn.Ruta r ON pc.id_ruta = r.id
+                                JOIN cat.Clase_Patrullaje c ON p.id_clase_patrullaje = c.id
+                                JOIN cat.Estado_Propuesta e ON pf.id_estado_propuesta = e.id
+                                JOIN cat.Tipo_Patrullaje t ON r.id_tipo_patrullaje = t.id
+                                JOIN cat.Nivel_Riesgo n ON pc.id_nivel_riesgo = n.id
+                                WHERE YEAR(PF.fecha) = @pAnio AND MONTH(PF.fecha) = @pMes
+                                AND r.id_comandancia_regional_SSF = @pRegion
+                                AND t.nombre = @pTipo
+                                AND c.nombre = @pClase
+                                AND e.estado = @pEstado
+                                ORDER BY pf.fecha";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pAnio", anio),
+                new SqlParameter("@pMes", mes),
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pTipo", tipo),
+                new SqlParameter("@pClase", clase),
+                new SqlParameter("@pEstado", estado),
+            };
+
+            return _programaContext.PropuestasVistas.FromSqlRaw(sqlQuery, parametros).ToList();
+        }
     }
 }
