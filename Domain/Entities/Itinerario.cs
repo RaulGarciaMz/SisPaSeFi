@@ -2,28 +2,36 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+[Table("itinerario", Schema = "ssf")]
+[Index("IdPunto", Name = "id_punto")]
+[Index("IdRuta", Name = "id_ruta")]
+public partial class Itinerario
 {
-    [Table("itinerario", Schema = "ssf")]
-    public class Itinerario
-    {
-        [Key]
-        public int id_itinerario { get; set; }
+    [Key]
+    [Column("id_itinerario")]
+    public int IdItinerario { get; set; }
 
-        [Required]
-        public int id_ruta { get; set; }
+    [Column("id_ruta")]
+    public int IdRuta { get; set; }
 
-        [Required]
-        public int id_punto { get; set; }
+    [Column("id_punto")]
+    public int IdPunto { get; set; }
 
-        [Required]
-        public int posicion { get; set; }
+    [Column("posicion")]
+    public int Posicion { get; set; }
 
-        public DateTime ultimaActualizacion { get; set; }
+    [Column("ultimaActualizacion", TypeName = "datetime")]
+    public DateTime UltimaActualizacion { get; set; }
 
-    }
+    [ForeignKey("IdPunto")]
+    [InverseProperty("Itinerarios")]
+    public virtual PuntoPatrullaje IdPuntoNavigation { get; set; } = null!;
+
+    [ForeignKey("IdRuta")]
+    [InverseProperty("Itinerarios")]
+    public virtual Ruta IdRutaNavigation { get; set; } = null!;
 }

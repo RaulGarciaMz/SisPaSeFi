@@ -34,7 +34,7 @@ namespace SqlServerAdapter
 
             foreach (var item in itin)
             {
-                item.id_ruta = r.id_ruta;
+                item.IdRuta = r.IdRuta;
             }
 
             _rutaContext.Itinerarios.AddRange(itin); 
@@ -55,9 +55,9 @@ namespace SqlServerAdapter
         /// </summary>
         public void Delete(int id)
         {
-            var r = _rutaContext.Rutas.Where(x => x.id_ruta == id).First();
+            var r = _rutaContext.Rutas.Where(x => x.IdRuta == id).First();
 
-            if (r.bloqueado == 0)
+            if (r.Bloqueado == 0)
             {
                 _rutaContext.Rutas.Remove(r);
                 _rutaContext.SaveChanges();
@@ -77,9 +77,9 @@ namespace SqlServerAdapter
         /// </summary>
         public string ObtenerDescripcionTipoPatrullaje(int tipoPatrullaje)
         {
-            var t = _rutaContext.TiposPatrullaje.Where(x => x.id_tipoPatrullaje == tipoPatrullaje).First();
+            var t = _rutaContext.TiposPatrullaje.Where(x => x.IdTipoPatrullaje == tipoPatrullaje).First();
 
-            return t.descripcion;
+            return t.Descripcion;
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace SqlServerAdapter
         /// </summary>
         public int ObtenerNumeroRutasPorFiltro(string clave, int idRuta)
         {
-            return _rutaContext.Rutas.Where(x => x.clave == clave && x.id_ruta == idRuta).Count();
+            return _rutaContext.Rutas.Where(x => x.Clave == clave && x.IdRuta == idRuta).Count();
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace SqlServerAdapter
         /// </summary>
         public int ObtenerNumeroRutasPorTipoAndRegionMilitar(int tipoPatrullaje, string regionMilitar)
         {
-            return _rutaContext.Rutas.Where(x => x.id_tipoPatrullaje == tipoPatrullaje && x.regionMilitarSDN == regionMilitar).Count();
+            return _rutaContext.Rutas.Where(x => x.IdTipoPatrullaje == tipoPatrullaje && x.RegionMilitarSdn == regionMilitar).Count();
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace SqlServerAdapter
         /// </summary>
         public int ObtenerNumeroProgramasPorRuta(int idRuta)
         {
-            return _rutaContext.Programas.Where(x => x.id_ruta == idRuta).Count();
+            return _rutaContext.Programas.Where(x => x.IdRuta == idRuta).Count();
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace SqlServerAdapter
         /// </summary>
         public int ObtenerNumeroPropuestasPorRuta(int idRuta)
         {
-            return _rutaContext.Propuestas.Where(x => x.id_ruta == idRuta).Count();
+            return _rutaContext.Propuestas.Where(x => x.IdRuta == idRuta).Count();
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace SqlServerAdapter
         /// </summary>
         public Usuario? ObtenerUsuarioConfigurador(string usuario) 
         {
-           return _rutaContext.Usuarios.Where(x => x.usuario_nom == usuario && x.configurador == 1).FirstOrDefault();
+           return _rutaContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefault();
         }
 
         /// <summary>

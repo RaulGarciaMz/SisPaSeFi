@@ -2,51 +2,81 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+[Table("puntospatrullaje", Schema = "ssf")]
+[Index("IdMunicipio", Name = "id_municipio")]
+public partial class PuntoPatrullaje
 {
+    [Key]
+    [Column("id_punto")]
+    public int IdPunto { get; set; }
 
-    [Table("puntospatrullaje", Schema = "ssf")]
-    public class PuntoPatrullaje
-    {
-        [Key]
-        public int id_punto { get; set; }
+    [Column("ubicacion")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string Ubicacion { get; set; } = null!;
 
-        [Required]
-        [StringLength(50)]
-        public string ubicacion { get; set; }
+    [Column("coordenadas")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string Coordenadas { get; set; } = null!;
 
-        [Required]
-        [StringLength(50)]
-        public string coordenadas { get; set; }
+    [Column("id_municipio")]
+    public int IdMunicipio { get; set; }
 
-        public int esInstalacion { get; set; }
+    [Column("esInstalacion")]
+    public int EsInstalacion { get; set; }
 
-        public int? id_nivelRiesgo { get; set; }
+    [Column("id_nivelRiesgo")]
+    public int? IdNivelRiesgo { get; set; }
 
-        public int? id_comandancia { get; set; }
+    [Column("id_comandancia")]
+    public int? IdComandancia { get; set; }
 
-        public int id_ProcesoResponsable { get; set; }
+    [Column("id_ProcesoResponsable")]
+    public int IdProcesoResponsable { get; set; }
 
-        public int id_GerenciaDivision { get; set; }
+    [Column("id_GerenciaDivision")]
+    public int IdGerenciaDivision { get; set; }
 
-        public int? id_usuario { get; set; }
+    [Column("id_usuario")]
+    public int? IdUsuario { get; set; }
 
-        public DateTime? ultimaActualizacion { get; set; }
+    [Column("ultimaActualizacion", TypeName = "datetime")]
+    public DateTime? UltimaActualizacion { get; set; }
 
-        public int bloqueado { get; set; }
+    [Column("bloqueado")]
+    public int Bloqueado { get; set; }
 
-        [StringLength(25)]
-        public string? latitud { get; set; }
+    [Column("latitud")]
+    [StringLength(25)]
+    [Unicode(false)]
+    public string? Latitud { get; set; }
 
-        [StringLength(25)]
-        public string? longitud { get; set; }
+    [Column("longitud")]
+    [StringLength(25)]
+    [Unicode(false)]
+    public string? Longitud { get; set; }
 
-        public int id_municipio { get; set; }
-        [ForeignKey("id_municipio")]
-        public Municipio? Municipio { get; set; }
-    }
+    [ForeignKey("IdMunicipio")]
+    [InverseProperty("Puntospatrullajes")]
+    public virtual Municipio IdMunicipioNavigation { get; set; } = null!;
+
+    [InverseProperty("IdPuntoNavigation")]
+    public virtual ICollection<Itinerario> Itinerarios { get; } = new List<Itinerario>();
+
+    [InverseProperty("IdPuntoInicioNavigation")]
+    public virtual ICollection<Linea> Lineas { get; } = new List<Linea>();
+
+    [InverseProperty("IdPuntoResponsableNavigation")]
+    public virtual ICollection<ProgramaPatrullaje> Programapatrullajes { get; } = new List<ProgramaPatrullaje>();
+
+    [InverseProperty("IdPuntoResponsableNavigation")]
+    public virtual ICollection<PropuestaPatrullaje> Propuestaspatrullajes { get; } = new List<PropuestaPatrullaje>();
+
+    [InverseProperty("IdPuntoNavigation")]
+    public virtual ICollection<ReportePunto> Reportepuntos { get; } = new List<ReportePunto>();
 }

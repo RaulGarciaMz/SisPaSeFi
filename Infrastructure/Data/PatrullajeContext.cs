@@ -22,7 +22,7 @@ namespace SqlServerAdapter.Data
 
         public  DbSet<PuntoPatrullaje> puntospatrullaje { get; set; }
         public  DbSet<Municipio> Municipios { get; set; }
-        public  DbSet<EstadosPais> Estados { get; set; }
+        public  DbSet<EstadoPais> Estados { get; set; }
         public DbSet<Itinerario> Itinerarios { get; set; }
     }
 }

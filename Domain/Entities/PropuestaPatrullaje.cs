@@ -1,53 +1,82 @@
-﻿using Domain.Ports.Driving;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+[Table("propuestaspatrullajes", Schema = "ssf")]
+[Index("IdApoyoPatrullaje", Name = "id_apoyoPatrullaje")]
+[Index("IdClasePatrullaje", Name = "id_clasePatrullaje")]
+[Index("IdPuntoResponsable", Name = "id_puntoResponsable")]
+[Index("IdRuta", Name = "id_ruta")]
+[Index("IdUsuario", Name = "id_usuario")]
+public partial class PropuestaPatrullaje
 {
-    [Table("propuestaspatrullajes", Schema = "ssf")]
-    public class PropuestaPatrullaje
-    {
-        [Key]
-        public int id_propuestaPatrullaje { get; set; }
+    [Key]
+    [Column("id_propuestaPatrullaje")]
+    public int IdPropuestaPatrullaje { get; set; }
 
-        [Required]
-        public int id_ruta { get; set; }
+    [Column("id_ruta")]
+    public int IdRuta { get; set; }
 
-        [Required]
-        public int id_usuario { get; set; }
+    [Column("id_usuario")]
+    public int IdUsuario { get; set; }
 
-        public DateTime ultimaActualizacion { get; set; }
+    [Column("ultimaActualizacion", TypeName = "datetime")]
+    public DateTime UltimaActualizacion { get; set; }
 
-        public DateTime? fechaPatrullaje { get; set; }
+    [Column("fechaPatrullaje", TypeName = "date")]
+    public DateTime? FechaPatrullaje { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string observaciones { get; set; }
+    [Column("observaciones")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string Observaciones { get; set; } = null!;
 
-        [Required]
-        public int riesgoPatrullaje { get; set; }
+    [Column("riesgoPatrullaje")]
+    public int RiesgoPatrullaje { get; set; }
 
-        [Required]
-        public int id_puntoResponsable { get; set; }
+    [Column("id_puntoResponsable")]
+    public int IdPuntoResponsable { get; set; }
 
-        [Required]
-        public int id_estadoPropuesta { get; set; }
+    [Column("id_estadoPropuesta")]
+    public int IdEstadoPropuesta { get; set; }
 
-        [Required]
-        public int id_apoyoPatrullaje { get; set; }
+    [Column("id_apoyoPatrullaje")]
+    public int IdApoyoPatrullaje { get; set; }
 
-        [Required]
-        public int id_clasePatrullaje { get; set; }
+    [Column("id_clasePatrullaje")]
+    public int IdClasePatrullaje { get; set; }
 
-        [StringLength(50)]
-        public string? solicitudOficioAutorizacion { get; set; }
+    [Column("solicitudOficioAutorizacion")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string? SolicitudOficioAutorizacion { get; set; }
 
-        [StringLength(50)]
-        public string? oficioAutorizacion { get; set; }
-    }
+    [Column("oficioAutorizacion")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string? OficioAutorizacion { get; set; }
+
+    [ForeignKey("IdApoyoPatrullaje")]
+    [InverseProperty("Propuestaspatrullajes")]
+    public virtual ApoyoPatrullaje IdApoyoPatrullajeNavigation { get; set; } = null!;
+
+    [ForeignKey("IdClasePatrullaje")]
+    [InverseProperty("Propuestaspatrullajes")]
+    public virtual ClasePatrullaje IdClasePatrullajeNavigation { get; set; } = null!;
+
+    [ForeignKey("IdPuntoResponsable")]
+    [InverseProperty("Propuestaspatrullajes")]
+    public virtual PuntoPatrullaje IdPuntoResponsableNavigation { get; set; } = null!;
+
+    [ForeignKey("IdRuta")]
+    [InverseProperty("Propuestaspatrullajes")]
+    public virtual Ruta IdRutaNavigation { get; set; } = null!;
+
+    [ForeignKey("IdUsuario")]
+    [InverseProperty("Propuestaspatrullajes")]
+    public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
 }

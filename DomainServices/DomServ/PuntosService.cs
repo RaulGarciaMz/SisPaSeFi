@@ -106,18 +106,19 @@ namespace DomainServices.DomServ
         {
             return new PuntoPatrullaje
             {
-                id_punto = p.id_punto,
-                ubicacion = p.ubicacion,
-                coordenadas = p.coordenadas,
-                esInstalacion = p.esInstalacion,
-                id_nivelRiesgo = p.id_nivelRiesgo,
-                id_comandancia = p.id_comandancia,
-                id_ProcesoResponsable = p.id_ProcesoResponsable,
-                id_GerenciaDivision = p.id_GerenciaDivision,
-                bloqueado = p.bloqueado,
-                //latitud =  ,
-                //longitud = ,
-                id_municipio = p.id_municipio,
+                IdPunto = p.id_punto,
+                Ubicacion = p.ubicacion,
+                Coordenadas = p.coordenadas,
+                EsInstalacion = p.esInstalacion,
+                IdNivelRiesgo = p.id_nivelRiesgo,
+                IdComandancia = p.id_comandancia,
+                IdProcesoResponsable = p.id_ProcesoResponsable,
+                IdGerenciaDivision = p.id_GerenciaDivision,
+                Bloqueado = p.bloqueado,
+                //Latitud =  ,
+                //Longitud = ,
+                IdMunicipio = p.id_municipio,
+                
             };
         }
 
@@ -128,21 +129,21 @@ namespace DomainServices.DomServ
         {
             return new PuntoDto
             {
-                id_punto = p.id_punto,
-                ubicacion = p.ubicacion,
-                coordenadas = p.coordenadas,
-                esInstalacion = p.esInstalacion,
-                id_nivelRiesgo = p.id_nivelRiesgo,
-                id_comandancia = p.id_comandancia,
-                id_ProcesoResponsable = p.id_ProcesoResponsable,
-                id_GerenciaDivision = p.id_GerenciaDivision,
-                bloqueado = p.bloqueado,
-                //latitud =  ,
-                //longitud = ,
-                id_municipio = p.id_municipio,
-                id_estado = p.Municipio.id_estado,
-                municipio = p.Municipio.nombre,
-                estado = p.Municipio.Estados.nombre  
+                id_punto = p.IdPunto,
+                ubicacion = p.Ubicacion,
+                coordenadas = p.Coordenadas,
+                esInstalacion = p.EsInstalacion,
+                id_nivelRiesgo = p.IdNivelRiesgo,
+                id_comandancia = p.IdComandancia,
+                id_ProcesoResponsable = p.IdProcesoResponsable,
+                id_GerenciaDivision = p.IdGerenciaDivision,
+                bloqueado = p.Bloqueado,
+                //Latitud =  ,
+                //Longitud = ,
+                id_municipio = p.IdMunicipio,
+                id_estado = p.IdMunicipioNavigation.IdEstado,
+                municipio = p.IdMunicipioNavigation.Nombre,
+                estado = p.IdMunicipioNavigation.IdEstadoNavigation.Nombre  
             };
         }
 

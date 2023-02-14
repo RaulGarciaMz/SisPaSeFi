@@ -1,68 +1,107 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+[Table("usuarios", Schema = "ssf")]
+[Index("UsuarioNom", Name = "usuarios$usuario_nom", IsUnique = true)]
+public partial class Usuario
 {
-    [Table("usuarios", Schema = "ssf")]
-    public class Usuario
-    {
-        [Key]
-        public int id_usuario { get; set; }
+    [Key]
+    [Column("id_usuario")]
+    public int IdUsuario { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string nombre { get; set; }
+    [Column("nombre")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string Nombre { get; set; } = null!;
 
-        [Required]
-        [StringLength(50)]
-        public string apellido1 { get; set; }
+    [Column("apellido1")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string Apellido1 { get; set; } = null!;
 
-        [Required]
-        [StringLength(50)]
-        public string apellido2 { get; set; }
+    [Column("apellido2")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string Apellido2 { get; set; } = null!;
 
-        [Required]
-        [StringLength(15)]
-        public string usuario_nom { get; set; }
+    [Column("usuario_nom")]
+    [StringLength(15)]
+    [Unicode(false)]
+    public string UsuarioNom { get; set; } = null!;
 
-        [StringLength(20)]
-        public string? cel { get; set; }
+    [Column("cel")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string? Cel { get; set; }
 
-        [StringLength(32)]
-        public string? pass { get; set; }
+    [Column("pass")]
+    [StringLength(32)]
+    [Unicode(false)]
+    public string? Pass { get; set; }
 
-        public int? configurador { get; set; }
+    [Column("configurador")]
+    public int? Configurador { get; set; }
 
-        public int? bloqueado { get; set; }
+    [Column("bloqueado")]
+    public int? Bloqueado { get; set; }
 
-        public int? AceptacionAvisoLegal { get; set; }
+    public int? AceptacionAvisoLegal { get; set; }
 
-        public int? intentos { get; set; }
+    [Column("intentos")]
+    public int? Intentos { get; set; }
 
-        public int? NotificarAcceso { get; set; }
+    public int? NotificarAcceso { get; set; }
 
-        public DateTime? EstampaTiempoUltimoAcceso { get; set; }
+    public DateTime? EstampaTiempoUltimoAcceso { get; set; }
 
-        public DateTime? EstampaTiempoAceptacionUso { get; set; }
+    public DateTime? EstampaTiempoAceptacionUso { get; set; }
 
-        [StringLength(100)]
-        public string? CorreoElectronico { get; set; }
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? CorreoElectronico { get; set; }
 
-        [Required]
-        public int regionSSF { get; set; }
+    [Column("regionSSF")]
+    public int RegionSsf { get; set; }
 
-        [Required]
-        public int tiempoEspera { get; set; }
+    [Column("tiempoEspera")]
+    public int TiempoEspera { get; set; }
 
-        [StringLength(32)]
-        public string? passTemp { get; set; }
+    [Column("passTemp")]
+    [StringLength(32)]
+    [Unicode(false)]
+    public string? PassTemp { get; set; }
 
-        [Required]
-        public int DesbloquearRegistros { get; set; }
-    }
+    public int DesbloquearRegistros { get; set; }
+
+    [InverseProperty("IdUsuarioNavigation")]
+    public virtual ICollection<BitacoraSeguimientoIncidencia> Bitacoraseguimientoincidencia { get; } = new List<BitacoraSeguimientoIncidencia>();
+
+    [InverseProperty("IdUsuarioNavigation")]
+    public virtual ICollection<BitacoraSeguimientoIncidenciaPunto> Bitacoraseguimientoincidenciapuntos { get; } = new List<BitacoraSeguimientoIncidenciaPunto>();
+
+    [InverseProperty("IdUsuarioNavigation")]
+    public virtual ICollection<DocumentoPatrullaje> Documentospatrullajes { get; } = new List<DocumentoPatrullaje>();
+
+    [InverseProperty("IdUsuarioNavigation")]
+    public virtual ICollection<NotaInformativa> Notainformativas { get; } = new List<NotaInformativa>();
+
+    [InverseProperty("IdUsuarioNavigation")]
+    public virtual ICollection<ProgramaPatrullaje> Programapatrullajes { get; } = new List<ProgramaPatrullaje>();
+
+    [InverseProperty("IdUsuarioNavigation")]
+    public virtual ICollection<PropuestaPatrullaje> Propuestaspatrullajes { get; } = new List<PropuestaPatrullaje>();
+
+    [InverseProperty("IdUsuarioNavigation")]
+    public virtual ICollection<Sesion> Sesiones { get; } = new List<Sesion>();
+
+    [InverseProperty("IdUsuarioNavigation")]
+    public virtual ICollection<TarjetaInformativa> Tarjetainformativas { get; } = new List<TarjetaInformativa>();
+
+    [InverseProperty("IdUsuarioVehiculoNavigation")]
+    public virtual ICollection<UsoVehiculo> Usovehiculos { get; } = new List<UsoVehiculo>();
 }

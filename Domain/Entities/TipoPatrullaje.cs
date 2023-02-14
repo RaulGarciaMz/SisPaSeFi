@@ -2,20 +2,25 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+[Table("tipopatrullaje", Schema = "ssf")]
+public partial class TipoPatrullaje
 {
-    [Table("tipopatrullaje", Schema = "ssf")]
-    public class TipoPatrullaje
-    {
-        [Key]
-        public int id_tipoPatrullaje { get; set; }
+    [Key]
+    [Column("id_tipoPatrullaje")]
+    public int IdTipoPatrullaje { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string descripcion { get; set; }
-    }
+    [Column("descripcion")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string Descripcion { get; set; } = null!;
+
+    [InverseProperty("IdTipoPatrullajeNavigation")]
+    public virtual ICollection<Ruta> Ruta { get; } = new List<Ruta>();
+
+    [InverseProperty("IdTipoPatrullajeNavigation")]
+    public virtual ICollection<Vehiculo> Vehiculos { get; } = new List<Vehiculo>();
 }

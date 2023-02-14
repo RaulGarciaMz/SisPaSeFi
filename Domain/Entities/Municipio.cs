@@ -2,35 +2,43 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+[Table("municipios", Schema = "ssf")]
+[Index("IdEstado", Name = "id_estado")]
+public partial class Municipio
 {
-    [Table("municipios", Schema = "ssf")]
-    public class Municipio
-    {
-        [Key]
-        public int id_municipio { get; set; }     
+    [Key]
+    [Column("id_municipio")]
+    public int IdMunicipio { get; set; }
 
-        [Required]
-        [StringLength(3)]
-        public string clave { get; set; }
+    [Column("id_estado")]
+    public int IdEstado { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string nombre { get; set; }
+    [Column("clave")]
+    [StringLength(3)]
+    [Unicode(false)]
+    public string Clave { get; set; } = null!;
 
-        [Required]
-        [StringLength(4)]
-        public string nombre_corto { get; set; }
+    [Column("nombre")]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string Nombre { get; set; } = null!;
 
-        List<PuntoPatrullaje> Puntos { get; set; }
+    [Column("nombre_corto")]
+    [StringLength(4)]
+    [Unicode(false)]
+    public string NombreCorto { get; set; } = null!;
 
-        public int id_estado { get; set; }
+    [InverseProperty("IdMunicipioNavigation")]
+    public virtual ICollection<Estructura> Estructuras { get; } = new List<Estructura>();
 
-        [ForeignKey("id_estado")]
-        public EstadosPais? Estados { get; set; }
-    }
+    [ForeignKey("IdEstado")]
+    [InverseProperty("Municipios")]
+    public virtual EstadoPais IdEstadoNavigation { get; set; } = null!;
+
+    [InverseProperty("IdMunicipioNavigation")]
+    public virtual ICollection<PuntoPatrullaje> Puntospatrullajes { get; } = new List<PuntoPatrullaje>();
 }

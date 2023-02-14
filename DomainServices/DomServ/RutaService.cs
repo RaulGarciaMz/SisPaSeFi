@@ -306,7 +306,7 @@ namespace DomainServices.DomServ
             }
             else
             {
-                return u.regionSSF;
+                return u.RegionSsf;
             }
         }
 
@@ -352,8 +352,8 @@ namespace DomainServices.DomServ
             {
                 var iti = new Itinerario()
                 {
-                    id_punto = reco.IdPunto,
-                    posicion = reco.Posicion
+                    IdPunto = reco.IdPunto,
+                    Posicion = reco.Posicion
                 };
                 itinerarios.Add(iti);
             }
@@ -368,14 +368,14 @@ namespace DomainServices.DomServ
         {
             return new Ruta()
             {
-                clave = r.Clave,
-                regionMilitarSDN = r.RegionMilitarSDN,
-                regionSSF = r.RegionSSF,
-                id_tipoPatrullaje = r.IdTipoPatrullaje,
-                bloqueado = r.Bloqueado,
-                zonaMilitarSDN = r.ZonaMilitarSDN,
-                observaciones = r.Observaciones,
-                habilitado = r.Habilitado
+                Clave = r.Clave,
+                RegionMilitarSdn = r.RegionMilitarSDN,
+                RegionSsf = r.RegionSSF,
+                IdTipoPatrullaje = r.IdTipoPatrullaje,
+                Bloqueado = r.Bloqueado,
+                ZonaMilitarSdn = r.ZonaMilitarSDN,
+                Observaciones = r.Observaciones,
+                Habilitado = r.Habilitado
             };
         }
     }

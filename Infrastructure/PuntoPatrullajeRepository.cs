@@ -28,8 +28,8 @@ namespace SqlServerAdapter
         public List<PuntoPatrullaje> ObtenerPorEstado(int id_estado)
         {
             return _patrullajeContext.puntospatrullaje
-                .Include(m => m.Municipio.Estados)
-                .Where(c => c.Municipio.id_estado == id_estado)
+                .Include(m => m.IdMunicipioNavigation.IdEstadoNavigation)
+                .Where(c => c.IdMunicipioNavigation.IdEstado == id_estado)
                 .ToList();
         }
 
@@ -39,8 +39,8 @@ namespace SqlServerAdapter
         public List<PuntoPatrullaje> ObtenerPorUbicacion(string ubicacion)
         {
             return _patrullajeContext.puntospatrullaje
-                .Include(m => m.Municipio.Estados)
-                .Where(e => e.ubicacion == ubicacion)
+                .Include(m => m.IdMunicipioNavigation.IdEstadoNavigation)
+                .Where(e => e.Ubicacion == ubicacion)
                 .ToList();
         }
 
@@ -68,7 +68,7 @@ namespace SqlServerAdapter
         public void Delete(int id)
         {
             var pp = _patrullajeContext.puntospatrullaje
-                .Where(x => x.id_punto == id && x.bloqueado == 0)
+                .Where(x => x.IdPunto == id && x.Bloqueado == 0)
                 .FirstOrDefault();
 
             if (pp != null)
@@ -80,7 +80,7 @@ namespace SqlServerAdapter
 
         public int ObtenerItinerariosPorPunto(int id)
         {
-            return _patrullajeContext.Itinerarios.Where(x => x.id_punto == id).Count();
+            return _patrullajeContext.Itinerarios.Where(x => x.IdPunto == id).Count();
         }
     }
 

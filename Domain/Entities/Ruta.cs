@@ -2,54 +2,68 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+[Table("rutas", Schema = "ssf")]
+[Index("IdTipoPatrullaje", Name = "id_tipoPatrullaje")]
+public partial class Ruta
 {
-    [Table("rutas", Schema = "ssf")]
-    public class Ruta
-    {
-        [Key]
-        public int id_ruta { get; set; }
+    [Key]
+    [Column("id_ruta")]
+    public int IdRuta { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string clave { get; set; }
+    [Column("clave")]
+    [StringLength(50)]
+    [Unicode(false)]
+    public string Clave { get; set; } = null!;
 
-        [Required]
-        [StringLength(3)]
-        public string regionMilitarSDN { get; set; }
+    [Column("regionMilitarSDN")]
+    [StringLength(3)]
+    [Unicode(false)]
+    public string RegionMilitarSdn { get; set; } = null!;
 
-        [Required]
-        [StringLength(3)]
-        public string regionSSF { get; set; }
+    [Column("regionSSF")]
+    [StringLength(3)]
+    [Unicode(false)]
+    public string RegionSsf { get; set; } = null!;
 
-        [Required]
-        public int id_tipoPatrullaje { get; set; }
+    [Column("id_tipoPatrullaje")]
+    public int IdTipoPatrullaje { get; set; }
 
-        [Required]
-        public int bloqueado { get; set; }
+    [Column("bloqueado")]
+    public int Bloqueado { get; set; }
 
-        [Required]
-        public int zonaMilitarSDN { get; set; }
+    [Column("zonaMilitarSDN")]
+    public int ZonaMilitarSdn { get; set; }
 
-        [StringLength(100)]
-        public string observaciones { get; set; }
+    [StringLength(100)]
+    [Unicode(false)]
+    public string? Observaciones { get; set; }
 
-        [Required]
-        public int consecutivoRegionMilitarSDN { get; set; }
+    [Column("consecutivoRegionMilitarSDN")]
+    public int ConsecutivoRegionMilitarSdn { get; set; }
 
-        [Required]
-        public int totalRutasRegionMilitarSDN { get; set; }
-        public DateTime ultimaActualizacion { get; set; }
+    [Column("totalRutasRegionMilitarSDN")]
+    public int TotalRutasRegionMilitarSdn { get; set; }
 
-        [Required]
-        public int habilitado { get; set; }
+    [Column("ultimaActualizacion", TypeName = "datetime")]
+    public DateTime UltimaActualizacion { get; set; }
 
-    }
-    
+    [Column("habilitado")]
+    public int Habilitado { get; set; }
+
+    [ForeignKey("IdTipoPatrullaje")]
+    [InverseProperty("Ruta")]
+    public virtual TipoPatrullaje IdTipoPatrullajeNavigation { get; set; } = null!;
+
+    [InverseProperty("IdRutaNavigation")]
+    public virtual ICollection<Itinerario> Itinerarios { get; } = new List<Itinerario>();
+
+    [InverseProperty("IdRutaNavigation")]
+    public virtual ICollection<ProgramaPatrullaje> Programapatrullajes { get; } = new List<ProgramaPatrullaje>();
+
+    [InverseProperty("IdRutaNavigation")]
+    public virtual ICollection<PropuestaPatrullaje> Propuestaspatrullajes { get; } = new List<PropuestaPatrullaje>();
 }
-
-
