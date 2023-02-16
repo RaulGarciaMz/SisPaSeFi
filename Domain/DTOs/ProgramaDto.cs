@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,4 +38,28 @@ namespace Domain.DTOs
         public List<string> lstPropuestasPatrullajesFechas;
         public int intApoyoPatrullaje;
     }
+
+    public class PatrullajeDto
+    {
+        public int IdPrograma;
+        public int IdRuta;
+        public string FechaPatrullaje;
+        public string Inicio;
+        public int IdPuntoResponsable;
+        public string Clave;
+        public int RegionMilitarSDN;
+        public int RegionSSF;
+        public string ObservacionesRuta;
+        public string DescripcionEstadoPatrullaje;
+        public string ObservacionesPrograma;
+        public string SolicitudOficioComision;
+        public string OficioComision;
+        public string DescripcionNivelRiesgo;
+        public string Itinerario;
+        public string UltimaActualizacion;
+        public int IdUsuario;
+        public int UsuarioResponsablePatrullaje;        
+        public string FechaTermino;
+    }
+
 }
