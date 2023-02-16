@@ -23,13 +23,13 @@ namespace SqlServerAdapter
         {
             _programaContext = programaContext; 
         }
-
+        
         //Caso 0 Extraordinario  --Propuestas extraordinarias
         public List<PatrullajeVista> ObtenerPropuestasExtraordinariasPorAnioMesDia(string tipo, int region, int anio, int mes, int dia)
         {
-            string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.id_puntoresponsable, b.clave,
-                   b.regionmilitarsdn,b.regionssf,b.observaciones, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,
-                   e.fechatermino,
+            string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.id_puntoresponsable, 
+                   a.ultimaactualizacion,a.id_usuario, b.clave, b.regionmilitarsdn,b.regionssf, b.observaciones observacionesruta, 
+                   d.descripcionnivel, e.fechatermino, 0 id_usuarioresponsablepatrullaje, '' observaciones, 0 riesgopatrullaje,
                    COALESCE(a.solicitudoficioautorizacion, '') solicitudoficiocomision,
                    COALESCE(a.oficioautorizacion, '') as oficiocomision,
                    COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -74,10 +74,11 @@ namespace SqlServerAdapter
         //Caso 5 Ordinario  - Propuestas pendientes de autorizar
         public List<PatrullajeVista> ObtenerPropuestasPendientesPorAutorizarPorFiltro(string tipo, int region, int anio, int mes, string clase)
         {
-            string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.id_puntoresponsable, b.clave,
-                   b.regionmilitarsdn,b.regionssf,b.observaciones, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,
+            string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.fechapatrullaje fechatermino, a.id_puntoresponsable, b.clave,
+                   b.regionmilitarsdn,b.regionssf,b.observaciones observacionesruta, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,0 id_usuarioresponsablepatrullaje,
+                   '' observaciones, 0 riesgopatrullaje,
                    COALESCE(a.solicitudoficioautorizacion, '') solicitudoficiocomision,
-                   COALESCE(a.oficioautorizacion, '') as oficiocomision,
+                   COALESCE(a.oficioautorizacion, '') as oficiocomision, 
                    COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
                              FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
                              WHERE f.id_ruta = a.id_ruta),'') as itinerario,
@@ -122,8 +123,8 @@ namespace SqlServerAdapter
         public List<PatrullajeVista> ObtenerPropuestasExtraordinariasPorFiltro(string tipo, int region, int anio, int mes, string clase)
         {
             string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.id_puntoresponsable, b.clave,
-                   b.regionmilitarsdn,b.regionssf,b.observaciones, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,
-                   e.fechatermino,
+                   b.regionmilitarsdn,b.regionssf,b.observaciones observacionesruta, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,
+                   e.fechatermino, 0 id_usuarioresponsablepatrullaje, 0 riesgopatrullaje, '' observaciones,
                    COALESCE(a.solicitudoficioautorizacion, '') solicitudoficiocomision,
                    COALESCE(a.oficioautorizacion, '') as oficiocomision,
                    COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -174,8 +175,9 @@ namespace SqlServerAdapter
             // 7  - paramEstado='Autorizada'
             // 8  - paramEstado='Rechazada'
             // 9  - paramEstado='Aprobada por comandancia regional'
-            string sqlQuery = @"SELECT a.id_propuestapatrullaje id,a.id_ruta,a.fechapatrullaje,a.id_puntoresponsable,b.clave,
-                   b.regionmilitarsdn,b.regionssf,b.observaciones,a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,
+            string sqlQuery = @"SELECT a.id_propuestapatrullaje id,a.id_ruta,a.fechapatrullaje,a.fechapatrullaje fechatermino,a.id_puntoresponsable,b.clave,
+                   b.regionmilitarsdn,b.regionssf,b.observaciones observacionesruta,a.ultimaactualizacion,a.id_usuario,d.descripcionnivel, 
+                   0 id_usuarioresponsablepatrullaje, '' observaciones, 0 riesgopatrullaje,
                    COALESCE(a.solicitudoficioautorizacion, '') solicitudoficiocomision,
                    COALESCE(a.oficioautorizacion, '') as oficiocomision,
                    COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -228,8 +230,8 @@ namespace SqlServerAdapter
             // 8 -- 'Rechazada'
             // 9 -- 'Aprobada por comandancia regional'
             string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.id_puntoresponsable, b.clave,
-                   b.regionmilitarsdn,b.regionssf,b.observaciones, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,
-                   e.fechatermino,
+                   b.regionmilitarsdn,b.regionssf,b.observaciones observacionesruta, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,
+                   e.fechatermino,0 id_usuarioresponsablepatrullaje, '' observaciones, 0 riesgopatrullaje,
                    COALESCE(a.solicitudoficioautorizacion, '') solicitudoficiocomision,
                    COALESCE(a.oficioautorizacion, '') as oficiocomision,
                    COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -278,7 +280,7 @@ namespace SqlServerAdapter
         //Caso 1 Programas EN PROGRESO Periodo 1 - Un día
         public List<PatrullajeVista> ObtenerProgramasEnProgresoPorDia(string tipo, int region, int anio, int mes, int dia)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -312,7 +314,7 @@ namespace SqlServerAdapter
         //Caso 1 Programas EN PROGRESO Periodo 2 - Un mes
         public List<PatrullajeVista> ObtenerProgramasEnProgresoPorMes(string tipo, int region, int anio, int mes)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -345,7 +347,7 @@ namespace SqlServerAdapter
         //Caso 1 Programas EN PROGRESO Periodo 3 - todos
         public List<PatrullajeVista> ObtenerProgramasEnProgreso(string tipo, int region)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -375,7 +377,7 @@ namespace SqlServerAdapter
         //Caso 2 Programas CONCLUIDOS Periodo 1 - Un día
         public List<PatrullajeVista> ObtenerProgramasConcluidosPorDia(string tipo, int region, int anio, int mes, int dia)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -409,7 +411,7 @@ namespace SqlServerAdapter
         //Caso 2 Programas CONCLUIDOS Periodo 2 - Un mes
         public List<PatrullajeVista> ObtenerProgramasConcluidosPorMes(string tipo, int region, int anio, int mes)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -442,7 +444,7 @@ namespace SqlServerAdapter
         //Caso 2 Programas CONCLUIDOS Periodo 3 - todos
         public List<PatrullajeVista> ObtenerProgramasConcluidos(string tipo, int region)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -472,7 +474,7 @@ namespace SqlServerAdapter
         //Caso 3 Programas CANCELADOS Periodo 1 - Un día
         public List<PatrullajeVista> ObtenerProgramasCanceladosPorDia(string tipo, int region, int anio, int mes, int dia)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -488,7 +490,7 @@ namespace SqlServerAdapter
                                 WHERE e.descripcion= @pTipo 
                                 AND b.regionssf= @pRegion 
                                 AND a.fechapatrullaje= DATEFROMPARTS (@pAnio, @pMes, @pDia)        
-                                AND a.id_estadopatrullaje = (SELECT id_estadopatrullaje FROM ssf.estadopatrullaje WHERE descripcionestadopatrullaje like 'Cancel%') 
+                                AND a.id_estadopatrullaje IN ((SELECT id_estadopatrullaje FROM ssf.estadopatrullaje WHERE descripcionestadopatrullaje like 'Cancel%') )
                                 ORDER BY a.fechapatrullaje,a.inicio";
 
             object[] parametros = new object[]
@@ -506,7 +508,7 @@ namespace SqlServerAdapter
         //Caso 3 Programas CANCELADOS Periodo 2 - Un mes
         public List<PatrullajeVista> ObtenerProgramasCanceladosPorMes(string tipo, int region, int anio, int mes)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -522,7 +524,7 @@ namespace SqlServerAdapter
                                 WHERE e.descripcion= @pTipo 
                                 AND b.regionssf= @pRegion 
                                 AND YEAR(a.fechapatrullaje) = @pAnio AND MONTH(a.fechapatrullaje) = @pMes
-                                AND a.id_estadopatrullaje = (SELECT id_estadopatrullaje FROM ssf.estadopatrullaje WHERE descripcionestadopatrullaje like 'Cancel%') 
+                                AND a.id_estadopatrullaje IN ((SELECT id_estadopatrullaje FROM ssf.estadopatrullaje WHERE descripcionestadopatrullaje like 'Cancel%') )
                                 ORDER BY a.fechapatrullaje,a.inicio";
 
             object[] parametros = new object[]
@@ -539,7 +541,7 @@ namespace SqlServerAdapter
         //Caso 3 Programas CANCELADOS Periodo 3 - todos
         public List<PatrullajeVista> ObtenerProgramasCancelados(string tipo, int region)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -554,7 +556,7 @@ namespace SqlServerAdapter
                                 JOIN ssf.tipopatrullaje e ON b.id_tipopatrullaje=e.id_tipopatrullaje
                                 WHERE e.descripcion= @pTipo 
                                 AND b.regionssf= @pRegion                                 
-                                AND a.id_estadopatrullaje = (SELECT id_estadopatrullaje FROM ssf.estadopatrullaje WHERE descripcionestadopatrullaje like 'Cancel%') 
+                                AND a.id_estadopatrullaje IN ((SELECT id_estadopatrullaje FROM ssf.estadopatrullaje WHERE descripcionestadopatrullaje like 'Cancel%') )
                                 ORDER BY a.fechapatrullaje,a.inicio";
 
             object[] parametros = new object[]
@@ -569,7 +571,7 @@ namespace SqlServerAdapter
         //Caso 4 Programas Periodo 1 - Un día
         public List<PatrullajeVista> ObtenerProgramasPorDia(string tipo, int region, int anio, int mes, int dia)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -602,7 +604,7 @@ namespace SqlServerAdapter
         //Caso 4 Programas Periodo 2 - Un mes  --- Aplica también para el Caso 0 Ordinario
         public List<PatrullajeVista> ObtenerProgramasPorMes(string tipo, int region, int anio, int mes)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -634,7 +636,7 @@ namespace SqlServerAdapter
         //Caso 4 Programas Periodo 3 - Todos
         public List<PatrullajeVista> ObtenerProgramas(string tipo, int region)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje,a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -658,6 +660,28 @@ namespace SqlServerAdapter
              };
 
             return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+        }
+
+
+        public List<PatrullajeVista> ObtenerProgramasSinParametros(string tipo, int region)
+        {
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+                                       b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
+                                       COALESCE(a.oficiocomision,'') oficiocomision,
+                                       COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
+                                                 FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
+                                                 WHERE f.id_ruta = a.id_ruta),'') as itinerario
+                                FROM ssf.programapatrullajes a
+                                JOIN ssf.rutas b ON a.id_ruta=b.id_ruta
+                                JOIN ssf.estadopatrullaje c ON a.id_estadopatrullaje=c.id_estadopatrullaje
+                                JOIN ssf.niveles d ON a.riesgopatrullaje=d.id_nivel
+                                JOIN ssf.tipopatrullaje e ON b.id_tipopatrullaje=e.id_tipopatrullaje                                
+                                ORDER BY a.fechapatrullaje,a.inicio";
+
+            object[] parametros = new object[] { };
+            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery,parametros).ToList();
         }
     }
 }

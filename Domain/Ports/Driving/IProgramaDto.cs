@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Domain.Ports.Driving
     public interface IProgramaDtoQuery
     {
 
-        List<PatrullajeDto> ObtenerPorFiltro(string tipo, int region, string clase,int anio, int mes, int dia, int opcion=0, int periodo=1);
+        List<PatrullajeDto> ObtenerPorFiltro(string tipo, int region, string clase,int anio, int mes, int dia=1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia);
+      
     }
 }

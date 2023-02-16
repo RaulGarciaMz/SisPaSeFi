@@ -20,18 +20,16 @@ namespace DomainServices.DomServ
             _repo= repo;
         }
 
-        public List<PatrullajeDto> ObtenerPorFiltro(string tipo, int region, string clase, int anio, int mes, int dia, int opcion = 0, int periodo = 1)
+        public List<PatrullajeDto> ObtenerPorFiltro(string tipo, int region, string clase, int anio, int mes, int dia = 1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia)
         {
-            var laOpcion = (FiltroProgramaOpcion)opcion;
-            var elPeriodo = (PeriodoOpcion)periodo;
             string estadoPropuesta;
 
             List<PatrullajeVista> patrullajes = new List<PatrullajeVista>();
             List<PatrullajeDto> patrullajesDto = new List<PatrullajeDto>();
 
-            switch (laOpcion) {
+            switch (opcion) {
 
-                case FiltroProgramaOpcion.Extraordinarios:
+                case FiltroProgramaOpcion.ExtraordinariosyProgramados:
 
                     if (clase == "EXTRAORDINARIO") 
                     {
@@ -42,8 +40,8 @@ namespace DomainServices.DomServ
                         patrullajes = _repo.ObtenerProgramasPorMes(tipo, region, anio, mes);
                     }
                     break;
-                case FiltroProgramaOpcion.PatrullajesEnProceso:
-                    switch (elPeriodo) {
+                case FiltroProgramaOpcion.PatrullajesEnProgreso:
+                    switch (periodo) {
                         case PeriodoOpcion.UnDia:
                             patrullajes = _repo.ObtenerProgramasEnProgresoPorDia(tipo, region, anio, mes,dia);
                             break;
@@ -56,7 +54,7 @@ namespace DomainServices.DomServ
                     }
                     break;
                 case FiltroProgramaOpcion.PatrullajesConcluidos:
-                    switch (elPeriodo)
+                    switch (periodo)
                     {
                         case PeriodoOpcion.UnDia:
                             patrullajes = _repo.ObtenerProgramasConcluidosPorDia(tipo, region, anio, mes, dia);
@@ -70,7 +68,7 @@ namespace DomainServices.DomServ
                     }
                     break;
                 case FiltroProgramaOpcion.PatrullajesCancelados:
-                    switch (elPeriodo)
+                    switch (periodo)
                     {
                         case PeriodoOpcion.UnDia:
                             patrullajes = _repo.ObtenerProgramasCanceladosPorDia(tipo, region, anio, mes, dia);
@@ -84,7 +82,7 @@ namespace DomainServices.DomServ
                     }
                     break;
                 case FiltroProgramaOpcion.PatrullajeTodos:
-                    switch (elPeriodo)
+                    switch (periodo)
                     {
                         case PeriodoOpcion.UnDia:
                             patrullajes = _repo.ObtenerProgramasPorDia(tipo, region, anio, mes, dia);
@@ -155,11 +153,6 @@ namespace DomainServices.DomServ
 
             foreach (PatrullajeVista p in patrullajes)
             {
-                if (clase != "EXTRAORDINARIO")
-                {
-                    p.fechatermino = p.fechapatrullaje;
-                }
-
                 var pDto = ConvierteDominioToDto(p);
                 patrullajesDto.Add(pDto);
             }
@@ -183,12 +176,12 @@ namespace DomainServices.DomServ
                 ObservacionesPrograma= p.observaciones,
                 ObservacionesRuta= p.observacionesruta,
                 OficioComision=p.oficiocomision,
-                RegionMilitarSDN=p.regionmilitarsdn,
-                RegionSSF=p.regionssf,
+                RegionMilitarSDN= Int32.Parse(p.regionmilitarsdn),
+                RegionSSF= Int32.Parse(p.regionssf),
                 SolicitudOficioComision=p.solicitudoficiocomision,
                 UltimaActualizacion= p.ultimaactualizacion.ToString("yyyy-MM-dd"),
                 UsuarioResponsablePatrullaje=p.id_usuarioresponsablepatrullaje,
-                Inicio= p.inicio.ToString("t")
+                Inicio= p.inicio.ToString()
             };
         }
     }
