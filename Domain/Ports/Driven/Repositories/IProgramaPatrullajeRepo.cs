@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Ports.Driven.Repositories
 {
-    public interface IProgramaPatrullajeRepo: IProgramaQuery
+    public interface IProgramaPatrullajeRepo: IProgramaCommand,IProgramaQuery
     {
     }
 }

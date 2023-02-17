@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.Entities.Vistas;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,14 @@ namespace Domain.Ports.Driving
 {
     public interface IProgramaCommand
     {
-        void Agrega(ProgramaPatrullaje pp);
-        void Agrega2(ProgramaPatrullaje pp);
-        void Update(ProgramaPatrullaje pp);
-        void Update2(ProgramaPatrullaje pp);
-        void Delete(int id);
-        void Delete2(int id);
+        void AgregaProgramaFechasMultiples(ProgramaPatrullaje pp);
+        void AgregaPropuestasParaPrograma(ProgramaPatrullaje pp);
+        void AgregaPropuestasFechasMultiples(ProgramaPatrullaje pp);
+        void AgregaPropuestaExtraordinaria(ProgramaPatrullaje pp);
+
+        void ActualizaPrograma();
+        void ActualizaPropuestasDelPrograma();
+        void DeletePropuesta(int id);
     }
 
     public interface IProgramaQuery

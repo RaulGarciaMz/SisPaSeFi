@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SqlServerAdapter
 {
@@ -662,26 +663,273 @@ namespace SqlServerAdapter
             return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
         }
 
-
-        public List<PatrullajeVista> ObtenerProgramasSinParametros(string tipo, int region)
+        public void AgregaProgramaFechasMultiples(ProgramaPatrullaje pp, List<DateTime> fechas)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
-                                       b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
-                                       COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
-                                       COALESCE(a.oficiocomision,'') oficiocomision,
-                                       COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
-                                                 FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
-                                                 WHERE f.id_ruta = a.id_ruta),'') as itinerario
-                                FROM ssf.programapatrullajes a
-                                JOIN ssf.rutas b ON a.id_ruta=b.id_ruta
-                                JOIN ssf.estadopatrullaje c ON a.id_estadopatrullaje=c.id_estadopatrullaje
-                                JOIN ssf.niveles d ON a.riesgopatrullaje=d.id_nivel
-                                JOIN ssf.tipopatrullaje e ON b.id_tipopatrullaje=e.id_tipopatrullaje                                
-                                ORDER BY a.fechapatrullaje,a.inicio";
+            var lstProgramas = new List<ProgramaPatrullaje>();
+            var lstPropuestas = new List<PropuestaPatrullaje>();
 
-            object[] parametros = new object[] { };
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery,parametros).ToList();
+            string edoAutorizada = "Autorizada";
+            var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
+
+            var propuestas = _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == pp.IdPropuestaPatrullaje).ToList();
+
+            foreach ( var prop in propuestas ) 
+            {
+                prop.IdEstadoPropuesta = idEdoAutorizada[0];
+            }
+
+            foreach (var fecha in fechas)
+            {
+                var programa = new ProgramaPatrullaje
+                {
+                    IdRuta = pp.IdRuta,
+                    IdUsuario = pp.IdUsuario,
+                    IdPuntoResponsable = pp.IdPuntoResponsable,
+                    IdPropuestaPatrullaje = pp.IdPropuestaPatrullaje,
+                    IdRutaOriginal = pp.IdRutaOriginal,
+                    RiesgoPatrullaje = pp.RiesgoPatrullaje,
+                    IdApoyoPatrullaje = pp.IdApoyoPatrullaje,
+                    UltimaActualizacion = pp.UltimaActualizacion,
+                    FechaPatrullaje = pp.FechaPatrullaje
+                };
+
+                lstProgramas.Add(programa);
+            }
+
+            _programaContext.ProgramasPatrullajes.AddRange(lstProgramas);
+            _programaContext.PropuestasPatrullajes.UpdateRange(propuestas);
+            _programaContext.SaveChanges();
+        }
+
+        public void AgregaPropuestasFechasMultiples(ProgramaPatrullaje pp, List<DateTime> fechas, string clase)
+        {
+            string edoCreada = "Creada";
+            var idEdoCreada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoCreada).Select(x => x.IdEstadoPropuesta).ToList();
+            var idClasePatrullaje = _programaContext.ClasesPatrullaje.Where(x => x.Descripcion == clase).Select(x => x.IdClasePatrullaje).ToList();
+
+            var propuestas = new List<PropuestaPatrullaje>();
+
+            foreach (var fecha in fechas)
+            {
+                var numRutas =_programaContext.PropuestasPatrullajes.Where(x => x.IdRuta == pp.IdRuta && x.FechaPatrullaje == pp.FechaPatrullaje).Count();   
+
+                if (numRutas == 0)
+                {
+                    var prop = new PropuestaPatrullaje() 
+                    {
+                    UltimaActualizacion = pp.UltimaActualizacion,
+                    IdRuta = pp.IdRuta,
+                    FechaPatrullaje = pp.FechaPatrullaje,
+                    IdUsuario = pp.IdUsuario,
+                    IdPuntoResponsable = pp.IdPuntoResponsable,
+                    Observaciones = pp.Observaciones,
+                    IdEstadoPropuesta = idEdoCreada[0],
+                    RiesgoPatrullaje = pp.RiesgoPatrullaje,
+                    IdClasePatrullaje = idClasePatrullaje[0],
+                    IdApoyoPatrullaje = pp.IdApoyoPatrullaje
+                    };
+
+                    propuestas.Add(prop);
+                }
+            }
+
+            if (propuestas.Count > 0) 
+            {
+                _programaContext.PropuestasPatrullajes.AddRange(propuestas);
+                _programaContext.SaveChanges();
+            }
+        }
+
+        //OJO Este está repetido en un update
+        public void AgregaProgramasActualizaPropuestas(List<ProgramaPatrullaje> programas)
+        {
+            string edoAutorizada = "Autorizada";
+            var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
+
+            var idPropuestas = programas.Select(x => x.IdPropuestaPatrullaje).ToList();
+
+            var aActualizar = (from c in _programaContext.PropuestasPatrullajes
+                               where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
+                               select c).ToList();
+
+            foreach (var item in aActualizar)
+            {
+                item.IdEstadoPropuesta = idEdoAutorizada[0];
+            }
+
+            _programaContext.ProgramasPatrullajes.AddRange(programas);
+            _programaContext.PropuestasPatrullajes.UpdateRange(aActualizar);
+            _programaContext.SaveChanges();
+        }
+
+
+
+        public void AgregaPropuestaExtraordinaria(ProgramaPatrullaje pp)
+        {
+
+            /*strInstruccionSQL = "SELECT * from propuestaspatrullajes where id_ruta=" & ProgramaPatrullaje.intIdRuta & " AND fechapatrullaje='" & ProgramaPatrullaje.strFechaPatrullaje & "'"
+                                    dataResultado = fnConsultaDatosMySQL(strInstruccionSQL)
+                                    If dataResultado.Rows.Count = 0 Then
+                                        'La ruta aún no está registrada en BD como propuesta de patrullaje
+                                        strInstruccionSQL = "INSERT INTO propuestaspatrullajes (ultimaactualizacion, id_ruta,fechapatrullaje,id_usuario,id_puntoresponsable,observaciones
+                                                                                        ,id_estadopropuesta,riesgopatrullaje,id_clasepatrullaje,id_apoyopatrullaje)
+                                                    VALUES(NOW(), " & ProgramaPatrullaje.intIdRuta & ", '" & ProgramaPatrullaje.strFechaPatrullaje & "', " & intIdUsuario & "
+                                                            , " & ProgramaPatrullaje.intIdPuntoResponsable & ", '" & ProgramaPatrullaje.strObservacionesPrograma & "'
+                                                            , (SELECT id_estadopropuesta FROM estadopropuesta WHERE descripcionestadopropuesta = 'Creada')
+                                                            ," & ProgramaPatrullaje.intIdRiesgoPatrullaje & "
+                                                            ,(SELECT id_clasepatrullaje FROM clasepatrullaje WHERE descripcion = '" & clase & "')
+                                                            ," & ProgramaPatrullaje.intApoyoPatrullaje & ")"
+                                        If fnActualizaDatosMySQL(strInstruccionSQL) > 0 Then
+                                            'Insertar el resto de datos en la tabla propuestaspatrullajescomplementosssf, propuestaspatrullajesvehiculos y propuestaspatrullajeslineas
+                                            strInstruccionSQL = "INSERT INTO propuestaspatrullajescomplementossf (id_propuestapatrullaje,fechatermino)
+                                                        VALUES((SELECT id_propuestapatrullaje FROM propuestaspatrullajes
+                                                                    WHERE id_ruta = " & ProgramaPatrullaje.intIdRuta & " AND fechapatrullaje = '" & ProgramaPatrullaje.strFechaPatrullaje & "')
+                                                                ,'" & ProgramaPatrullaje.strFechaTermino & "')"
+                                            If fnActualizaDatosMySQL(strInstruccionSQL) > 0 Then
+                                                'Insertar los vehículos y líneas
+                                                For Each intIdVehiculo As Integer In ProgramaPatrullaje.lstPropuestasPatrullajesVehiculos
+                                                    strInstruccionSQL = "INSERT INTO propuestaspatrullajesvehiculos (id_propuestapatrullaje,id_vehiculo)
+                                                                VALUES((SELECT id_propuestapatrullaje FROM propuestaspatrullajes WHERE id_ruta = " & ProgramaPatrullaje.intIdRuta & "
+                                                                        AND fechapatrullaje = '" & ProgramaPatrullaje.strFechaPatrullaje & "')
+                                                                        ," & intIdVehiculo & ")"
+                                                    fnActualizaDatosMySQL(strInstruccionSQL)
+                                                Next
+                                                For Each intIdLinea As Integer In ProgramaPatrullaje.lstPropuestasPatrullajesLineas
+                                                    strInstruccionSQL = "INSERT INTO propuestaspatrullajeslineas (id_propuestapatrullaje,id_linea)
+                                                                VALUES((SELECT id_propuestapatrullaje FROM propuestaspatrullajes WHERE id_ruta = " & ProgramaPatrullaje.intIdRuta & "
+                                                                        AND fechapatrullaje = '" & ProgramaPatrullaje.strFechaPatrullaje & "')
+                                                                        ," & intIdLinea & ")"
+                                                    fnActualizaDatosMySQL(strInstruccionSQL)
+                                                Next
+                                            Else
+                                                EscribeEnLog("No se insertaron los registros: " & strInstruccionSQL)
+                                            End If
+                                        Else
+                                            EscribeEnLog("No se insertaron los registros: " & strInstruccionSQL)
+                                        End If*/
+
+
+
+            throw new NotImplementedException();
+        }
+
+        public void ActualizaPropuestaAutorizadaToRechazada(int idPropuesta, int idUsuario)
+        {
+            string edoAutorizada = "Autorizada";
+            var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
+            var propuestaActualizar = _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == idPropuesta && x.IdEstadoPropuesta < idEdoAutorizada[0]).ToList();
+
+            if (propuestaActualizar.Count == 1)
+            {
+                var actualizar = propuestaActualizar[0];
+                string edoRechazada = "Rechazada";
+                var idEdoRechazada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoRechazada).Select(x => x.IdEstadoPropuesta).ToList();
+
+                actualizar.IdEstadoPropuesta = idEdoRechazada[0];
+                actualizar.IdUsuario = idUsuario;
+
+                _programaContext.PropuestasPatrullajes.Update(actualizar);
+                _programaContext.SaveChanges();
+            }
+        }
+
+        public void ActualizaPropuestaAprobadaPorComandanciaToPendientoDeAprobacionComandancia(int idPropuesta, int idUsuario)
+        {
+            string edoAprobada = "Aprobada por comandancia regional";
+            var idEdoAprobada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAprobada).Select(x => x.IdEstadoPropuesta).ToList();
+            var propuestaActualizar = _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == idPropuesta && x.IdEstadoPropuesta < idEdoAprobada[0]).ToList();
+
+            if (propuestaActualizar.Count == 1) 
+            {
+                var actualizar = propuestaActualizar[0];
+                string edoPendiente = "Pendiente de aprobacion por comandancia regional";
+                var idEdoPendiente = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoPendiente).Select(x => x.IdEstadoPropuesta).ToList();
+
+                actualizar.IdEstadoPropuesta = idEdoPendiente[0];
+                actualizar.IdUsuario = idUsuario;
+
+                _programaContext.PropuestasPatrullajes.Update(actualizar);
+                _programaContext.SaveChanges();
+            }
+        }
+
+        public void ActualizaPropuestaAutorizadaToPendientoDeAutorizacionSsf(int idPropuesta, int idUsuario)
+        {
+            string edoAutorizada = "Autorizada";
+            var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
+            var propuestaActualizar = _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == idPropuesta && x.IdEstadoPropuesta < idEdoAutorizada[0]).ToList();
+
+            if (propuestaActualizar.Count == 1)
+            {
+                var actualizar = propuestaActualizar[0];
+                string edoPendiente = "Pendiente de autorizacion por la SSF";
+                var idEdoPendiente = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoPendiente).Select(x => x.IdEstadoPropuesta).ToList();
+
+                actualizar.IdEstadoPropuesta = idEdoPendiente[0];
+                actualizar.IdUsuario = idUsuario;
+
+                _programaContext.PropuestasPatrullajes.Update(actualizar);
+                _programaContext.SaveChanges();
+            }
+        }
+
+
+        //OJO Este está repetido
+        public void ActualizaProgramasConPropuestas(List<ProgramaPatrullaje> programas)
+        {
+            string edoAutorizada = "Autorizada";
+            var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
+
+            var idPropuestas = programas.Select(x => x.IdPropuestaPatrullaje).ToList();
+
+            var aActualizar = (from c in _programaContext.PropuestasPatrullajes
+                              where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
+                              select c).ToList();
+
+            foreach (var item in aActualizar)
+            {
+                item.IdEstadoPropuesta = idEdoAutorizada[0];
+            }
+
+            _programaContext.ProgramasPatrullajes.AddRange(programas);
+            _programaContext.PropuestasPatrullajes.UpdateRange(aActualizar);
+            _programaContext.SaveChanges();             
+        }
+
+        public void ActualizaRutayUsuarioDelPrograma(int idPrograma, int idRuta, int idUsuario)
+        {
+            var programa = _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).ToList();
+
+            if (programa.Count() == 1) 
+            {
+                var progamaActualizar = programa[0];
+                progamaActualizar.IdRuta = idRuta;
+                progamaActualizar.IdUsuario = idUsuario;
+
+                _programaContext.ProgramasPatrullajes.Update(progamaActualizar);
+                _programaContext.SaveChanges();
+            }       
+        }
+
+        public void DeletePropuesta(int id)
+        {
+            string estado = "Autorizada";
+            var edos = _programaContext.EstadosPropuesta.
+                Where(x => x.DescripcionEstadoPropuesta == estado).
+                Select(x => x.IdEstadoPropuesta);
+
+            var pro =_programaContext.PropuestasPatrullajes.
+                Where(x => x.IdPropuestaPatrullaje == id);
+
+            var aBorrar = (from c in pro
+                           where !edos.Any(o => o == c.IdEstadoPropuesta) //NOT IN
+                           select c).ToList();
+         
+            if (aBorrar.Count > 0 )
+            {
+                _programaContext.PropuestasPatrullajes.Remove(aBorrar[0]);
+                _programaContext.SaveChanges();
+            }
         }
     }
 }

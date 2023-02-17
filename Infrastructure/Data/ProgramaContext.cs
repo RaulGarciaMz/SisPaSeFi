@@ -19,7 +19,9 @@ namespace SqlServerAdapter.Data
             optionsBuilder.LogTo(message => Debug.WriteLine(message));
         }
 
-
+        public DbSet<ClasePatrullaje> ClasesPatrullaje { get; set; }
+        public DbSet<EstadoPropuesta> EstadosPropuesta { get; set; }
+        public DbSet<PropuestaPatrullaje> PropuestasPatrullajes { get; set; }
         public DbSet<ProgramaPatrullaje> ProgramasPatrullajes { get; set; }     
         public DbSet<PatrullajeVista> PatrullajesVista { get; set; }
     }

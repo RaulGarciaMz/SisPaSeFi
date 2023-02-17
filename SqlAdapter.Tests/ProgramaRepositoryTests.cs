@@ -291,6 +291,16 @@ namespace SqlAdapter.Tests
             }
         }
 
+
+
+        [Fact]
+        public void DeletePropuesta_ReturnsOk()
+        {
+            var pc = new ProgramaPatrullajeRepository(new ProgramaContext());
+            pc.DeletePropuesta(51292);
+
+   
+        }
     }
 
 }
