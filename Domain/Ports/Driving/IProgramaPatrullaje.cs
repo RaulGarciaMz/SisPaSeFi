@@ -11,13 +11,16 @@ namespace Domain.Ports.Driving
 {
     public interface IProgramaCommand
     {
-        void AgregaProgramaFechasMultiples(ProgramaPatrullaje pp);
-        void AgregaPropuestasParaPrograma(ProgramaPatrullaje pp);
-        void AgregaPropuestasFechasMultiples(ProgramaPatrullaje pp);
-        void AgregaPropuestaExtraordinaria(ProgramaPatrullaje pp);
+        void AgregaPropuestasComoProgramasActualizaPropuestas(List<ProgramaPatrullaje> programas, string usuario);
+        void AgregaPropuestaExtraordinaria(PropuestaExtraordinariaAdd pp, string clase, string usuario);
+        void AgregaPropuestasFechasMultiples(PropuestaPatrullaje pp, List<DateTime> fechas, string clase, string usuario);
+        void AgregaProgramaFechasMultiples(ProgramaPatrullaje pp, List<DateTime> fechas, string usuario);
+        void ActualizaProgramaPorCambioDeRuta(int idPrograma, int idRuta, string usuario);
+        void ActualizaProgramasConPropuestas(List<ProgramaPatrullaje> programas, string usuario);
+        void ActualizaPropuestasAutorizadaToRechazada(List<PropuestaPatrullaje> propuestas, string usuario);
+        void ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandancia(List<PropuestaPatrullaje> propuestas, string usuario);
+        void ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsf(List<PropuestaPatrullaje> propuestas, string usuario);
 
-        void ActualizaPrograma();
-        void ActualizaPropuestasDelPrograma();
         void DeletePropuesta(int id);
     }
 

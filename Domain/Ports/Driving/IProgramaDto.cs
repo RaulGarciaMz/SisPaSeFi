@@ -10,13 +10,12 @@ namespace Domain.Ports.Driving
 {
     public interface IProgramaDtoCommand
     {
-        void AgregaProgramaFechasMultiples(ProgramaDto p);
-        void AgregaPropuestasParaPrograma();
-        void AgregaPropuestasFechasMultiples();
-        void AgregaPropuestaExtraordinaria();
+        void AgregaPrograma(string opcion, string clase, ProgramaDto p, string usuario);
+        void AgregaPropuestasComoProgramas(List<ProgramaDto> p, string usuario);
 
-        void ActualizaPrograma();
-        void ActualizaPropuestasDelPrograma();
+        void ActualizaPropuestasComoProgramasActualizaPropuestas(List<ProgramaDto> p, string opcion, int accion, string usuario);
+        void ActualizaProgramaPorCambioDeRuta(ProgramaDto p, string usuario);
+
         void DeletePropuesta(int id);
     }
     public interface IProgramaDtoQuery

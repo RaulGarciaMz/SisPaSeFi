@@ -20,6 +20,10 @@ namespace SqlServerAdapter.Data
         }
 
         public DbSet<ClasePatrullaje> ClasesPatrullaje { get; set; }
+        public DbSet<PropuestaPatrullajeComplementossf> PropuestasComplementosSsf { get; set; }
+        public DbSet<PropuestaPatrullajeVehiculo> PropuestasVehiculos { get; set; }
+        public DbSet<PropuestaPatrullajeLinea> PropuestasLineas { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<EstadoPropuesta> EstadosPropuesta { get; set; }
         public DbSet<PropuestaPatrullaje> PropuestasPatrullajes { get; set; }
         public DbSet<ProgramaPatrullaje> ProgramasPatrullajes { get; set; }     
