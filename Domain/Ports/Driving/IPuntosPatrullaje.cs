@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 namespace Domain.Ports.Driving
 {
     public interface IPuntosPatrullaje
-    {
-        
+    {      
         void Agrega(PuntoPatrullaje pp);
         void Update(PuntoPatrullaje pp);
         void Delete(int id);
@@ -19,5 +18,6 @@ namespace Domain.Ports.Driving
         List<PuntoPatrullaje> ObtenerPorEstado(int id_estado);
         List<PuntoPatrullaje> ObtenerPorUbicacion(string ubicacion);
         int ObtenerItinerariosPorPunto(int id);
+        int ObtenerUsuarioConfigurador(string usuario);
     }
 }

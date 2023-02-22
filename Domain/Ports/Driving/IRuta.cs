@@ -30,7 +30,7 @@ namespace Domain.Ports.Driving
         int ObtenerNumeroRutasPorTipoAndRegionMilitar(int tipoPatrullaje, string regionMilitar);
         string ObtenerDescripcionTipoPatrullaje(int tipoPatrullaje);
         int ObtenerNumeroProgramasPorRuta(int idRuta);
-        int ObtenerNumeroPropuestasPorRuta(int idRuta);
+        int ObtenerNumeroPropuestasPorRuta(int idRuta);      
         Usuario? ObtenerUsuarioConfigurador(string usuario);
         List<RutaVista> ObtenerRutasPorRegionSsf(string tipo, int regionSsf);
         List<RutaVista> ObtenerRutasPorRegionMilitar(string tipo, string regionMilitar);

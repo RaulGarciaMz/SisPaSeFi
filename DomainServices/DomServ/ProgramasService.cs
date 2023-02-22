@@ -369,47 +369,6 @@ namespace DomainServices.DomServ
             return pp;
         }
 
-/*        private PatrullajeDto ConvierteDtoToPropuestaAddDomain(PatrullajeDto p)
-        {
-*//*
-            var propuesta = ConvierteDtoPropuestaToDominio(p);
-            var propuestaVehiculos = ConvierteDtoPropuestaVehiculoToDominio(p);
-            var propuestaLineas = ConvierteDtoPropuestaLineaToDominio(p);
-*//*
-            var pp = new PropuestaExtraordinariaAdd()
-            { 
-                Propuesta = null,
-                Vehiculos= null,
-                Lineas = null
-            };
-
-
-            pp, string clase, List< PropuestaPatrullajeVehiculo > vehiculos, List<PropuestaPatrullajeLinea> lineas
-
-            return new PatrullajeDto()
-            {
-                IdPrograma = p.id,
-                IdRuta = p.id_ruta,
-                Clave = p.clave,
-                DescripcionEstadoPatrullaje = p.descripcionestadopatrullaje,
-                DescripcionNivelRiesgo = p.descripcionnivel,
-                FechaPatrullaje = p.fechapatrullaje.ToString("yyyy-MM-dd"),
-                FechaTermino = p.fechatermino.ToString("yyyy-MM-dd"),
-                IdPuntoResponsable = p.id_puntoresponsable,
-                IdUsuario = p.id_usuario,
-                Itinerario = p.itinerario,
-                ObservacionesPrograma = p.observaciones,
-                ObservacionesRuta = p.observacionesruta,
-                OficioComision = p.oficiocomision,
-                RegionMilitarSDN = Int32.Parse(p.regionmilitarsdn),
-                RegionSSF = Int32.Parse(p.regionssf),
-                SolicitudOficioComision = p.solicitudoficiocomision,
-                UltimaActualizacion = p.ultimaactualizacion.ToString("yyyy-MM-dd"),
-                UsuarioResponsablePatrullaje = p.id_usuarioresponsablepatrullaje,
-                Inicio = p.inicio.ToString()
-            };
-        }*/
-
         private List<DateTime> ConvierteStringFechaToDateTime(List<string> fechas) 
         {
         var lstFechas = new List<DateTime>();

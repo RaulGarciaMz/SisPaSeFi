@@ -9,9 +9,9 @@ namespace Domain.Ports.Driving
 {
     public interface IRutaDtoCommand
     {
-        void Agrega(RutaDto pp);
-        void Update(RutaDto pp);
-        void Delete(int id);
+        void Agrega(RutaDto pp, string usuario);
+        void Update(RutaDto pp, string usuario);
+        void Delete(int id, string usuario);
     }
 
     public interface IRutaDtoQuery

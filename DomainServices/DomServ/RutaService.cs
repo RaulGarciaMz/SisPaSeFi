@@ -26,58 +26,69 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de agregar una ruta junto con sus itinerarios
         /// </summary>
-        public void Agrega(RutaDto pp)
-        {         
-            if (ExisteItinerarioConfiguradoEnRegionesZona(pp.IdTipoPatrullaje, pp.RegionSSF, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, pp.Itinerario))
+        public void Agrega(RutaDto pp, string usuario)
+        {
+            if (EsUsuarioConfigurador(usuario))
             {
-                return;
+                if (ExisteItinerarioConfiguradoEnRegionesZona(pp.IdTipoPatrullaje, pp.RegionSSF, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, pp.Itinerario))
+                {
+                    return;
+                }
+
+                int totalRutas = CalculaTotalRutas(pp.IdTipoPatrullaje, pp.RegionMilitarSDN);
+                pp.Clave = GeneraClaveRuta(pp.IdTipoPatrullaje, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, totalRutas);
+                pp.TotalRutasRegionMilitarSDN = totalRutas;
+
+                var rp = ConvierteRutaDto(pp);
+                var itinerarios = ConvierteRecorridosAItinearios(pp.Recorridos);
+
+                _repo.Agrega(rp, itinerarios);
             }
-
-            int totalRutas = CalculaTotalRutas(pp.IdTipoPatrullaje, pp.RegionMilitarSDN);
-            pp.Clave = GeneraClaveRuta(pp.IdTipoPatrullaje, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, totalRutas);
-            pp.TotalRutasRegionMilitarSDN = totalRutas;
-
-            var rp = ConvierteRutaDto(pp);
-            var itinerarios = ConvierteRecorridosAItinearios(pp.Recorridos);
-
-            _repo.Agrega(rp, itinerarios);
         }
 
         /// <summary>
         /// Método <c>Update</c> Implementa la interfaz para el caso de uso de actualizar una ruta
         /// </summary>
-        public void Update(RutaDto pp)
+        public void Update(RutaDto pp, string usuario)
         {
-            if (ExisteRutaConMismaClave(pp.IdRuta, pp.Clave))
+            if (EsUsuarioConfigurador(usuario))
             {
-                return;
+                if (ExisteRutaConMismaClave(pp.IdRuta, pp.Clave))
+                {
+                    return;
+                }
+
+                if (ExisteItinerarioConfiguradoEnOtraRuta(pp.IdTipoPatrullaje, pp.RegionSSF, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, pp.IdRuta, pp.Itinerario))
+                {
+                    return;
+                }
+
+                int totalRutas = CalculaTotalRutas(pp.IdTipoPatrullaje, pp.RegionMilitarSDN);
+                var strClave = AsignaClaveRuta(pp, totalRutas);
+
+                pp.Clave = strClave;
+
+                var rp = ConvierteRutaDto(pp);
+
+                _repo.Update(rp);
             }
-
-            if (ExisteItinerarioConfiguradoEnOtraRuta(pp.IdTipoPatrullaje, pp.RegionSSF, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, pp.IdRuta, pp.Itinerario))
-            {
-                return;
-            }
-
-            int totalRutas = CalculaTotalRutas(pp.IdTipoPatrullaje, pp.RegionMilitarSDN);
-            var strClave = AsignaClaveRuta(pp, totalRutas);
-
-            pp.Clave = strClave;
-
-            var rp = ConvierteRutaDto(pp);
-
-            _repo.Update(rp);
         }
 
         /// <summary>
         /// Método <c>Update</c> Implementa la interfaz para el caso de uso de eliminar una ruta
         /// </summary>
-        public void Delete(int id)
-        {        
-            if (ExisteRutaEnPropuestaOrPrograma(id)) {
-                return;
+        public void Delete(int id, string usuario)
+        {
+            if (EsUsuarioConfigurador(usuario))
+            {
+                if (ExisteRutaEnPropuestaOrPrograma(id))
+                {
+                    return;
+                }
+
+                _repo.Delete(id);
             }
 
-            _repo.Delete(id);
         }
 
         /// <summary>
@@ -87,6 +98,11 @@ namespace DomainServices.DomServ
         {
             List<RutaDto> retornadas = new List<RutaDto>();
             List<RutaVista> encontradas = new List<RutaVista>();
+
+            if (!EsUsuarioConfigurador(usuario)) 
+            {
+                return retornadas;
+            }
 
             var opcionFiltro = (FiltroRutaOpcion)opcion;
             switch (opcionFiltro)
@@ -231,6 +247,21 @@ namespace DomainServices.DomServ
 
             return false;
         }
+
+        /// <summary>
+        /// Método <c>EsUsuarioConfigurador</c> verifica si el nombre del usuario corresponde a un usuario configurador
+        /// </summary>
+        private bool EsUsuarioConfigurador(string usuario)
+        {
+            if (_repo.ObtenerUsuarioConfigurador(usuario) != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
 
         /// <summary>
         /// Método <c>CalculaTotalRutas</c> calcula el número de rutas de cierto tipo de patrullaje para una región militar indicadaverifica si en los catálogos de programas y propuestas de patrullaje ya existe la ruta indicada

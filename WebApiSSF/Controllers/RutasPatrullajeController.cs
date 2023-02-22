@@ -29,23 +29,23 @@ namespace WebApiSSF.Controllers
 
         // POST api/<RutasPatrullajeController>
         [HttpPost]
-        public void PostValue([FromBody] RutaDto r)
+        public void PostValue(string usuario,[FromBody] RutaDto r)
         {
-            _rp.Agrega(r);
+            _rp.Agrega(r, usuario);
         }
 
         // PUT api/<RutasPatrullajeController>/5
         [HttpPut("{id}")]
-        public void PutValue(int id, [FromBody] RutaDto r)
+        public void PutValue(int id, string usuario, [FromBody] RutaDto r)
         {
-            _rp.Update(r);
+            _rp.Update(r, usuario);
         }
 
         // DELETE api/<RutasPatrullajeController>/5
         [HttpDelete("{id}")]
-        public void DeleteValue(int id)
+        public void DeleteValue(int id, string usuario)
         {
-            _rp.Delete(id);
+            _rp.Delete(id, usuario);
         }
     }
 }

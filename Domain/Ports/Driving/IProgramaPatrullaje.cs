@@ -60,6 +60,5 @@ namespace Domain.Ports.Driving
         public List<PatrullajeVista> ObtenerProgramasPorMes(string tipo, int region, int anio, int mes);
         //Caso 4 Programas Periodo 3 - Todos
         public List<PatrullajeVista> ObtenerProgramas(string tipo, int region);
-
     }
 }

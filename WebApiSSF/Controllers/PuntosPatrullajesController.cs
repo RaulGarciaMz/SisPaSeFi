@@ -23,31 +23,31 @@ namespace WebApiSSF.Controllers
 
         // GET: api/<PuntosPatrullajesController>
         [HttpGet]
-        public IEnumerable<PuntoDto> GetValues(int opcion, string valor)
+        public IEnumerable<PuntoDto> GetValues(int opcion, string valor, string usuario)
         {
             FiltroPunto filtro=(FiltroPunto) opcion;
-            return _pp.ObtenerPorOpcion(filtro, valor);
+            return _pp.ObtenerPorOpcion(filtro, valor, usuario);
         }
 
         // POST api/<PuntosPatrullajesController>
         [HttpPost]
-        public void PostValue([FromBody] PuntoDto pto)
+        public void PostValue(string usuario,[FromBody] PuntoDto pto)
         {
-            _pp.Agrega(pto);
+            _pp.Agrega(pto, usuario);
         }
 
         // PUT api/<PuntosPatrullajesController>/5
         [HttpPut("{id}")]
-        public void PutValue(int id, [FromBody] PuntoDto pto)
+        public void PutValue(int id, string usuario, [FromBody] PuntoDto pto)
         {
-           _pp.Update(pto);
+           _pp.Update(pto, usuario);
         }
 
         // DELETE api/<PuntosPatrullajesController>/5
         [HttpDelete("{id}")]
-        public void DeleteValue(int id)
+        public void DeleteValue(int id, string usuario)
         {
-             _pp.Delete(id);
+             _pp.Delete(id, usuario);
         }
     }
 }

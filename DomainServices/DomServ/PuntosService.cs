@@ -25,65 +25,90 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de agregar un punto de patrullaje
         /// </summary>
-        public void Agrega(PuntoDto pp)
+        public void Agrega(PuntoDto pp, string usuario)
         {
-            var p = ConvierteDtoToDominio(pp);
-            _repo.Agrega(p);
+            if (EsUsuarioConfigurador(usuario))
+            {
+                var p = ConvierteDtoToDominio(pp);
+                _repo.Agrega(p);
+            }
         }
 
         /// <summary>
         /// Método <c>Delete</c> Implementa la interfaz para el caso de uso de eliminar un punto de patrullaje, mientras no esté en otros itinerarios
         /// </summary>
-        public void Delete(int id)
+        public void Delete(int id, string usuario)
         {
-            if (ExisteEnItinerarios(id))
+            if (EsUsuarioConfigurador(usuario))
             {
-                return;
-            }
+                if (ExisteEnItinerarios(id))
+                {
+                    return;
+                }
 
-            _repo.Delete(id);
+                _repo.Delete(id);
+            }                
         }
 
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de actualizar un punto de patrullaje
         /// </summary>
-        public void Update(PuntoDto pp)
+        public void Update(PuntoDto pp, string usuario)
         {
-            var p = ConvierteDtoToDominio(pp);
-            _repo.Update(p);
+            if (EsUsuarioConfigurador(usuario))
+            {
+                var p = ConvierteDtoToDominio(pp);
+                _repo.Update(p);
+            }
         }
 
         /// <summary>
         /// Método <c>ObtenerPorOpcion</c> Implementa la interfaz para el caso de uso de obtener puntos de patrullaje acorde a un filtro indicado
         /// </summary>
-        public List<PuntoDto> ObtenerPorOpcion(FiltroPunto opcion, string valor)
+        public List<PuntoDto> ObtenerPorOpcion(FiltroPunto opcion, string valor, string usuario)
         {
             var puntos = new List<PuntoPatrullaje>();
             var r = new List<PuntoDto>();
 
-            switch (opcion)
+            if (EsUsuarioConfigurador(usuario))
             {
-                case FiltroPunto.Estado:
-                    var b = int.TryParse(valor, out int j);
-                    if (!b)
-                    {
-                        return r;
-                    }
-                    puntos = _repo.ObtenerPorEstado(j);
-                    break;
+                switch (opcion)
+                {
+                    case FiltroPunto.Estado:
+                        var b = int.TryParse(valor, out int j);
+                        if (!b)
+                        {
+                            return r;
+                        }
+                        puntos = _repo.ObtenerPorEstado(j);
+                        break;
 
-                case FiltroPunto.Ubicacion:
-                    puntos = _repo.ObtenerPorUbicacion(valor).ToList();
-                    break;
-            }
+                    case FiltroPunto.Ubicacion:
+                        puntos = _repo.ObtenerPorUbicacion(valor).ToList();
+                        break;
+                }
 
-            foreach (var p in puntos)
-            {
-                var miPto = ConvierteDominioToDto(p);
-                r.Add(miPto);
+                foreach (var p in puntos)
+                {
+                    var miPto = ConvierteDominioToDto(p);
+                    r.Add(miPto);
+                }
             }
 
             return r;
+        }
+
+        /// <summary>
+        /// Método <c>EsUsuarioConfigurador</c> verifica si nombre del usuaio corresponde a un usuario configurador
+        /// </summary>
+        private bool EsUsuarioConfigurador(string usuario)
+        {
+            if (_repo.ObtenerUsuarioConfigurador(usuario) > 0)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -146,6 +171,7 @@ namespace DomainServices.DomServ
                 estado = p.IdMunicipioNavigation.IdEstadoNavigation.Nombre  
             };
         }
+
 
     }    
 }

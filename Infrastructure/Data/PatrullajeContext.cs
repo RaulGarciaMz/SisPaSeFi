@@ -24,5 +24,6 @@ namespace SqlServerAdapter.Data
         public  DbSet<Municipio> Municipios { get; set; }
         public  DbSet<EstadoPais> Estados { get; set; }
         public DbSet<Itinerario> Itinerarios { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
     }
 }
