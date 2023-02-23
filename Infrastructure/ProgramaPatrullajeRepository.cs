@@ -1036,7 +1036,7 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ObtenerIdUsuario</c> implementa la interface para obtener el ID del usuario por nombre.
         /// </summary>
-        private int ObtenerIdUsuario(string usuario)
+        public int ObtenerIdUsuario(string usuario)
         {
             var user = _programaContext.Usuarios.Where(x => x.UsuarioNom == usuario).Select(x => x.IdUsuario).ToList();
 
