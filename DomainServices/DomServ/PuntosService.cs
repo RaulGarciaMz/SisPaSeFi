@@ -38,7 +38,7 @@ namespace DomainServices.DomServ
         /// Método <c>Delete</c> Implementa la interfaz para el caso de uso de eliminar un punto de patrullaje, mientras no esté en otros itinerarios
         /// </summary>
         public void Delete(int id, string usuario)
-        {
+        {        
             if (EsUsuarioConfigurador(usuario))
             {
                 if (ExisteEnItinerarios(id))
@@ -98,12 +98,13 @@ namespace DomainServices.DomServ
             return r;
         }
 
+
         /// <summary>
-        /// Método <c>EsUsuarioConfigurador</c> verifica si nombre del usuaio corresponde a un usuario configurador
+        /// Método <c>ExisteEnItinerarios</c> verifica si el punto de patrullaje indicado existe en algún itinerario
         /// </summary>
-        private bool EsUsuarioConfigurador(string usuario)
+        private bool ExisteEnItinerarios(int id)
         {
-            if (_repo.ObtenerUsuarioConfigurador(usuario) > 0)
+            if (_repo.ObtenerItinerariosPorPunto(id) > 0)
             {
                 return true;
             }
@@ -112,11 +113,11 @@ namespace DomainServices.DomServ
         }
 
         /// <summary>
-        /// Método <c>ExisteEnItinerarios</c> verifica si el punto de patrullaje indicado existe en algún itinerario
+        /// Método <c>EsUsuarioConfigurador</c> verifica si el nombre del usuario corresponde a un usuario configurador
         /// </summary>
-        private bool ExisteEnItinerarios(int id)
+        private bool EsUsuarioConfigurador(string usuario)
         {
-            if (_repo.ObtenerItinerariosPorPunto(id) > 0)
+            if (_repo.ObtenerIdUsuarioConfigurador(usuario) >= 0)
             {
                 return true;
             }
@@ -143,7 +144,7 @@ namespace DomainServices.DomServ
                 //Latitud =  ,
                 //Longitud = ,
                 IdMunicipio = p.id_municipio,
-                
+                IdUsuario= p.id_usuario
             };
         }
 

@@ -718,22 +718,15 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>AgregaPropuestasComoProgramasActualizaPropuestas</c> implementa la interface para registrar programas referidas a las propuestas indicadas (convierte propuestas en programas).
         /// </summary>
-        public void AgregaPropuestasComoProgramasActualizaPropuestas(List<ProgramaPatrullaje> programas, string usuario)
+        public void AgregaPropuestasComoProgramasActualizaPropuestas(List<ProgramaPatrullaje> programas, int usuarioId)
         {
-            var userId = ObtenerUsuario(usuario);
-
-            if (userId < 0)
-            {
-                return;
-            }
-
             string edoAutorizada = "Autorizada";
             var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
             var lstPropuestasActualizar = new List<PropuestaPatrullaje>();
 
             foreach (var p in programas)
             {
-                p.IdUsuario = userId;
+                p.IdUsuario = usuarioId;
                 var aActualizar = _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == p.IdPropuestaPatrullaje).ToList();
 
                 foreach (var item in aActualizar)
@@ -755,15 +748,8 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>AgregaPropuestaExtraordinaria</c> implementa la interface para agregar propuestas extraordinaria.
         /// </summary>
-        public void AgregaPropuestaExtraordinaria(PropuestaExtraordinariaAdd pp,  string clase,string usuario)
+        public void AgregaPropuestaExtraordinaria(PropuestaExtraordinariaAdd pp,  string clase,int usuarioId)
         {
-            var userId = ObtenerUsuario(usuario);
-
-            if (userId < 0)
-            {
-                return;
-            }
-
             var rutaNoExisteEnPropuesta = _programaContext.PropuestasPatrullajes
                 .Where(x => x.IdRuta == pp.Propuesta.IdRuta && x.FechaPatrullaje == pp.Propuesta.FechaPatrullaje)
                 .Count() == 0;
@@ -785,7 +771,7 @@ namespace SqlServerAdapter
 
                 pp.Propuesta.IdClasePatrullaje = idClase[0];
                 pp.Propuesta.IdEstadoPropuesta = idEdoCreada[0];
-                pp.Propuesta.IdUsuario = userId;
+                pp.Propuesta.IdUsuario = usuarioId;
 
                 var complemento = new PropuestaPatrullajeComplementossf() 
                 {
@@ -814,15 +800,8 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>AgregaPropuestasFechasMultiples</c> implementa la interface para agregar propuestas de múltiples fechas.
         /// </summary>
-        public void AgregaPropuestasFechasMultiples(PropuestaPatrullaje pp, List<DateTime> fechas, string clase, string usuario)
+        public void AgregaPropuestasFechasMultiples(PropuestaPatrullaje pp, List<DateTime> fechas, string clase, int usuarioId)
         {
-            var userId = ObtenerUsuario(usuario);
-
-            if (userId < 0)
-            {
-                return;
-            }
-
             string edoCreada = "Creada";
             var idEdoCreada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoCreada).Select(x => x.IdEstadoPropuesta).ToList();
             var idClasePatrullaje = _programaContext.ClasesPatrullaje.Where(x => x.Descripcion == clase).Select(x => x.IdClasePatrullaje).ToList();
@@ -840,7 +819,7 @@ namespace SqlServerAdapter
                         UltimaActualizacion = pp.UltimaActualizacion,
                         IdRuta = pp.IdRuta,
                         FechaPatrullaje = pp.FechaPatrullaje,
-                        IdUsuario = userId,
+                        IdUsuario = usuarioId,
                         IdPuntoResponsable = pp.IdPuntoResponsable,
                         Observaciones = pp.Observaciones,
                         IdEstadoPropuesta = idEdoCreada[0],
@@ -863,15 +842,8 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>AgregaProgramaFechasMultiples</c> implementa la interface para agregar programas para múltiples fechas.
         /// </summary>
-        public void AgregaProgramaFechasMultiples(ProgramaPatrullaje pp, List<DateTime> fechas, string usuario)
+        public void AgregaProgramaFechasMultiples(ProgramaPatrullaje pp, List<DateTime> fechas, int usuarioId)
         {
-            var userId = ObtenerUsuario(usuario);
-
-            if (userId < 0)
-            {
-                return;
-            }
-
             var lstProgramas = new List<ProgramaPatrullaje>();
             var lstPropuestas = new List<PropuestaPatrullaje>();
 
@@ -890,7 +862,7 @@ namespace SqlServerAdapter
                 var programa = new ProgramaPatrullaje
                 {
                     IdRuta = pp.IdRuta,
-                    IdUsuario = userId,
+                    IdUsuario = usuarioId,
                     IdPuntoResponsable = pp.IdPuntoResponsable,
                     IdPropuestaPatrullaje = pp.IdPropuestaPatrullaje,
                     IdRutaOriginal = pp.IdRutaOriginal,
@@ -911,22 +883,15 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ActualizaProgramaPorCambioDeRuta</c> implementa la interface para actualizar programas debido a cambio de ruta.
         /// </summary>
-        public void ActualizaProgramaPorCambioDeRuta(int idPrograma, int idRuta, string usuario)
+        public void ActualizaProgramaPorCambioDeRuta(int idPrograma, int idRuta, int usuarioId)
         {
-            var userId = ObtenerUsuario(usuario);
-
-            if (userId < 0)
-            {
-                return;
-            }
-
             var programa = _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).ToList();
 
             if (programa.Count() == 1)
             {
                 var progamaActualizar = programa[0];
                 progamaActualizar.IdRuta = idRuta;
-                progamaActualizar.IdUsuario = userId;
+                progamaActualizar.IdUsuario = usuarioId;
 
                 _programaContext.ProgramasPatrullajes.Update(progamaActualizar);
                 _programaContext.SaveChanges();
@@ -936,15 +901,8 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ActualizaProgramasConPropuestas</c> implementa la interface para actualizar programas con propuestas.
         /// </summary>
-        public void ActualizaProgramasConPropuestas(List<ProgramaPatrullaje> programas, string usuario)
+        public void ActualizaProgramasConPropuestas(List<ProgramaPatrullaje> programas)
         {
-            var userId = ObtenerUsuario(usuario);
-
-            if (userId < 0)
-            {
-                return;
-            }
-
             string edoAutorizada = "Autorizada";
             var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
 
@@ -954,12 +912,7 @@ namespace SqlServerAdapter
                                where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
                                select c).ToList();
 
-            foreach (var prog in programas)
-            {
-                prog.IdUsuario = userId;
-            }
-
-            foreach (var item in aActualizar)
+             foreach (var item in aActualizar)
             {
                 item.IdEstadoPropuesta = idEdoAutorizada[0];
             }
@@ -972,15 +925,8 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ActualizaPropuestasAutorizadaToRechazada</c> implementa la interface para actualizar el estado de propuestas autorizadas hacia propuestas rechazadas.
         /// </summary>
-        public void ActualizaPropuestasAutorizadaToRechazada(List<PropuestaPatrullaje> propuestas, string usuario)
+        public void ActualizaPropuestasAutorizadaToRechazada(List<PropuestaPatrullaje> propuestas, int usuarioId)
         {
-            var userId = ObtenerUsuario(usuario);
-
-            if (userId < 0)
-            {
-                return;
-            }
-
             string edoAutorizada = "Autorizada";
             var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
             string edoRechazada = "Rechazada";
@@ -996,7 +942,7 @@ namespace SqlServerAdapter
             {
                 foreach (var pa in propuestasActualizar)
                 {
-                    pa.IdUsuario = userId;
+                    pa.IdUsuario = usuarioId;
                     pa.IdEstadoPropuesta = edoRechazada[0];
                 }
 
@@ -1008,15 +954,8 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandancia</c> implementa la interface para actualizar el estado d elas propuestas de aprobada por comandancia hacia pendiente de aprobación.
         /// </summary>
-        public void ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandancia(List<PropuestaPatrullaje> propuestas, string usuario)
+        public void ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandancia(List<PropuestaPatrullaje> propuestas, int usuarioId)
         {
-            var userId = ObtenerUsuario(usuario);
-
-            if (userId < 0)
-            {
-                return;
-            }
-
             string edoAprobada = "Aprobada por comandancia regional";
             var idEdoAprobada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAprobada).Select(x => x.IdEstadoPropuesta).ToList();
             string edoPendiente = "Pendiente de aprobacion por comandancia regional";
@@ -1032,7 +971,7 @@ namespace SqlServerAdapter
             {
                 foreach (var pa in propuestasActualizar)
                 {
-                    pa.IdUsuario = userId;
+                    pa.IdUsuario = usuarioId;
                     pa.IdEstadoPropuesta = edoPendiente[0];
                 }
 
@@ -1044,15 +983,8 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsf</c> implementa la interface para actualizar el estado de las propuestas de autorizadas hacia pendiente de autorización SSF.
         /// </summary>
-        public void ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsf(List<PropuestaPatrullaje> propuestas, string usuario)
+        public void ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsf(List<PropuestaPatrullaje> propuestas, int usuarioId)
         {
-            var userId = ObtenerUsuario(usuario);
-
-            if (userId < 0)
-            {
-                return;
-            }
-
             string edoAutorizada = "Autorizada";
             var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
             string edoPendiente = "Pendiente de autorizacion por la SSF";
@@ -1068,7 +1000,7 @@ namespace SqlServerAdapter
             {
                 foreach (var pa in propuestasActualizar)
                 {
-                    pa.IdUsuario = userId;
+                    pa.IdUsuario = usuarioId;
                     pa.IdEstadoPropuesta = edoPendiente[0];
                 }
 
@@ -1102,11 +1034,11 @@ namespace SqlServerAdapter
         }
 
         /// <summary>
-        /// Método <c>ObtenerUsuario</c> implementa la interface para obtener usuario por nombre.
+        /// Método <c>ObtenerIdUsuario</c> implementa la interface para obtener el ID del usuario por nombre.
         /// </summary>
-        private int ObtenerUsuario(string usuario_nom)
+        private int ObtenerIdUsuario(string usuario)
         {
-            var user = _programaContext.Usuarios.Where(x => x.UsuarioNom == usuario_nom).Select(x => x.IdUsuario).ToList();
+            var user = _programaContext.Usuarios.Where(x => x.UsuarioNom == usuario).Select(x => x.IdUsuario).ToList();
 
             if (user.Count == 0)
             {
@@ -1117,5 +1049,14 @@ namespace SqlServerAdapter
                 return user[0];
             }
         }
+
+        /// <summary>
+        /// Método <c>ObtenerUsuarioConfigurador</c> implementa la interface para obtener usuario configurador por nombre.
+        /// </summary>
+        public Usuario? ObtenerUsuarioConfigurador(string usuario) 
+        {
+            return _programaContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefault();
+        }
+
     }
 }

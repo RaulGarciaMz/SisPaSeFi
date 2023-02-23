@@ -83,9 +83,18 @@ namespace SqlServerAdapter
             return _patrullajeContext.Itinerarios.Where(x => x.IdPunto == id).Count();
         }
 
-        public int ObtenerUsuarioConfigurador(string usuario)
+        public int ObtenerIdUsuarioConfigurador(string usuario_nom)
         {
-            return _patrullajeContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).Count();
+            var user = _patrullajeContext.Usuarios.Where(x => x.UsuarioNom == usuario_nom && x.Configurador == 1).Select(x => x.IdUsuario).ToList();
+
+            if (user.Count == 0)
+            {
+                return -1;
+            }
+            else
+            {
+                return user[0];
+            }
         }
     }
 

@@ -22,105 +22,141 @@ namespace DomainServices.DomServ
         }
 
         public void AgregaPrograma(string opcion, string clase, ProgramaDto p, string usuario) 
-        {     
-            switch (opcion) 
+        {
+            var user = _repo.ObtenerUsuarioConfigurador(usuario);
+
+            if (EsUsuarioConfigurador(user))
             {
-                case "Propuesta":
-                    switch (clase) 
-                    {
-                        case "EXTRAORDINARIO":
+                switch (opcion)
+                {
+                    case "Propuesta":
+                        switch (clase)
+                        {
+                            case "EXTRAORDINARIO":
 
-                            var pp = new PropuestaExtraordinariaAdd() 
-                            {
-                                Propuesta = ConvierteProgramaDtoToPropuestaDominio(p),
-                                Vehiculos = ConvierteListaVehiculosDtoToVehiculosDomain(p),
-                                Lineas = ConvierteListaLineasDtoToLineasDomain(p)
-                            };
-                            _repo.AgregaPropuestaExtraordinaria(pp, clase, usuario);
+                                var pp = new PropuestaExtraordinariaAdd()
+                                {
+                                    Propuesta = ConvierteProgramaDtoToPropuestaDominio(p),
+                                    Vehiculos = ConvierteListaVehiculosDtoToVehiculosDomain(p),
+                                    Lineas = ConvierteListaLineasDtoToLineasDomain(p)
+                                };
+                                _repo.AgregaPropuestaExtraordinaria(pp, clase, user.IdUsuario);
 
-                            break;
+                                break;
 
-                        default:
+                            default:
 
 
-                            _repo.AgregaPropuestasFechasMultiples(ConvierteProgramaDtoToPropuestaDominio(p), 
-                                                                  ConvierteStringFechaToDateTime(p.LstPropuestasPatrullajesFechas),  
-                                                                  clase, usuario);
+                                _repo.AgregaPropuestasFechasMultiples(ConvierteProgramaDtoToPropuestaDominio(p),
+                                                                      ConvierteStringFechaToDateTime(p.LstPropuestasPatrullajesFechas),
+                                                                      clase, user.IdUsuario);
 
-                            break;
-                    }
-                    break;
-                case "Programa":
+                                break;
+                        }
+                        break;
+                    case "Programa":
 
-                    var prog = ConvierteProgramaDtoToProgramaDominio(p);
-                    var fechas = ConvierteStringFechaToDateTime(p.LstPropuestasPatrullajesFechas);
-                    _repo.AgregaProgramaFechasMultiples(prog, fechas, usuario);
+                        var prog = ConvierteProgramaDtoToProgramaDominio(p);
+                        var fechas = ConvierteStringFechaToDateTime(p.LstPropuestasPatrullajesFechas);
+                        _repo.AgregaProgramaFechasMultiples(prog, fechas, user.IdUsuario);
 
-                    break;
+                        break;
+                }
             }
+
         }
 
         public void AgregaPropuestasComoProgramas(List<ProgramaDto> p, string usuario)
         {
-            var programas = new List<ProgramaPatrullaje>();
-            foreach (ProgramaDto prog in p) 
-            {
-                programas.Add(ConvierteProgramaDtoToProgramaDominio(prog));
-            }  
+            var userId = _repo.ObtenerIdUsuario(usuario);
 
-            _repo.AgregaPropuestasComoProgramasActualizaPropuestas(programas, usuario);     
+            if (EsUsuarioRegistrado(userId))
+            {
+                var programas = new List<ProgramaPatrullaje>();
+                foreach (ProgramaDto prog in p)
+                {
+                    programas.Add(ConvierteProgramaDtoToProgramaDominio(prog));
+                }
+
+                _repo.AgregaPropuestasComoProgramasActualizaPropuestas(programas, userId);
+            }
         }
 
         public void ActualizaPropuestasComoProgramasActualizaPropuestas(List<ProgramaDto> p, string opcion, int accion, string usuario)
         {
-            switch (opcion) 
+            var userId = _repo.ObtenerIdUsuario(usuario);
+
+            if (EsUsuarioRegistrado(userId))
             {
-                case "Programa":
-                    var lstProgramas = new List<ProgramaPatrullaje>();
+                switch (opcion)
+                {
+                    case "Programa":
+                        var lstProgramas = new List<ProgramaPatrullaje>();
 
-                    foreach (ProgramaDto prog in p)
-                    {
-                        var a = ConvierteProgramaDtoToProgramaDominio(prog);
-                        lstProgramas.Add(a);
-                    }
-                    _repo.ActualizaProgramasConPropuestas(lstProgramas, usuario);
-                    
-                    break;
+                        foreach (ProgramaDto prog in p)
+                        {
+                            var a = ConvierteProgramaDtoToProgramaDominio(prog);
+                            lstProgramas.Add(a);
+                        }
+                        _repo.ActualizaProgramasConPropuestas(lstProgramas);
 
-                case "Propuesta":
+                        break;
 
-                    var lstPropuestas = new List<PropuestaPatrullaje>();
+                    case "Propuesta":
 
-                    foreach (ProgramaDto prog in p)
-                    {
-                        var a = ConvierteProgramaDtoToPropuestaDominio(prog);
-                        lstPropuestas.Add(a);
-                    }
+                        var lstPropuestas = new List<PropuestaPatrullaje>();
 
-                    switch (accion) 
-                    {
-                        case 2:
-                            _repo.ActualizaPropuestasAutorizadaToRechazada(lstPropuestas, usuario);
-                            break;
-                        case 3:
-                            _repo.ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandancia(lstPropuestas, usuario);
-                            break;
-                        case 4:
-                            _repo.ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsf(lstPropuestas, usuario);
-                            break;
-                    }
-                    break;
+                        foreach (ProgramaDto prog in p)
+                        {
+                            var a = ConvierteProgramaDtoToPropuestaDominio(prog);
+                            lstPropuestas.Add(a);
+                        }
+
+                        switch (accion)
+                        {
+                            case 2:
+                                _repo.ActualizaPropuestasAutorizadaToRechazada(lstPropuestas, userId);
+                                break;
+                            case 3:
+                                _repo.ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandancia(lstPropuestas, userId);
+                                break;
+                            case 4:
+                                _repo.ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsf(lstPropuestas, userId);
+                                break;
+                        }
+                        break;
+                }
             }
         }
 
         public void ActualizaProgramaPorCambioDeRuta(ProgramaDto p, string usuario)
         {
-            _repo.ActualizaProgramaPorCambioDeRuta(p.IdPrograma, p.IdRuta, usuario);
+            var user = _repo.ObtenerIdUsuario(usuario);
+
+            if (EsUsuarioRegistrado(user))
+            {
+                _repo.ActualizaProgramaPorCambioDeRuta(p.IdPrograma, p.IdRuta, user);
+            }                
         }
 
-        public void DeletePropuesta(int id)
+        public void DeletePropuesta(int id, string usuario)
         {
-            _repo.DeletePropuesta(id);
+            var user = _repo.ObtenerIdUsuario(usuario);
+
+            if (EsUsuarioRegistrado(user))
+            {
+                _repo.DeletePropuesta(id);
+            }                
+        }
+
+        private bool EsUsuarioConfigurador(Usuario? user) 
+        {
+            return user != null;
+        }
+
+        private bool EsUsuarioRegistrado(int user)
+        {
+            return user >= 0;
         }
 
         public List<PatrullajeDto> ObtenerPorFiltro(string tipo, int region, string clase, int anio, int mes, int dia = 1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia)

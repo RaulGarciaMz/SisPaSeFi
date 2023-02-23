@@ -11,15 +11,15 @@ namespace Domain.Ports.Driving
 {
     public interface IProgramaCommand
     {
-        void AgregaPropuestasComoProgramasActualizaPropuestas(List<ProgramaPatrullaje> programas, string usuario);
-        void AgregaPropuestaExtraordinaria(PropuestaExtraordinariaAdd pp, string clase, string usuario);
-        void AgregaPropuestasFechasMultiples(PropuestaPatrullaje pp, List<DateTime> fechas, string clase, string usuario);
-        void AgregaProgramaFechasMultiples(ProgramaPatrullaje pp, List<DateTime> fechas, string usuario);
-        void ActualizaProgramaPorCambioDeRuta(int idPrograma, int idRuta, string usuario);
-        void ActualizaProgramasConPropuestas(List<ProgramaPatrullaje> programas, string usuario);
-        void ActualizaPropuestasAutorizadaToRechazada(List<PropuestaPatrullaje> propuestas, string usuario);
-        void ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandancia(List<PropuestaPatrullaje> propuestas, string usuario);
-        void ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsf(List<PropuestaPatrullaje> propuestas, string usuario);
+        void AgregaPropuestasComoProgramasActualizaPropuestas(List<ProgramaPatrullaje> programas, int usuarioId);
+        void AgregaPropuestaExtraordinaria(PropuestaExtraordinariaAdd pp, string clase, int usuarioId);
+        void AgregaPropuestasFechasMultiples(PropuestaPatrullaje pp, List<DateTime> fechas, string clase, int usuarioId);
+        void AgregaProgramaFechasMultiples(ProgramaPatrullaje pp, List<DateTime> fechas, int usuarioId);
+        void ActualizaProgramaPorCambioDeRuta(int idPrograma, int idRuta, int usuarioId);
+        void ActualizaProgramasConPropuestas(List<ProgramaPatrullaje> programas);
+        void ActualizaPropuestasAutorizadaToRechazada(List<PropuestaPatrullaje> propuestas, int usuarioId);
+        void ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandancia(List<PropuestaPatrullaje> propuestas, int usuarioId);
+        void ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsf(List<PropuestaPatrullaje> propuestas, int usuarioId);
 
         void DeletePropuesta(int id);
     }
@@ -60,5 +60,8 @@ namespace Domain.Ports.Driving
         public List<PatrullajeVista> ObtenerProgramasPorMes(string tipo, int region, int anio, int mes);
         //Caso 4 Programas Periodo 3 - Todos
         public List<PatrullajeVista> ObtenerProgramas(string tipo, int region);
+
+        public Usuario? ObtenerUsuarioConfigurador(string usuario);
+        public int ObtenerIdUsuario(string usuario);
     }
 }

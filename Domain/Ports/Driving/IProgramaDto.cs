@@ -16,7 +16,7 @@ namespace Domain.Ports.Driving
         void ActualizaPropuestasComoProgramasActualizaPropuestas(List<ProgramaDto> p, string opcion, int accion, string usuario);
         void ActualizaProgramaPorCambioDeRuta(ProgramaDto p, string usuario);
 
-        void DeletePropuesta(int id);
+        void DeletePropuesta(int id, string usuario);
     }
     public interface IProgramaDtoQuery
     {

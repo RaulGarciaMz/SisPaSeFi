@@ -63,9 +63,9 @@ namespace WebApiSSF.Controllers
 
         // DELETE api/<ProgramasPatrullajeController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(int id, string usuario)
         {
-            _pp.DeletePropuesta(id);
+            _pp.DeletePropuesta(id, usuario);
         }
     }
 }

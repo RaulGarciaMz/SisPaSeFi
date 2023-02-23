@@ -18,6 +18,6 @@ namespace Domain.Ports.Driving
         List<PuntoPatrullaje> ObtenerPorEstado(int id_estado);
         List<PuntoPatrullaje> ObtenerPorUbicacion(string ubicacion);
         int ObtenerItinerariosPorPunto(int id);
-        int ObtenerUsuarioConfigurador(string usuario);
+        int ObtenerIdUsuarioConfigurador(string usuario_nom);
     }
 }
