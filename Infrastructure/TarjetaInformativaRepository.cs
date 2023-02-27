@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
+using System.Runtime.CompilerServices;
 
 namespace SqlServerAdapter
 {
@@ -21,12 +22,12 @@ namespace SqlServerAdapter
             _tarjetaContext = tarjetaContext;
         }
 
-        public void Agrega(TarjetaInformativa tarjeta, int idEstadoPatrullaje , int usuarioId) 
+        public async Task AgregaAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje , int usuarioId) 
         { 
             tarjeta.IdUsuario= usuarioId;
             _tarjetaContext.TarjetasInformativas.Add(tarjeta);
 
-            var programa = ObtenerProgramaPatrullajePorId(tarjeta.IdPrograma);
+            var programa = await ObtenerProgramaPatrullajePorIdAsync(tarjeta.IdPrograma);
 
             if (programa != null)
             {
@@ -39,20 +40,15 @@ namespace SqlServerAdapter
                 _tarjetaContext.Programas.Update(programa);
             }
 
-            _tarjetaContext.SaveChanges();
+            await _tarjetaContext.SaveChangesAsync();
         }
 
-
-        private ProgramaPatrullaje? ObtenerProgramaPatrullajePorId(int id) {
-            return _tarjetaContext.Programas.Where(x => x.IdPrograma == id).FirstOrDefault();
-        }
-
-        public void Update(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId) 
+        public async Task UpdateAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId) 
         {
             tarjeta.IdUsuario= usuarioId;
             _tarjetaContext.TarjetasInformativas.Update(tarjeta);
 
-            var programa = ObtenerProgramaPatrullajePorId(tarjeta.IdPrograma);
+            var programa = await ObtenerProgramaPatrullajePorIdAsync(tarjeta.IdPrograma);
 
             if (programa != null ) 
             {
@@ -65,10 +61,10 @@ namespace SqlServerAdapter
                 _tarjetaContext.Programas.Update(programa);
             }           
             
-            _tarjetaContext.SaveChanges();
+            await _tarjetaContext.SaveChangesAsync();
         }
 
-        public List<TarjetaInformativaVista> ObtenerPorAnioMes(string tipo, string region, int anio, int mes) 
+        public async Task< List<TarjetaInformativaVista>> ObtenerPorAnioMesAsync(string tipo, string region, int anio, int mes) 
         {
             string sqlQuery = @"SELECT a.id_nota, a.id_programa, b.fechapatrullaje, b.id_ruta, c.regionssf, c.id_tipopatrullaje, a.ultimaactualizacion,
                                        a.id_usuario, a.inicio, a.termino, a.tiempovuelo, a.calzoacalzo, a.observaciones, d.id_estadopatrullaje,
@@ -118,12 +114,12 @@ namespace SqlServerAdapter
                 new SqlParameter("@pMes", mes)
              };
 
-            return _tarjetaContext.TarjetasInformativasVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _tarjetaContext.TarjetasInformativasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
-        public int ObtenerIdUsuarioRegistrado(string usuario)
+        public async Task<int> ObtenerIdUsuarioRegistradoAsync(string usuario)
         {
-            var user = _tarjetaContext.Usuarios.Where(x => x.UsuarioNom == usuario).Select(x => x.IdUsuario).ToList();
+            var user = await _tarjetaContext.Usuarios.Where(x => x.UsuarioNom == usuario).Select(x => x.IdUsuario).ToListAsync();
 
             if (user.Count == 0)
             {
@@ -135,9 +131,9 @@ namespace SqlServerAdapter
             }
         }
 
-        public int ObtenerIdUsuarioConfigurador(string usuario)
+        public async Task<int> ObtenerIdUsuarioConfiguradorAsync(string usuario)
         {
-            var user = _tarjetaContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).Select(x => x.IdUsuario).ToList();
+            var user = await _tarjetaContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).Select(x => x.IdUsuario).ToListAsync();
 
             if (user.Count == 0)
             {
@@ -149,13 +145,25 @@ namespace SqlServerAdapter
             }
         }
 
-        public TarjetaInformativa? ObtenerTarjetaPorIdNota(int idNota) 
+        public async Task<TarjetaInformativa?> ObtenerTarjetaPorIdNotaAsync(int idNota) 
         { 
-            return _tarjetaContext.TarjetasInformativas.Where(x => x.IdNota== idNota).FirstOrDefault();
+            return await _tarjetaContext.TarjetasInformativas.Where(x => x.IdNota== idNota).FirstOrDefaultAsync();
         }
-        public int NumeroDeTarjetasPorProgama(int idPrograma)
+
+        public async Task<int> NumeroDeTarjetasPorProgamaAsync(int idPrograma)
         {
-            return _tarjetaContext.TarjetasInformativas.Where(x => x.IdPrograma == idPrograma).Count();
+            return await _tarjetaContext.TarjetasInformativas.Where(x => x.IdPrograma == idPrograma).CountAsync();
         }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await _tarjetaContext.SaveChangesAsync() >= 0);
+        }
+
+        private async Task<ProgramaPatrullaje?> ObtenerProgramaPatrullajePorIdAsync(int id)
+        {
+            return await _tarjetaContext.Programas.Where(x => x.IdPrograma == id).FirstOrDefaultAsync();
+        }
+
     }
 }

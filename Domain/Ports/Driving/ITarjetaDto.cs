@@ -9,12 +9,12 @@ namespace Domain.Ports.Driving
 {
     public interface ITarjetaDtoCommand
     {
-        void Agrega(TarjetaDto tarjeta, string usuario);
-        void Update(TarjetaDto tarjeta, string usuario);
+        Task Agrega(TarjetaDto tarjeta, string usuario);
+        Task Update(TarjetaDto tarjeta, string usuario);
     }
 
     public interface ITarjetaDtoQuery
     {
-        List<TarjetaDto> ObtenerPorAnioMes(string tipo, string region, int anio, int mes, string usuario);
+        Task<List<TarjetaDto>> ObtenerPorAnioMes(string tipo, string region, int anio, int mes, string usuario);
     }
 }

@@ -20,31 +20,31 @@ namespace DomainServices.DomServ
             _repo = repo;
         }
 
-        public void Agrega(TarjetaDto tarjeta, string usuario) {
+        public async Task Agrega(TarjetaDto tarjeta, string usuario) {
 
-            var userId = _repo.ObtenerIdUsuarioConfigurador(usuario);
+            var userId = await _repo.ObtenerIdUsuarioConfiguradorAsync(usuario);
 
             if (EsUsuarioRegistrado(userId))
             {
-                if (ExisteTarjetaParaElPrograma(tarjeta.IdPrograma)) 
+                if (await ExisteTarjetaParaElPrograma(tarjeta.IdPrograma)) 
                 {
                     return;
                 }
 
                 var t = ConvierteTarjetaDtoToDomain(tarjeta);
 
-                _repo.Agrega(t, tarjeta.IdEstadoPatrullaje, userId);
+                await _repo.AgregaAsync(t, tarjeta.IdEstadoPatrullaje, userId);
             }
                 
         }
 
-        public void Update(TarjetaDto tarjeta, string usuario) 
+        public async  Task Update(TarjetaDto tarjeta, string usuario) 
         {
-            var userId = _repo.ObtenerIdUsuarioConfigurador(usuario);
+            var userId = await _repo.ObtenerIdUsuarioConfiguradorAsync(usuario);
 
             if (EsUsuarioRegistrado(userId))
             {
-                var t = _repo.ObtenerTarjetaPorIdNota(tarjeta.IdNota);
+                var t = await _repo.ObtenerTarjetaPorIdNotaAsync(tarjeta.IdNota);
 
                 if (t == null)
                 {
@@ -68,18 +68,18 @@ namespace DomainServices.DomServ
                 t.PersonalNavalSemaroficial = tarjeta.PersonalNavalSEMAROficial;
                 t.PersonalNavalSemartropa = tarjeta.PersonalNavalSEMARTropa;
 
-                _repo.Update(t, tarjeta.IdEstadoPatrullaje, userId);
+                await _repo.UpdateAsync(t, tarjeta.IdEstadoPatrullaje, userId);
             }    
         }
 
-        public List<TarjetaDto> ObtenerPorAnioMes(string tipo, string region, int anio, int mes, string usuario) 
+        public async Task<List<TarjetaDto>> ObtenerPorAnioMes(string tipo, string region, int anio, int mes, string usuario) 
         {
             var regreso = new List<TarjetaDto>();
-            var userId = _repo.ObtenerIdUsuarioRegistrado(usuario);
+            var userId = await _repo.ObtenerIdUsuarioRegistradoAsync(usuario);
 
             if (EsUsuarioRegistrado(userId))
             {
-                var tarjetas = _repo.ObtenerPorAnioMes(tipo, region, anio, mes);
+                var tarjetas = await _repo.ObtenerPorAnioMesAsync(tipo, region, anio, mes);
 
                 foreach (var t in tarjetas)
                 {
@@ -96,9 +96,9 @@ namespace DomainServices.DomServ
             return user >= 0;
         }
 
-        private bool ExisteTarjetaParaElPrograma(int idPrograma)
+        private async Task<bool> ExisteTarjetaParaElPrograma(int idPrograma)
         {
-            if (_repo.NumeroDeTarjetasPorProgama(idPrograma) > 0)
+            if (await _repo.NumeroDeTarjetasPorProgamaAsync(idPrograma) > 0)
             {
                 return true;
             }

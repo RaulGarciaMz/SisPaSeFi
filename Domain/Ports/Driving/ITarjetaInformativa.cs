@@ -10,17 +10,17 @@ namespace Domain.Ports.Driving
 {
     public interface ITarjetaInformativaCommand
     {
-        void Agrega(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId);
-        void Update(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId);
+        Task AgregaAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId);
+        Task UpdateAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId);
     }
 
     public interface ITarjetaInformativaQuery
     {
-        List<TarjetaInformativaVista> ObtenerPorAnioMes(string tipo, string region, int anio, int mes);
+        Task<List<TarjetaInformativaVista>> ObtenerPorAnioMesAsync(string tipo, string region, int anio, int mes);
 
-        int ObtenerIdUsuarioRegistrado(string usuario);
-        int ObtenerIdUsuarioConfigurador(string usuario);
-        TarjetaInformativa? ObtenerTarjetaPorIdNota(int idNota);
-        int NumeroDeTarjetasPorProgama(int idPrograma);
+        Task<int> ObtenerIdUsuarioRegistradoAsync(string usuario);
+        Task<int> ObtenerIdUsuarioConfiguradorAsync(string usuario);
+        Task<TarjetaInformativa?> ObtenerTarjetaPorIdNotaAsync(int idNota);
+        Task<int> NumeroDeTarjetasPorProgamaAsync(int idPrograma);
     }
 }
