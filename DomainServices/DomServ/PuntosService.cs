@@ -25,52 +25,52 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de agregar un punto de patrullaje
         /// </summary>
-        public void Agrega(PuntoDto pp, string usuario)
+        public async Task Agrega(PuntoDto pp, string usuario)
         {
-            if (EsUsuarioConfigurador(usuario))
+            if (await EsUsuarioConfigurador(usuario))
             {
                 var p = ConvierteDtoToDominio(pp);
-                _repo.Agrega(p);
+                await _repo.Agrega(p);
             }
         }
 
         /// <summary>
         /// Método <c>Delete</c> Implementa la interfaz para el caso de uso de eliminar un punto de patrullaje, mientras no esté en otros itinerarios
         /// </summary>
-        public void Delete(int id, string usuario)
+        public async Task Delete(int id, string usuario)
         {        
-            if (EsUsuarioConfigurador(usuario))
+            if (await EsUsuarioConfigurador(usuario))
             {
-                if (ExisteEnItinerarios(id))
+                if (await ExisteEnItinerarios(id))
                 {
                     return;
                 }
 
-                _repo.Delete(id);
+                await _repo.Delete(id);
             }                
         }
 
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de actualizar un punto de patrullaje
         /// </summary>
-        public void Update(PuntoDto pp, string usuario)
+        public async Task Update(PuntoDto pp, string usuario)
         {
-            if (EsUsuarioConfigurador(usuario))
+            if (await EsUsuarioConfigurador(usuario))
             {
                 var p = ConvierteDtoToDominio(pp);
-                _repo.Update(p);
+                await _repo.Update(p);
             }
         }
 
         /// <summary>
         /// Método <c>ObtenerPorOpcion</c> Implementa la interfaz para el caso de uso de obtener puntos de patrullaje acorde a un filtro indicado
         /// </summary>
-        public List<PuntoDto> ObtenerPorOpcion(FiltroPunto opcion, string valor, string usuario)
+        public async Task<List<PuntoDto>> ObtenerPorOpcionAsync(FiltroPunto opcion, string valor, string usuario)
         {
             var puntos = new List<PuntoPatrullaje>();
             var r = new List<PuntoDto>();
 
-            if (EsUsuarioConfigurador(usuario))
+            if (await EsUsuarioConfigurador(usuario))
             {
                 switch (opcion)
                 {
@@ -80,11 +80,11 @@ namespace DomainServices.DomServ
                         {
                             return r;
                         }
-                        puntos = _repo.ObtenerPorEstado(j);
+                        puntos = await _repo.ObtenerPorEstadoAsync(j);
                         break;
 
                     case FiltroPunto.Ubicacion:
-                        puntos = _repo.ObtenerPorUbicacion(valor).ToList();
+                        puntos = await _repo.ObtenerPorUbicacionAsync(valor);
                         break;
                 }
 
@@ -102,9 +102,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>ExisteEnItinerarios</c> verifica si el punto de patrullaje indicado existe en algún itinerario
         /// </summary>
-        private bool ExisteEnItinerarios(int id)
+        private async Task<bool> ExisteEnItinerarios(int id)
         {
-            if (_repo.ObtenerItinerariosPorPunto(id) > 0)
+            if (await _repo.ObtenerItinerariosPorPuntoAsync(id) > 0)
             {
                 return true;
             }
@@ -115,9 +115,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>EsUsuarioConfigurador</c> verifica si el nombre del usuario corresponde a un usuario configurador
         /// </summary>
-        private bool EsUsuarioConfigurador(string usuario)
+        private async Task<bool> EsUsuarioConfigurador(string usuario)
         {
-            if (_repo.ObtenerIdUsuarioConfigurador(usuario) >= 0)
+            if (await _repo.ObtenerIdUsuarioConfiguradorAsync(usuario) >= 0)
             {
                 return true;
             }

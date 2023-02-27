@@ -11,13 +11,13 @@ namespace Domain.Ports.Driving
 {
     public interface IPuntosPatrullaje
     {      
-        void Agrega(PuntoPatrullaje pp);
-        void Update(PuntoPatrullaje pp);
-        void Delete(int id);
+        Task Agrega(PuntoPatrullaje pp);
+        Task Update(PuntoPatrullaje pp);
+        Task Delete(int id);
 
-        List<PuntoPatrullaje> ObtenerPorEstado(int id_estado);
-        List<PuntoPatrullaje> ObtenerPorUbicacion(string ubicacion);
-        int ObtenerItinerariosPorPunto(int id);
-        int ObtenerIdUsuarioConfigurador(string usuario_nom);
+        Task<List<PuntoPatrullaje>> ObtenerPorEstadoAsync(int id_estado);
+        Task<List<PuntoPatrullaje>> ObtenerPorUbicacionAsync(string ubicacion);
+        Task<int> ObtenerItinerariosPorPuntoAsync(int id);
+        Task<int> ObtenerIdUsuarioConfiguradorAsync(string usuario_nom);
     }
 }

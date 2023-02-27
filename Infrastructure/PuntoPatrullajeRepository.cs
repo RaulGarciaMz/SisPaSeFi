@@ -25,47 +25,47 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ObtenerPorEstado</c> Obtiene puntos de patrullaje pertenecientes al estado indicado
         /// </summary>
-        public List<PuntoPatrullaje> ObtenerPorEstado(int id_estado)
+        public async Task<List<PuntoPatrullaje>> ObtenerPorEstadoAsync(int id_estado)
         {
-            return _patrullajeContext.puntospatrullaje
+            return await _patrullajeContext.puntospatrullaje
                 .Include(m => m.IdMunicipioNavigation.IdEstadoNavigation)
                 .Where(c => c.IdMunicipioNavigation.IdEstado == id_estado)
-                .ToList();
+                .ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerPorUbicacion</c> Obtiene puntos de patrullaje cuya ubicación (nombre) coincida con el parámetro
         /// </summary>
-        public List<PuntoPatrullaje> ObtenerPorUbicacion(string ubicacion)
+        public async Task<List<PuntoPatrullaje>> ObtenerPorUbicacionAsync(string ubicacion)
         {
-            return _patrullajeContext.puntospatrullaje
+            return await _patrullajeContext.puntospatrullaje
                 .Include(m => m.IdMunicipioNavigation.IdEstadoNavigation)
                 .Where(e => e.Ubicacion == ubicacion)
-                .ToList();
+                .ToListAsync();
         }
 
         /// <summary>
         /// Método <c>Agrega</c> implementa la interface para registrar puntos de patrullaje
         /// </summary>
-        public void Agrega(PuntoPatrullaje pp)
+        public async Task Agrega(PuntoPatrullaje pp)
         {
             _patrullajeContext.Add(pp);
-            _patrullajeContext.SaveChanges();
+            await _patrullajeContext.SaveChangesAsync();
         }
 
         /// <summary>
         /// Método <c>Update</c> implementa la interface para actualizar puntos de patrullaje.
         /// </summary>
-        public void Update(PuntoPatrullaje pp)
+        public async Task Update(PuntoPatrullaje pp)
         {
             _patrullajeContext.Update(pp);
-            _patrullajeContext.SaveChanges();
+            await _patrullajeContext.SaveChangesAsync();
         }
 
         /// <summary>
         /// Método <c>Delete</c> implementa la interface para eliminar el punto de patrullaje indicado, siempre y cuando no esté bloqueado
         /// </summary>
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
             var pp = _patrullajeContext.puntospatrullaje
                 .Where(x => x.IdPunto == id && x.Bloqueado == 0)
@@ -74,18 +74,18 @@ namespace SqlServerAdapter
             if (pp != null)
             {
                 _patrullajeContext.Remove(pp);
-                _patrullajeContext.SaveChanges();
+                await _patrullajeContext.SaveChangesAsync();
             }            
         }
 
-        public int ObtenerItinerariosPorPunto(int id)
+        public async Task<int> ObtenerItinerariosPorPuntoAsync(int id)
         {
-            return _patrullajeContext.Itinerarios.Where(x => x.IdPunto == id).Count();
+            return await _patrullajeContext.Itinerarios.Where(x => x.IdPunto == id).CountAsync();
         }
 
-        public int ObtenerIdUsuarioConfigurador(string usuario_nom)
+        public async Task<int> ObtenerIdUsuarioConfiguradorAsync(string usuario_nom)
         {
-            var user = _patrullajeContext.Usuarios.Where(x => x.UsuarioNom == usuario_nom && x.Configurador == 1).Select(x => x.IdUsuario).ToList();
+            var user = await _patrullajeContext.Usuarios.Where(x => x.UsuarioNom == usuario_nom && x.Configurador == 1).Select(x => x.IdUsuario).ToListAsync();
 
             if (user.Count == 0)
             {
@@ -95,6 +95,11 @@ namespace SqlServerAdapter
             {
                 return user[0];
             }
+        }
+
+        public async Task<bool> SaveChangesAsync() 
+        {
+            return (await _patrullajeContext.SaveChangesAsync() >= 0 );
         }
     }
 

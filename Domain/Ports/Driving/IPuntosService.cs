@@ -11,9 +11,9 @@ namespace Domain.Ports.Driving
 {
     public interface IPuntosService
     {
-        void Agrega(PuntoDto pp, string usuario);
-        void Update(PuntoDto pp,string usuario);
-        void Delete(int id, string usuario);
-        List<PuntoDto> ObtenerPorOpcion(FiltroPunto opcion, string valor, string usuario);
+        Task Agrega(PuntoDto pp, string usuario);
+        Task Update(PuntoDto pp,string usuario);
+        Task Delete(int id, string usuario);
+        Task<List<PuntoDto>> ObtenerPorOpcionAsync(FiltroPunto opcion, string valor, string usuario);
     }
 }
