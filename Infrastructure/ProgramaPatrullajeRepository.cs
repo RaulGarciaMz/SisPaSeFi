@@ -26,10 +26,10 @@ namespace SqlServerAdapter
         }
 
         /// <summary>
-        /// Método <c>ObtenerPropuestasExtraordinariasPorAnioMesDia</c> implementa la interface para obtener propuestas extraordinarias por fecha.
+        /// Método <c>ObtenerPropuestasExtraordinariasPorAnioMesDiaAsync</c> implementa la interface para obtener propuestas extraordinarias por fecha.
         /// Caso 0 Extraordinario  --Propuestas extraordinarias
         /// </summary>       
-        public List<PatrullajeVista> ObtenerPropuestasExtraordinariasPorAnioMesDia(string tipo, int region, int anio, int mes, int dia)
+        public async Task< List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorAnioMesDiaAsync(string tipo, int region, int anio, int mes, int dia)
         {
             string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.id_puntoresponsable, 
                    a.ultimaactualizacion,a.id_usuario, b.clave, b.regionmilitarsdn,b.regionssf, b.observaciones observacionesruta, 
@@ -72,14 +72,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pDia", dia)
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerPropuestasPendientesPorAutorizarPorFiltro</c> implementa la interface para obtener propuestas pendientes por autorizar, acorde al filtro de los parámetros indicados.
         /// Caso 5 Ordinario  - Propuestas pendientes de autorizar
         /// </summary>
-        public List<PatrullajeVista> ObtenerPropuestasPendientesPorAutorizarPorFiltro(string tipo, int region, int anio, int mes, string clase)
+        public async Task<List<PatrullajeVista>> ObtenerPropuestasPendientesPorAutorizarPorFiltroAsync(string tipo, int region, int anio, int mes, string clase)
         {
             string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.fechapatrullaje fechatermino, a.id_puntoresponsable, b.clave,
                    b.regionmilitarsdn,b.regionssf,b.observaciones observacionesruta, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,0 id_usuarioresponsablepatrullaje,
@@ -123,14 +123,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pClase", clase)
             };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerPropuestasExtraordinariasPorFiltro</c> implementa la interface para obtere propuetsas extraordinarias acorde al filtro de los parámetros indicados.
         /// Caso 5 ExtraordinarioOrdinario
         /// </summary>
-        public List<PatrullajeVista> ObtenerPropuestasExtraordinariasPorFiltro(string tipo, int region, int anio, int mes, string clase)
+        public async Task<List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorFiltroAsync(string tipo, int region, int anio, int mes, string clase)
         {
             string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.id_puntoresponsable, b.clave,
                    b.regionmilitarsdn,b.regionssf,b.observaciones observacionesruta, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,
@@ -175,14 +175,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pClase", clase)
             };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerPropuestasPorFiltroEstado</c> implementa la interface para obtener propuestas acorde al filtro de los parámetros indicados.
         /// Dan servicio a las opciones 6,7,8,9  Ordinario  -- Propuestas
         /// </summary>
-        public List<PatrullajeVista> ObtenerPropuestasPorFiltroEstado(string tipo, int region, int anio, int mes, string clase, string estadoPropuesta)
+        public async Task<List<PatrullajeVista>> ObtenerPropuestasPorFiltroEstadoAsync(string tipo, int region, int anio, int mes, string clase, string estadoPropuesta)
         {
             // 6  - paramEstado='Pendiente de autorizacion por la SSF'
             // 7  - paramEstado='Autorizada'
@@ -232,14 +232,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@paramEstado", estadoPropuesta)
             };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerPropuestasExtraordinariasPorFiltroEstado</c> implementa la interface para obtener propuestas extraordinarias por estado de la propuesta.
         /// Caso 6,7,8,9 Extraordinario
         /// </summary>
-        public List<PatrullajeVista> ObtenerPropuestasExtraordinariasPorFiltroEstado(string tipo, int region, int anio, int mes, string clase, string estadoPropuesta)
+        public async Task<List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(string tipo, int region, int anio, int mes, string clase, string estadoPropuesta)
         {
             // 6 -- 'Pendiente de autorizacion por la SSF'
             // 7 -- 'Autorizada'
@@ -290,14 +290,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pEstado", estadoPropuesta)
             };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerProgramasEnProgresoPorDia</c> implementa la interface para obtener programas en progreso por fecha.
         /// Caso 1 Programas EN PROGRESO Periodo 1 - Un día
         /// </summary>
-        public List<PatrullajeVista> ObtenerProgramasEnProgresoPorDia(string tipo, int region, int anio, int mes, int dia)
+        public async Task<List<PatrullajeVista>> ObtenerProgramasEnProgresoPorDiaAsync(string tipo, int region, int anio, int mes, int dia)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
@@ -327,14 +327,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pDia", dia)
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerProgramasEnProgresoPorMes</c> implementa la interface para obtener programas en progreso por mes.
         /// Caso 1 Programas EN PROGRESO Periodo 2 - Un mes
         /// </summary>
-        public List<PatrullajeVista> ObtenerProgramasEnProgresoPorMes(string tipo, int region, int anio, int mes)
+        public async Task<List<PatrullajeVista>> ObtenerProgramasEnProgresoPorMesAsync(string tipo, int region, int anio, int mes)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
@@ -363,14 +363,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pMes", mes)
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerProgramasEnProgreso</c> implementa la interface para obtener programas en progreso para una región.
         /// Caso 1 Programas EN PROGRESO Periodo 3 - todos
         /// </summary>
-        public List<PatrullajeVista> ObtenerProgramasEnProgreso(string tipo, int region)
+        public async Task<List<PatrullajeVista>> ObtenerProgramasEnProgresoAsync(string tipo, int region)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
@@ -396,14 +396,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pRegion", region),
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerProgramasConcluidosPorDia</c> implementa la interface para obtener programas concluidos por fecha (día).
         /// Caso 2 Programas CONCLUIDOS Periodo 1 - Un día
         /// </summary>
-        public List<PatrullajeVista> ObtenerProgramasConcluidosPorDia(string tipo, int region, int anio, int mes, int dia)
+        public async Task<List<PatrullajeVista>> ObtenerProgramasConcluidosPorDiaAsync(string tipo, int region, int anio, int mes, int dia)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
@@ -433,14 +433,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pDia", dia)
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerProgramasConcluidosPorMes</c> implementa la interface para obtener programas concluidos por mes.
         /// Caso 2 Programas CONCLUIDOS Periodo 2 - Un mes
         /// </summary>
-        public List<PatrullajeVista> ObtenerProgramasConcluidosPorMes(string tipo, int region, int anio, int mes)
+        public async Task<List<PatrullajeVista>> ObtenerProgramasConcluidosPorMesAsync(string tipo, int region, int anio, int mes)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
@@ -469,14 +469,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pMes", mes)
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerProgramasConcluidos</c> implementa la interface para aobtener programas concluidos por region.
         /// Caso 2 Programas CONCLUIDOS Periodo 3 - todos
         /// </summary>
-        public List<PatrullajeVista> ObtenerProgramasConcluidos(string tipo, int region)
+        public async Task<List<PatrullajeVista>> ObtenerProgramasConcluidosAsync(string tipo, int region)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
@@ -502,7 +502,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pRegion", region),
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
@@ -510,7 +510,7 @@ namespace SqlServerAdapter
         /// Caso 3 Programas CANCELADOS Periodo 1 - Un día
         /// </summary>
         //
-        public List<PatrullajeVista> ObtenerProgramasCanceladosPorDia(string tipo, int region, int anio, int mes, int dia)
+        public async Task<List<PatrullajeVista>> ObtenerProgramasCanceladosPorDiaAsync(string tipo, int region, int anio, int mes, int dia)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
@@ -540,14 +540,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pDia", dia)
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerProgramasCanceladosPorMes</c> implementa la interface para obtener programas cancelados por mes.
         /// Caso 3 Programas CANCELADOS Periodo 2 - Un mes
         /// </summary>
-        public List<PatrullajeVista> ObtenerProgramasCanceladosPorMes(string tipo, int region, int anio, int mes)
+        public async Task<List<PatrullajeVista>> ObtenerProgramasCanceladosPorMesAsync(string tipo, int region, int anio, int mes)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
@@ -576,14 +576,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pMes", mes)
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerProgramasCancelados</c> implementa la interface para obtener programas cancelados por región.
         /// Caso 3 Programas CANCELADOS Periodo 3 - todos
         /// </summary>
-        public List<PatrullajeVista> ObtenerProgramasCancelados(string tipo, int region)
+        public async Task<List<PatrullajeVista>> ObtenerProgramasCanceladosAsync(string tipo, int region)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
@@ -609,14 +609,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pRegion", region),
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerProgramasPorDia</c> implementa la interface para obtener programas por fecha (día).
         /// Caso 4 Programas Periodo 1 - Un día
         /// </summary>
-        public List<PatrullajeVista> ObtenerProgramasPorDia(string tipo, int region, int anio, int mes, int dia)
+        public async Task<List<PatrullajeVista>> ObtenerProgramasPorDiaAsync(string tipo, int region, int anio, int mes, int dia)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
@@ -645,14 +645,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pDia", dia)
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerProgramasPorMes</c> implementa la interface para obtener programas por mes.
         /// Caso 4 Programas Periodo 2 - Un mes  --- Aplica también para el Caso 0 Ordinario
         /// </summary>
-        public List<PatrullajeVista> ObtenerProgramasPorMes(string tipo, int region, int anio, int mes)
+        public async Task<List<PatrullajeVista>> ObtenerProgramasPorMesAsync(string tipo, int region, int anio, int mes)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
@@ -680,14 +680,14 @@ namespace SqlServerAdapter
                 new SqlParameter("@pMes", mes)
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerProgramas</c> implementa la interface para obtener todos los programas por región.
         /// Caso 4 Programas Periodo 3 - Todos
         /// </summary>
-        public List<PatrullajeVista> ObtenerProgramas(string tipo, int region)
+        public async Task<List<PatrullajeVista>> ObtenerProgramasAsync(string tipo, int region)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje,a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
@@ -712,22 +712,22 @@ namespace SqlServerAdapter
                 new SqlParameter("@pRegion", region)
              };
 
-            return _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>AgregaPropuestasComoProgramasActualizaPropuestas</c> implementa la interface para registrar programas referidas a las propuestas indicadas (convierte propuestas en programas).
         /// </summary>
-        public void AgregaPropuestasComoProgramasActualizaPropuestas(List<ProgramaPatrullaje> programas, int usuarioId)
+        public async Task AgregaPropuestasComoProgramasActualizaPropuestasAsync(List<ProgramaPatrullaje> programas, int usuarioId)
         {
             string edoAutorizada = "Autorizada";
-            var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
+            var idEdoAutorizada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToListAsync();
             var lstPropuestasActualizar = new List<PropuestaPatrullaje>();
 
             foreach (var p in programas)
             {
                 p.IdUsuario = usuarioId;
-                var aActualizar = _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == p.IdPropuestaPatrullaje).ToList();
+                var aActualizar = await _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == p.IdPropuestaPatrullaje).ToListAsync();
 
                 foreach (var item in aActualizar)
                 {
@@ -742,32 +742,32 @@ namespace SqlServerAdapter
 
             _programaContext.ProgramasPatrullajes.AddRange(programas);
             _programaContext.PropuestasPatrullajes.UpdateRange(lstPropuestasActualizar);
-            _programaContext.SaveChanges();
+            await _programaContext.SaveChangesAsync();
         }
 
         /// <summary>
         /// Método <c>AgregaPropuestaExtraordinaria</c> implementa la interface para agregar propuestas extraordinaria.
         /// </summary>
-        public void AgregaPropuestaExtraordinaria(PropuestaExtraordinariaAdd pp,  string clase,int usuarioId)
+        public async Task AgregaPropuestaExtraordinariaAsync(PropuestaExtraordinariaAdd pp,  string clase,int usuarioId)
         {
-            var rutaNoExisteEnPropuesta = _programaContext.PropuestasPatrullajes
+            var rutaNoExisteEnPropuesta = await _programaContext.PropuestasPatrullajes
                 .Where(x => x.IdRuta == pp.Propuesta.IdRuta && x.FechaPatrullaje == pp.Propuesta.FechaPatrullaje)
-                .Count() == 0;
+                .CountAsync() == 0;
 
             string edoCreada = "Creada";
-            var idEdoCreada = _programaContext.EstadosPropuesta
+            var idEdoCreada = await _programaContext.EstadosPropuesta
                 .Where(x => x.DescripcionEstadoPropuesta == edoCreada)
-                .Select(x => x.IdEstadoPropuesta).ToList();
+                .Select(x => x.IdEstadoPropuesta).ToListAsync();
 
             if (rutaNoExisteEnPropuesta)
             {
-                var idClase = _programaContext.ClasesPatrullaje
+                var idClase = await _programaContext.ClasesPatrullaje
                     .Where(x => x.Descripcion == clase)
-                    .Select(x => x.IdClasePatrullaje).ToList();
+                    .Select(x => x.IdClasePatrullaje).ToListAsync();
 
-                var propuesta = _programaContext.PropuestasPatrullajes
+                var propuesta = await _programaContext.PropuestasPatrullajes
                     .Where(x => x.IdRuta == pp.Propuesta.IdRuta && x.FechaPatrullaje == pp.Propuesta.FechaPatrullaje)
-                    .Select(x => x.IdPropuestaPatrullaje).ToList();
+                    .Select(x => x.IdPropuestaPatrullaje).ToListAsync();
 
                 pp.Propuesta.IdClasePatrullaje = idClase[0];
                 pp.Propuesta.IdEstadoPropuesta = idEdoCreada[0];
@@ -793,24 +793,24 @@ namespace SqlServerAdapter
                 _programaContext.PropuestasComplementosSsf.Add(complemento);
                 _programaContext.PropuestasVehiculos.AddRange(pp.Vehiculos);
                 _programaContext.PropuestasLineas.AddRange(pp.Lineas);
-                _programaContext.SaveChanges();
+                await _programaContext.SaveChangesAsync();
             }
         }
 
         /// <summary>
         /// Método <c>AgregaPropuestasFechasMultiples</c> implementa la interface para agregar propuestas de múltiples fechas.
         /// </summary>
-        public void AgregaPropuestasFechasMultiples(PropuestaPatrullaje pp, List<DateTime> fechas, string clase, int usuarioId)
+        public async Task AgregaPropuestasFechasMultiplesAsync(PropuestaPatrullaje pp, List<DateTime> fechas, string clase, int usuarioId)
         {
             string edoCreada = "Creada";
-            var idEdoCreada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoCreada).Select(x => x.IdEstadoPropuesta).ToList();
-            var idClasePatrullaje = _programaContext.ClasesPatrullaje.Where(x => x.Descripcion == clase).Select(x => x.IdClasePatrullaje).ToList();
+            var idEdoCreada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoCreada).Select(x => x.IdEstadoPropuesta).ToListAsync();
+            var idClasePatrullaje = await _programaContext.ClasesPatrullaje.Where(x => x.Descripcion == clase).Select(x => x.IdClasePatrullaje).ToListAsync();
 
             var propuestas = new List<PropuestaPatrullaje>();
 
             foreach (var fecha in fechas)
             {
-                var numRutas = _programaContext.PropuestasPatrullajes.Where(x => x.IdRuta == pp.IdRuta && x.FechaPatrullaje == pp.FechaPatrullaje).Count();
+                var numRutas = await _programaContext.PropuestasPatrullajes.Where(x => x.IdRuta == pp.IdRuta && x.FechaPatrullaje == pp.FechaPatrullaje).CountAsync();
 
                 if (numRutas == 0)
                 {
@@ -835,22 +835,22 @@ namespace SqlServerAdapter
             if (propuestas.Count > 0)
             {
                 _programaContext.PropuestasPatrullajes.AddRange(propuestas);
-                _programaContext.SaveChanges();
+                await _programaContext.SaveChangesAsync();
             }
         }
 
         /// <summary>
         /// Método <c>AgregaProgramaFechasMultiples</c> implementa la interface para agregar programas para múltiples fechas.
         /// </summary>
-        public void AgregaProgramaFechasMultiples(ProgramaPatrullaje pp, List<DateTime> fechas, int usuarioId)
+        public async Task AgregaProgramaFechasMultiplesAsync(ProgramaPatrullaje pp, List<DateTime> fechas, int usuarioId)
         {
             var lstProgramas = new List<ProgramaPatrullaje>();
             var lstPropuestas = new List<PropuestaPatrullaje>();
 
             string edoAutorizada = "Autorizada";
-            var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
+            var idEdoAutorizada = await  _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToListAsync();
 
-            var propuestas = _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == pp.IdPropuestaPatrullaje).ToList();
+            var propuestas = await _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == pp.IdPropuestaPatrullaje).ToListAsync();
 
             foreach (var prop in propuestas)
             {
@@ -877,15 +877,15 @@ namespace SqlServerAdapter
 
             _programaContext.ProgramasPatrullajes.AddRange(lstProgramas);
             _programaContext.PropuestasPatrullajes.UpdateRange(propuestas);
-            _programaContext.SaveChanges();
+            await _programaContext.SaveChangesAsync();
         }
 
         /// <summary>
         /// Método <c>ActualizaProgramaPorCambioDeRuta</c> implementa la interface para actualizar programas debido a cambio de ruta.
         /// </summary>
-        public void ActualizaProgramaPorCambioDeRuta(int idPrograma, int idRuta, int usuarioId)
+        public async Task ActualizaProgramaPorCambioDeRutaAsync(int idPrograma, int idRuta, int usuarioId)
         {
-            var programa = _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).ToList();
+            var programa = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).ToListAsync();
 
             if (programa.Count() == 1)
             {
@@ -894,23 +894,23 @@ namespace SqlServerAdapter
                 progamaActualizar.IdUsuario = usuarioId;
 
                 _programaContext.ProgramasPatrullajes.Update(progamaActualizar);
-                _programaContext.SaveChanges();
+                await _programaContext.SaveChangesAsync();
             }
         }
 
         /// <summary>
         /// Método <c>ActualizaProgramasConPropuestas</c> implementa la interface para actualizar programas con propuestas.
         /// </summary>
-        public void ActualizaProgramasConPropuestas(List<ProgramaPatrullaje> programas)
+        public async Task ActualizaProgramasConPropuestasAsync(List<ProgramaPatrullaje> programas)
         {
             string edoAutorizada = "Autorizada";
-            var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
+            var idEdoAutorizada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToListAsync();
 
             var idPropuestas = programas.Select(x => x.IdPropuestaPatrullaje).ToList();
 
-            var aActualizar = (from c in _programaContext.PropuestasPatrullajes
+            var aActualizar = await (from c in _programaContext.PropuestasPatrullajes
                                where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
-                               select c).ToList();
+                               select c).ToListAsync();
 
              foreach (var item in aActualizar)
             {
@@ -919,24 +919,24 @@ namespace SqlServerAdapter
 
             _programaContext.ProgramasPatrullajes.AddRange(programas);
             _programaContext.PropuestasPatrullajes.UpdateRange(aActualizar);
-            _programaContext.SaveChanges();
+            await _programaContext.SaveChangesAsync();
         }
 
         /// <summary>
         /// Método <c>ActualizaPropuestasAutorizadaToRechazada</c> implementa la interface para actualizar el estado de propuestas autorizadas hacia propuestas rechazadas.
         /// </summary>
-        public void ActualizaPropuestasAutorizadaToRechazada(List<PropuestaPatrullaje> propuestas, int usuarioId)
+        public async Task ActualizaPropuestasAutorizadaToRechazadaAsync(List<PropuestaPatrullaje> propuestas, int usuarioId)
         {
             string edoAutorizada = "Autorizada";
-            var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
+            var idEdoAutorizada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToListAsync();
             string edoRechazada = "Rechazada";
-            var idEdoRechazada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoRechazada).Select(x => x.IdEstadoPropuesta).ToList();
+            var idEdoRechazada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoRechazada).Select(x => x.IdEstadoPropuesta).ToListAsync();
             var idPropuestas = propuestas.Select(x => x.IdPropuestaPatrullaje).ToList();
 
-            var propuestasActualizar = (from c in _programaContext.PropuestasPatrullajes
+            var propuestasActualizar = await  (from c in _programaContext.PropuestasPatrullajes
                                where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
                                && c.IdEstadoPropuesta != idEdoAutorizada[0]
-                               select c).ToList();
+                               select c).ToListAsync();
 
             if (propuestasActualizar.Count > 0)
             {
@@ -947,25 +947,25 @@ namespace SqlServerAdapter
                 }
 
                 _programaContext.PropuestasPatrullajes.UpdateRange(propuestasActualizar);
-                _programaContext.SaveChanges();
+                await _programaContext.SaveChangesAsync();
             }
         }
 
         /// <summary>
         /// Método <c>ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandancia</c> implementa la interface para actualizar el estado d elas propuestas de aprobada por comandancia hacia pendiente de aprobación.
         /// </summary>
-        public void ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandancia(List<PropuestaPatrullaje> propuestas, int usuarioId)
+        public async Task ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(List<PropuestaPatrullaje> propuestas, int usuarioId)
         {
             string edoAprobada = "Aprobada por comandancia regional";
-            var idEdoAprobada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAprobada).Select(x => x.IdEstadoPropuesta).ToList();
+            var idEdoAprobada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAprobada).Select(x => x.IdEstadoPropuesta).ToListAsync();
             string edoPendiente = "Pendiente de aprobacion por comandancia regional";
-            var idEdoPendiente = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoPendiente).Select(x => x.IdEstadoPropuesta).ToList();
+            var idEdoPendiente = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoPendiente).Select(x => x.IdEstadoPropuesta).ToListAsync();
             var idPropuestas = propuestas.Select(x => x.IdPropuestaPatrullaje).ToList();
 
-            var propuestasActualizar = (from c in _programaContext.PropuestasPatrullajes
+            var propuestasActualizar = await (from c in _programaContext.PropuestasPatrullajes
                                         where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
                                         && c.IdEstadoPropuesta < idEdoAprobada[0]
-                                        select c).ToList();
+                                        select c).ToListAsync();
 
             if (propuestasActualizar.Count > 0)
             {
@@ -976,25 +976,25 @@ namespace SqlServerAdapter
                 }
 
                 _programaContext.PropuestasPatrullajes.UpdateRange(propuestasActualizar);
-                _programaContext.SaveChanges();
+                await _programaContext.SaveChangesAsync();
             }
         }
 
         /// <summary>
         /// Método <c>ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsf</c> implementa la interface para actualizar el estado de las propuestas de autorizadas hacia pendiente de autorización SSF.
         /// </summary>
-        public void ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsf(List<PropuestaPatrullaje> propuestas, int usuarioId)
+        public async Task ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(List<PropuestaPatrullaje> propuestas, int usuarioId)
         {
             string edoAutorizada = "Autorizada";
-            var idEdoAutorizada = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToList();
+            var idEdoAutorizada =await  _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToListAsync();
             string edoPendiente = "Pendiente de autorizacion por la SSF";
-            var idEdoPendiente = _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoPendiente).Select(x => x.IdEstadoPropuesta).ToList();
+            var idEdoPendiente = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoPendiente).Select(x => x.IdEstadoPropuesta).ToListAsync();
             var idPropuestas = propuestas.Select(x => x.IdPropuestaPatrullaje).ToList();
 
-            var propuestasActualizar = (from c in _programaContext.PropuestasPatrullajes
+            var propuestasActualizar =await  (from c in _programaContext.PropuestasPatrullajes
                                         where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
                                         && c.IdEstadoPropuesta < idEdoAutorizada[0]
-                                        select c).ToList();
+                                        select c).ToListAsync();
 
             if (propuestasActualizar.Count > 0)
             {
@@ -1005,40 +1005,40 @@ namespace SqlServerAdapter
                 }
 
                 _programaContext.PropuestasPatrullajes.UpdateRange(propuestasActualizar);
-                _programaContext.SaveChanges();
+                await _programaContext.SaveChangesAsync();
             }
         }
 
         /// <summary>
         /// Método <c>DeletePropuesta</c> implementa la interface para eliminar una propuesta.
         /// </summary>
-        public void DeletePropuesta(int id)
+        public async Task DeletePropuestaAsync(int id)
         {
             string estado = "Autorizada";
-            var edos = _programaContext.EstadosPropuesta.
+            var edos =  _programaContext.EstadosPropuesta.
                 Where(x => x.DescripcionEstadoPropuesta == estado).
                 Select(x => x.IdEstadoPropuesta);
 
             var pro =_programaContext.PropuestasPatrullajes.
                 Where(x => x.IdPropuestaPatrullaje == id);
 
-            var aBorrar = (from c in pro
+            var aBorrar = await (from c in pro
                            where !edos.Any(o => o == c.IdEstadoPropuesta) //NOT IN
-                           select c).ToList();
+                           select c).ToListAsync();
          
             if (aBorrar.Count > 0 )
             {
                 _programaContext.PropuestasPatrullajes.Remove(aBorrar[0]);
-                _programaContext.SaveChanges();
+                await _programaContext.SaveChangesAsync();
             }
         }
 
         /// <summary>
         /// Método <c>ObtenerIdUsuario</c> implementa la interface para obtener el ID del usuario por nombre.
         /// </summary>
-        public int ObtenerIdUsuario(string usuario)
+        public async Task<int> ObtenerIdUsuarioAsync(string usuario)
         {
-            var user = _programaContext.Usuarios.Where(x => x.UsuarioNom == usuario).Select(x => x.IdUsuario).ToList();
+            var user = await _programaContext.Usuarios.Where(x => x.UsuarioNom == usuario).Select(x => x.IdUsuario).ToListAsync();
 
             if (user.Count == 0)
             {
@@ -1053,10 +1053,14 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ObtenerUsuarioConfigurador</c> implementa la interface para obtener usuario configurador por nombre.
         /// </summary>
-        public Usuario? ObtenerUsuarioConfigurador(string usuario) 
+        public async Task<Usuario?> ObtenerUsuarioConfiguradorAsync(string usuario) 
         {
-            return _programaContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefault();
+            return await _programaContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefaultAsync();
         }
 
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await _programaContext.SaveChangesAsync() >= 0);
+        }
     }
 }

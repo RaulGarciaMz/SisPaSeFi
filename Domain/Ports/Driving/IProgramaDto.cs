@@ -10,16 +10,16 @@ namespace Domain.Ports.Driving
 {
     public interface IProgramaDtoCommand
     {
-        void AgregaPrograma(string opcion, string clase, ProgramaDto p, string usuario);
-        void AgregaPropuestasComoProgramas(List<ProgramaDto> p, string usuario);
+        Task AgregaPrograma(string opcion, string clase, ProgramaDto p, string usuario);
+        Task AgregaPropuestasComoProgramas(List<ProgramaDto> p, string usuario);
 
-        void ActualizaPropuestasComoProgramasActualizaPropuestas(List<ProgramaDto> p, string opcion, int accion, string usuario);
-        void ActualizaProgramaPorCambioDeRuta(ProgramaDto p, string usuario);
+        Task ActualizaPropuestasComoProgramasActualizaPropuestas(List<ProgramaDto> p, string opcion, int accion, string usuario);
+        Task ActualizaProgramaPorCambioDeRuta(ProgramaDto p, string usuario);
 
-        void DeletePropuesta(int id, string usuario);
+        Task DeletePropuesta(int id, string usuario);
     }
     public interface IProgramaDtoQuery
     {
-        List<PatrullajeDto> ObtenerPorFiltro(string tipo, int region, string clase,int anio, int mes, int dia=1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia);      
+        Task<List<PatrullajeDto>> ObtenerPorFiltro(string tipo, int region, string clase,int anio, int mes, int dia=1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia);      
     }
 }
