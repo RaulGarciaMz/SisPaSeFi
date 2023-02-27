@@ -25,9 +25,9 @@ namespace SqlServerAdapter
         }
 
         /// <summary>
-        /// Método <c>Agrega</c> Implementa la interfaz para agregar una ruta junto con sus itinerarios
+        /// Método <c>AgregaAsync</c> Implementa la interfaz para agregar una ruta junto con sus itinerarios
         /// </summary>
-        public void Agrega(Ruta r, List<Itinerario> itin)
+        public async Task AgregaAsync(Ruta r, List<Itinerario> itin)
         {
             //TODO Tratar de implementar transacción
            _rutaContext.Rutas.Add(r);
@@ -38,54 +38,46 @@ namespace SqlServerAdapter
             }
 
             _rutaContext.Itinerarios.AddRange(itin); 
-            _rutaContext.SaveChanges();
+            await _rutaContext.SaveChangesAsync();
         }
 
         /// <summary>
-        /// Método <c>Update</c> Implementa la interfaz para actualizar una ruta junto con sus itinerarios
+        /// Método <c>UpdateAsync</c> Implementa la interfaz para actualizar una ruta junto con sus itinerarios
         /// </summary>
-        public void Update(Ruta pp)
+        public async Task UpdateAsync(Ruta pp)
         {
             _rutaContext.Rutas.Remove(pp);
-            _rutaContext.SaveChanges();
+            await _rutaContext.SaveChangesAsync();
         }
 
         /// <summary>
-        /// Método <c>Delete</c> Implementa la interfaz para eliminar una ruta indicada que no está bloqueada
+        /// Método <c>DeleteAsync</c> Implementa la interfaz para eliminar una ruta indicada que no está bloqueada
         /// </summary>
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var r = _rutaContext.Rutas.Where(x => x.IdRuta == id).First();
+            var r = await _rutaContext.Rutas.Where(x => x.IdRuta == id).FirstAsync();
 
             if (r.Bloqueado == 0)
             {
                 _rutaContext.Rutas.Remove(r);
-                _rutaContext.SaveChanges();
+                await _rutaContext.SaveChangesAsync();
             }
         }
 
         /// <summary>
-        /// Método <c>Delete</c> Implementa la interfaz para obtener rutas filtradas
+        /// Método <c>ObtenerDescripcionTipoPatrullajeAsync</c> implementa la interfaz para obtener la descripcion de un tipo de patrullaje indicado
         /// </summary>
-        public List<Ruta> ObtenerPorFiltro(int opcion, string tipo, string criterio, string actividad)
+        public async Task<string> ObtenerDescripcionTipoPatrullajeAsync(int tipoPatrullaje)
         {
-             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Método <c>ObtenerDescripcionTipoPatrullaje</c> implementa la interfaz para obtener la descripcion de un tipo de patrullaje indicado
-        /// </summary>
-        public string ObtenerDescripcionTipoPatrullaje(int tipoPatrullaje)
-        {
-            var t = _rutaContext.TiposPatrullaje.Where(x => x.IdTipoPatrullaje == tipoPatrullaje).First();
+            var t = await _rutaContext.TiposPatrullaje.Where(x => x.IdTipoPatrullaje == tipoPatrullaje).FirstAsync();
 
             return t.Descripcion;
         }
 
         /// <summary>
-        /// Método <c>ObtenerNumeroItinerariosConfiguradosPorZonasRuta</c> implementa la interfaz para obtener el número de itinerarios configurados para la combinación de parámetros indicados
+        /// Método <c>ObtenerNumeroItinerariosConfiguradosPorZonasRutaAsync</c> implementa la interfaz para obtener el número de itinerarios configurados para la combinación de parámetros indicados
         /// </summary>
-        public int ObtenerNumeroItinerariosConfiguradosPorZonasRuta(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, string ruta)
+        public async Task<int> ObtenerNumeroItinerariosConfiguradosPorZonasRutaAsync(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, string ruta)
         {
             string sqlQuery = @"SELECT itinerarioruta FROM (
                      SELECT a.id_ruta,a.clave,a.regionmilitarsdn as regiondelasdn,a.regionssf as regiondelassf,
@@ -109,13 +101,13 @@ namespace SqlServerAdapter
                 new SqlParameter("@parRuta", ruta),
             };
 
-            return _rutaContext.Itinerarios.FromSqlRaw(sqlQuery, parametros).Count();
+            return await _rutaContext.Itinerarios.FromSqlRaw(sqlQuery, parametros).CountAsync();
         }
 
         /// <summary>
-        /// Método <c>ObtenerNumeroItinerariosConfiguradosEnOtraRuta</c> implementa la interfaz para obtener el número de itinerarios configurados en una ruta diferente a la indicada
+        /// Método <c>ObtenerNumeroItinerariosConfiguradosEnOtraRutaAsync</c> implementa la interfaz para obtener el número de itinerarios configurados en una ruta diferente a la indicada
         /// </summary>
-        public int ObtenerNumeroItinerariosConfiguradosEnOtraRuta(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, int ruta, string rutaItinerario)
+        public async Task<int> ObtenerNumeroItinerariosConfiguradosEnOtraRutaAsync(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, int ruta, string rutaItinerario)
         {
             string sqlQuery = @"SELECT itinerarioruta FROM (
                      SELECT a.id_ruta,a.clave,a.regionmilitarsdn as regiondelasdn,a.regionssf as regiondelassf,
@@ -141,53 +133,53 @@ namespace SqlServerAdapter
                 new SqlParameter("@parRutaItinerario", rutaItinerario)
             };
 
-            return _rutaContext.Itinerarios.FromSqlRaw(sqlQuery, parametros).Count();
+            return await _rutaContext.Itinerarios.FromSqlRaw(sqlQuery, parametros).CountAsync();
         }
 
         /// <summary>
-        /// Método <c>ObtenerNumeroRutasPorFiltro</c> implementa la interfaz para obtener el número de rutas por clave y ruta
+        /// Método <c>ObtenerNumeroRutasPorFiltroAsync</c> implementa la interfaz para obtener el número de rutas por clave y ruta
         /// </summary>
-        public int ObtenerNumeroRutasPorFiltro(string clave, int idRuta)
+        public async Task<int> ObtenerNumeroRutasPorFiltroAsync(string clave, int idRuta)
         {
-            return _rutaContext.Rutas.Where(x => x.Clave == clave && x.IdRuta == idRuta).Count();
+            return await _rutaContext.Rutas.Where(x => x.Clave == clave && x.IdRuta == idRuta).CountAsync();
         }
 
         /// <summary>
-        /// Método <c>ObtenerNumeroRutasPorTipoAndRegionMilitar</c> implementa la interfaz para obtener el número de rutas por tipo de patrullaje y región militar
+        /// Método <c>ObtenerNumeroRutasPorTipoAndRegionMilitarAsync</c> implementa la interfaz para obtener el número de rutas por tipo de patrullaje y región militar
         /// </summary>
-        public int ObtenerNumeroRutasPorTipoAndRegionMilitar(int tipoPatrullaje, string regionMilitar)
+        public async Task<int> ObtenerNumeroRutasPorTipoAndRegionMilitarAsync(int tipoPatrullaje, string regionMilitar)
         {
-            return _rutaContext.Rutas.Where(x => x.IdTipoPatrullaje == tipoPatrullaje && x.RegionMilitarSdn == regionMilitar).Count();
+            return await _rutaContext.Rutas.Where(x => x.IdTipoPatrullaje == tipoPatrullaje && x.RegionMilitarSdn == regionMilitar).CountAsync();
         }
 
         /// <summary>
-        /// Método <c>ObtenerNumeroProgramasPorRuta</c> implementa la interfaz para obtener el número de programas de patrullaje para una ruta indicada
+        /// Método <c>ObtenerNumeroProgramasPorRutaAsync</c> implementa la interfaz para obtener el número de programas de patrullaje para una ruta indicada
         /// </summary>
-        public int ObtenerNumeroProgramasPorRuta(int idRuta)
+        public async Task<int> ObtenerNumeroProgramasPorRutaAsync(int idRuta)
         {
-            return _rutaContext.Programas.Where(x => x.IdRuta == idRuta).Count();
+            return await _rutaContext.Programas.Where(x => x.IdRuta == idRuta).CountAsync();
         }
 
         /// <summary>
-        /// Método <c>ObtenerNumeroPropuestasPorRuta</c> implementa la interfaz para obtener el número de propuestas de patrullaje para una ruta indicada
+        /// Método <c>ObtenerNumeroPropuestasPorRutaAsync</c> implementa la interfaz para obtener el número de propuestas de patrullaje para una ruta indicada
         /// </summary>
-        public int ObtenerNumeroPropuestasPorRuta(int idRuta)
+        public async Task<int> ObtenerNumeroPropuestasPorRutaAsync(int idRuta)
         {
-            return _rutaContext.Propuestas.Where(x => x.IdRuta == idRuta).Count();
+            return await _rutaContext.Propuestas.Where(x => x.IdRuta == idRuta).CountAsync();
         }
 
         /// <summary>
-        /// Método <c>ObtenerUsuarioConfigurador</c> implementa la interfaz para obtener al usuario indicado sólo si es configurador configurador, 
+        /// Método <c>ObtenerUsuarioConfiguradorAsync</c> implementa la interfaz para obtener al usuario indicado sólo si es configurador configurador, 
         /// </summary>
-        public Usuario? ObtenerUsuarioConfigurador(string usuario) 
+        public async Task <Usuario?> ObtenerUsuarioConfiguradorAsync(string usuario) 
         {
-           return _rutaContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefault();
+           return await _rutaContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefaultAsync();
         }
 
         /// <summary>
-        /// Método <c>ObtenerRutasPorRegionSsf</c> implementa la interfaz para obtener rutas filtradas por tipo y región SSF
+        /// Método <c>ObtenerRutasPorRegionSsfAsync</c> implementa la interfaz para obtener rutas filtradas por tipo y región SSF
         /// </summary>
-        public List<RutaVista> ObtenerRutasPorRegionSsf(string tipo, int regionSsf)
+        public async Task<List<RutaVista>> ObtenerRutasPorRegionSsfAsync(string tipo, int regionSsf)
         {
             string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
                    a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
@@ -206,13 +198,13 @@ namespace SqlServerAdapter
                 new SqlParameter("@parDescripcion", tipo)
             };
 
-            return _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
-        /// Método <c>ObtenerRutasPorRegionMilitar</c> implementa la interfaz para obtener rutas filtradas por Región Militar
+        /// Método <c>ObtenerRutasPorRegionMilitarAsync</c> implementa la interfaz para obtener rutas filtradas por Región Militar
         /// </summary>
-        public List<RutaVista> ObtenerRutasPorRegionMilitar(string tipo, string regionMilitar)
+        public async Task<List<RutaVista>> ObtenerRutasPorRegionMilitarAsync(string tipo, string regionMilitar)
         {
             string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
                    a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
@@ -231,13 +223,13 @@ namespace SqlServerAdapter
                 new SqlParameter("@parDescripcion", tipo)
             };
 
-            return _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
-        /// Método <c>ObtenerRutasPorCombinacionFiltros</c> implementa la interfaz para obtener rutas filtradas tipo, clave, observaciones e itinerario
+        /// Método <c>ObtenerRutasPorCombinacionFiltrosAsync</c> implementa la interfaz para obtener rutas filtradas tipo, clave, observaciones e itinerario
         /// </summary>
-        public List<RutaVista> ObtenerRutasPorCombinacionFiltros(string tipo, string criterio)
+        public async Task<List<RutaVista>> ObtenerRutasPorCombinacionFiltrosAsync(string tipo, string criterio)
         {
             criterio = "%" + criterio + "%";
 
@@ -262,13 +254,13 @@ namespace SqlServerAdapter
                 new SqlParameter("@parDescripcion", tipo)
             };
 
-            return _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
-        /// Método <c>ObtenerPropuestasPorRegionMilitarAndRegionSsf</c> implementa la interfaz para obtener propuestas de patrullaje (rutas) filtradas tipo, región militar y región SSF
+        /// Método <c>ObtenerPropuestasPorRegionMilitarAndRegionSsfAsync</c> implementa la interfaz para obtener propuestas de patrullaje (rutas) filtradas tipo, región militar y región SSF
         /// </summary>
-        public List<RutaVista> ObtenerPropuestasPorRegionMilitarAndRegionSsf(string tipo, string regionMilitar, int regionSsf)
+        public async Task<List<RutaVista>> ObtenerPropuestasPorRegionMilitarAndRegionSsfAsync(string tipo, string regionMilitar, int regionSsf)
         {
             string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
                    a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
@@ -288,13 +280,13 @@ namespace SqlServerAdapter
                 new SqlParameter("@parDescripcion", tipo)
             };
 
-            return _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
-        /// Método <c>ObtenerPropuestasPorCombinacionFiltrosConRegionSsf</c> implementa la interfaz para obtener propuestas de patrullaje (rutas) filtradas tipo, región SSF,  clave, observaciones e itinerario
+        /// Método <c>ObtenerPropuestasPorCombinacionFiltrosConRegionSsfAsync</c> implementa la interfaz para obtener propuestas de patrullaje (rutas) filtradas tipo, región SSF,  clave, observaciones e itinerario
         /// </summary>
-        public List<RutaVista> ObtenerPropuestasPorCombinacionFiltrosConRegionSsf(string tipo, string criterio, int regionSsf)
+        public async Task <List<RutaVista>> ObtenerPropuestasPorCombinacionFiltrosConRegionSsfAsync(string tipo, string criterio, int regionSsf)
         {
             criterio = "%" + criterio + "%";
 
@@ -320,7 +312,12 @@ namespace SqlServerAdapter
                 new SqlParameter("@parDescripcion", tipo)
             };
 
-            return _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToList();
+            return await  _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await _rutaContext.SaveChangesAsync() >= 0);
         }
     }
 }

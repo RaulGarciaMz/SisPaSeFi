@@ -9,13 +9,13 @@ namespace Domain.Ports.Driving
 {
     public interface IRutaDtoCommand
     {
-        void Agrega(RutaDto pp, string usuario);
-        void Update(RutaDto pp, string usuario);
-        void Delete(int id, string usuario);
+        Task Agrega(RutaDto pp, string usuario);
+        Task Update(RutaDto pp, string usuario);
+        Task Delete(int id, string usuario);
     }
 
     public interface IRutaDtoQuery
     {
-        List<RutaDto> ObtenerPorFiltro(string usuario, int opcion, string tipo, string criterio, string actividad);
+        Task<List<RutaDto>> ObtenerPorFiltro(string usuario, int opcion, string tipo, string criterio, string actividad);
     }
 }

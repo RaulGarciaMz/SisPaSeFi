@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Ports.Driven.Repositories
 {
-    public interface IRutasRepo : IRutaCommand, IRutaQuery, IRutaQueries
+    public interface IRutasRepo : IRutaCommand, IRutaQueries
     {
     }
 }

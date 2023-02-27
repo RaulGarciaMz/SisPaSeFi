@@ -26,80 +26,79 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de agregar una ruta junto con sus itinerarios
         /// </summary>
-        public void Agrega(RutaDto pp, string usuario)
+        public async Task Agrega(RutaDto pp, string usuario)
         {
-            if (EsUsuarioConfigurador(usuario))
+            if (await EsUsuarioConfigurador(usuario))
             {
-                if (ExisteItinerarioConfiguradoEnRegionesZona(pp.IdTipoPatrullaje, pp.RegionSSF, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, pp.Itinerario))
+                if (await ExisteItinerarioConfiguradoEnRegionesZona(pp.IdTipoPatrullaje, pp.RegionSSF, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, pp.Itinerario))
                 {
                     return;
                 }
 
-                int totalRutas = CalculaTotalRutas(pp.IdTipoPatrullaje, pp.RegionMilitarSDN);
-                pp.Clave = GeneraClaveRuta(pp.IdTipoPatrullaje, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, totalRutas);
+                int totalRutas = await CalculaTotalRutas(pp.IdTipoPatrullaje, pp.RegionMilitarSDN);
+                pp.Clave = await GeneraClaveRuta(pp.IdTipoPatrullaje, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, totalRutas);
                 pp.TotalRutasRegionMilitarSDN = totalRutas;
 
                 var rp = ConvierteRutaDto(pp);
                 var itinerarios = ConvierteRecorridosAItinearios(pp.Recorridos);
 
-                _repo.Agrega(rp, itinerarios);
+                await _repo.AgregaAsync(rp, itinerarios);
             }
         }
 
         /// <summary>
         /// Método <c>Update</c> Implementa la interfaz para el caso de uso de actualizar una ruta
         /// </summary>
-        public void Update(RutaDto pp, string usuario)
+        public async Task Update(RutaDto pp, string usuario)
         {
-            if (EsUsuarioConfigurador(usuario))
+            if (await EsUsuarioConfigurador(usuario))
             {
-                if (ExisteRutaConMismaClave(pp.IdRuta, pp.Clave))
+                if (await ExisteRutaConMismaClave(pp.IdRuta, pp.Clave))
                 {
                     return;
                 }
 
-                if (ExisteItinerarioConfiguradoEnOtraRuta(pp.IdTipoPatrullaje, pp.RegionSSF, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, pp.IdRuta, pp.Itinerario))
+                if (await ExisteItinerarioConfiguradoEnOtraRuta(pp.IdTipoPatrullaje, pp.RegionSSF, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, pp.IdRuta, pp.Itinerario))
                 {
                     return;
                 }
 
-                int totalRutas = CalculaTotalRutas(pp.IdTipoPatrullaje, pp.RegionMilitarSDN);
-                var strClave = AsignaClaveRuta(pp, totalRutas);
+                int totalRutas = await CalculaTotalRutas(pp.IdTipoPatrullaje, pp.RegionMilitarSDN);
+                var strClave = await AsignaClaveRuta(pp, totalRutas);
 
                 pp.Clave = strClave;
 
                 var rp = ConvierteRutaDto(pp);
 
-                _repo.Update(rp);
+                await _repo.UpdateAsync(rp);
             }
         }
 
         /// <summary>
         /// Método <c>Update</c> Implementa la interfaz para el caso de uso de eliminar una ruta
         /// </summary>
-        public void Delete(int id, string usuario)
+        public async Task Delete(int id, string usuario)
         {
-            if (EsUsuarioConfigurador(usuario))
+            if (await EsUsuarioConfigurador(usuario))
             {
-                if (ExisteRutaEnPropuestaOrPrograma(id))
+                if (await ExisteRutaEnPropuestaOrPrograma(id))
                 {
-                    return;
+                    return ;
                 }
 
-                _repo.Delete(id);
-            }
-
+                await _repo.DeleteAsync(id);
+            }            
         }
 
         /// <summary>
         /// Método <c>ObtenerPorFiltro</c> Implementa la interfaz para el caso de uso de obterne rutas filtradas
         /// </summary>
-        public List<RutaDto> ObtenerPorFiltro(string usuario, int opcion, string tipo, string criterio, string actividad)
+        public async Task<List<RutaDto>> ObtenerPorFiltro(string usuario, int opcion, string tipo, string criterio, string actividad)
         {
             List<RutaDto> retornadas = new List<RutaDto>();
             List<RutaVista> encontradas = new List<RutaVista>();
 
-            if (!EsUsuarioConfigurador(usuario)) 
+            if (!await EsUsuarioConfigurador(usuario)) 
             {
                 return retornadas;
             }
@@ -111,7 +110,7 @@ namespace DomainServices.DomServ
 
                     if (Int32.TryParse(criterio, out int j))
                     {
-                        encontradas = _repo.ObtenerRutasPorRegionSsf(tipo, j);
+                        encontradas = await _repo.ObtenerRutasPorRegionSsfAsync(tipo, j);
                     }
                     break;
                 default:
@@ -119,7 +118,7 @@ namespace DomainServices.DomServ
                     switch (actividad)
                     {
                         case "Propuesta":
-                            var regionSsf = ObtenerRegionSsfPorUsuario(usuario);
+                            var regionSsf = await ObtenerRegionSsfPorUsuario(usuario);
                             var hayUsuarioConRegion = regionSsf is null;
 
                             switch (opcionFiltro)
@@ -127,21 +126,21 @@ namespace DomainServices.DomServ
                                 case FiltroRutaOpcion.RegionMilitar:
                                     if (hayUsuarioConRegion) 
                                     {
-                                        encontradas = _repo.ObtenerPropuestasPorRegionMilitarAndRegionSsf(tipo, criterio, regionSsf.Value);
+                                        encontradas = await _repo.ObtenerPropuestasPorRegionMilitarAndRegionSsfAsync(tipo, criterio, regionSsf.Value);
                                     }
                                     else
                                     {
-                                        encontradas = _repo.ObtenerRutasPorRegionMilitar(tipo, criterio);
+                                        encontradas = await _repo.ObtenerRutasPorRegionMilitarAsync(tipo, criterio);
                                     }                                    
                                     break;
                                 case FiltroRutaOpcion.RutaItinerarioObservacion:
                                     if (hayUsuarioConRegion)
                                     {
-                                        encontradas = _repo.ObtenerPropuestasPorCombinacionFiltrosConRegionSsf(tipo, criterio, regionSsf.Value);
+                                        encontradas = await _repo.ObtenerPropuestasPorCombinacionFiltrosConRegionSsfAsync(tipo, criterio, regionSsf.Value);
                                     }
                                     else 
                                     {
-                                        encontradas = _repo.ObtenerRutasPorCombinacionFiltros(tipo, criterio);
+                                        encontradas = await _repo.ObtenerRutasPorCombinacionFiltrosAsync(tipo, criterio);
                                     }                                    
                                     break;
                             }
@@ -150,10 +149,10 @@ namespace DomainServices.DomServ
                             switch (opcionFiltro)
                             {
                                 case FiltroRutaOpcion.RegionMilitar:
-                                    encontradas = _repo.ObtenerRutasPorRegionMilitar(tipo, criterio);
+                                    encontradas = await _repo.ObtenerRutasPorRegionMilitarAsync(tipo, criterio);
                                     break;
                                 case FiltroRutaOpcion.RutaItinerarioObservacion:
-                                    encontradas = _repo.ObtenerRutasPorCombinacionFiltros(tipo, criterio);
+                                    encontradas = await _repo.ObtenerRutasPorCombinacionFiltrosAsync(tipo, criterio);
                                     break;
                             }
                             break;
@@ -189,9 +188,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>ExisteRutaConMismaClave</c> verifica si en el catálogo de rutas existe otra con la misma clave
         /// </summary>
-        private bool ExisteRutaConMismaClave(int idRuta, string clave)
+        private async Task<bool> ExisteRutaConMismaClave(int idRuta, string clave)
         {
-            int numRutas = _repo.ObtenerNumeroRutasPorFiltro(clave, idRuta);
+            int numRutas = await _repo.ObtenerNumeroRutasPorFiltroAsync(clave, idRuta);
             
             if (numRutas > 0)
             {
@@ -204,9 +203,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>ExisteItinerarioConfiguradoEnRegionesZona</c> verifica si en el catálogo de itinerarios existe otra para la misma ruta, región, zona y tipo de patrullaje
         /// </summary>
-        private bool ExisteItinerarioConfiguradoEnRegionesZona(int idTipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, string ruta)
+        private async Task<bool> ExisteItinerarioConfiguradoEnRegionesZona(int idTipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, string ruta)
         {
-            int numItinerarios =_repo.ObtenerNumeroItinerariosConfiguradosPorZonasRuta(idTipoPatrullaje, regionSsf, regionMilitar, zonaMilitar, ruta);
+            int numItinerarios = await _repo.ObtenerNumeroItinerariosConfiguradosPorZonasRutaAsync(idTipoPatrullaje, regionSsf, regionMilitar, zonaMilitar, ruta);
   
             if (numItinerarios > 0)
             { 
@@ -219,9 +218,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>ExisteItinerarioConfiguradoEnOtraRuta</c> verifica si en el catálogo de itinerarios ya existe con figurado para otra ruta, para la región, zona y tipo de patrullaje
         /// </summary>
-        private bool ExisteItinerarioConfiguradoEnOtraRuta(int idTipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, int ruta, string rutaItinerario)
+        private async Task<bool> ExisteItinerarioConfiguradoEnOtraRuta(int idTipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, int ruta, string rutaItinerario)
         {
-            int numItinerarios = _repo.ObtenerNumeroItinerariosConfiguradosEnOtraRuta(idTipoPatrullaje, regionSsf, regionMilitar, zonaMilitar, ruta, rutaItinerario);
+            int numItinerarios = await _repo.ObtenerNumeroItinerariosConfiguradosEnOtraRutaAsync(idTipoPatrullaje, regionSsf, regionMilitar, zonaMilitar, ruta, rutaItinerario);
 
             if (numItinerarios > 0)
             {
@@ -234,13 +233,13 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>ExisteRutaEnPropuestaOrPrograma</c> verifica si en los catálogos de programas y propuestas de patrullaje ya existe la ruta indicada
         /// </summary>
-        private bool ExisteRutaEnPropuestaOrPrograma(int idRuta)
+        private async Task<bool> ExisteRutaEnPropuestaOrPrograma(int idRuta)
         {
-            if (_repo.ObtenerNumeroProgramasPorRuta(idRuta) > 0) {
+            if ( await _repo.ObtenerNumeroProgramasPorRutaAsync(idRuta) > 0) {
                 return true;
             }
 
-            if (_repo.ObtenerNumeroPropuestasPorRuta(idRuta) > 0)
+            if (await _repo.ObtenerNumeroPropuestasPorRutaAsync(idRuta) > 0)
             {
                 return true;
             }
@@ -251,9 +250,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>EsUsuarioConfigurador</c> verifica si el nombre del usuario corresponde a un usuario configurador
         /// </summary>
-        private bool EsUsuarioConfigurador(string usuario)
+        private async Task<bool> EsUsuarioConfigurador(string usuario)
         {
-            if (_repo.ObtenerUsuarioConfigurador(usuario) != null)
+            if (await _repo.ObtenerUsuarioConfiguradorAsync(usuario) != null)
             {
                 return true;
             }
@@ -266,9 +265,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>CalculaTotalRutas</c> calcula el número de rutas de cierto tipo de patrullaje para una región militar indicadaverifica si en los catálogos de programas y propuestas de patrullaje ya existe la ruta indicada
         /// </summary>
-        private int CalculaTotalRutas(int tipoPatrullaje, string regionMilitar) 
+        private async Task<int> CalculaTotalRutas(int tipoPatrullaje, string regionMilitar) 
         {
-            int numRutas = _repo.ObtenerNumeroRutasPorTipoAndRegionMilitar(tipoPatrullaje, regionMilitar);
+            int numRutas = await _repo.ObtenerNumeroRutasPorTipoAndRegionMilitarAsync(tipoPatrullaje, regionMilitar);
 
             return numRutas + 1;
         }
@@ -276,9 +275,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>GeneraClaveRuta</c> genera la clave de la ruta de acuerdo al tipo, región, zona y total de rutas
         /// </summary>
-        private string GeneraClaveRuta(int tipoPatrullaje, string regionMilitar, int zonaMilitar, int totalRutas) 
+        private async Task<string> GeneraClaveRuta(int tipoPatrullaje, string regionMilitar, int zonaMilitar, int totalRutas) 
         {
-           string clave= GeneraPrefijoClave(tipoPatrullaje, totalRutas);
+           string clave= await GeneraPrefijoClave(tipoPatrullaje, totalRutas);
 
             return clave + 
                    "-" +
@@ -291,9 +290,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>AsignaClaveRuta</c> cambia la clave de la ruta en caso de requerirse para una actualización
         /// </summary>
-        private string AsignaClaveRuta(RutaDto pp, int totalRutas)
+        private async Task<string> AsignaClaveRuta(RutaDto pp, int totalRutas)
         {
-            var clave = GeneraPrefijoClave(pp.IdTipoPatrullaje, totalRutas);
+            var clave = await GeneraPrefijoClave(pp.IdTipoPatrullaje, totalRutas);
 
             var strClave = clave + "-" + ConvierteARomano(pp.RegionMilitarSDN) + "-" + pp.ZonaMilitarSDN;
             if ((Strings.Left(pp.Clave, strClave.Length) ?? "") == (strClave ?? ""))
@@ -311,9 +310,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>GeneraPrefijoClave</c> genera la el prfijo inicial de la clave de la ruta de acuerdo a la descripción del tipo de patrullaje
         /// </summary>
-        private string GeneraPrefijoClave(int tipoPatrullaje, int totalRutas)
+        private async Task<string> GeneraPrefijoClave(int tipoPatrullaje, int totalRutas)
         {
-            var desc = _repo.ObtenerDescripcionTipoPatrullaje(tipoPatrullaje);
+            var desc = await _repo.ObtenerDescripcionTipoPatrullajeAsync(tipoPatrullaje);
 
             if (desc == "AEREO")
             {
@@ -328,9 +327,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>ObtenerRegionSsfPorUsuario</c> Obtiene la Región SSF a la que pertenece un usuario especificado. Regresa null si el usuario no tiene Region SSF
         /// </summary>
-        private int? ObtenerRegionSsfPorUsuario(string usuario)
+        private async Task<int?> ObtenerRegionSsfPorUsuario(string usuario)
         {
-            var u = _repo.ObtenerUsuarioConfigurador(usuario);
+            var u = await _repo.ObtenerUsuarioConfiguradorAsync(usuario);
             if (u is null)
             {
                 return null;

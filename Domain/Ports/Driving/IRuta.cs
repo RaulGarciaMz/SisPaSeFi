@@ -12,30 +12,25 @@ namespace Domain.Ports.Driving
 {
     public interface IRutaCommand
     {
-        void Agrega(Ruta r, List<Itinerario> itin);
-        void Update(Ruta pp);
-        void Delete(int id);
-    }
-
-    public interface IRutaQuery
-    {
-        List<Ruta> ObtenerPorFiltro(int opcion, string tipo, string criterio, string actividad);
+        Task AgregaAsync(Ruta r, List<Itinerario> itin);
+        Task UpdateAsync(Ruta pp);
+        Task DeleteAsync(int id);
     }
 
     public interface IRutaQueries
     {        
-        int ObtenerNumeroRutasPorFiltro(string clave, int idRuta);
-        int ObtenerNumeroItinerariosConfiguradosPorZonasRuta(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, string ruta );
-        int ObtenerNumeroItinerariosConfiguradosEnOtraRuta(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, int ruta, string rutaItinerario);
-        int ObtenerNumeroRutasPorTipoAndRegionMilitar(int tipoPatrullaje, string regionMilitar);
-        string ObtenerDescripcionTipoPatrullaje(int tipoPatrullaje);
-        int ObtenerNumeroProgramasPorRuta(int idRuta);
-        int ObtenerNumeroPropuestasPorRuta(int idRuta);      
-        Usuario? ObtenerUsuarioConfigurador(string usuario);
-        List<RutaVista> ObtenerRutasPorRegionSsf(string tipo, int regionSsf);
-        List<RutaVista> ObtenerRutasPorRegionMilitar(string tipo, string regionMilitar);
-        List<RutaVista> ObtenerRutasPorCombinacionFiltros(string tipo, string criterio);
-        List<RutaVista> ObtenerPropuestasPorRegionMilitarAndRegionSsf(string tipo, string regionMilitar, int regionSsf);
-        List<RutaVista> ObtenerPropuestasPorCombinacionFiltrosConRegionSsf(string tipo, string criterio, int regionSsf);
+        Task<int> ObtenerNumeroRutasPorFiltroAsync(string clave, int idRuta);
+        Task<int> ObtenerNumeroItinerariosConfiguradosPorZonasRutaAsync(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, string ruta );
+        Task<int> ObtenerNumeroItinerariosConfiguradosEnOtraRutaAsync(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, int ruta, string rutaItinerario);
+        Task<int> ObtenerNumeroRutasPorTipoAndRegionMilitarAsync(int tipoPatrullaje, string regionMilitar);
+        Task<string> ObtenerDescripcionTipoPatrullajeAsync(int tipoPatrullaje);
+        Task<int> ObtenerNumeroProgramasPorRutaAsync(int idRuta);
+        Task<int> ObtenerNumeroPropuestasPorRutaAsync(int idRuta);      
+        Task<Usuario?> ObtenerUsuarioConfiguradorAsync(string usuario);
+        Task<List<RutaVista>> ObtenerRutasPorRegionSsfAsync(string tipo, int regionSsf);
+        Task<List<RutaVista>> ObtenerRutasPorRegionMilitarAsync(string tipo, string regionMilitar);
+        Task<List<RutaVista>> ObtenerRutasPorCombinacionFiltrosAsync(string tipo, string criterio);
+        Task<List<RutaVista>> ObtenerPropuestasPorRegionMilitarAndRegionSsfAsync(string tipo, string regionMilitar, int regionSsf);
+        Task<List<RutaVista>> ObtenerPropuestasPorCombinacionFiltrosConRegionSsfAsync(string tipo, string criterio, int regionSsf);
     }
 }
