@@ -2,9 +2,11 @@ using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
 using DomainServices.DomServ;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using SqlServerAdapter;
 using SqlServerAdapter.Data;
+using System.Text;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -40,6 +42,21 @@ builder.Services.AddDbContext<ProgramaContext>(dbCtxtOptions => dbCtxtOptions.Us
 builder.Services.AddDbContext<RutaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<TarjetaInformativaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 
+/*builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new() 
+        { 
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey= true,
+            ValidIssuer = builder.Configuration["Authentication:Issuer"],
+            ValidAudience = builder.Configuration["Authentication:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForKey"]))
+        };
+    }
+    ); */
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -49,9 +66,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.UseHttpsRedirection();
 
+//app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Ports.Driving;
 using DomainServices.DomServ;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SqlServerAdapter.Data;
@@ -14,6 +15,7 @@ using System.Security.Cryptography;
 namespace WebApiSSF.Controllers
 {
     [Route("api/[controller]")]
+    //[Authorize]
     [ApiController]
     public class ProgramasPatrullajeController : ControllerBase
     {

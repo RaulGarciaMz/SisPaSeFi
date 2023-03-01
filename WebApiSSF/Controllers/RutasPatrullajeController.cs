@@ -5,12 +5,14 @@ using SqlServerAdapter.Data;
 using DomainServices.DomServ;
 using System.Drawing;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApiSSF.Controllers
 {
     [Route("api/[controller]")]
+    //[Authorize]
     [ApiController]
     public class RutasPatrullajeController : ControllerBase
     {
