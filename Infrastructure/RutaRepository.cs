@@ -21,7 +21,7 @@ namespace SqlServerAdapter
 
         public RutaRepository(RutaContext rutaContext)
         {
-            _rutaContext = rutaContext;
+            _rutaContext = rutaContext ?? throw new ArgumentNullException(nameof(rutaContext)); 
         }
 
         /// <summary>

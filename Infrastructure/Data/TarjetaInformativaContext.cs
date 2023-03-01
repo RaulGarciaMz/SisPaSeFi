@@ -11,11 +11,16 @@ namespace SqlServerAdapter.Data
 {
     public class TarjetaInformativaContext : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public TarjetaInformativaContext(DbContextOptions<TarjetaInformativaContext> options)
+            : base(options)
+        {
+
+        }
+/*        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseSqlServer("Data source = E02626; Initial Catalog = ssf; Integrated Security=True; TrustServerCertificate=True; Trusted_Connection=True; User Id=sa; Password=mi4lia5es_rg@rci@");
-        }
+        }*/
 
         public DbSet<TarjetaInformativaVista> TarjetasInformativasVista { get; set; }
         public DbSet<TarjetaInformativa> TarjetasInformativas { get; set; }

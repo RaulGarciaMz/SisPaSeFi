@@ -22,7 +22,7 @@ namespace SqlServerAdapter
 
         public ProgramaPatrullajeRepository(ProgramaContext programaContext)
         {
-            _programaContext = programaContext; 
+            _programaContext = programaContext ?? throw new ArgumentNullException(nameof(programaContext));
         }
 
         /// <summary>

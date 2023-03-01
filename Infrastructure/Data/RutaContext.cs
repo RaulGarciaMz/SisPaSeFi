@@ -11,6 +11,11 @@ namespace SqlServerAdapter.Data
 {
     public class RutaContext : DbContext
     {
+        public RutaContext(DbContextOptions<RutaContext> options)
+            : base(options)
+        {
+
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //base.OnConfiguring(optionsBuilder);

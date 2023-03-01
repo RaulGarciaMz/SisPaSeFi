@@ -19,7 +19,7 @@ namespace SqlServerAdapter
 
         public PuntoPatrullajeRepository(PatrullajeContext patrullajeContext) 
         {
-            _patrullajeContext = patrullajeContext;
+            _patrullajeContext = patrullajeContext ?? throw new ArgumentNullException(nameof(patrullajeContext));
         }
 
         /// <summary>

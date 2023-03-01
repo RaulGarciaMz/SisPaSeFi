@@ -19,7 +19,7 @@ namespace SqlServerAdapter
 
         public TarjetaInformativaRepository(TarjetaInformativaContext tarjetaContext)
         {
-            _tarjetaContext = tarjetaContext;
+            _tarjetaContext = tarjetaContext ?? throw  new ArgumentNullException(nameof(tarjetaContext));
         }
 
         public async Task AgregaAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje , int usuarioId) 
