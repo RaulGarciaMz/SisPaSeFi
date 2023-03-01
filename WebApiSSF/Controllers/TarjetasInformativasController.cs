@@ -16,9 +16,10 @@ namespace WebApiSSF.Controllers
         private readonly ITarjetaService _t;
         private readonly ILogger<TarjetasInformativasController> _log;
 
-        public TarjetasInformativasController(ILogger<TarjetasInformativasController> log)
+        public TarjetasInformativasController(ITarjetaService t, ILogger<TarjetasInformativasController> log)
         {
-            _t = new TarjetasService(new SqlServerAdapter.TarjetaInformativaRepository(new TarjetaInformativaContext()));
+            //_t = new TarjetasService(new SqlServerAdapter.TarjetaInformativaRepository(new TarjetaInformativaContext()));
+            _t = t ?? throw new ArgumentNullException(nameof(t));
             _log = log;
         }
 

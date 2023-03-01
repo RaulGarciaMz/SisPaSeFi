@@ -19,9 +19,10 @@ namespace WebApiSSF.Controllers
         private readonly IPuntosService _pp;
         private readonly ILogger<PuntosPatrullajesController> _log;
 
-        public PuntosPatrullajesController(ILogger<PuntosPatrullajesController> log)
+        public PuntosPatrullajesController(IPuntosService p, ILogger<PuntosPatrullajesController> log)
         {
-            _pp = new PuntosService(new SqlServerAdapter.PuntoPatrullajeRepository(new PatrullajeContext()));
+            //_pp = new PuntosService(new SqlServerAdapter.PuntoPatrullajeRepository(new PatrullajeContext()));
+            _pp = p ?? throw new ArgumentNullException(nameof(p));
             _log = log;
         }
 

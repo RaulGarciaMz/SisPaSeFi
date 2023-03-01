@@ -20,9 +20,10 @@ namespace WebApiSSF.Controllers
         private readonly IProgramaService _pp;
         private readonly ILogger<ProgramasPatrullajeController> _log;
 
-        public ProgramasPatrullajeController(ILogger<ProgramasPatrullajeController> log)
+        public ProgramasPatrullajeController(IProgramaService ps, ILogger<ProgramasPatrullajeController> log)
         {
-            _pp = new ProgramasService(new SqlServerAdapter.ProgramaPatrullajeRepository(new ProgramaContext()));
+//            _pp = new ProgramasService(new SqlServerAdapter.ProgramaPatrullajeRepository(new ProgramaContext()));
+            _pp = ps ?? throw new ArgumentNullException(nameof(ps));
             _log = log;
         }
 
@@ -48,7 +49,7 @@ namespace WebApiSSF.Controllers
         
         // POST api/<ProgramasPatrullajeController>
         [HttpPost]
-        public async Task<ActionResult> PostPrograma(string opcion, string clase, string usuario, [FromBody] ProgramaDto p)
+        public async Task<ActionResult> PostPrograma(string opcion,  string clase,  string usuario, [FromBody] ProgramaDto p)
         {
             try
             {
@@ -62,9 +63,9 @@ namespace WebApiSSF.Controllers
             }           
         }
 
-/*        // POST api/<ProgramasPatrullajeController>
+        // POST api/<ProgramasPatrullajeController>
         [HttpPost]
-        public async Task<ActionResult> PostPropuestas([FromQuery] string usuario, [FromBody] List<ProgramaDto> p)
+        public async Task<ActionResult> PostPropuestas(string usuario, [FromBody] List<ProgramaDto> p)
         {
             try
             {
@@ -76,7 +77,7 @@ namespace WebApiSSF.Controllers
                 _log.LogInformation($"error al registrar una propuesta para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
-        }*/
+        }
 
         // PUT api/<ProgramasPatrullajeController>/5
         [HttpPut("{usuario}")]
@@ -94,7 +95,7 @@ namespace WebApiSSF.Controllers
             }
         }
 
-/*        // PUT api/<ProgramasPatrullajeController>/5
+        // PUT api/<ProgramasPatrullajeController>/5
         [HttpPut("{usuario}")]
         public async Task<ActionResult> PutPropuestasToProgramas(string opcion, int accion, string usuario, [FromBody] List<ProgramaDto> p)
         {
@@ -108,7 +109,7 @@ namespace WebApiSSF.Controllers
                 _log.LogInformation($"error al actualizar una propuesta como programa para el usuario: {usuario}, opcion: {opcion}, acción: {accion}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
-        }*/
+        }
 
         // DELETE api/<ProgramasPatrullajeController>/5
         [HttpDelete("{id}")]

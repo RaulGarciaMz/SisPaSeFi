@@ -18,9 +18,10 @@ namespace WebApiSSF.Controllers
         private readonly IRutaService _rp;
         private readonly ILogger<RutasPatrullajeController> _log;
 
-        public RutasPatrullajeController(ILogger<RutasPatrullajeController> log)
+        public RutasPatrullajeController(IRutaService r, ILogger<RutasPatrullajeController> log)
         {
-            _rp = new RutaService(new SqlServerAdapter.RutaRepository(new RutaContext()));
+            //_rp = new RutaService(new SqlServerAdapter.RutaRepository(new RutaContext()));
+            _rp = r ?? throw new ArgumentNullException(nameof(r));
             _log = log;
         }
 
