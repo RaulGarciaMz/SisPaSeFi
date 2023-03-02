@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SqlServerAdapter.Data;
+using System.Net.Mime;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,8 +26,19 @@ namespace WebApiSSF.Controllers
             _log = log;
         }
 
-        // GET: api/<TarjetasInformativasController>
+        /// <summary>
+        /// Obtiene la lista de tarjetas informativas acorde a los parámetros indicados
+        /// </summary>
+        /// <param name="tipo">Tipo de patrullaje (TERRESTRE o AEREO)</param>
+        /// <param name="region">Región de SSF</param>
+        /// <param name="anio">Año</param>
+        /// <param name="mes">Mes</param>
+        /// <param name="usuario">Nombre del usuario que solicita la información</param>
+        /// <returns>ActionResult con lista de tajetas informativas</returns>
         [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<TarjetaDto>>> Get(string tipo, string region, int anio, int mes, string usuario)
         {
             try
@@ -42,8 +54,16 @@ namespace WebApiSSF.Controllers
             }            
         }
 
-        // POST api/<TarjetasInformativasController>
+        /// <summary>
+        /// Registra una tarjeta informativa
+        /// </summary>
+        /// <param name="usuario">Nombre del usuario que registra la tarjeta</param>
+        /// <param name="tarjeta">Tarjeta informativa a registrar</param>
+        /// <returns></returns>
         [HttpPost]
+        [Consumes(MediaTypeNames.Application.Json)]        
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Post(string usuario, [FromBody] TarjetaDto tarjeta)
         {
             try
@@ -58,8 +78,17 @@ namespace WebApiSSF.Controllers
             }
         }
 
-        // PUT api/<TarjetasInformativasController>/5
+        /// <summary>
+        /// Actualiza una tarjeta informativa indicada
+        /// </summary>
+        /// <param name="id">Identificador de la tarjeta informativa</param>
+        /// <param name="usuario">Nombre del usuario que realiza la actualización</param>
+        /// <param name="tarjeta">Tarjeta informativa con datos a actualizar</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Put(int id, string usuario, [FromBody] TarjetaDto tarjeta)
         {
             try

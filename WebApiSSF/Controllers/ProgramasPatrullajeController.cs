@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SqlServerAdapter.Data;
 using System;
+using System.Net.Mime;
 using System.Security.Cryptography;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -29,9 +30,24 @@ namespace WebApiSSF.Controllers
             _log = log;
         }
 
-
-        // GET: api/<ProgramasPatrullajeController>
+        /// <summary>
+        /// Obtiene los programas de patrullaje acorde a las opciones indicadas
+        /// </summary>
+        /// <param name="tipo">Descripción del tipo de patrullaje (TERRESTRE o AEREO)</param>
+        /// <param name="region">Región SSF</param>
+        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <param name="clase">Descripción de la clase de patrullaje a incluir</param>
+        /// <param name="anio">Año</param>
+        /// <param name="mes">Mes</param>
+        /// <param name="dia">Día</param>
+        /// <param name="opcion">Indicador del tipo de propgrama o propuesta a obtener. (0 - Extraordinarios o programados, 1 - En progreso, 2 - Concluidos, 3 - Cancelados, 4 - Todos, 5 - Propuestas (todas), 6 - Propuestas pendientes, 7 - Propuestas autorizadas, 8 - Propuestas Rechazadas, 9 - Propuestas enviadas)</param>
+        /// <param name="periodo">Indicador del tipo de período que se requiere (0 - Un día, 1 - Un mes, 2 - Todos)</param>
+        /// <returns></returns>
         [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<PatrullajeDto>>> GetValues(string tipo, int region, string usuario, string clase, int anio, int mes, int dia, int opcion=0, int periodo=1)
         {
             try
@@ -40,7 +56,14 @@ namespace WebApiSSF.Controllers
                 var elPeriodo = (PeriodoOpcion)periodo;
 
                 var programas = await _pp.ObtenerPorFiltro(tipo, region, clase, anio, mes, dia, laOpcion, elPeriodo);
-                return Ok();
+                
+                if (programas == null)
+                {
+                    return NotFound();
+                }
+
+
+                return Ok(programas);
             }
             catch (Exception ex)
             {
@@ -48,9 +71,20 @@ namespace WebApiSSF.Controllers
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
-        
-        // POST api/<ProgramasPatrullajeController>
+
+        /// <summary>
+        /// Registra una propuesta o un programa de patrullaje
+        /// </summary>
+        /// <param name="opcion">Tipo de elemento a registrar ("Propuesta" o "Programa") </param>
+        /// <param name="clase">Clase de patrullaje a registrar ("EXTRAORDINARIO" o "") </param>
+        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <param name="p">Programa de patrullaje a registrar</param>
+        /// <returns></returns>   
+        [Route("programas")]
         [HttpPost]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> PostPrograma(string opcion,  string clase,  string usuario, [FromBody] ProgramaDto p)
         {
             try
@@ -65,8 +99,17 @@ namespace WebApiSSF.Controllers
             }           
         }
 
-        // POST api/<ProgramasPatrullajeController>
+        /// <summary>
+        /// Registra una propuesta de patrullaje como programa de patrullaje
+        /// </summary>
+        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <param name="p">Propuesta de patrullaje a registrar</param>
+        /// <returns></returns>
+        [Route("propuestas")]
         [HttpPost]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> PostPropuestas(string usuario, [FromBody] List<ProgramaDto> p)
         {
             try
@@ -81,8 +124,17 @@ namespace WebApiSSF.Controllers
             }
         }
 
-        // PUT api/<ProgramasPatrullajeController>/5
+        /// <summary>
+        /// Actualiza un programa de patrullaje mediente el cambio de ruta del programa
+        /// </summary>
+        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <param name="p">Programa de patrullaje</param>
+        /// <returns></returns>
+        [Route("cambio")]
         [HttpPut("{usuario}")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> PutCambioRuta(string usuario, [FromBody] ProgramaDto p)
         {
             try
@@ -97,8 +149,19 @@ namespace WebApiSSF.Controllers
             }
         }
 
-        // PUT api/<ProgramasPatrullajeController>/5
+        /// <summary>
+        /// Actualiza el estado de una propuesta o programa de patrullaje
+        /// </summary>
+        /// <param name="opcion">Tipo de elemento a actualizar ("Propuesta" o "Programa")</param>
+        /// <param name="accion">Tipo de acción a realizar 2 - Rechazar propuestas autorizadas, 3 - Cambiar propuestas aprobadas por comandancia a Pendiente de aprobación , 4 - Cambiar de propuesta autorizada a pendiente de autorización por SSF</param>
+        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <param name="p">Propuesta de patrullaje</param>
+        /// <returns></returns>
+        [Route("propuestas")]
         [HttpPut("{usuario}")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> PutPropuestasToProgramas(string opcion, int accion, string usuario, [FromBody] List<ProgramaDto> p)
         {
             try
@@ -113,8 +176,15 @@ namespace WebApiSSF.Controllers
             }
         }
 
-        // DELETE api/<ProgramasPatrullajeController>/5
+        /// <summary>
+        /// Elimina una propuesta de patrullaje
+        /// </summary>
+        /// <param name="id">Identificador de la propuesta a eliminar</param>
+        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Delete(int id, string usuario)
         {
             try
@@ -124,7 +194,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al eliminar el programa id: {id} para el usuario: {usuario}", ex);
+                _log.LogInformation($"error al eliminar la propuesta id: {id} para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

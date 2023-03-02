@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using SqlServerAdapter;
 using SqlServerAdapter.Data;
+using System.Reflection;
 using System.Text;
 
 Log.Logger = new LoggerConfiguration()
@@ -26,7 +27,18 @@ builder.Services.AddControllers(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(setup => {
+    var xmlCommFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlCommPath = Path.Combine(AppContext.BaseDirectory, xmlCommFile);
+    setup.IncludeXmlComments(xmlCommPath);
+
+    //TODO Eliminar esto posterior a dar resolución de conflicto de operaciones Para eliminar conflictos de operaciones múltiples
+    setup.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+    setup.IgnoreObsoleteActions();
+    setup.IgnoreObsoleteProperties();
+    setup.CustomSchemaIds(type => type.FullName);
+});
+
 
 builder.Services.AddScoped<IRutasRepo, RutaRepository>();
 builder.Services.AddScoped<IRutaService, RutaService>();
