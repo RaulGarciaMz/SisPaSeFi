@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SqlServerAdapter.Data;
 using System.Net.Mime;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,9 +39,9 @@ namespace WebApiSSF.Controllers
         /// <returns>ActionResult con lista de tajetas informativas</returns>
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<TarjetaDto>>> Get(string tipo, string region, int anio, int mes, string usuario)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<TarjetaDto>>> Get([Required] string tipo, [Required] string region, [Required] int anio, [Required] int mes, [Required] string usuario)
         {
             try
             {
@@ -64,7 +66,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]        
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Post(string usuario, [FromBody] TarjetaDto tarjeta)
+        public async Task<ActionResult> Post([Required] string usuario, [FromBody] TarjetaDto tarjeta)
         {
             try
             {
@@ -89,7 +91,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Put(int id, string usuario, [FromBody] TarjetaDto tarjeta)
+        public async Task<ActionResult> Put([Required] int id, [Required] string usuario, [FromBody] TarjetaDto tarjeta)
         {
             try
             {

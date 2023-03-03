@@ -7,6 +7,8 @@ using System.Drawing;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Mime;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,7 +42,7 @@ namespace WebApiSSF.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<RutaDto>>> GetValues(string usuario, int opcion, string tipo, string criterio, string actividad)
+        public async Task<ActionResult<IEnumerable<RutaDto>>> GetValues([Required] string usuario, [Required] int opcion, [Required] string tipo, string criterio, string actividad)
         {
             try
             {
@@ -63,7 +65,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PostValue(string usuario,[FromBody] RutaDto r)
+        public async Task<ActionResult> PostValue([Required] string usuario,[FromBody] RutaDto r)
         {
             try
             {
@@ -86,9 +88,9 @@ namespace WebApiSSF.Controllers
         /// <returns></returns>
         [HttpPut("{id}")]
         [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PutValue(int id, string usuario, [FromBody] RutaDto r)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> PutValue([Required] int id, [Required] string usuario, [FromBody] RutaDto r)
         {
             try
             {
@@ -111,7 +113,7 @@ namespace WebApiSSF.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> DeleteValue(int id, string usuario)
+        public async Task<ActionResult> DeleteValue([Required] int id, [Required] string usuario)
         {
             try
             {

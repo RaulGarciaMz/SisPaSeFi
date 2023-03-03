@@ -33,10 +33,10 @@ builder.Services.AddSwaggerGen(setup => {
     setup.IncludeXmlComments(xmlCommPath);
 
     //TODO Eliminar esto posterior a dar resolución de conflicto de operaciones Para eliminar conflictos de operaciones múltiples
-    setup.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+  /*  setup.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     setup.IgnoreObsoleteActions();
     setup.IgnoreObsoleteProperties();
-    setup.CustomSchemaIds(type => type.FullName);
+    setup.CustomSchemaIds(type => type.FullName);*/
 });
 
 

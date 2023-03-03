@@ -26,6 +26,9 @@ namespace WebApiSSF.Controllers
         }
 
         [HttpPost("authenticate")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesDefaultResponseType]
         public ActionResult<string> Authenticate(AuthenticationRequestBody body) 
         {
             var user = ValidaCredencialesUsuario(body.Usuario, body.Password);

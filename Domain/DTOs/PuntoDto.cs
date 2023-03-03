@@ -22,16 +22,21 @@ namespace Domain.DTOs
         /// <summary>
         /// descripción de la ubicación del punto de patrullaje
         /// </summary>
+        [Required]
+        [StringLength(50)]
         public string ubicacion { get; set; }
 
         /// <summary>
         /// Coordenadas X, y del punto de patrullaje
         /// </summary>
+        [Required]
+        [StringLength(50)]
         public string coordenadas { get; set; }
 
         /// <summary>
         /// Indicador para conocer si el punto de patrulaje es una instalación física
         /// </summary>
+        [Required]
         public int esInstalacion { get; set; }
 
         /// <summary>
@@ -45,18 +50,22 @@ namespace Domain.DTOs
         /// <summary>
         /// Identificador del proceso responsable del punto de patrullaje
         /// </summary>
+        [Required]
         public int id_ProcesoResponsable { get; set; }
         /// <summary>
         /// Identificador de la gerencia y división encargada del punto de patrullaje
         /// </summary>
+        [Required]
         public int id_GerenciaDivision { get; set; }    
         /// <summary>
         /// Indicador del estado (Bloqueado o desbloqueado) del registro del punto de patrullaje
         /// </summary>
+        [Required]
         public int bloqueado { get; set; }
         /// <summary>
         /// Identificador del municipio al que pertenece el punto de patrullaje
         /// </summary>
+        [Required]
         public int id_municipio { get; set; }
         /// <summary>
         /// Nombre del municipio al que pertenece el punto de patrullaje

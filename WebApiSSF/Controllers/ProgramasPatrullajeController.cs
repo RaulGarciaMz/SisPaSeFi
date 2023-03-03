@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SqlServerAdapter.Data;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 using System.Security.Cryptography;
 
@@ -48,7 +49,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<PatrullajeDto>>> GetValues(string tipo, int region, string usuario, string clase, int anio, int mes, int dia, int opcion=0, int periodo=1)
+        public async Task<ActionResult<IEnumerable<PatrullajeDto>>> GetValues([Required] string tipo, [Required] int region, [Required] string usuario, string clase, int anio, int mes, int dia, [Required] int opcion =0, int periodo=1)
         {
             try
             {
@@ -85,7 +86,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PostPrograma(string opcion,  string clase,  string usuario, [FromBody] ProgramaDto p)
+        public async Task<ActionResult> PostPrograma([Required] string opcion,  [Required] string clase,  [Required] string usuario, [FromBody] ProgramaDto p)
         {
             try
             {
@@ -110,7 +111,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PostPropuestas(string usuario, [FromBody] List<ProgramaDto> p)
+        public async Task<ActionResult> PostPropuestas([Required] string usuario, [FromBody] List<ProgramaDto> p)
         {
             try
             {
@@ -125,17 +126,16 @@ namespace WebApiSSF.Controllers
         }
 
         /// <summary>
-        /// Actualiza un programa de patrullaje mediente el cambio de ruta del programa
+        /// Actualiza un programa de patrullaje mediante el cambio de ruta del programa
         /// </summary>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
         /// <param name="p">Programa de patrullaje</param>
         /// <returns></returns>
-        [Route("cambio")]
-        [HttpPut("{usuario}")]
+        [HttpPut("{usuario}/ruta")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PutCambioRuta(string usuario, [FromBody] ProgramaDto p)
+        public async Task<ActionResult> PutCambioRuta([Required] string usuario, [FromBody] ProgramaDto p)
         {
             try
             {
@@ -156,13 +156,12 @@ namespace WebApiSSF.Controllers
         /// <param name="accion">Tipo de acción a realizar 2 - Rechazar propuestas autorizadas, 3 - Cambiar propuestas aprobadas por comandancia a Pendiente de aprobación , 4 - Cambiar de propuesta autorizada a pendiente de autorización por SSF</param>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
         /// <param name="p">Propuesta de patrullaje</param>
-        /// <returns></returns>
-        [Route("propuestas")]
-        [HttpPut("{usuario}")]
+        /// <returns></returns>        
+        [HttpPut("{usuario}/propuestas")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PutPropuestasToProgramas(string opcion, int accion, string usuario, [FromBody] List<ProgramaDto> p)
+        public async Task<ActionResult> PutPropuestasToProgramas([Required] string opcion, [FromQuery] int accion, [Required] string usuario, [FromBody] List<ProgramaDto> p)
         {
             try
             {
@@ -185,7 +184,7 @@ namespace WebApiSSF.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete(int id, string usuario)
+        public async Task<ActionResult> Delete([Required] int id, [Required] string usuario)
         {
             try
             {

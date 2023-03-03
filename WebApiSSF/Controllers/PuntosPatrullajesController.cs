@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SqlServerAdapter.Data;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Net.Mime;
 
@@ -41,7 +42,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<PuntoDto>>> GetValues(int opcion, string valor, string usuario)
+        public async Task<ActionResult<IEnumerable<PuntoDto>>> GetValues([Required] int opcion, [Required] string valor, [Required] string usuario)
         {
             try
             {
@@ -75,7 +76,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PostValue(string usuario,[FromBody] PuntoDto pto)
+        public async Task<ActionResult> PostValue([Required] string usuario,[FromBody] PuntoDto pto)
         {
             try
             {
@@ -100,7 +101,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PutValue(int id, string usuario, [FromBody] PuntoDto pto)
+        public async Task<ActionResult> PutValue(int id, [Required] string usuario, [FromBody] PuntoDto pto)
         {
             try
             {
@@ -123,7 +124,7 @@ namespace WebApiSSF.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> DeleteValue(int id, string usuario)
+        public async Task<ActionResult> DeleteValue([Required] int id, [Required] string usuario)
         {
             try
             {
