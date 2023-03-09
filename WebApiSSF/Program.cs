@@ -48,11 +48,14 @@ builder.Services.AddScoped<IProgramaPatrullajeRepo, ProgramaPatrullajeRepository
 builder.Services.AddScoped<IProgramaService, ProgramasService>();
 builder.Services.AddScoped<ITarjetaInformativaRepo, TarjetaInformativaRepository>();
 builder.Services.AddScoped<ITarjetaService, TarjetasService>();
+builder.Services.AddScoped<ICatalogosConsultaRepo, CatalogoConsultasRepository>();
+builder.Services.AddScoped<ICatalogosConsultaService, CatalogoConsultasService>();
 
 builder.Services.AddDbContext<PatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<ProgramaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<RutaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<TarjetaInformativaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
+builder.Services.AddDbContext<CatalogosConsultaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 
 /*builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
