@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using Domain.Ports.Driving;
 using System;
 using System.Collections.Generic;
 using System.Linq;

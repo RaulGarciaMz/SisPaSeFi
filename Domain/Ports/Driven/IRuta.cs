@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Ports.Driving
+namespace Domain.Ports.Driven
 {
     public interface IRutaCommand
     {
@@ -18,14 +18,14 @@ namespace Domain.Ports.Driving
     }
 
     public interface IRutaQueries
-    {        
+    {
         Task<int> ObtenerNumeroRutasPorFiltroAsync(string clave, int idRuta);
-        Task<int> ObtenerNumeroItinerariosConfiguradosPorZonasRutaAsync(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, string ruta );
+        Task<int> ObtenerNumeroItinerariosConfiguradosPorZonasRutaAsync(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, string ruta);
         Task<int> ObtenerNumeroItinerariosConfiguradosEnOtraRutaAsync(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, int ruta, string rutaItinerario);
         Task<int> ObtenerNumeroRutasPorTipoAndRegionMilitarAsync(int tipoPatrullaje, string regionMilitar);
         Task<string> ObtenerDescripcionTipoPatrullajeAsync(int tipoPatrullaje);
         Task<int> ObtenerNumeroProgramasPorRutaAsync(int idRuta);
-        Task<int> ObtenerNumeroPropuestasPorRutaAsync(int idRuta);      
+        Task<int> ObtenerNumeroPropuestasPorRutaAsync(int idRuta);
         Task<Usuario?> ObtenerUsuarioConfiguradorAsync(string usuario);
         Task<List<RutaVista>> ObtenerRutasPorRegionSsfAsync(string tipo, int regionSsf);
         Task<List<RutaVista>> ObtenerRutasPorRegionMilitarAsync(string tipo, string regionMilitar);

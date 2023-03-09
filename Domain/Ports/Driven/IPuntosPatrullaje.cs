@@ -7,10 +7,10 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Ports.Driving
+namespace Domain.Ports.Driven
 {
     public interface IPuntosPatrullaje
-    {      
+    {
         Task Agrega(PuntoPatrullaje pp);
         Task Update(PuntoPatrullaje pp);
         Task Delete(int id);

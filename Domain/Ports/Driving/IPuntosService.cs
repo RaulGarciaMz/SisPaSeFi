@@ -9,11 +9,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Ports.Driving
 {
-    public interface IPuntosService
+    public interface IPuntosService: IPuntosDtoCommand, IPuntosDtoQuery
     {
-        Task Agrega(PuntoDto pp, string usuario);
-        Task Update(PuntoDto pp,string usuario);
-        Task Delete(int id, string usuario);
-        Task<List<PuntoDto>> ObtenerPorOpcionAsync(FiltroPunto opcion, string valor, string usuario);
     }
 }

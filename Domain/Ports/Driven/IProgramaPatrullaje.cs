@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Ports.Driving
+namespace Domain.Ports.Driven
 {
     public interface IProgramaCommand
     {
@@ -27,9 +27,9 @@ namespace Domain.Ports.Driving
     public interface IProgramaQuery
     {
         //Caso 0 Extraordinario  --Propuestas extraordinarias
-        Task <List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorAnioMesDiaAsync(string tipo, int region, int anio, int mes, int dia);
+        Task<List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorAnioMesDiaAsync(string tipo, int region, int anio, int mes, int dia);
         //Caso 5 Ordinario  - Propuestas pendientes de autorizar
-        Task <List<PatrullajeVista>> ObtenerPropuestasPendientesPorAutorizarPorFiltroAsync(string tipo, int region, int anio, int mes, string clase);
+        Task<List<PatrullajeVista>> ObtenerPropuestasPendientesPorAutorizarPorFiltroAsync(string tipo, int region, int anio, int mes, string clase);
         //Caso 5 ExtraordinarioOrdinario  - 
         Task<List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorFiltroAsync(string tipo, int region, int anio, int mes, string clase);
         //Dan servicio a las opciones 6,7,8,9  Ordinario  -- Propuestas
@@ -61,7 +61,7 @@ namespace Domain.Ports.Driving
         //Caso 4 Programas Periodo 3 - Todos
         Task<List<PatrullajeVista>> ObtenerProgramasAsync(string tipo, int region);
 
-         Task<Usuario?> ObtenerUsuarioConfiguradorAsync(string usuario);
-         Task<int> ObtenerIdUsuarioAsync(string usuario);
+        Task<Usuario?> ObtenerUsuarioConfiguradorAsync(string usuario);
+        Task<int> ObtenerIdUsuarioAsync(string usuario);
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Ports.Driving
+namespace Domain.Ports.Driven
 {
     public interface ITarjetaInformativaCommand
     {

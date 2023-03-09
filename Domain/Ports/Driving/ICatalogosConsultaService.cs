@@ -8,14 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Ports.Driving
 {
-    public interface ICatalogosConsultaService
+    public interface ICatalogosConsultaService: ICatalogoConsultasDto
     {
-        Task<List<CatalogoGenerico>> ObtenerComandanciaPorIdUsuarioAsync(int idUsuario);
-        Task<List<CatalogoGenerico>> ObtenerTiposPatrullajeAsync();
-        Task<List<CatalogoGenerico>> ObtenerTiposVehiculoAsync();
-        Task<List<CatalogoGenerico>> ObtenerClasificacionesIncidenciaAsync();
-        Task<List<CatalogoGenerico>> ObtenerNivelesAsync();
-        Task<List<CatalogoGenerico>> ObtenerConceptosAfectacionAsync();
-        Task<List<int>> ObtenerRegionesMilitaresEnRutasAsync();
     }
 }
