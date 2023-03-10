@@ -50,12 +50,15 @@ builder.Services.AddScoped<ITarjetaInformativaRepo, TarjetaInformativaRepository
 builder.Services.AddScoped<ITarjetaService, TarjetasService>();
 builder.Services.AddScoped<ICatalogosConsultaRepo, CatalogoConsultasRepository>();
 builder.Services.AddScoped<ICatalogosConsultaService, CatalogoConsultasService>();
+builder.Services.AddScoped<IUsuariosRepo, UsuariosRepository>();
+builder.Services.AddScoped<IUsuariosService, UsuariosService>();
 
 builder.Services.AddDbContext<PatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<ProgramaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<RutaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<TarjetaInformativaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<CatalogosConsultaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
+builder.Services.AddDbContext<UsuariosContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 
 /*builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>

@@ -10,16 +10,15 @@ namespace Domain.Ports.Driving
 {
     public interface IUsuariosDtoCommand
     {
-        Task BloqueaUsuario(string usuario);
-        Task DesbloqueaUsuario(string usuario);
-        Task ReiniciaClaveUsuario(string usuario);
+        Task BloqueaUsuarioAsync(string usuario);
+        Task DesbloqueaUsuarioAsync(string usuario);
+        Task ReiniciaClaveUsuarioAsync(string usuario);
     }
 
     public interface IUsuariosDtoQuery
     {
-        Task<UsuarioDto?> ObtenerUsuarioConfiguradorPorId(int idUsuario);
-
-        Task<UsuarioDto?> ObtenerUsuarioConfiguradorPorNombre(string usuario);
-        Task<UsuarioDto?> ObtenerUsuarioPorCriterio(string criterio);
+        Task<UsuarioDto?> ObtenerUsuarioConfiguradorPorIdAsync(int idUsuario);
+        Task<UsuarioDto?> ObtenerUsuarioConfiguradorPorNombreAsync(string usuario);
+        Task<UsuarioDto?> ObtenerUsuarioPorCriterioAsync(string criterio);
     }
 }

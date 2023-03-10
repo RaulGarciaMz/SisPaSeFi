@@ -19,22 +19,22 @@ namespace DomainServices.DomServ
             _repo = repo;
         }
 
-        public async Task BloqueaUsuario(string usuario)
+        public async Task BloqueaUsuarioAsync(string usuario)
         {
             await _repo.BloqueaUsuarioAsync(usuario);            
         }
 
-        public async Task DesbloqueaUsuario(string usuario)
+        public async Task DesbloqueaUsuarioAsync(string usuario)
         {
             await _repo.DesbloqueaUsuarioAsync(usuario);
         }
 
-        public async Task ReiniciaClaveUsuario(string usuario)
+        public async Task ReiniciaClaveUsuarioAsync(string usuario)
         {
             await _repo.ReiniciaClaveUsuarioAsync(usuario);
         }
 
-        public async Task<UsuarioDto?> ObtenerUsuarioConfiguradorPorId(int idUsuario)
+        public async Task<UsuarioDto?> ObtenerUsuarioConfiguradorPorIdAsync(int idUsuario)
         {
             var usDto = new UsuarioDto();
             var user = await _repo.ObtenerUsuarioConfiguradorPorIdAsync(idUsuario);
@@ -57,7 +57,7 @@ namespace DomainServices.DomServ
             return usDto;
         }
 
-        public async Task<UsuarioDto?> ObtenerUsuarioConfiguradorPorNombre(string usuario)
+        public async Task<UsuarioDto?> ObtenerUsuarioConfiguradorPorNombreAsync(string usuario)
         {
             var usDto = new UsuarioDto();
             var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
@@ -80,7 +80,7 @@ namespace DomainServices.DomServ
             return usDto;
         }
 
-        public async Task<UsuarioDto?> ObtenerUsuarioPorCriterio(string criterio)
+        public async Task<UsuarioDto?> ObtenerUsuarioPorCriterioAsync(string criterio)
         {
             var usDto = new UsuarioDto();
             var user = await _repo.ObtenerUsuarioPorCriterioAsync(criterio);
