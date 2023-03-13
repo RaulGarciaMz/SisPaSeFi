@@ -19,7 +19,7 @@ namespace SqlServerAdapter
 
         public EvidenciasRepository(EvidenciasContext evidenciaContext)
         {
-            _evidenciaContext = _evidenciaContext ?? throw new ArgumentNullException(nameof(evidenciaContext));
+            _evidenciaContext = evidenciaContext ?? throw new ArgumentNullException(nameof(evidenciaContext));
         }
 
         public async Task AgregarEvidenciaDeEstructuraAsync(int idReporte, string rutaArchivo, string nombreArchivo, string descripcion)
