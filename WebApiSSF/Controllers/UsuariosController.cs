@@ -182,5 +182,29 @@ namespace WebApiSSF.Controllers
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
+
+        /// <summary>
+        /// Actualiza el usuario con respecto a la opción indicada
+        /// </summary>
+        /// <param name="opcion">Opción de actualización ("Desbloquear", "Bloquear" ó "ReiniciarClave")</param>
+        /// <param name="usuario">Usuario (alias - usuario_nom) al que se aplicará la actualización</param>
+        /// <returns></returns>
+        [HttpPut("{usuario}/actualiza")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> ActualizaUsuarioPorOpcion([Required]string opcion,string usuario)
+        {
+            try
+            {
+                await _pp.ActualizaUsuarioPorOpcionAsync(opcion, usuario);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al actualizar el usuario", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
     }
 }

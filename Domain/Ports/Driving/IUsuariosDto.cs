@@ -12,6 +12,7 @@ namespace Domain.Ports.Driving
         Task BloqueaUsuarioAsync(string usuario);
         Task DesbloqueaUsuarioAsync(string usuario);
         Task ReiniciaClaveUsuarioAsync(string usuario);
+        Task ActualizaUsuarioPorOpcionAsync(string opcion, string usuario);
     }
 
     public interface IUsuariosDtoQuery

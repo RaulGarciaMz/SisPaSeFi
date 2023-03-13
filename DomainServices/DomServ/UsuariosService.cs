@@ -19,6 +19,26 @@ namespace DomainServices.DomServ
             _repo = repo;
         }
 
+        public async Task ActualizaUsuarioPorOpcionAsync(string opcion, string usuario)
+        {
+            var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+            if (user != null)
+            {
+                switch (opcion) 
+                {
+                    case "Desbloquear":
+                        await _repo.DesbloqueaUsuarioAsync(usuario);
+                        break;
+                    case "Bloquear":
+                        await _repo.BloqueaUsuarioAsync(usuario);
+                        break;
+                    case "ReiniciarClave":
+                        await _repo.ReiniciaClaveUsuarioAsync(usuario);
+                        break;
+                }                
+            }
+        }
+
         public async Task BloqueaUsuarioAsync(string usuario)
         {
             var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
