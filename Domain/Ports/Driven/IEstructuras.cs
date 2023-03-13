@@ -18,6 +18,8 @@ namespace Domain.Ports.Driven
     {
         Task<List<EstructurasVista>> ObtenerEstructuraPorLineaAsync(int idLinea);
         Task<List<EstructurasVista>> ObtenerEstructuraPorLineaEnRutaAsync(int idLinea, int idRuta);
+        Task<List<Estructura>> ObtenerEstructurasEnCoordenadasPorId(int estructura, string coordenadas);
+        Task<List<Estructura>> ObtenerEstructurasEnCoordenadas(string coordenadas);
     }
 }
 

@@ -1,5 +1,7 @@
 ﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.Entities.Vistas;
+using Domain.Enums;
 using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
@@ -28,7 +30,12 @@ namespace DomainServices.DomServ
 
             if (user != null) 
             {
-                await _repo.ActualizaUbicacionAsync(idEstructura, nombre, idMunicipio, latitud, longitud);
+                string coordenadas = latitud + "," + longitud;
+                var enUsoPorOtros = await EstanCoordenadasDeEstructuraEnUso(idEstructura,coordenadas);
+                if (!enUsoPorOtros)
+                {
+                    await _repo.ActualizaUbicacionAsync(idEstructura, nombre, idMunicipio, latitud, longitud);
+                }
             }
         }
 
@@ -38,9 +45,43 @@ namespace DomainServices.DomServ
 
             if (user != null)
             {
-                await _repo.AgregaAsync(idLinea, nombre, idMunicipio, latitud, longitud);
+                string coordenadas = latitud + "," + longitud;
+                var enUso = await EstanCoordenadasEnUso(coordenadas);
+                if (!enUso)
+                {
+                    await _repo.AgregaAsync(idLinea, nombre, idMunicipio, latitud, longitud);
+                }
             }
         }
+
+        public async Task<List<EstructuraDto>> ObtenerEstructuraPorOpcionAsync(int opcion, int idLinea, int idRuta, string usuario)
+        {
+            var retDto = new List<EstructuraDto>();
+            var lstEst = new List<EstructurasVista>();
+
+            var user = await _userConf.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            var miOpcion = (LineaEstructuraOpcion)opcion;
+
+            if (user != null)
+            {
+
+                switch (miOpcion) 
+                {
+                    case LineaEstructuraOpcion.EstructurasDeUnaLinea:
+                        lstEst = await _repo.ObtenerEstructuraPorLineaAsync(idLinea);
+                        break;
+                    case LineaEstructuraOpcion.EstructurasDeUnaLineaEnRuta:
+                        lstEst = await _repo.ObtenerEstructuraPorLineaEnRutaAsync(idLinea, idRuta);
+                        break;
+                }
+                
+                retDto = ConvierteListaEstructurasDomainToDto(lstEst);
+            }
+
+            return retDto;
+        }
+
 
         public async Task<List<EstructuraDto>> ObtenerEstructuraPorLineaAsync(int idLinea, string usuario)
         {
@@ -81,6 +122,41 @@ namespace DomainServices.DomServ
             }
 
             return retDto;
+        }
+
+        private async Task<bool> EstanCoordenadasEnUso(string coordenadas) {
+
+            var existen = await _repo.ObtenerEstructurasEnCoordenadas(coordenadas);
+
+            if (existen == null) 
+            { 
+                return false;
+            }
+
+            if (existen.Count() == 0) 
+            { 
+                return false; 
+            }
+
+            return true;
+        }
+
+        private async Task<bool> EstanCoordenadasDeEstructuraEnUso(int idEstructura, string coordenadas)
+        {
+
+            var existen = await _repo.ObtenerEstructurasEnCoordenadasPorId(idEstructura,coordenadas);
+
+            if (existen == null)
+            {
+                return false;
+            }
+
+            if (existen.Count() == 0)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private EstructuraDto ConvierteEstructuraToDto(EstructurasVista e) 

@@ -29,6 +29,39 @@ namespace WebApiSSF.Controllers
         /// </summary>
         /// <param name="idLinea">Identificador de la línea</param>
         /// <param name="usuario">Usuario (alias - usuario_nom) que realiza la consulta</param>
+        /// <param name="opcion">Identificador de la opción a ejecutar (1 - Estructuras de una línea, 2 - Estructuras de una linea en una ruta)</param>
+        /// <param name="idRuta">Identificador de la ruta (para el caso de la opción 2)</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<EstructuraDto>>> ObtenerEstructuraPorOpcionLinea([Required] int idLinea, [Required] string usuario, int opcion = 0, int idRuta=0)
+        {
+            try
+            {
+                var coms = await _pp.ObtenerEstructuraPorOpcionAsync(opcion,idLinea,idRuta, usuario);
+
+                if (coms.Count <= 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(coms);
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al obtener las estructuras por identificador de línea", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+/*        /// <summary>
+        /// Obtiene la lista de estructuras para una línea indicada
+        /// </summary>
+        /// <param name="idLinea">Identificador de la línea</param>
+        /// <param name="usuario">Usuario (alias - usuario_nom) que realiza la consulta</param>
         /// <returns></returns>
         [Route("linea")]
         [HttpGet]
@@ -87,7 +120,7 @@ namespace WebApiSSF.Controllers
                 _log.LogInformation($"error al obtener las estructuras por identificador de línea para una ruta dada", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
-        }
+        }*/
 
         /// <summary>
         /// Agrega una estructura

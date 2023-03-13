@@ -111,6 +111,16 @@ namespace SqlServerAdapter
             return await _estructuraContext.EstructurasVistas.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
+        public async Task<List<Estructura>> ObtenerEstructurasEnCoordenadasPorId(int estructura, string coordenadas)
+        {
+            return await _estructuraContext.Estructuras.Where(x => x.IdEstructura == estructura && x.Coordenadas != coordenadas).ToListAsync();
+        }
+
+        public async Task<List<Estructura>> ObtenerEstructurasEnCoordenadas(string coordenadas)
+        {
+            return await _estructuraContext.Estructuras.Where(x => x.Coordenadas == coordenadas).ToListAsync();
+        }
+
         public async Task<bool> SaveChangesAsync()
         {
             return (await _estructuraContext.SaveChangesAsync() >= 0);
