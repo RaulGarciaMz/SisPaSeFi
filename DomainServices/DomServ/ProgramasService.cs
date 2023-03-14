@@ -129,7 +129,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task ActualizaProgramaPorCambioDeRuta(ProgramaDto p, string usuario)
+        public async Task ActualizaProgramaPorCambioDeRuta(ProgramaDtoForUpdateRuta p, string usuario)
         {
             var user =await  _repo.ObtenerIdUsuarioAsync(usuario);
 
@@ -137,6 +137,17 @@ namespace DomainServices.DomServ
             {
                 await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.IdPrograma, p.IdRuta, user);
             }                
+        }
+
+        public async Task ActualizaProgramasPorInicioPatrullajeAsync(ProgramaDtoForUpdateInicio p, string usuario)
+        {
+            var user = await _repo.ObtenerIdUsuarioAsync(usuario);
+
+            if (EsUsuarioRegistrado(user))
+            {
+                TimeSpan ini = TimeSpan.Parse(p.Inicio);
+                await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.IdPrograma, p.IdRiesgoPatrullaje, p.IdUsuario,p.IdEstadoPatrullaje, ini);
+            }
         }
 
         public async Task DeletePropuesta(int id, string usuario)

@@ -17,10 +17,10 @@ namespace Domain.Ports.Driven
         Task AgregaProgramaFechasMultiplesAsync(ProgramaPatrullaje pp, List<DateTime> fechas, int usuarioId);
         Task ActualizaProgramaPorCambioDeRutaAsync(int idPrograma, int idRuta, int usuarioId);
         Task ActualizaProgramasConPropuestasAsync(List<ProgramaPatrullaje> programas);
+        Task ActualizaProgramasPorInicioPatrullajeAsync(int idPrograma, int idRiesgo, int idUsuario, int idEstadoPatrullaje, TimeSpan inicio);
         Task ActualizaPropuestasAutorizadaToRechazadaAsync(List<PropuestaPatrullaje> propuestas, int usuarioId);
         Task ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(List<PropuestaPatrullaje> propuestas, int usuarioId);
-        Task ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(List<PropuestaPatrullaje> propuestas, int usuarioId);
-
+        Task ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(List<PropuestaPatrullaje> propuestas, int usuarioId);        
         Task DeletePropuestaAsync(int id);
     }
 

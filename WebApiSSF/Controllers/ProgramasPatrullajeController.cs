@@ -26,7 +26,6 @@ namespace WebApiSSF.Controllers
 
         public ProgramasPatrullajeController(IProgramaService ps, ILogger<ProgramasPatrullajeController> log)
         {
-//            _pp = new ProgramasService(new SqlServerAdapter.ProgramaPatrullajeRepository(new ProgramaContext()));
             _pp = ps ?? throw new ArgumentNullException(nameof(ps));
             _log = log;
         }
@@ -135,7 +134,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PutCambioRuta([Required] string usuario, [FromBody] ProgramaDto p)
+        public async Task<ActionResult> PutCambioRuta([Required] string usuario, [FromBody] ProgramaDtoForUpdateRuta p)
         {
             try
             {
@@ -145,6 +144,30 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogInformation($"error al actualizar un programa por cambio de ruta para el usuario: {usuario}", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+        /// <summary>
+        /// Actualiza un programa de patrullaje mediante el cambio de ruta del programa
+        /// </summary>
+        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <param name="p">Programa de patrullaje</param>
+        /// <returns></returns>
+        [HttpPut("{usuario}/iniciopatrullaje")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> PutInicioPatrullaje([Required] string usuario, [FromBody] ProgramaDtoForUpdateInicio p)
+        {
+            try
+            {
+                await _pp.ActualizaProgramasPorInicioPatrullajeAsync(p, usuario);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al actualizar un programa por inicio de patrullaje para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

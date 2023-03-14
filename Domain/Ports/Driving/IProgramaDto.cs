@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,8 @@ namespace Domain.Ports.Driving
         Task AgregaPropuestasComoProgramas(List<ProgramaDto> p, string usuario);
 
         Task ActualizaPropuestasComoProgramasActualizaPropuestas(List<ProgramaDto> p, string opcion, int accion, string usuario);
-        Task ActualizaProgramaPorCambioDeRuta(ProgramaDto p, string usuario);
-
+        Task ActualizaProgramaPorCambioDeRuta(ProgramaDtoForUpdateRuta p, string usuario);
+        Task ActualizaProgramasPorInicioPatrullajeAsync(ProgramaDtoForUpdateInicio p, string usuario);
         Task DeletePropuesta(int id, string usuario);
     }
     public interface IProgramaDtoQuery

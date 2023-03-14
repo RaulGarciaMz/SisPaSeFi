@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace SqlServerAdapter
@@ -920,6 +921,25 @@ namespace SqlServerAdapter
             _programaContext.ProgramasPatrullajes.AddRange(programas);
             _programaContext.PropuestasPatrullajes.UpdateRange(aActualizar);
             await _programaContext.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Método <c>ActualizaProgramasPorInicioPatrullajeAsync</c> implementa la interface para actualizar programas por inicio de patrullaje.
+        /// </summary>
+        public async Task ActualizaProgramasPorInicioPatrullajeAsync(int idPrograma, int idRiesgo, int idUsuario, int idEstadoPatrullaje, TimeSpan inicio)
+        {
+            var pa = await _programaContext.ProgramasPatrullajes.Where(x => x.IdRuta == idPrograma).SingleOrDefaultAsync();
+            if (pa != null) 
+            {
+                pa.UltimaActualizacion = DateTime.UtcNow;
+                pa.Inicio =inicio;
+                pa.IdEstadoPatrullaje = idEstadoPatrullaje;
+                pa.IdUsuario = idUsuario;
+                pa.RiesgoPatrullaje = idRiesgo;
+
+                _programaContext.ProgramasPatrullajes.Update(pa);
+                await _programaContext.SaveChangesAsync();
+            }                  
         }
 
         /// <summary>

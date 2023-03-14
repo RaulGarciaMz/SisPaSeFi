@@ -119,6 +119,53 @@ namespace Domain.DTOs
     }
 
     /// <summary>
+    /// Programa de patrullaje para actualización por inicio de patrullaje
+    /// </summary>
+    public class ProgramaDtoForUpdateInicio
+    {
+        /// <summary>
+        /// Identificador del programa de patrullaje
+        /// </summary>
+        public int IdPrograma { get; set; }
+        /// <summary>
+        /// Hora de inicio del patrullaje
+        /// </summary>
+        public string Inicio { get; set; }
+        /// <summary>
+        /// Identificador del nivel de riesgo del programa de patrullaje
+        /// </summary>
+        public int IdRiesgoPatrullaje { get; set; }
+        /// <summary>
+        /// Fecha de la última actualización del registro del programa de patrullaje
+        /// </summary>
+        public string UltimaActualizacion { get; set; }
+        /// <summary>
+        /// Identificador del usuario que regstró el programa de patrullaje
+        /// </summary>
+        public int IdUsuario { get; set; }
+        /// <summary>
+        /// Identificador del estado del patrullaje
+        /// </summary>
+        public int IdEstadoPatrullaje { get; set; }
+    }
+
+    /// <summary>
+    /// Programa de patrullaje para actualizar cambio de ruta
+    /// </summary>
+    public class ProgramaDtoForUpdateRuta
+    {
+        /// <summary>
+        /// Identificador del programa de patrullaje
+        /// </summary>
+        public int IdPrograma { get; set; }
+        /// <summary>
+        /// Identificador de la ruta del programa de patrullaje
+        /// </summary>
+        public int IdRuta { get; set; }     
+    }
+
+
+    /// <summary>
     /// Patrullaje
     /// </summary>
     public class PatrullajeDto
