@@ -18,12 +18,6 @@ namespace SqlServerAdapter.Data
         {
 
         }
-/*        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            //base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Data source = E02626; Initial Catalog = ssf; Integrated Security=True; TrustServerCertificate=True; Trusted_Connection=True; User Id=sa; Password=mi4lia5es_rg@rci@");
-            optionsBuilder.LogTo(message => Debug.WriteLine(message));
-        }*/
 
         public DbSet<ClasePatrullaje> ClasesPatrullaje { get; set; }
         public DbSet<PropuestaPatrullajeComplementossf> PropuestasComplementosSsf { get; set; }
