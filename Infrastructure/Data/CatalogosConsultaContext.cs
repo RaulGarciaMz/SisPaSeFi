@@ -14,7 +14,6 @@ namespace SqlServerAdapter.Data
         public CatalogosConsultaContext(DbContextOptions<CatalogosConsultaContext> options)
             : base(options)
         {
-
         }
 
         public DbSet<ComandanciaRegional> Comandancias { get; set; }
@@ -24,7 +23,11 @@ namespace SqlServerAdapter.Data
         public virtual DbSet<Nivel> Niveles { get; set; }
         public virtual DbSet<ConceptoAfectacion> ConceptosAfectacion { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
-        public virtual DbSet<Ruta> Rutas { get; set; }       
+        public virtual DbSet<Ruta> Rutas { get; set; }
+        public virtual DbSet<EstadoPais> EstadosPais { get; set; }
+        public virtual DbSet<Municipio> Municipios { get; set; }
+        public virtual DbSet<ProcesoResponsable> ProcesosResponsables { get; set; }
+        public virtual DbSet<TipoDocumento> TiposDocumentos { get; set; }
     }
 }
 

@@ -28,7 +28,7 @@ namespace SqlServerAdapter
         {
             return await (from c in _catalogosConsultaContext.Comandancias
                           join u in _catalogosConsultaContext.Usuarios on c.IdUsuario equals u.IdUsuario
-                          where u.IdUsuario == idUsuario
+                          where u.IdUsuario == idUsuario && c.IdPunto > 0
                           select c).ToListAsync();
         }
 
@@ -55,6 +55,26 @@ namespace SqlServerAdapter
         public async Task<List<TipoVehiculo>> ObtenerTiposVehiculoAsync()
         {
             return await _catalogosConsultaContext.TiposVehiculo.ToListAsync();
+        }
+
+        public async Task<List<EstadoPais>> ObtenerEstadosPaisAsync()
+        {
+            return await _catalogosConsultaContext.EstadosPais.ToListAsync();
+        }
+
+        public async Task<List<ProcesoResponsable>> ObtenerProcesosResponsablesAsync()
+        {
+            return await _catalogosConsultaContext.ProcesosResponsables.ToListAsync();
+        }
+
+        public async Task<List<TipoDocumento>> ObtenerTiposDocumentosAsync()
+        {
+            return await _catalogosConsultaContext.TiposDocumentos.ToListAsync();
+        }
+
+        public async Task<List<Municipio>> ObtenerMunicipiosPorEstadoAsync(int idEstado)
+        {
+            return await _catalogosConsultaContext.Municipios.Where(x => x.IdEstado == idEstado).ToListAsync();
         }
     }
 }

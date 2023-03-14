@@ -15,6 +15,10 @@ namespace Domain.Ports.Driving
         Task<List<CatalogoGenerico>> ObtenerClasificacionesIncidenciaAsync();
         Task<List<CatalogoGenerico>> ObtenerNivelesAsync();
         Task<List<CatalogoGenerico>> ObtenerConceptosAfectacionAsync();
+        Task<List<CatalogoGenerico>> ObtenerEstadosPaisAsync();
+        Task<List<CatalogoGenerico>> ObtenerProcesosResponsablesAsync();
+        Task<List<CatalogoGenerico>> ObtenerTiposDocumentosAsync();
+        Task<List<CatalogoGenerico>> ObtenerMunicipiosPorEstadoAsync(int idEstado);
         Task<List<int>> ObtenerRegionesMilitaresEnRutasAsync();
     }
 }

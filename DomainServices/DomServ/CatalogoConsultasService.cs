@@ -77,6 +77,44 @@ namespace DomainServices.DomServ
             return cat;
         }
 
+        public async Task<List<CatalogoGenerico>> ObtenerEstadosPaisAsync()
+        {
+            var cat = new List<CatalogoGenerico>();
+            var clas = await _repo.ObtenerEstadosPaisAsync();
+
+            foreach (var c in clas)
+            {
+                var row = new CatalogoGenerico()
+                {
+                    Id = c.IdEstado,
+                    Descripcion = c.Nombre
+                };
+
+                cat.Add(row);
+            }
+
+            return cat;
+        }
+
+        public async Task<List<CatalogoGenerico>> ObtenerMunicipiosPorEstadoAsync(int idEstado)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var clas = await _repo.ObtenerMunicipiosPorEstadoAsync(idEstado);
+
+            foreach (var c in clas)
+            {
+                var row = new CatalogoGenerico()
+                {
+                    Id = c.IdMunicipio,
+                    Descripcion = c.Nombre
+                };
+
+                cat.Add(row);
+            }
+
+            return cat;
+        }
+
         public async Task<List<CatalogoGenerico>> ObtenerNivelesAsync()
         {
             var cat = new List<CatalogoGenerico>();
@@ -96,11 +134,49 @@ namespace DomainServices.DomServ
             return cat;
         }
 
+        public async Task<List<CatalogoGenerico>> ObtenerProcesosResponsablesAsync()
+        {
+            var cat = new List<CatalogoGenerico>();
+            var clas = await _repo.ObtenerProcesosResponsablesAsync();
+
+            foreach (var c in clas)
+            {
+                var row = new CatalogoGenerico()
+                {
+                    Id = c.IdProcesoResponsable,
+                    Descripcion = c.Nombre
+                };
+
+                cat.Add(row);
+            }
+
+            return cat;
+        }
+
         public async Task<List<int>> ObtenerRegionesMilitaresEnRutasAsync()
         {
             var clas = await _repo.ObtenerRegionesMilitaresEnRutanAsync();
 
             return clas.OrderBy(x => x).ToList();
+        }
+
+        public async Task<List<CatalogoGenerico>> ObtenerTiposDocumentosAsync()
+        {
+            var cat = new List<CatalogoGenerico>();
+            var clas = await _repo.ObtenerTiposDocumentosAsync();
+
+            foreach (var c in clas)
+            {
+                var row = new CatalogoGenerico()
+                {
+                    Id = Convert.ToInt32(c.IdTipoDocumento),
+                    Descripcion = c.Descripcion
+                };
+
+                cat.Add(row);
+            }
+
+            return cat;
         }
 
         public async Task<List<CatalogoGenerico>> ObtenerTiposPatrullajeAsync()

@@ -254,6 +254,147 @@ namespace WebApiSSF.Controllers
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
+
+        /// <summary>
+        /// Obtiene la lista de Estados del país del catálogo
+        /// </summary>
+        /// <returns></returns>
+        [Route("estadospais")]
+        [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerEstadosDelPais()
+        {
+            try
+            {
+                var coms = await _pp.ObtenerEstadosPaisAsync();
+
+                if (coms == null)
+                {
+                    return StatusCode(500, "La consulta trajo una lista nula");
+                }
+
+                if (coms.Count <= 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(coms);
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al obtener estados del país del catálogo", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+        /// <summary>
+        /// Obtiene la lista de Municipios pertenecientes al estado indicado en el parámetro
+        /// </summary>
+        /// <param name="id">Identificador del estado</param>
+        /// <returns></returns>
+        [Route("municipios")]
+        [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerMunicipiosPorEstado([Required]int id)
+        {
+            try
+            {
+                var coms = await _pp.ObtenerMunicipiosPorEstadoAsync(id);
+
+                if (coms == null)
+                {
+                    return StatusCode(500, "La consulta trajo una lista nula");
+                }
+
+                if (coms.Count <= 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(coms);
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al obtener Municipios para el estado {id}", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+        /// <summary>
+        /// Obtiene la lista de Procesos responsables del catálogo
+        /// </summary>
+        /// <returns></returns>
+        [Route("procesosresponsables")]
+        [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerProcesosResponsables()
+        {
+            try
+            {
+                var coms = await _pp.ObtenerProcesosResponsablesAsync();
+
+                if (coms == null)
+                {
+                    return StatusCode(500, "La consulta trajo una lista nula");
+                }
+
+                if (coms.Count <= 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(coms);
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al obtener los procesos responsables del catálogo", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+        /// <summary>
+        /// Obtiene la lista de tipos de documentos del catálogo
+        /// </summary>
+        /// <returns></returns>
+        [Route("tiposdocumentos")]
+        [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerTiposDocumentos()
+        {
+            try
+            {
+                var coms = await _pp.ObtenerTiposDocumentosAsync();
+
+                if (coms == null)
+                {
+                    return StatusCode(500, "La consulta trajo una lista nula");
+                }
+
+                if (coms.Count <= 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(coms);
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al obtener los tipos de documentos del catálogo", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
     }
 }
 

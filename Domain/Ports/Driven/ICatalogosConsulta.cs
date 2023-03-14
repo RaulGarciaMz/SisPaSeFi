@@ -36,4 +36,24 @@ namespace Domain.Ports.Driven
     {
         Task<List<int>> ObtenerRegionesMilitaresEnRutanAsync();
     }
+
+    public interface IEstadoPaisQuery
+    {
+        Task<List<EstadoPais>> ObtenerEstadosPaisAsync();
+    }
+
+    public interface IProcesoResponsableQuery
+    {
+        Task<List<ProcesoResponsable>> ObtenerProcesosResponsablesAsync();
+    }
+
+    public interface ITipoDocumentoQuery
+    {
+        Task<List<TipoDocumento>> ObtenerTiposDocumentosAsync();
+    }
+
+    public interface IMunicipioQuery
+    {
+        Task<List<Municipio>> ObtenerMunicipiosPorEstadoAsync(int idEstado);
+    }
 }
