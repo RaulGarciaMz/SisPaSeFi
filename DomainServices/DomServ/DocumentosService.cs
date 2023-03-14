@@ -22,14 +22,14 @@ namespace DomainServices.DomServ
             _user = uc;
         }
 
-        public async Task<List<DocumentoPatrullaje>> ObtenerDocumentosAsync(DocumentoDto d) 
+        public async Task<List<DocumentoPatrullaje>> ObtenerDocumentosAsync(int idComandancia, int anio, int mes, string usuario) 
         {
             var l = new List<DocumentoPatrullaje>();
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(d.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
             {
-                l= await _repo.ObtenerDocumentosAsync(d.IdComandancia, d.Anio, d.Mes);
+                l= await _repo.ObtenerDocumentosAsync(idComandancia, anio, mes);
             }
 
             return l;
