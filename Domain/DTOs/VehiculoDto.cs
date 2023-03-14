@@ -35,6 +35,10 @@ namespace Domain.DTOs
         /// Matrícula del vehículo
         /// </summary>
         public string Matricula { get; set; }
+        /// <summary>
+        /// Nombre del usuario (alias o usuario_nom) que realiza la actualización
+        /// </summary>
+        public string Usuario { get; set; }
     }
 
     /// <summary>
@@ -66,5 +70,9 @@ namespace Domain.DTOs
         /// Matrícula del vehículo
         /// </summary>
         public string Matricula { get; set; }
+        /// <summary>
+        /// Nombre del usuario (alias o usuario_nom) que realiza la creación
+        /// </summary>
+        public string Usuario { get; set; }
     }
 }

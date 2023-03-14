@@ -22,9 +22,9 @@ namespace DomainServices.DomServ
             _user = uc;
         }
 
-        public async Task ActualizaAsync(VehiculoDtoForUpdate vehiculo, string usuario)
+        public async Task ActualizaAsync(VehiculoDtoForUpdate vehiculo)
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(vehiculo.Usuario);
 
             if (user != null)
             {
@@ -32,9 +32,9 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task AgregaAsync(VehiculoDtoForCreate vehiculo, string usuario)
+        public async Task AgregaAsync(VehiculoDtoForCreate vehiculo)
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(vehiculo.Usuario);
 
             if (user != null)
             {
@@ -42,7 +42,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task<List<VehiculoPatrullajeVista>> ObtenerVehiculosPorOpcionAsync(string opcion, int region, string criterio, string usuario)
+        public async Task<List<VehiculoPatrullajeVista>> ObtenerVehiculosPorOpcionAsync(string opcion, int region, string? criterio, string usuario)
         {
             var l = new List<VehiculoPatrullajeVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
@@ -55,6 +55,15 @@ namespace DomainServices.DomServ
                 descripcion = chunks[1];
             }
 
+            if (criterio == null)
+            {
+                criterio = "";
+            }
+            else
+            {
+                criterio = "%" + criterio + "%";
+            }
+            
 
             if (user != null)
             {
@@ -95,8 +104,8 @@ namespace DomainServices.DomServ
                         break;
                     case "VEHICULOSPATRULLAJEEXTRAORDINARIO":
 
-                        var idPropueta =  Int32.Parse(criterio);
-                        l = await _repo.ObtenerVehiculosPatrullajeExtraordinarioPorDescripcionAsync(idPropueta, descripcion);
+                        var idPropuesta =  Int32.Parse(criterio);
+                        l = await _repo.ObtenerVehiculosPatrullajeExtraordinarioPorDescripcionAsync(idPropuesta, descripcion);
 
                         break;
                 }

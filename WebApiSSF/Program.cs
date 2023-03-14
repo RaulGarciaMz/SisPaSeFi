@@ -58,6 +58,8 @@ builder.Services.AddScoped<IEstructurasService, EstructurasService>();
 builder.Services.AddScoped<IUsuariosConfiguradorQuery, UsuariosRepository>(); // para consultas de usuario configurador
 builder.Services.AddScoped<IEvidenciasRepo, EvidenciasRepository>();
 builder.Services.AddScoped<IEvidenciasService, EvidenciasService>();
+builder.Services.AddScoped<IVehiculosPatrullajeRepo, VehiculoPatrullajeRepository>();
+builder.Services.AddScoped<IVehiculoService, VehiculoService>();
 
 builder.Services.AddDbContext<PatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<ProgramaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
@@ -67,6 +69,7 @@ builder.Services.AddDbContext<CatalogosConsultaContext>(dbCtxtOptions => dbCtxtO
 builder.Services.AddDbContext<UsuariosContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<EstructurasContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<EvidenciasContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
+builder.Services.AddDbContext<VehiculosPatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 
 /*builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
