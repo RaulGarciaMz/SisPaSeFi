@@ -1,15 +1,75 @@
-﻿using System;
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.DTOs
 {
+     /// <summary>
+     /// Documento de patrullaje
+     /// </summary>
+    public class DocumentoDto
+    {
+        /// <summary>
+        /// Identificador del documento de patrullaje
+        /// </summary>
+        public long IdDocumentoPatrullaje { get; set; }
+        /// <summary>
+        /// Identificador de la referencia del documento
+        /// </summary>
+        public long? IdReferencia { get; set; }
+        /// <summary>
+        /// Identificador del tipo de documento
+        /// </summary>
+        public long IdTipoDocumento { get; set; }
+        /// <summary>
+        /// Identificador de la comandancia a donde pertenece el documento
+        /// </summary>
+        public int IdComandancia { get; set; }
+        /// <summary>
+        /// Fecha de registro del documento
+        /// </summary>
+        public DateTime FechaRegistro { get; set; }
+        /// <summary>
+        /// Fecha de referencia del documento
+        /// </summary>
+        public DateTime FechaReferencia { get; set; }
+        /// <summary>
+        /// Ruta o ubicación (path) del archivo
+        /// </summary>
+        public string RutaArchivo { get; set; }
+        /// <summary>
+        /// Nombre del archivo
+        /// </summary>
+        public string NombreArchivo { get; set; }
+        /// <summary>
+        /// Descripción del documento
+        /// </summary>
+        public string Descripcion { get; set; }
+        /// <summary>
+        /// Identificador del usuario que registró el documento
+        /// </summary>
+        public int IdUsuario { get; set; }
+        /// <summary>
+        /// Descripción del tipo de documento
+        /// </summary>
+        public string DescripcionTipoDocumento { get; set; }
+        /// <summary>
+        /// Nombre y apellido del usuario que registró el documento
+        /// </summary>
+        public string Usuario { get; set; }
+    }
+
     /// <summary>
     /// Documento de patrullaje
     /// </summary>
-    public class DocumentoDto
+    public class DocumentoDtoForQuery
     {
         /// <summary>
         /// Identificador de la comandancia
@@ -28,4 +88,6 @@ namespace Domain.DTOs
         /// </summary>
         public string Usuario { get; set; }
     }
+
+
 }

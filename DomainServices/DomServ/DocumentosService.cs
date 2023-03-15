@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Domain.Entities;
 using Domain.Ports.Driving;
 using Domain.DTOs;
+using Domain.Entities.Vistas;
+using Domain.DTOs.catalogos;
 
 namespace DomainServices.DomServ
 {
@@ -22,17 +24,53 @@ namespace DomainServices.DomServ
             _user = uc;
         }
 
-        public async Task<List<DocumentoPatrullaje>> ObtenerDocumentosAsync(int idComandancia, int anio, int mes, string usuario) 
+        public async Task<List<DocumentoDto>> ObtenerDocumentosAsync(int idComandancia, int anio, int mes, string usuario) 
         {
-            var l = new List<DocumentoPatrullaje>();
+            var l = new List<DocumentoDto>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
             {
-                l= await _repo.ObtenerDocumentosAsync(idComandancia, anio, mes);
+                var docs = await _repo.ObtenerDocumentosAsync(idComandancia, anio, mes);
+                l= ConvierteListaDocumentosToDto(docs);
             }
 
             return l;
+        }
+
+        private DocumentoDto ConvierteDocumentoToDto(DocumentosVista d)
+        {
+            var doc = new DocumentoDto() 
+            {
+                IdDocumentoPatrullaje = d.id_documentoPatrullaje,
+                IdReferencia= d.id_referencia,
+                IdTipoDocumento = d.id_tipoDocumento,
+                IdComandancia = d.id_comandancia,
+                FechaRegistro = d.fechaRegistro,
+                FechaReferencia = d.fechaReferencia,
+                RutaArchivo = d.rutaArchivo,
+                NombreArchivo = d.nombreArchivo,
+                Descripcion = d.descripcion,
+                IdUsuario = d.id_usuario,
+                DescripcionTipoDocumento = d.descripciontipodocumento,
+                Usuario = d.usuario                 
+            };
+
+            return doc;
+        }
+
+        private List<DocumentoDto> ConvierteListaDocumentosToDto(List<DocumentosVista> documentos) 
+        {
+            var ldto = new List<DocumentoDto>();
+
+            foreach (var item in documentos)
+            {
+                var d = ConvierteDocumentoToDto(item);
+
+                ldto.Add(d);
+            }
+
+            return ldto;
         }
     }
 }

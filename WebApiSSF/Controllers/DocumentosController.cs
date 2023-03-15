@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driving;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<DocumentoPatrullaje>>> Get([Required] int idComandancia, [Required] int anio, [Required] int mes, [Required] string usuario)
+        public async Task<ActionResult<IEnumerable<DocumentoDto>>> Get([Required] int idComandancia, [Required] int anio, [Required] int mes, [Required] string usuario)
         {
             try
             {

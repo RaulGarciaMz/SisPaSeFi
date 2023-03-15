@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Vistas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Domain.Ports.Driven.Repositories
 {
     public interface IDocumentosRepo
     {
-        Task<List<DocumentoPatrullaje>> ObtenerDocumentosAsync(int idComandancia, int anio, int mes);
+        Task<List<DocumentosVista>> ObtenerDocumentosAsync(int idComandancia, int anio, int mes);
     }
 }

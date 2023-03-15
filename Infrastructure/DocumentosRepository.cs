@@ -1,5 +1,6 @@
 ﻿using Domain.DTOs.catalogos;
 using Domain.Entities;
+using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +22,11 @@ namespace SqlServerAdapter
             _documentosContext = documentoContext ?? throw new ArgumentNullException(nameof(documentoContext));
         }
 
-        public async Task<List<DocumentoPatrullaje>> ObtenerDocumentosAsync(int idComandancia, int anio, int mes)
+        public async Task<List<DocumentosVista>> ObtenerDocumentosAsync(int idComandancia, int anio, int mes)
         {
             string sqlQuery = @"SELECT a.id_documentopatrullaje, a.id_referencia, a.id_tipodocumento, a.id_comandancia, a.fecharegistro, 
                                        a.fechareferencia, a.rutaarchivo, a.nombrearchivo, a.descripcion, a.id_usuario, 
-                                	   b.descripcion descripciontipoducumento, CONCAT(c.nombre, ' ', c.apellido1) usuario
+                                	   b.descripcion descripciontipodocumento, CONCAT(c.nombre, ' ', c.apellido1) usuario
                                 FROM ssf.documentospatrullaje a
                                 JOIN ssf.tipodocumento b ON a.id_tipodocumento = b.id_tipodocumento
                                 JOIN ssf.usuarios c ON a.id_usuario = c.id_usuario
@@ -39,7 +40,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pMes", mes)
             };
 
-            return await _documentosContext.Documentos.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _documentosContext.DocumentosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
     }
 }

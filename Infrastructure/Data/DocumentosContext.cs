@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Vistas;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,6 @@ namespace SqlServerAdapter.Data
         {            
         }
 
-        public DbSet<DocumentoPatrullaje> Documentos { get; set; }
+        public DbSet<DocumentosVista> DocumentosVista { get; set; }
     }
 }
