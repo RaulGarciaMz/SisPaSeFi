@@ -40,9 +40,13 @@ namespace DomainServices.DomServ
                         incids = ConvierteListaIncidenciasEstructuraToDto(abiertaEstructura);
                         break;
                     case "IncidenciaSinAtenderPorVariosDiasEnESTRUCTURAS":
-                        var diasAtras = -dias;
-                        var noAtendidas = await _repo.ObtenerIncidenciasNoAtendidasPorDiasEnEstructurasAsync(diasAtras);
-                        incids = ConvierteListaIncidenciasEstructuraToDto(noAtendidas);
+                        if (dias > 0) 
+                        {
+                            var diasAtras = -dias;
+                            var noAtendidas = await _repo.ObtenerIncidenciasNoAtendidasPorDiasEnEstructurasAsync(diasAtras);
+                            incids = ConvierteListaIncidenciasEstructuraToDto(noAtendidas);
+                        }
+
                         break;
                 }
             }
