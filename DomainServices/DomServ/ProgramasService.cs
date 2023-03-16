@@ -46,11 +46,9 @@ namespace DomainServices.DomServ
 
                             default:
 
-
                                 await _repo.AgregaPropuestasFechasMultiplesAsync(ConvierteProgramaDtoToPropuestaDominio(p),
                                                                       ConvierteStringFechaToDateTime(p.LstPropuestasPatrullajesFechas),
                                                                       clase, user.IdUsuario);
-
                                 break;
                         }
                         break;
@@ -63,7 +61,6 @@ namespace DomainServices.DomServ
                         break;
                 }
             }
-
         }
 
         public async Task AgregaPropuestasComoProgramas(List<ProgramaDto> p, string usuario)
