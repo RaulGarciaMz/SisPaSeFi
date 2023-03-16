@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.DTOs
 {
-    public class ItinerarioDtoForCreate
+    public class ItinerarioDto
     {
         public int IdItinerario { get; set; }
         public int IdRuta { get; set; }

@@ -36,7 +36,7 @@ namespace DomainServices.DomServ
             return itinerarios;
         }
 
-        public async Task AgregaItinerarioAsync(ItinerarioDtoForCreate it)
+        public async Task AgregaItinerarioAsync(ItinerarioDto it)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(it.Usuario);
 
@@ -57,7 +57,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task ActualizaItinerarioAsync(ItinerarioDtoForCreate it)
+        public async Task ActualizaItinerarioAsync(ItinerarioDto it)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(it.Usuario);
 

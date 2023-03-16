@@ -10,8 +10,8 @@ namespace Domain.Ports.Driving
 {
     public interface IItinerarioDtoCommand
     {
-        Task AgregaItinerarioAsync(ItinerarioDtoForCreate it);
-        Task ActualizaItinerarioAsync(ItinerarioDtoForCreate it);
+        Task AgregaItinerarioAsync(ItinerarioDto it);
+        Task ActualizaItinerarioAsync(ItinerarioDto it);
         Task BorraItinerarioAsync(int id, string usuario);
     }
 
