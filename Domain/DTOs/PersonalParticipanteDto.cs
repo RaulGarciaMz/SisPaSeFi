@@ -9,7 +9,7 @@ namespace Domain.DTOs
     /// <summary>
     /// Usuario participante en patrullaje
     /// </summary>
-    public class UsuarioPatrullajeDto
+    public class PersonalParticipanteDto
     {
         /// <summary>
         /// Identificador del programa de patrullaje

@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace Domain.Ports.Driven
 {
-    public interface IUsuarioPatrullajeCommand
+    public interface IPersonalParticipanteCommand
     {
         Task AgregaUsuarioPatrullajeAsync(int idPrograma, int idUsuario);
         Task BorraUsuarioPatrullajeAsync(int idPrograma, int idUsuario);
     }
 
-    public interface IUsuarioPatrullajeQuery
+    public interface IPersonalParticipanteQuery
     {
-        Task<List<UsuarioPatrullajeVista>> ObtenerPersonalAsignadoEnProgramaAsync(int idPrograma);
-        Task<List<UsuarioPatrullajeVista>> ObtenerPersonalNoAsignadoEnProgramaAsync(int idPrograma, int region);
+        Task<List<PersonalParticipanteVista>> ObtenerPersonalAsignadoEnProgramaAsync(int idPrograma);
+        Task<List<PersonalParticipanteVista>> ObtenerPersonalNoAsignadoEnProgramaAsync(int idPrograma, int region);
         Task<List<UsuarioPatrullaje>> ObtenerUsuarioPatrullajeAsignadoEnProgramaAsync(int idPrograma, int idUsuario);
 
     }

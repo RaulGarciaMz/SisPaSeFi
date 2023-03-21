@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Ports.Driven.Repositories
 {
-    public interface IUsuarioPatrullajeRepo : IUsuarioPatrullajeCommand, IUsuarioPatrullajeQuery
+    public interface IPersonalParticipanteRepo : IPersonalParticipanteCommand, IPersonalParticipanteQuery
     {
     }
 }

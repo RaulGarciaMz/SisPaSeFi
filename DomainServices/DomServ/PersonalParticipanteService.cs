@@ -13,20 +13,20 @@ using Domain.Ports.Driving;
 
 namespace DomainServices.DomServ
 {
-    public class UsuariosPatrullajeService : IUsuariosPatrullajeService
+    public class PersonalParticipanteService : IPersonalParticipanteService
     {
-        private readonly IUsuarioPatrullajeRepo _repo;
+        private readonly IPersonalParticipanteRepo _repo;
         private readonly IUsuariosConfiguradorQuery _user;
 
-        public UsuariosPatrullajeService(IUsuarioPatrullajeRepo repo, IUsuariosConfiguradorQuery u)
+        public PersonalParticipanteService(IPersonalParticipanteRepo repo, IUsuariosConfiguradorQuery u)
         {
             _repo = repo;
             _user = u;
         }
 
-        public async Task<List<UsuarioPatrullajeVista>> ObtenerIncidenciasPorOpcionAsync(string opcion, int idPrograma, int region, string usuario)
+        public async Task<List<PersonalParticipanteVista>> ObtenerPersonalParticipantePorOpcionAsync(string opcion, int idPrograma, int region, string usuario)
         {
-            var l = new List<UsuarioPatrullajeVista>();
+            var l = new List<PersonalParticipanteVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
@@ -34,10 +34,11 @@ namespace DomainServices.DomServ
                 switch (opcion)
                 {
                     case "PersonalAsignado":
-                        l= await _repo.ObtenerPersonalAsignadoEnProgramaAsync(idPrograma);
+                        l = await _repo.ObtenerPersonalAsignadoEnProgramaAsync(idPrograma);
+
                         break;
                     case "PersonalNoAsignado":
-                        l= await _repo.ObtenerPersonalNoAsignadoEnProgramaAsync(idPrograma, region);
+                        l = await _repo.ObtenerPersonalNoAsignadoEnProgramaAsync(idPrograma, region);
                         break;
                 }
             }
@@ -46,9 +47,9 @@ namespace DomainServices.DomServ
         }
 
 
-        public async Task Agregar(UsuarioPatrullajeDto u)
+        public async Task Agregar(PersonalParticipanteDto u)
         {
-            var l = new List<UsuarioPatrullajeVista>();
+            var l = new List<PersonalParticipanteVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(u.Usuario);
 
             if (user != null)
@@ -66,9 +67,9 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task Borrar(UsuarioPatrullajeDto u)
+        public async Task Borrar(PersonalParticipanteDto u)
         {
-            var l = new List<UsuarioPatrullajeVista>();
+            var l = new List<PersonalParticipanteVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(u.Usuario);
 
             if (user != null)

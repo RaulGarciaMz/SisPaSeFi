@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Ports.Driving
 {
-    public interface IUsuariosPatrullajeService : IUsuariosPatrullajeDtoCommand, IUsuariosPatrullajeDtoQuery
+    public interface IPersonalParticipanteService : IPersonalParticipanteDtoCommand, IPersonalParticipanteDtoQuery
     {
     }
 }

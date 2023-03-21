@@ -12,32 +12,32 @@ using System.Threading.Tasks;
 
 namespace SqlServerAdapter
 {
-    public class UsuarioPatrullajeRepository : IUsuarioPatrullajeRepo
+    public class PersonalParticipanteRepository : IPersonalParticipanteRepo
     {
-        protected readonly UsuarioPatrullajeContext _userPatrullajeContext;
+        protected readonly PersonalParticipanteContext _userPatrullajeContext;
 
-        public UsuarioPatrullajeRepository(UsuarioPatrullajeContext userpatrullajeContext)
+        public PersonalParticipanteRepository(PersonalParticipanteContext userpatrullajeContext)
         {
             _userPatrullajeContext = userpatrullajeContext ?? throw new ArgumentNullException(nameof(userpatrullajeContext));
         }
 
-        public async Task<List<UsuarioPatrullajeVista>> ObtenerPersonalAsignadoEnProgramaAsync(int idPrograma) 
+        public async Task<List<PersonalParticipanteVista>> ObtenerPersonalAsignadoEnProgramaAsync(int idPrograma) 
         {
             string sqlQuery = @"SELECT a.id_usuario, a.usuario_nom, a.nombre, a.apellido1, a.apellido2, a.correoelectronico, a.cel, a.configurador
                                 FROM ssf.usuarios a
-                                JOIN ssf.usuariopatrullaje b ON a.id_usuario=b.id_usuario
+                                JOIN ssf.usuariopatrullaje b ON a.id_usuario = b.id_usuario
                                 WHERE b.id_programa = @pIdPrograma";
 
             object[] parametros = new object[]
             {
                 new SqlParameter("@pIdPrograma", idPrograma)
-
             };
 
-            return await _userPatrullajeContext.UsuariosPatrullajeVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+           return await _userPatrullajeContext.PersonasParticipantesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+
         }
 
-        public async Task<List<UsuarioPatrullajeVista>> ObtenerPersonalNoAsignadoEnProgramaAsync(int idPrograma, int region)
+        public async Task<List<PersonalParticipanteVista>> ObtenerPersonalNoAsignadoEnProgramaAsync(int idPrograma, int region)
         {
             string sqlQuery = @"SELECT a.id_usuario, a.usuario_nom, a.nombre, a.apellido1, a.apellido2, a.correoelectronico, a.cel, a.configurador
                                 FROM ssf.usuarios a
@@ -51,7 +51,7 @@ namespace SqlServerAdapter
 
             };
 
-            return await _userPatrullajeContext.UsuariosPatrullajeVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _userPatrullajeContext.PersonasParticipantesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         public async Task<List<UsuarioPatrullaje>> ObtenerUsuarioPatrullajeAsignadoEnProgramaAsync(int idPrograma, int idUsuario)
