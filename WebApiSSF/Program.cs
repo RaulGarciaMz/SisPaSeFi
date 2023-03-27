@@ -70,6 +70,8 @@ builder.Services.AddScoped<IItinerariosRepo, ItinerarioRepository>();
 builder.Services.AddScoped<IItinerariosService, ItinerariosService>();
 builder.Services.AddScoped<IPersonalParticipanteRepo, PersonalParticipanteRepository>();
 builder.Services.AddScoped<IPersonalParticipanteService, PersonalParticipanteService>();
+builder.Services.AddScoped<IProgramaMensualRepo, ProgramaMensualRepository>();
+builder.Services.AddScoped<IProgramaMensualService, ProgramaMensualService>();
 
 builder.Services.AddDbContext<PatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<ProgramaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
@@ -85,6 +87,7 @@ builder.Services.AddDbContext<DocumentosContext>(dbCtxtOptions => dbCtxtOptions.
 builder.Services.AddDbContext<IncidenciaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<ItinerarioContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<PersonalParticipanteContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
+builder.Services.AddDbContext<ProgramaMensualContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 
 /*builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>

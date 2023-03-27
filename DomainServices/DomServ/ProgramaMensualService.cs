@@ -84,6 +84,8 @@ namespace DomainServices.DomServ
 
                         rutas.Add(v);
                     }
+
+                    prog.RutasProgramaPatrullajeMensual = rutas;
                 }               
             }
 
