@@ -14,12 +14,12 @@ namespace WebApiSSF.Controllers
     [Route("api/[controller]")]
     //[Authorize]
     [ApiController]
-    public class IncidenciasController : ControllerBase
+    public class IncidenciaController : ControllerBase
     {
         private readonly IIncidenciasService _rp;
-        private readonly ILogger<IncidenciasController> _log;
+        private readonly ILogger<IncidenciaController> _log;
 
-        public IncidenciasController(IIncidenciasService r, ILogger<IncidenciasController> log)
+        public IncidenciaController(IIncidenciasService r, ILogger<IncidenciaController> log)
         {
             _rp = r ?? throw new ArgumentNullException(nameof(r));
             _log = log;

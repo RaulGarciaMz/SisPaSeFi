@@ -19,12 +19,12 @@ namespace WebApiSSF.Controllers
     [Route("api/[controller]")]
     //[Authorize]
     [ApiController]
-    public class ProgramasPatrullajeController : ControllerBase
+    public class ProgramaPatrullajesController : ControllerBase
     {
         private readonly IProgramaService _pp;
-        private readonly ILogger<ProgramasPatrullajeController> _log;
+        private readonly ILogger<ProgramaPatrullajesController> _log;
 
-        public ProgramasPatrullajeController(IProgramaService ps, ILogger<ProgramasPatrullajeController> log)
+        public ProgramaPatrullajesController(IProgramaService ps, ILogger<ProgramaPatrullajesController> log)
         {
             _pp = ps ?? throw new ArgumentNullException(nameof(ps));
             _log = log;

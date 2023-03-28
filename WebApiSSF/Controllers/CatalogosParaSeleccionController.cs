@@ -15,13 +15,13 @@ namespace WebApiSSF.Controllers
     [Route("api/[controller]")]
     //[Authorize]
     [ApiController]
-    public class CatalogosConsultasController : ControllerBase
+    public class CatalogosParaSeleccionController : ControllerBase
     {
 
         private readonly ICatalogosConsultaService _pp;
-        private readonly ILogger<CatalogosConsultasController> _log;
+        private readonly ILogger<CatalogosParaSeleccionController> _log;
 
-        public CatalogosConsultasController(ICatalogosConsultaService p, ILogger<CatalogosConsultasController> log)
+        public CatalogosParaSeleccionController(ICatalogosConsultaService p, ILogger<CatalogosParaSeleccionController> log)
         {
             _pp = p ?? throw new ArgumentNullException(nameof(p));
             _log = log ?? throw new ArgumentNullException(nameof(log));

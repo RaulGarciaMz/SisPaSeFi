@@ -16,12 +16,12 @@ namespace WebApiSSF.Controllers
     [Route("api/[controller]")]
     //[Authorize]
     [ApiController]
-    public class TarjetasInformativasController : ControllerBase
+    public class TarjetaInformativaController : ControllerBase
     {
         private readonly ITarjetaService _t;
-        private readonly ILogger<TarjetasInformativasController> _log;
+        private readonly ILogger<TarjetaInformativaController> _log;
 
-        public TarjetasInformativasController(ITarjetaService t, ILogger<TarjetasInformativasController> log)
+        public TarjetaInformativaController(ITarjetaService t, ILogger<TarjetaInformativaController> log)
         {
             //_t = new TarjetasService(new SqlServerAdapter.TarjetaInformativaRepository(new TarjetaInformativaContext()));
             _t = t ?? throw new ArgumentNullException(nameof(t));

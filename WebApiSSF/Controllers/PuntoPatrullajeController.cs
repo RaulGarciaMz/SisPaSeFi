@@ -18,12 +18,12 @@ namespace WebApiSSF.Controllers
     [Route("api/[controller]")]
     //[Authorize]
     [ApiController]
-    public class PuntosPatrullajesController : ControllerBase
+    public class PuntoPatrullajeController : ControllerBase
     {
         private readonly IPuntosService _pp;
-        private readonly ILogger<PuntosPatrullajesController> _log;
+        private readonly ILogger<PuntoPatrullajeController> _log;
 
-        public PuntosPatrullajesController(IPuntosService p, ILogger<PuntosPatrullajesController> log)
+        public PuntoPatrullajeController(IPuntosService p, ILogger<PuntoPatrullajeController> log)
         {
             //_pp = new PuntosService(new SqlServerAdapter.PuntoPatrullajeRepository(new PatrullajeContext()));
             _pp = p ?? throw new ArgumentNullException(nameof(p));

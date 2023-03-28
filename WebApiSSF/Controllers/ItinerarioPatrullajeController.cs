@@ -14,12 +14,12 @@ namespace WebApiSSF.Controllers
     [Route("api/[controller]")]
     //[Authorize]
     [ApiController]
-    public class ItinerariosController : ControllerBase
+    public class ItinerarioPatrullajeController : ControllerBase
     {
         private readonly IItinerariosService _rp;
-        private readonly ILogger<ItinerariosController> _log;
+        private readonly ILogger<ItinerarioPatrullajeController> _log;
 
-        public ItinerariosController(IItinerariosService r, ILogger<ItinerariosController> log)
+        public ItinerarioPatrullajeController(IItinerariosService r, ILogger<ItinerarioPatrullajeController> log)
         {
             _rp = r ?? throw new ArgumentNullException(nameof(r));
             _log = log;
