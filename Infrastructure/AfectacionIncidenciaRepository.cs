@@ -1,14 +1,19 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Vistas;
+using Domain.Ports.Driven.Repositories;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SqlServerAdapter
 {
-    public class AfectacionIncidenciaRepository
+    public class AfectacionIncidenciaRepository : IAfectacionesRepo
     {
         protected readonly AfectacionIncidenciasContext _afectacionContext;
 
@@ -17,12 +22,75 @@ namespace SqlServerAdapter
             _afectacionContext = afectacionContext ?? throw new ArgumentNullException(nameof(afectacionContext));
         }
 
-        public async Task<List<AfectacionIncidencia>> ObtenerAfectacionIncidenciaAsync()
+        public async Task<List<AfectacionIncidenciaVista>> ObtenerAfectacionIncidenciaPorOpcionAsync(int idReporte, string tipo)
         {
-           var p = new List<AfectacionIncidencia>();
+            string sqlQuery = @"SELECT a.id_afectacionincidencia, a.id_incidencia, a.id_conceptoafectacion, a.cantidad, 
+                                       a.preciounitario, a.tipo_incidencia, b.descripcion, b.unidades
+                                FROM ssf.afectacionincidencia a
+                                JOIN ssf.conceptosafectacion b ON a.id_conceptoafectacion=b.id_conceptoafectacion
+                                JOIN ssf.tiporeporte c ON a.tipo_incidencia = c.idtiporeporte
+                                WHERE c.descripcion= @pTipo
+                                AND a.id_incidencia= @pIdReporte";
 
-            return p;
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pIdReporte", idReporte),
+                new SqlParameter("@pTipo", tipo)
+            };
+
+            return await _afectacionContext.AfectacionesIncidenciasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
+
+        public async Task AgregaAsync(int idIncidencia, int idConcepto, int cantidad, float precio, int idTipo)
+        {
+            var afect = new AfectacionIncidencia() 
+            {
+                IdIncidencia = idIncidencia,
+                IdConceptoAfectacion = idConcepto,
+                Cantidad = cantidad,
+                PrecioUnitario = precio,
+                TipoIncidencia = idTipo
+            };
+
+            _afectacionContext.AfectacionesIncidencias.Add(afect);
+            await _afectacionContext.SaveChangesAsync();
+        }
+
+        public async Task ActualizaAsync(int idIncidencia, int cantidad, float precio)
+        {
+            var afect = await _afectacionContext.AfectacionesIncidencias.Where(x => x.IdAfectacionIncidencia == idIncidencia).SingleOrDefaultAsync();
+
+            if (afect != null)
+            { 
+                afect.Cantidad = cantidad;
+                afect.PrecioUnitario = precio;
+
+                _afectacionContext.AfectacionesIncidencias.Update(afect);
+                await _afectacionContext.SaveChangesAsync();
+            } 
+        }
+
+        public async Task<List<AfectacionIncidencia>> ObtenerAfectacionPorIncidenciaAndTipoAndConceptoAsync(int idIncidencia, int idConcepto, string tipo)
+        {
+            string sqlQuery = @"SELECT a.*
+                                FROM ssf.afectacionincidencia a
+                                JOIN ssf.conceptosafectacion b ON a.id_conceptoafectacion=b.id_conceptoafectacion
+                                JOIN ssf.tiporeporte c ON a.tipo_incidencia = c.idtiporeporte
+                                WHERE c.descripcion= @pTipo
+                                AND a.id_incidencia= @pIdIncidencia
+                                AND a.id_conceptoAfectacion = @pConcepto";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pIdIncidencia", idIncidencia),
+                new SqlParameter("@pTipo", tipo),
+                new SqlParameter("@pConcepto", idConcepto)
+            };
+
+             return await _afectacionContext.AfectacionesIncidencias.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+
 
     }
 }
