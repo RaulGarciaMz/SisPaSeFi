@@ -53,7 +53,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task<List<LineaVista>> ObtenerLineas(int opcion, string criterio, string usuario)
+        public async Task<List<LineaVista>> ObtenerLineasAsync(int opcion, string criterio, string usuario)
         {
             var lineas = new List<LineaVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);

@@ -17,6 +17,6 @@ namespace Domain.Ports.Driving
 
     public interface ILineasDtoQuery
     {
-        Task<List<LineaVista>> ObtenerLineas(int opcion, string criterio, string usuario);
+        Task<List<LineaVista>> ObtenerLineasAsync(int opcion, string criterio, string usuario);
     }
 }
