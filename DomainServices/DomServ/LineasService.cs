@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Enums;
 using Domain.Ports.Driven;
+using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
 using System;
 using System.Collections.Generic;
