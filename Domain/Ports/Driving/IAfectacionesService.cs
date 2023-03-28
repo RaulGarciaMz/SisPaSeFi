@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Ports.Driving
 {
-    public interface IAfectacionesService
+    public interface IAfectacionesService : IAfectacionesDtoCommand, IAfectacionesDtoQuery
     {
     }
 }
