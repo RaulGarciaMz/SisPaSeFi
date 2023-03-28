@@ -147,6 +147,7 @@ public partial class MyDataDbContext : DbContext
     public virtual DbSet<Usuariospotfire> Usuariospotfires { get; set; }
 
     public virtual DbSet<Vehiculo> Vehiculos { get; set; }
+    public virtual DbSet<Tiporeporte> Tiporeportes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -422,6 +423,11 @@ public partial class MyDataDbContext : DbContext
             entity.HasKey(e => e.IdNivel).HasName("PK_niveles_id_nivel");
 
             entity.Property(e => e.IdNivel).ValueGeneratedNever();
+        });
+
+        modelBuilder.Entity<Tiporeporte>(entity =>
+        {
+            entity.Property(e => e.Idtiporeporte).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<NivelRiesgo>(entity =>

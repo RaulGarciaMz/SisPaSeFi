@@ -38,7 +38,8 @@ namespace SqlServerAdapter
                 new SqlParameter("@pTipo", tipo)
             };
 
-            return await _afectacionContext.AfectacionesIncidenciasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+                return await _afectacionContext.AfectacionesIncidenciasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+
         }
 
         public async Task AgregaAsync(int idIncidencia, int idConcepto, int cantidad, float precio, int idTipo)
