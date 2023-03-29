@@ -90,6 +90,8 @@ public partial class MyDataDbContext : DbContext
 
     public virtual DbSet<NotaInformativa> Notainformativas { get; set; }
 
+    public virtual DbSet<Permisosedicionprocesoconduccion> Permisosedicionprocesoconduccion { get; set; }
+
     public virtual DbSet<ProcesoResponsable> Procesosresponsables { get; set; }
 
     public virtual DbSet<ProgramaPatrullaje> Programapatrullajes { get; set; }
@@ -446,6 +448,11 @@ public partial class MyDataDbContext : DbContext
                 .HasConstraintName("notainformativa$notaInformativa_ibfk_1");
 
             entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Notainformativas).HasConstraintName("notainformativa$notaInformativa_ibfk_2");
+        });
+
+        modelBuilder.Entity<Permisosedicionprocesoconduccion>(entity =>
+        {
+            entity.HasKey(e => e.Idpermisoedicionprocesoconduccion).HasName("PK_permisosedicionprocesoconduccion_idpermisoedicionprocesoconduccion");
         });
 
         modelBuilder.Entity<ProcesoResponsable>(entity =>
