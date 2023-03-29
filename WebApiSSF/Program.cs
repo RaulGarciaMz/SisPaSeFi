@@ -76,6 +76,8 @@ builder.Services.AddScoped<ILineasRepo, LineasRepository>();
 builder.Services.AddScoped<ILineasService, LineasService>();
 builder.Services.AddScoped<IAfectacionesRepo, AfectacionIncidenciaRepository>();
 builder.Services.AddScoped<IAfectacionesService, AfectacionesService>();
+builder.Services.AddScoped<IPermisosConduccionRepo, PermisosEdicionConduccionRepository>();
+builder.Services.AddScoped<IPermisoEdicionConduccionService, PermisosEdicionConduccionService>();
 
 builder.Services.AddDbContext<PatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<ProgramaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
@@ -94,6 +96,7 @@ builder.Services.AddDbContext<PersonalParticipanteContext>(dbCtxtOptions => dbCt
 builder.Services.AddDbContext<ProgramaMensualContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<LineasContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<AfectacionIncidenciasContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
+builder.Services.AddDbContext<PermisosEdicionConduccionContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 
 /*builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
