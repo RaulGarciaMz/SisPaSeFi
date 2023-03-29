@@ -42,14 +42,15 @@ namespace WebApiSSF.Controllers
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claimsForToken = new List<Claim>();
-            claimsForToken.Add(new Claim("sub", "1"));  // falta obtener el Id del usuario
+            claimsForToken.Add(new Claim("Name", body.Usuario));  
+            claimsForToken.Add(new Claim("Surname", body.Password)); 
 
             var jwtToken = new JwtSecurityToken(
                 _configuration["Authentication:Issuer"],
                 _configuration["Authentication:Audience"],
                 claimsForToken,
                 DateTime.UtcNow,
-                DateTime.UtcNow.AddHours(1),
+                DateTime.UtcNow.AddDays(1),
                 signingCredentials);
 
             var tokenReturned = new JwtSecurityTokenHandler().WriteToken(jwtToken);
