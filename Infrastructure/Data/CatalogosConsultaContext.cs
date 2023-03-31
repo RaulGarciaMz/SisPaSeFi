@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Entities.Vistas;
 using Microsoft.EntityFrameworkCore;
-using ScaffoldSSF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

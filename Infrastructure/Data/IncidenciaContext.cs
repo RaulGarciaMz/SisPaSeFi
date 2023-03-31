@@ -12,7 +12,7 @@ namespace SqlServerAdapter.Data
     public class IncidenciaContext : DbContext
     {
         public IncidenciaContext(DbContextOptions<IncidenciaContext> options)
-    : base(options)
+        : base(options)
         {
         }
 
@@ -20,9 +20,8 @@ namespace SqlServerAdapter.Data
         public DbSet<IncidenciaInstalacionVista> IncidenciasInstalaciones { get; set; }
         public DbSet<ReporteEstructura> ReportesEstructuras { get; set; }
         public DbSet<ReportePunto> ReportesInstalaciones { get; set; }
-        public DbSet<ReporteIncidenciaAbierto> ReportesIncidenciasAbiertos { get; set; }
-        
-
-        //public DbSet<TarjetaInformativaReporte> TarjetaInformativaReportes { get; set; }
+        public DbSet<ReporteIncidenciaAbierto> ReportesIncidenciasAbiertos { get; set; }       
+        public DbSet<TarjetaInformativaReporte> TarjetaInformativaReportes { get; set; }
+        public DbSet<Tiporeporte> TiposReporte { get; set; }
     }
 }

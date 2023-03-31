@@ -3,7 +3,6 @@ using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using ScaffoldSSF.Models;
 using SqlServerAdapter.Data;
 using System;
 using System.Collections.Generic;

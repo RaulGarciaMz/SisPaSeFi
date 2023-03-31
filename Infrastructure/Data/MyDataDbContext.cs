@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
-using ScaffoldSSF.Models;
 
 namespace SqlServerAdapter.Data;
 
@@ -54,6 +53,8 @@ public partial class MyDataDbContext : DbContext
     public virtual DbSet<EstadoPais> Estadospais { get; set; }
 
     public virtual DbSet<EstadoTarjetaInformativa> Estadotarjetainformativas { get; set; }
+
+    public virtual DbSet<TarjetaInformativaReporte> TarjetaInformativaReportes { get; set; }
 
     public virtual DbSet<Estructura> Estructuras { get; set; }
 

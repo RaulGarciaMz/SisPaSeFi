@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace ScaffoldSSF.Models;
+namespace Domain.Entities;
 
 [Table("resultadopatrullaje", Schema = "ssf")]
 public partial class ResultadoPatrullaje

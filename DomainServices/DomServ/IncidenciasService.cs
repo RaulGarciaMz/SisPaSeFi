@@ -103,18 +103,10 @@ namespace DomainServices.DomServ
                         break;
                 }
 
-                //TODO falta implementar la inserción en tarjetainformativa reporte
+                //TODO falta revisar si es correcta esta funcionalidad
                 if (idReporte != -1 && i.IdTarjeta > 0)
                 {
-/*                    strInstruccionSQL = "INSERT INTO tarjetainformativareporte (idtarjeta,idreporte,idtiporeporte)
-                                                SELECT " & objIncidencia.intIdTarjeta & "
-                                                ," & intIdReporte & "
-                                                ,(SELECT idtiporeporte FROM tiporeporte WHERE descripcion = '" & objIncidencia.strTipoIncidencia & "') FROM(SELECT 1, 2, 3) AS tmp_name
-                                                WHERE NOT EXISTS(
-                                                    SELECT idtarjeta FROM tarjetainformativareporte WHERE idtarjeta = " & objIncidencia.intIdTarjeta & "
-                                                        AND idreporte = " & intIdReporte & "
-                                                        AND idtiporeporte = (SELECT idtiporeporte FROM tiporeporte WHERE descripcion = '" & objIncidencia.strTipoIncidencia & "')
-                                                ) LIMIT 1; "*/
+                    await _repo.AgregaTarjetaInformativaReporteAsync(i.IdTarjeta, idReporte, i.TipoIncidencia);
                 }
             }
         }

@@ -236,24 +236,29 @@ namespace SqlServerAdapter
         }
 
 
-        //TODO Falta implementar esta función debido a que la BDD no está actualizada
-        public async Task AgregaTarjetaInformativaReporteAsync(int idEstructura, int idNota, string incidencia, int edoIncidencia, int prioridad, int clasificacion)
+        //TODO Revisar funcionalidad porque la consulta original está rara
+        public async Task AgregaTarjetaInformativaReporteAsync(int idTarjeta, int idReporte, string tipoIncidencia)
         {
-            var reporte = new ReporteEstructura()
+            var tr = await _incidenciaContext.TiposReporte.Where(x => x.Descripcion == tipoIncidencia).FirstOrDefaultAsync();
+
+            if (tr != null)
             {
-                IdEstructura = idEstructura,
-                IdNota = idNota,
-                Incidencia = incidencia,
-                EstadoIncidencia = edoIncidencia,
-                PrioridadIncidencia = prioridad,
-                IdClasificacionIncidencia = clasificacion,
-                UltimaActualizacion = DateTime.UtcNow
-            };
+                var existe = await _incidenciaContext.TarjetaInformativaReportes.AnyAsync(x => x.Idtarjeta == idTarjeta && x.Idreporte == idReporte && x.Idtiporeporte == tr.Idtiporeporte);
 
-            _incidenciaContext.ReportesEstructuras.Add(reporte);
+                if (!existe)
+                {
+                    var tir = new TarjetaInformativaReporte() 
+                    {
+                        Idtarjeta = idTarjeta,
+                        Idreporte = idReporte,
+                        Idtiporeporte = tr.Idtiporeporte
+                    };
 
-            await _incidenciaContext.SaveChangesAsync();
+                    _incidenciaContext.TarjetaInformativaReportes.Add(tir);
 
+                    await _incidenciaContext.SaveChangesAsync();
+                }
+            }
         }
     }
 }
