@@ -29,7 +29,7 @@ namespace WebApiSSF.Controllers
         /// Obtiene la lista de afectaciones de incidencias acorde a los parámetros indicados
         /// </summary>
         /// <param name="idReporte">Identificador de la incidencia</param>
-        /// <param name="tipo">Tipo de incidencia ("INSTALACION" o "ESTRUCTURA")</param>
+        /// <param name="opcion">Tipo de incidencia ("INSTALACION" o "ESTRUCTURA")</param>
         /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [HttpGet]
@@ -37,11 +37,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<AfectacionIncidenciaVista>>> ObtenerAfectacionIncidenciaPorOpcion([Required]int idReporte, [Required] string tipo, [Required] string usuario)
+        public async Task<ActionResult<IEnumerable<AfectacionIncidenciaVista>>> ObtenerAfectacionIncidenciaPorOpcion([Required]int idReporte, [Required] string opcion, [Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerAfectacionIncidenciaPorOpcionAsync(idReporte, tipo, usuario);
+                var coms = await _pp.ObtenerAfectacionIncidenciaPorOpcionAsync(idReporte, opcion, usuario);
 
                 if (coms.Count <= 0)
                 {
@@ -52,7 +52,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener las afectaciones incidencias para el id de incidencia: {idReporte}, tipo: {tipo}, usuario: {usuario}", ex);
+                _log.LogInformation($"error al obtener las afectaciones incidencias para el id de incidencia: {idReporte}, tipo: {opcion}, usuario: {usuario}", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
                 //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
                 return StatusCode(500, m);

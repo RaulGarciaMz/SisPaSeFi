@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
+using ScaffoldSSF.Models;
 
 namespace SqlServerAdapter.Data;
 
@@ -109,6 +110,8 @@ public partial class MyDataDbContext : DbContext
     public virtual DbSet<ReporteEstructura> Reporteestructuras { get; set; }
 
     public virtual DbSet<ReportePunto> Reportepuntos { get; set; }
+
+    public virtual DbSet<ResultadoPatrullaje> ResultadoPatrullajes { get; set; }
 
     public virtual DbSet<Rol> Roles { get; set; }
 
@@ -565,6 +568,13 @@ public partial class MyDataDbContext : DbContext
             entity.HasOne(d => d.EstadoIncidenciaNavigation).WithMany(p => p.Reportepuntos).HasConstraintName("reportepunto$reportePunto_ibfk_3");
 
             entity.HasOne(d => d.IdPuntoNavigation).WithMany(p => p.Reportepuntos).HasConstraintName("reportepunto$reportePunto_ibfk_2");
+        });
+
+        modelBuilder.Entity<ResultadoPatrullaje>(entity =>
+        {
+            entity.HasKey(e => e.IdResultadoPatrullaje).HasName("PK_resultadopatrullaje_idresultadopatrullaje");
+
+            entity.Property(e => e.IdResultadoPatrullaje).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<Rol>(entity =>

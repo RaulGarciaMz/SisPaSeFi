@@ -1,4 +1,6 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Vistas;
+using ScaffoldSSF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +47,7 @@ namespace Domain.Ports.Driven
     public interface IProcesoResponsableQuery
     {
         Task<List<ProcesoResponsable>> ObtenerProcesosResponsablesAsync();
+        Task<ProcesoResponsable?> ObtenerProcesosResponsablePorIdAsync(int id);
     }
 
     public interface ITipoDocumentoQuery
@@ -56,4 +59,17 @@ namespace Domain.Ports.Driven
     {
         Task<List<Municipio>> ObtenerMunicipiosPorEstadoAsync(int idEstado);
     }
+
+    public interface IGerenciaDivisionQuery
+    {
+        Task<List<CatalogoVista>> ObtenerCatalogoPorNombreTablaAync(string nombre);
+    }
+
+    public interface IResultadoPatrullajeQuery
+    {
+        Task<List<ResultadoPatrullaje>> ObtenerResultadosPatrullajeAsync();
+    }
+
+
+    
 }

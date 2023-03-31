@@ -30,7 +30,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de comandancias para un usuario indicado
         /// </summary>
-        /// <param name="idUsuario">Identificador del usuario</param>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [Route("comandancias")]
         [HttpGet]
@@ -38,11 +38,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerComandanciaPorIdUsuario([Required] int idUsuario)
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerComandanciaPorUsuario([Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerComandanciaPorIdUsuarioAsync(idUsuario);
+                var coms = await _pp.ObtenerComandanciaPorIdUsuarioAsync(usuario);
 
                 if (coms == null) { }
 
@@ -63,6 +63,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de tipos de patrullaje del catálogo
         /// </summary>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [Route("tipopatrullaje")]
         [HttpGet]
@@ -70,11 +71,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerTiposPatrullaje()
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerTiposPatrullaje([Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerTiposPatrullajeAsync();
+                var coms = await _pp.ObtenerTiposPatrullajeAsync(usuario);
 
                 if (coms == null) { }
 
@@ -95,6 +96,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de tipos de vehículos del catálogo
         /// </summary>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [Route("tipovehiculo")]
         [HttpGet]
@@ -102,11 +104,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerTiposVehiculo()
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerTiposVehiculo([Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerTiposVehiculoAsync();
+                var coms = await _pp.ObtenerTiposVehiculoAsync(usuario);
 
                 if (coms == null) { }
 
@@ -127,6 +129,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de clasificaciones de incidencias del catálogo
         /// </summary>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [Route("clasificacionincidencias")]
         [HttpGet]
@@ -134,11 +137,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerClasificacionesIncidencia()
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerClasificacionesIncidencia([Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerClasificacionesIncidenciaAsync();
+                var coms = await _pp.ObtenerClasificacionesIncidenciaAsync(usuario);
 
                 if (coms == null) { }
 
@@ -159,6 +162,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de niveles del catálogo
         /// </summary>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [Route("niveles")]
         [HttpGet]
@@ -166,11 +170,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerNiveles()
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerNiveles([Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerNivelesAsync();
+                var coms = await _pp.ObtenerNivelesAsync(usuario);
 
                 if (coms == null) { }
 
@@ -191,6 +195,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de conceptos de afectación del catálogo
         /// </summary>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [Route("conceptosafectacion")]
         [HttpGet]
@@ -198,11 +203,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerConceptosAfectacion()
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerConceptosAfectacion([Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerConceptosAfectacionAsync();
+                var coms = await _pp.ObtenerConceptosAfectacionAsync(usuario);
 
                 if (coms == null) { }
 
@@ -223,6 +228,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de identificadores de las regiones militares que son usador en las rutas
         /// </summary>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [Route("regionesenrutas")]
         [HttpGet]
@@ -230,11 +236,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<int>>> ObtenerRegionesMilitaresEnRutas()
+        public async Task<ActionResult<IEnumerable<int>>> ObtenerRegionesMilitaresEnRutasConDescVacia([Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerRegionesMilitaresEnRutasAsync();
+                var coms = await _pp.ObtenerRegionesMilitaresEnRutasConDescVaciaAsync(usuario);
 
                 if (coms == null) 
                 {
@@ -256,8 +262,45 @@ namespace WebApiSSF.Controllers
         }
 
         /// <summary>
+        /// Obtiene la lista de resultados de patrullaje
+        /// </summary>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+        /// <returns></returns>
+        [Route("resultadospatrullaje")]
+        [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerResultadosPatrullajeAsync([Required] string usuario)
+        {
+            try
+            {
+                var coms = await _pp.ObtenerResultadosPatrullajeAsync(usuario);
+
+                if (coms == null)
+                {
+                    return StatusCode(500, "La consulta trajo una lista nula");
+                }
+
+                if (coms.Count <= 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(coms);
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al obtener estados del país del catálogo", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+        /// <summary>
         /// Obtiene la lista de Estados del país del catálogo
         /// </summary>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [Route("estadospais")]
         [HttpGet]
@@ -265,11 +308,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerEstadosDelPais()
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerEstadosDelPais([Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerEstadosPaisAsync();
+                var coms = await _pp.ObtenerEstadosPaisAsync(usuario);
 
                 if (coms == null)
                 {
@@ -294,6 +337,7 @@ namespace WebApiSSF.Controllers
         /// Obtiene la lista de Municipios pertenecientes al estado indicado en el parámetro
         /// </summary>
         /// <param name="id">Identificador del estado</param>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [Route("municipios")]
         [HttpGet]
@@ -301,11 +345,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerMunicipiosPorEstado([Required]int id)
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerMunicipiosPorEstado([Required]int id, [Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerMunicipiosPorEstadoAsync(id);
+                var coms = await _pp.ObtenerMunicipiosPorEstadoAsync(id, usuario);
 
                 if (coms == null)
                 {
@@ -329,6 +373,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de Procesos responsables del catálogo
         /// </summary>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [Route("procesosresponsables")]
         [HttpGet]
@@ -336,11 +381,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerProcesosResponsables()
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerProcesosResponsables([Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerProcesosResponsablesAsync();
+                var coms = await _pp.ObtenerProcesosResponsablesAsync(usuario);
 
                 if (coms == null)
                 {
@@ -362,8 +407,46 @@ namespace WebApiSSF.Controllers
         }
 
         /// <summary>
+        /// Obtiene la lista de las tablas del catálogo de gerencia división acorde al identificador del proceso responsable indicado
+        /// </summary>
+        /// <param name="idProceso">Identificador del proceso responsable</param>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+        /// <returns></returns>
+        [Route("gerenciadivision")]
+        [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerGerenciaDivision([Required] int idProceso, [Required] string usuario)
+        {
+            try
+            {
+                var coms = await _pp.ObtenerGerenciaDivisionAsync(idProceso,usuario);
+
+                if (coms == null)
+                {
+                    return StatusCode(500, "La consulta trajo una lista nula");
+                }
+
+                if (coms.Count <= 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(coms);
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al obtener la lista de gerencia división del catálogo", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+        /// <summary>
         /// Obtiene la lista de tipos de documentos del catálogo
         /// </summary>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [Route("tiposdocumentos")]
         [HttpGet]
@@ -371,11 +454,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerTiposDocumentos()
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerTiposDocumentos([Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerTiposDocumentosAsync();
+                var coms = await _pp.ObtenerTiposDocumentosAsync(usuario);
 
                 if (coms == null)
                 {
@@ -392,6 +475,42 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogInformation($"error al obtener los tipos de documentos del catálogo", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+        /// <summary>
+        /// Obtiene la lista de registros de un catálogo correspondiente a la opción indicada 
+        /// </summary>
+        /// <param name="opcion">Nombre de la opción para catálogo ("RSF", "TipoPatrullaje", "TipoVehiculo", "ClasificacionIncidencia", "Niveles", "ConceptosAfectacion", "RegionesSDN", "ResultadoPatrullaje", "EstadosDelPais", "MunicipiosEstado", "ProcesosResponsables", "GerenciaDivision", "TipoDocumento")</param>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerCatalogoPorOpcion([Required]string opcion, [Required] string usuario)
+        {
+            try
+            {
+                var coms = await _pp.ObtenerCatalogoPorOpcionAsync(opcion, usuario);
+
+                if (coms == null)
+                {
+                    return StatusCode(500, "La consulta trajo una lista nula");
+                }
+
+                if (coms.Count <= 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(coms);
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al obtener el catálogo por opción", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

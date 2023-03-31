@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Ports.Driving
 {
-    public interface ICatalogosConsultaService: ICatalogoConsultasDto
+    public interface ICatalogosConsultaService : ICatalogoConsultasDto
     {
+        
     }
 }

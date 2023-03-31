@@ -1,6 +1,9 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using ScaffoldSSF.Models;
 using SqlServerAdapter.Data;
 using System;
 using System.Collections.Generic;
@@ -75,6 +78,33 @@ namespace SqlServerAdapter
         public async Task<List<Municipio>> ObtenerMunicipiosPorEstadoAsync(int idEstado)
         {
             return await _catalogosConsultaContext.Municipios.Where(x => x.IdEstado == idEstado).ToListAsync();
+        }
+
+        public async Task<ProcesoResponsable?> ObtenerProcesosResponsablePorIdAsync(int id)
+        {
+            return await _catalogosConsultaContext.ProcesosResponsables.Where(x => x.IdProcesoResponsable == id).SingleOrDefaultAsync();
+        }
+
+        public async Task<List<CatalogoVista>> ObtenerCatalogoPorNombreTablaAync(string nombre)
+        {
+            var cat = "ssf." + nombre;
+
+            string sqlQuery = @"SELECT id, CONCAT(nombre, ' - ' , clave) nombre
+                                FROM @pTabla
+                                ORDER BY id";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pTabla", cat),
+            };
+
+            return await _catalogosConsultaContext.CatalogosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+
+        }
+
+        public async Task<List<ResultadoPatrullaje>> ObtenerResultadosPatrullajeAsync()
+        {
+            return await _catalogosConsultaContext.ResultadosPatrullaje.ToListAsync();
         }
     }
 }

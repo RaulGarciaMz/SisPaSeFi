@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Entities.Vistas;
 using Microsoft.EntityFrameworkCore;
+using ScaffoldSSF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,8 @@ namespace SqlServerAdapter.Data
         public virtual DbSet<Municipio> Municipios { get; set; }
         public virtual DbSet<ProcesoResponsable> ProcesosResponsables { get; set; }
         public virtual DbSet<TipoDocumento> TiposDocumentos { get; set; }
+        public virtual DbSet<ResultadoPatrullaje> ResultadosPatrullaje { get; set; }
+        public virtual DbSet<CatalogoVista> CatalogosVista { get; set; }
     }
 }
 

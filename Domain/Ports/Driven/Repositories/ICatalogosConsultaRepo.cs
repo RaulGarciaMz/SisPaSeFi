@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace Domain.Ports.Driven.Repositories
 {
     public interface ICatalogosConsultaRepo: IComandanciasQuery, ITipoPatrullajeQuery, ITipoVehiculoQuery, IClasificacionIncidenciaQuery, 
-        INivelesQuery, IConceptoAfectacionQuery, IRegionEnRutaQuery, IEstadoPaisQuery, IProcesoResponsableQuery, ITipoDocumentoQuery, IMunicipioQuery
+        INivelesQuery, IConceptoAfectacionQuery, IRegionEnRutaQuery, IEstadoPaisQuery, IProcesoResponsableQuery, ITipoDocumentoQuery, 
+        IMunicipioQuery, IGerenciaDivisionQuery, IResultadoPatrullajeQuery
     {
     }
 }

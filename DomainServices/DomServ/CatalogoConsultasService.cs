@@ -1,5 +1,6 @@
 ﻿using Domain.DTOs.catalogos;
 using Domain.Entities;
+using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
 using System;
@@ -13,208 +14,390 @@ namespace DomainServices.DomServ
     public class CatalogoConsultasService : ICatalogosConsultaService
     {
         private readonly ICatalogosConsultaRepo _repo;
+        private readonly IUsuariosConfiguradorQuery _user;
 
-        public CatalogoConsultasService(ICatalogosConsultaRepo repo)
+        public CatalogoConsultasService(ICatalogosConsultaRepo repo, IUsuariosConfiguradorQuery u)
         {
             _repo = repo;
+            _user = u;
         }
 
-        public async Task<List<CatalogoGenerico>> ObtenerClasificacionesIncidenciaAsync()
-        {
-           var cat = new List<CatalogoGenerico>();
-           var clas = await _repo.ObtenerClasificacionesIncidenciaAsync();
-
-            foreach (var c in clas) 
-            {
-                var row = new CatalogoGenerico()
-                { 
-                    Id = c.IdClasificacionIncidencia,
-                    Descripcion = c.Descripcion
-                };
-
-                cat.Add(row);
-            }
-
-            return cat;
-        }
-
-        public async Task<List<CatalogoGenerico>> ObtenerComandanciaPorIdUsuarioAsync(int idUsuario)
+        public async Task<List<CatalogoGenerico>> ObtenerCatalogoPorOpcionAsync(string opcion, string usuario)
         {
             var cat = new List<CatalogoGenerico>();
-            var clas = await _repo.ObtenerComandanciaPorIdUsuarioAsync(idUsuario);
 
-            foreach (var c in clas)
-            {
-                var row = new CatalogoGenerico()
-                {
-                    Id = c.IdComandancia,
-                    Descripcion = c.Numero.ToString()
-                };
+            int dtoComplementario=0;
 
-                cat.Add(row);
+            if (opcion.Contains("-"))
+            { 
+                var splOpcion = opcion.Split("-");
+                opcion = splOpcion[0];
+                dtoComplementario = Int32.Parse( splOpcion[1]);
             }
 
-            return cat;
+            switch(opcion) 
+            {
+                case "RSF":
+                    cat = await ObtenerComandanciaPorIdUsuarioAsync(usuario);
+                    break;
+                case "TipoPatrullaje":
+                    cat = await ObtenerTiposPatrullajeAsync(usuario);
+                    break;
+                case "TipoVehiculo":
+                    cat = await ObtenerTiposVehiculoAsync(usuario);
+                    break;
+                case "ClasificacionIncidencia":
+                    cat = await ObtenerClasificacionesIncidenciaAsync(usuario);
+                    break;
+                case "Niveles":
+                    cat = await ObtenerNivelesAsync(usuario);
+                    break;
+                case "ConceptosAfectacion":
+                    cat = await ObtenerConceptosAfectacionAsync(usuario);
+                    break;
+                case "RegionesSDN":
+                    cat = await ObtenerRegionesMilitaresEnRutasConDescVaciaAsync(usuario);
+                    break;
+                case "ResultadoPatrullaje":
+                    cat = await ObtenerResultadosPatrullajeAsync(usuario);
+                    break;
+                case "EstadosDelPais":
+                    cat = await ObtenerEstadosPaisAsync(usuario);
+                    break;
+                case "MunicipiosEstado":
+                    cat = await ObtenerMunicipiosPorEstadoAsync(dtoComplementario, usuario);
+                    break;
+                case "ProcesosResponsables":
+                    cat = await ObtenerProcesosResponsablesAsync(usuario);
+                    break;
+                case "GerenciaDivision":    
+                    cat = await ObtenerGerenciaDivisionAsync(dtoComplementario, usuario);
+                    break;
+                case "TipoDocumento":
+                    cat = await ObtenerTiposDocumentosAsync(usuario);
+                    break;
+            }
+            
+            return cat;           
         }
 
-        public async  Task<List<CatalogoGenerico>> ObtenerConceptosAfectacionAsync()
+        public async Task<List<CatalogoGenerico>> ObtenerComandanciaPorIdUsuarioAsync(string usuario)
         {
             var cat = new List<CatalogoGenerico>();
-            var clas = await _repo.ObtenerConceptosAfectacionAsync();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
-            foreach (var c in clas)
+            if (user != null)
             {
-                var desc = c.Descripcion + "(" + c.PrecioUnitario.ToString() + "/" + c.Unidades + ")";
-                var row = new CatalogoGenerico()
+                var clas = await _repo.ObtenerComandanciaPorIdUsuarioAsync(user.IdUsuario);
+
+                foreach (var c in clas)
                 {
-                    Id = c.IdConceptoAfectacion,
-                    Descripcion = desc
-                };
-                
-                cat.Add(row);
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdComandancia,
+                        Descripcion = c.Numero.ToString()
+                    };
+
+                    cat.Add(row);
+                }
             }
 
             return cat;
         }
 
-        public async Task<List<CatalogoGenerico>> ObtenerEstadosPaisAsync()
+        public async Task<List<CatalogoGenerico>> ObtenerTiposPatrullajeAsync(string usuario)
         {
             var cat = new List<CatalogoGenerico>();
-            var clas = await _repo.ObtenerEstadosPaisAsync();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
-            foreach (var c in clas)
+            if (user != null)
             {
-                var row = new CatalogoGenerico()
-                {
-                    Id = c.IdEstado,
-                    Descripcion = c.Nombre
-                };
+                var clas = await _repo.ObtenerTiposPatrullajeAsync();
 
-                cat.Add(row);
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdTipoPatrullaje,
+                        Descripcion = c.Descripcion
+                    };
+
+                    cat.Add(row);
+                }
             }
 
             return cat;
         }
 
-        public async Task<List<CatalogoGenerico>> ObtenerMunicipiosPorEstadoAsync(int idEstado)
+        public async Task<List<CatalogoGenerico>> ObtenerTiposVehiculoAsync(string usuario)
         {
             var cat = new List<CatalogoGenerico>();
-            var clas = await _repo.ObtenerMunicipiosPorEstadoAsync(idEstado);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
-            foreach (var c in clas)
+            if (user != null)
             {
-                var row = new CatalogoGenerico()
-                {
-                    Id = c.IdMunicipio,
-                    Descripcion = c.Nombre
-                };
+                var clas = await _repo.ObtenerTiposVehiculoAsync();
 
-                cat.Add(row);
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdTipoVehiculo,
+                        Descripcion = c.DescripciontipoVehiculo
+                    };
+
+                    cat.Add(row);
+                }
             }
 
             return cat;
         }
 
-        public async Task<List<CatalogoGenerico>> ObtenerNivelesAsync()
+        public async Task<List<CatalogoGenerico>> ObtenerClasificacionesIncidenciaAsync(string usuario)
         {
             var cat = new List<CatalogoGenerico>();
-            var clas = await _repo.ObtenerNivelesAsync();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
-            foreach (var c in clas)
+            if (user != null)
             {
-                var row = new CatalogoGenerico()
-                {
-                    Id = c.IdNivel,
-                    Descripcion = c.DescripcionNivel
-                };
+                var clas = await _repo.ObtenerClasificacionesIncidenciaAsync();
 
-                cat.Add(row);
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdClasificacionIncidencia,
+                        Descripcion = c.Descripcion
+                    };
+
+                    cat.Add(row);
+                }
             }
 
             return cat;
         }
 
-        public async Task<List<CatalogoGenerico>> ObtenerProcesosResponsablesAsync()
+        public async Task<List<CatalogoGenerico>> ObtenerNivelesAsync(string usuario)
         {
             var cat = new List<CatalogoGenerico>();
-            var clas = await _repo.ObtenerProcesosResponsablesAsync();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
-            foreach (var c in clas)
+            if (user != null)
             {
-                var row = new CatalogoGenerico()
-                {
-                    Id = c.IdProcesoResponsable,
-                    Descripcion = c.Nombre
-                };
+                var clas = await _repo.ObtenerNivelesAsync();
 
-                cat.Add(row);
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdNivel,
+                        Descripcion = c.DescripcionNivel
+                    };
+
+                    cat.Add(row);
+                }
             }
 
             return cat;
         }
 
-        public async Task<List<int>> ObtenerRegionesMilitaresEnRutasAsync()
-        {
-            var clas = await _repo.ObtenerRegionesMilitaresEnRutanAsync();
-
-            return clas.OrderBy(x => x).ToList();
-        }
-
-        public async Task<List<CatalogoGenerico>> ObtenerTiposDocumentosAsync()
+        public async  Task<List<CatalogoGenerico>> ObtenerConceptosAfectacionAsync(string usuario)
         {
             var cat = new List<CatalogoGenerico>();
-            var clas = await _repo.ObtenerTiposDocumentosAsync();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
-            foreach (var c in clas)
+            if (user != null)
             {
-                var row = new CatalogoGenerico()
-                {
-                    Id = Convert.ToInt32(c.IdTipoDocumento),
-                    Descripcion = c.Descripcion
-                };
+                var clas = await _repo.ObtenerConceptosAfectacionAsync();
 
-                cat.Add(row);
+                foreach (var c in clas)
+                {
+                    var desc = c.Descripcion + "(" + c.PrecioUnitario.ToString() + "/" + c.Unidades + ")";
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdConceptoAfectacion,
+                        Descripcion = desc
+                    };
+
+                    cat.Add(row);
+                }
             }
 
             return cat;
         }
 
-        public async Task<List<CatalogoGenerico>> ObtenerTiposPatrullajeAsync()
+        public async Task<List<CatalogoGenerico>> ObtenerRegionesMilitaresEnRutasConDescVaciaAsync(string usuario)
         {
             var cat = new List<CatalogoGenerico>();
-            var clas = await _repo.ObtenerTiposPatrullajeAsync();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
-            foreach (var c in clas)
+            if (user != null)
             {
-                var row = new CatalogoGenerico()
-                {
-                    Id = c.IdTipoPatrullaje,
-                    Descripcion = c.Descripcion
-                };
+                var clas = await _repo.ObtenerRegionesMilitaresEnRutanAsync();
+                var ordenadas = clas.OrderBy(x => x).ToList();
 
-                cat.Add(row);
+                foreach (var c in ordenadas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c,
+                        Descripcion = ""
+                    };
+
+                    cat.Add(row);
+                }
             }
 
             return cat;
         }
 
-        public async Task<List<CatalogoGenerico>> ObtenerTiposVehiculoAsync()
+        public async Task<List<CatalogoGenerico>> ObtenerResultadosPatrullajeAsync(string usuario)
         {
             var cat = new List<CatalogoGenerico>();
-            var clas = await _repo.ObtenerTiposVehiculoAsync();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
-            foreach (var c in clas)
+            if (user != null)
             {
-                var row = new CatalogoGenerico()
-                {
-                    Id = c.IdTipoVehiculo,
-                    Descripcion = c.DescripciontipoVehiculo
-                };
+                var clas = await _repo.ObtenerResultadosPatrullajeAsync();
 
-                cat.Add(row);
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdResultadoPatrullaje,
+                        Descripcion = c.Descripcion
+                    };
+
+                    cat.Add(row);
+                }
             }
 
             return cat;
         }
+
+        public async Task<List<CatalogoGenerico>> ObtenerEstadosPaisAsync(string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var clas = await _repo.ObtenerEstadosPaisAsync();
+
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdEstado,
+                        Descripcion = c.Nombre
+                    };
+
+                    cat.Add(row);
+                }
+            }
+
+            return cat;
+        }
+            
+        public async Task<List<CatalogoGenerico>> ObtenerMunicipiosPorEstadoAsync(int idEstado, string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var clas = await _repo.ObtenerMunicipiosPorEstadoAsync(idEstado);
+
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdMunicipio,
+                        Descripcion = c.Nombre
+                    };
+
+                    cat.Add(row);
+                }
+            }
+
+            return cat;
+        }
+
+        public async Task<List<CatalogoGenerico>> ObtenerProcesosResponsablesAsync(string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var clas = await _repo.ObtenerProcesosResponsablesAsync();
+
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdProcesoResponsable,
+                        Descripcion = c.Nombre
+                    };
+
+                    cat.Add(row);
+                }
+            }
+
+            return cat;
+        }
+       
+        public async Task<List<CatalogoGenerico>> ObtenerGerenciaDivisionAsync(int idProceso, string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var tabla = await _repo.ObtenerProcesosResponsablePorIdAsync(idProceso);
+
+                if (tabla != null)
+                {
+                    var clas = await _repo.ObtenerCatalogoPorNombreTablaAync(tabla.Tabla);
+
+                    foreach (var c in clas)
+                    {
+                        var row = new CatalogoGenerico()
+                        {
+                            Id = c.id,
+                            Descripcion = c.nombre
+                        };
+
+                        cat.Add(row);
+                    }
+                }
+            }
+
+            return cat;
+        }
+
+        public async Task<List<CatalogoGenerico>> ObtenerTiposDocumentosAsync(string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var clas = await _repo.ObtenerTiposDocumentosAsync();
+
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = Convert.ToInt32(c.IdTipoDocumento),
+                        Descripcion = c.Descripcion
+                    };
+
+                    cat.Add(row);
+                }
+            }
+
+            return cat;
+        }        
     }
 }
