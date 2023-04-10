@@ -111,6 +111,52 @@ namespace SqlServerAdapter
             return await _estructuraContext.EstructurasVistas.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
+        public async Task<List<EstructurasVista>> ObtenerEstructuraAlrededorDeCoordenadaAsync(float coordX, float coordY)
+        {
+            string sqlQuery = @"SELECT a.id_estructura, a.nombre, a.id_procesoresponsable, a.id_gerenciadivision
+                                       a.latitud, a.longitud, a.coordenadas, a.id_municipio,
+                                       b.id_linea, b.clave, b.descripcion , c.nombre municipio,
+                                       d.id_estado, d.nombre estado    
+                                FROM ssf.estructura a
+                                JOIN ssf.linea b ON a.id_linea = b.id_linea
+                                JOIN ssf.municipios c ON a.id_municipio = c.id_municipio
+                                JOIN ssf.estadospais d ON c.id_estado = d.id_estado,
+                                (
+                                SELECT @pLatitud+0.05 maxLatitud, @pLongitud-0.05 minLatitud, @pLatitud-0.01 minLongitud, @pLatitud+0.01 maxLongitud 
+                                ) cuadrante
+                                WHERE a.latitud BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
+                                AND a.longitud BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pRuta", coordX),
+                new SqlParameter("@pLinea", coordY)
+            };
+
+            return await _estructuraContext.EstructurasVistas.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<EstructurasVista?> ObtenerEstructuraPorIdAsync(int idEstructura)
+        {
+            string sqlQuery = @"SELECT a.id_estructura, a.nombre, a.id_procesoresponsable, a.id_gerenciadivision
+                                       a.latitud, a.longitud, a.coordenadas, a.id_municipio,
+                                       b.id_linea, b.clave, b.descripcion , c.nombre municipio,
+                                       d.id_estado, d.nombre estado    
+                                FROM ssf.estructura a
+                                JOIN ssf.linea b ON a.id_linea = b.id_linea
+                                JOIN ssf.municipios c ON a.id_municipio = c.id_municipio
+                                JOIN ssf.estadospais d ON c.id_estado = d.id_estado
+                                WHERE a.id_estructura = @pEstructura";
+
+            object[] parametros = new object[]
+            {
+
+                new SqlParameter("@pEstructura", idEstructura)
+            };
+
+            return await _estructuraContext.EstructurasVistas.FromSqlRaw(sqlQuery, parametros).SingleOrDefaultAsync();
+        }
+
         public async Task<List<Estructura>> ObtenerEstructurasEnCoordenadasPorId(int estructura, string coordenadas)
         {
             return await _estructuraContext.Estructuras.Where(x => x.IdEstructura == estructura && x.Coordenadas != coordenadas).ToListAsync();

@@ -11,5 +11,6 @@ namespace Domain.Enums
         None,
         EstructurasDeUnaLinea,
         EstructurasDeUnaLineaEnRuta,
+        EstructurasAlrededorDeCoordenada
     }
 }

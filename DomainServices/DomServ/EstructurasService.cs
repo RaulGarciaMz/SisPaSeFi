@@ -39,23 +39,27 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task AgregaAsync(int idLinea, string nombre, int idMunicipio, string latitud, string longitud, string usuario)
+        public async Task AgregaAsync(int idLinea, string nombre, int idMunicipio, string? latitud, string? longitud, string usuario)
         {
             var user = await _userConf.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
+            
             if (user != null)
             {
-                string coordenadas = latitud + "," + longitud;
-                var enUso = await EstanCoordenadasEnUso(coordenadas);
-                if (!enUso)
+                if (latitud != null && longitud != null)
                 {
-                    await _repo.AgregaAsync(idLinea, nombre, idMunicipio, latitud, longitud);
+                    string coordenadas = latitud + "," + longitud;
+                    var enUso = await EstanCoordenadasEnUso(coordenadas);
+                    if (!enUso)
+                    {
+                        await _repo.AgregaAsync(idLinea, nombre, idMunicipio, latitud, longitud);
+                    }
                 }
             }
         }
 
-        public async Task<List<EstructuraDto>> ObtenerEstructuraPorOpcionAsync(int opcion, int idLinea, int idRuta, string usuario)
-        {
+        public async Task<List<EstructuraDto>> ObtenerEstructuraPorOpcionAsync(int opcion, int idLinea, string criterio, string usuario)
+        {      
             var retDto = new List<EstructuraDto>();
             var lstEst = new List<EstructurasVista>();
 
@@ -72,7 +76,13 @@ namespace DomainServices.DomServ
                         lstEst = await _repo.ObtenerEstructuraPorLineaAsync(idLinea);
                         break;
                     case LineaEstructuraOpcion.EstructurasDeUnaLineaEnRuta:
+                        var idRuta = Int32.Parse(criterio);
                         lstEst = await _repo.ObtenerEstructuraPorLineaEnRutaAsync(idLinea, idRuta);
+                        break;
+                    case LineaEstructuraOpcion.EstructurasAlrededorDeCoordenada:
+
+                        var coord = criterio.Split(",");
+                        lstEst = await _repo.ObtenerEstructuraAlrededorDeCoordenadaAsync(float.Parse(coord[0]), float.Parse(coord[1]));
                         break;
                 }
                 
@@ -82,35 +92,24 @@ namespace DomainServices.DomServ
             return retDto;
         }
 
-
-        public async Task<List<EstructuraDto>> ObtenerEstructuraPorLineaAsync(int idLinea, string usuario)
+        public async Task<EstructuraDto> ObtenerEstructuraPorIdAsync(int idEstructura, string usuario)
         {
-            var retDto = new List<EstructuraDto>();
+            var retDto = new EstructuraDto();
             var user = await _userConf.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
             {
-                var lstEstr = await _repo.ObtenerEstructuraPorLineaAsync(idLinea);
-                retDto = ConvierteListaEstructurasDomainToDto(lstEstr);
+                var estructura = await _repo.ObtenerEstructuraPorIdAsync(idEstructura);
+
+                if (estructura != null) 
+                {
+                    retDto = ConvierteEstructuraToDto(estructura);
+                }                
             }
 
             return retDto;
         }
 
-        public async Task<List<EstructuraDto>> ObtenerEstructuraPorLineaEnRutaAsync(int idLinea, int idRuta, string usuario)
-        {
-            var retDto = new List<EstructuraDto>();
-            var user = await _userConf.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
-
-            if (user != null)
-            {
-              var lstEstr =  await _repo.ObtenerEstructuraPorLineaEnRutaAsync(idLinea, idRuta);
-
-                retDto = ConvierteListaEstructurasDomainToDto(lstEstr);                
-            }
-
-            return retDto;
-        }
 
         private List<EstructuraDto> ConvierteListaEstructurasDomainToDto(List<EstructurasVista> lista) 
         {
