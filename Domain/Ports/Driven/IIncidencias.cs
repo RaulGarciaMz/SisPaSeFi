@@ -24,7 +24,10 @@ namespace Domain.Ports.Driven
         Task<List<IncidenciaInstalacionVista>> ObtenerIncidenciasAbiertasEnInstalacionAsync(int idActivo);
         Task<List<IncidenciaEstructuraVista>> ObtenerIncidenciasAbiertasEnEstructuraAsync(int idEstructura);
         Task<List<IncidenciaEstructuraVista>> ObtenerIncidenciasNoAtendidasPorDiasEnEstructurasAsync(int numeroDias);
+        Task<List<IncidenciaEstructuraVista>> ObtenerIncidenciasReportadasEnProgramaEnEstructuraAsync(int programa);
+        Task<List<IncidenciaInstalacionVista>> ObtenerIncidenciasReportadasEnProgramaEnInstalacionAsync(int programa);
         Task<List<ReporteIncidenciaAbierto>> ObtenerReportesAbiertosPorInstalacionAsync(int idActivo, int claseIncidencia);
         Task<List<ReporteIncidenciaAbierto>> ObtenerReportesAbiertosPorEstructuraAsync(int idEstructura, int claseIncidencia);
+ 
     }
 }

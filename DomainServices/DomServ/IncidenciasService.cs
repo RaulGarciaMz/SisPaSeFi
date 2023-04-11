@@ -22,7 +22,7 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task<List<IncidenciasDto>> ObtenerIncidenciasPorOpcionAsync(string opcion, int idActivo, int dias, string usuario)
+        public async Task<List<IncidenciasDto>> ObtenerIncidenciasPorOpcionAsync(string opcion, int idActivo, string criterio, int dias, string usuario)
         {
             var incids = new List<IncidenciasDto>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
@@ -46,7 +46,16 @@ namespace DomainServices.DomServ
                             var noAtendidas = await _repo.ObtenerIncidenciasNoAtendidasPorDiasEnEstructurasAsync(diasAtras);
                             incids = ConvierteListaIncidenciasEstructuraToDto(noAtendidas);
                         }
-
+                        break;
+                    case "IncidenciaReportadaEnProgramaINSTALACION":
+                        var idProgInsta = Int32.Parse(criterio);
+                        var repProgInstalacion = await _repo.ObtenerIncidenciasReportadasEnProgramaEnInstalacionAsync(idProgInsta);
+                        incids = ConvierteListaIncidenciasInstalacionToDto(repProgInstalacion);
+                        break;
+                    case "IncidenciaReportadaEnProgramaESTRUCTURA":
+                        var idProgEstructura = Int32.Parse(criterio);
+                        var repProgEstruct = await _repo.ObtenerIncidenciasReportadasEnProgramaEnEstructuraAsync(idProgEstructura);
+                        incids = ConvierteListaIncidenciasEstructuraToDto(repProgEstruct);
                         break;
                 }
             }

@@ -38,11 +38,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<IncidenciasDto>>> ObtenerIncidenciasPorOpcion([Required]string opcion, [Required] int idActivo, [Required] string usuario, int dias=0)
-        {
+        public async Task<ActionResult<IEnumerable<IncidenciasDto>>> ObtenerIncidenciasPorOpcion([Required]string opcion, int idActivo, string criterio, [Required] string usuario, int dias=0)
+        {//ByVal opcion As String, ByVal IdActivo As Integer, ByVal criterio As String, ByVal usuario As String
             try
             {
-                var l = await _rp.ObtenerIncidenciasPorOpcionAsync(opcion, idActivo, dias, usuario);
+                var l = await _rp.ObtenerIncidenciasPorOpcionAsync(opcion, idActivo, criterio, dias, usuario);
 
                 if (l == null) 
                 {

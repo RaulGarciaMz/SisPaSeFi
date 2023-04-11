@@ -15,6 +15,6 @@ namespace Domain.Ports.Driving
 
     public interface IIncidenciasDtoQuery
     {
-        Task<List<IncidenciasDto>> ObtenerIncidenciasPorOpcionAsync(string opcion, int idActivo, int dias, string usuario);
+        Task<List<IncidenciasDto>> ObtenerIncidenciasPorOpcionAsync(string opcion, int idActivo,  string criterio, int dias, string usuario);
     }
 }

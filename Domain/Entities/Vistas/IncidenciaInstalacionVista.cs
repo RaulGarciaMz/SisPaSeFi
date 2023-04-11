@@ -26,5 +26,6 @@ namespace Domain.Entities.Vistas
         public string descripcionEstado { get; set; }
         public string descripcionnivel { get; set; }
         public string tiporeporte { get; set; }
+        public string descripcion { get; set; }
     }
 }

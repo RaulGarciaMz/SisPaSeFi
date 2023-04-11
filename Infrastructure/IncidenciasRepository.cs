@@ -9,6 +9,7 @@ using SqlServerAdapter.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -23,18 +24,19 @@ namespace SqlServerAdapter
         {
             _incidenciaContext = incidenciaContext ?? throw new ArgumentNullException(nameof(incidenciaContext));
         }
-       
+
         public async Task<List<IncidenciaInstalacionVista>> ObtenerIncidenciasAbiertasEnInstalacionAsync(int idActivo)
         {
             string sqlQuery = @"SELECT a.id_reportepunto id_reporte, a.id_nota, a.id_punto, b.ubicacion, 
                                        a.incidencia, a.estadoincidencia, 
                                        a.prioridadincidencia, a.id_clasificacionincidencia, a.ultimaactualizacion,
                                        b.coordenadas, b.id_procesoresponsable, b.id_gerenciadivision, 
-                                       d.descripcionestado, e.descripcionnivel,'INSTALACION' as tiporeporte
+                                       d.descripcionestado, e.descripcionnivel,  h.descripcion, 'INSTALACION' as tiporeporte
                                 FROM ssf.reportepunto a
                                 JOIN ssf.puntospatrullaje b ON a.id_punto= b.id_punto
                                 JOIN ssf.estadosincidencias d ON a.estadoincidencia= d.id_estadoincidencia
                                 JOIN ssf.niveles e ON a.prioridadincidencia=e.id_nivel
+                                JOIN ssf.clasificacionincidencia h ON a.id_clasificacionincidencia = h.id_clasificacionincidencia
                                 WHERE a.estadoincidencia<>(SELECT id_estadoincidencia FROM ssf.estadosincidencias WHERE descripcionestado= 'concluido')
                                 AND a.id_punto= @pIdActivo
                                 ORDER BY a.ultimaactualizacion DESC";
@@ -47,17 +49,69 @@ namespace SqlServerAdapter
             return await _incidenciaContext.IncidenciasInstalaciones.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
+        public async Task<List<IncidenciaInstalacionVista>> ObtenerIncidenciasReportadasEnProgramaEnInstalacionAsync(int programa)
+        {
+            string sqlQuery = @"SELECT a.id_reportepunto, a.id_nota, a.id_punto, b.ubicacion,'' as vacio, b.coordenadas, 
+                                       b.id_procesoresponsable, b.id_gerenciadivision, a.incidencia, a.estadoincidencia, 
+                                       c.descripcionestado, a.ultimaactualizacion, a.prioridadincidencia, a.id_clasificacionincidencia,
+                                       'INSTALACION' as tiporeporte, d.descripcionnivel, h.descripcion
+                                FROM ssf.reportepunto a
+                                JOIN ssf.puntospatrullaje b ON a.id_punto= b.id_punto
+                                JOIN ssf.estadosincidencias c ON a.estadoincidencia= c.id_estadoincidencia
+                                JOIN ssf.niveles d ON a.prioridadincidencia= d.id_nivel
+                                JOIN ssf.tarjetainformativareporte e ON a.id_reportepunto= e.idreporte
+                                JOIN ssf.tarjetainformativa f ON e.idtarjeta= f.id_nota
+                                JOIN ssf.clasificacionincidencia g ON a.id_clasificacionincidencia= g.id_clasificacionincidencia
+                                JOIN ssf.tiporeporte h ON e.idtiporeporte = h.idtiporeporte
+                                WHERE h.descripcion= 'INSTALACION' AND f.id_programa= @pPrograma
+                                ORDER BY a.ultimaactualizacion DESC";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pPrograma", programa)
+            };
+
+            return await _incidenciaContext.IncidenciasInstalaciones.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<List<IncidenciaEstructuraVista>> ObtenerIncidenciasReportadasEnProgramaEnEstructuraAsync(int programa)
+        {
+            string sqlQuery = @"SELECT a.id_reporte, a.id_nota, a.id_estructura, c.clave,b.nombre, b.coordenadas, b.id_procesoresponsable,
+                                       b.id_gerenciadivision, a.incidencia, a.estadoincidencia, d.descripcionestado ,a.ultimaactualizacion, 
+                                       a.prioridadincidencia, a.id_clasificacionincidencia,'ESTRUCTURA' as tiporeporte, e.descripcionnivel, 
+                                       h.descripcion
+                                FROM ssf.reporteestructuras a
+                                JOIN ssf.estructura b ON a.id_estructura=b.id_estructura
+                                JOIN ssf.linea c ON b.id_linea= c.id_linea
+                                JOIN ssf.estadosincidencias d ON a.estadoincidencia=d.id_estadoincidencia
+                                JOIN ssf.niveles e ON a.prioridadincidencia=e.id_nivel
+                                JOIN ssf.tarjetainformativareporte f ON a.id_reporte=f.idreporte
+                                JOIN ssf.tarjetainformativa g ON f.idtarjeta=g.id_nota
+                                JOIN ssf.clasificacionincidencia h ON a.id_clasificacionincidencia=h.id_clasificacionincidencia
+                                JOIN ssf.tiporeporte i ON f.idtiporeporte = i.idtiporeporte
+                                WHERE i.descripcion='ESTRUCTURA' AND g.id_programa=@pPrograma
+                                ORDER BY a.ultimaactualizacion DESC";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pPrograma", programa)
+            };
+
+            return await _incidenciaContext.IncidenciasEstructuras.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
         public async Task<List<IncidenciaEstructuraVista>> ObtenerIncidenciasAbiertasEnEstructuraAsync(int idEstructura) 
         {
             string sqlQuery = @"SELECT a.id_reporte, a.id_nota, a.id_estructura, a.incidencia, a.estadoincidencia, 
                                        a.prioridadincidencia, a.id_clasificacionincidencia, a.ultimaactualizacion,
                                        b.clave, c.nombre, c.coordenadas, c.id_procesoresponsable, c.id_gerenciadivision,
-                                       d.descripcionestado,e.descripcionnivel, 'ESTRUCTURA' as tiporeporte
+                                       d.descripcionestado,e.descripcionnivel,  h.descripcion, 'ESTRUCTURA' as tiporeporte
                                 FROM ssf.reporteestructuras a 
                                 JOIN ssf.estructura c ON a.id_estructura=c.id_estructura
                                 JOIN ssf.linea b ON c.id_linea=b.id_linea
                                 JOIN ssf.estadosincidencias d ON a.estadoincidencia=d.id_estadoincidencia
                                 JOIN ssf.niveles e ON a.prioridadincidencia=e.id_nivel
+                                JOIN ssf.clasificacionincidencia h ON a.id_clasificacionincidencia = h.id_clasificacionincidencia
                                 WHERE a.estadoincidencia<>(SELECT id_estadoincidencia FROM ssf.estadosincidencias WHERE descripcionestado='concluido')
                                 AND a.id_estructura=@pIdActivo
                                 ORDER BY a.ultimaactualizacion DESC";
@@ -75,12 +129,13 @@ namespace SqlServerAdapter
             string sqlQuery = @" SELECT a.id_reporte, a.id_nota, a.id_estructura,a.incidencia, a.estadoincidencia, 
                                         a.prioridadincidencia, a.id_clasificacionincidencia, a.ultimaactualizacion,
                                         b.clave, c.nombre, c.coordenadas, c.id_procesoresponsable, c.id_gerenciadivision,
-                                		d.descripcionestado, e.descripcionnivel, 'ESTRUCTURA' as tiporeporte
+                                		d.descripcionestado, e.descripcionnivel, h.descripcion, 'ESTRUCTURA' as tiporeporte
                                  FROM ssf.reporteestructuras a
                                  JOIN ssf.estructura c ON a.id_estructura=c.id_estructura
                                  JOIN ssf.linea b ON c.id_linea=b.id_linea
                                  JOIN ssf.estadosincidencias d ON a.estadoincidencia=d.id_estadoincidencia
                                  JOIN ssf.niveles e ON a.prioridadincidencia=e.id_nivel
+                                JOIN ssf.clasificacionincidencia h ON a.id_clasificacionincidencia = h.id_clasificacionincidencia
                                  WHERE a.estadoincidencia<>(SELECT id_estadoincidencia FROM ssf.estadosincidencias WHERE descripcionestado='concluido')
                                  AND a.ultimoregistroenbitacora < DATEADD(day, @pDias, GETDATE()) 
                                  ORDER BY a.ultimaactualizacion DESC";
