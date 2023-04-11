@@ -4,6 +4,7 @@ using Domain.Entities.Vistas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,6 +37,8 @@ namespace Domain.Ports.Driven
         Task<List<PatrullajeVista>> ObtenerPropuestasPorFiltroEstadoAsync(string tipo, int region, int anio, int mes, string clase, string estadoPropuesta);
         //Caso 6,7,8,9 Extraordinario  - 
         Task<List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(string tipo, int region, int anio, int mes, string clase, string estadoPropuesta);
+        //Caso 10 Patrullajes de una ruta y fecha específica
+        Task<List<PatrullajeVista>> ObtenerPatrullajesEnRutaAndFechaEspecificaAsync(int ruta, int anio, int mes, int dia);
         //Caso 1 Programas EN PROGRESO Periodo 1 - Un día
         Task<List<PatrullajeVista>> ObtenerProgramasEnProgresoPorDiaAsync(string tipo, int region, int anio, int mes, int dia);
         //Caso 1 Programas EN PROGRESO Periodo 2 - Un mes

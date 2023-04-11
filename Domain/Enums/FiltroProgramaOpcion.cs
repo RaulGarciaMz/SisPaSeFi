@@ -17,6 +17,7 @@ namespace Domain.Enums
         PropuestasPendientes,   //PROPUESTAS DE PATRULLAJE PENDIENTES DE AUTORIZACION POR LA SSF
         PropuestasAutorizadas,  //PROPUESTAS DE PATRULLAJE AUTORIZADAS POR LA SSF
         PropuestasRechazadas,   //PROPUESTAS DE PATRULLAJE RECHAZADAS POR LA SSF        
-        PropuestasEnviadas      //Propuestas enviadas a aprobación de la comandancia regional
+        PropuestasEnviadas,      //Propuestas enviadas a aprobación de la comandancia regional
+        PatrullajesEnRutaFechaEspecifica //PATRULLAJES DE UNA RUTA Y FECHA ESPECÍFICA
     }
 }

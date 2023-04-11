@@ -22,5 +22,6 @@ namespace Domain.Ports.Driven
         Task<List<VehiculoPatrullajeVista>> ObtenerVehiculosPorRegionParaPatrullajeTerrestreAsync(int region);
         Task<List<VehiculoPatrullajeVista>> ObtenerVehiculosPorRegionCriterioParaPatrullajeTerrestreAsync(int region, string criterio);
         Task<List<VehiculoPatrullajeVista>> ObtenerVehiculosPatrullajeExtraordinarioPorDescripcionAsync(int idPropuesta, string descripcion );
+        Task<int> ObtenerNumeroDeVehiculosPorMatriculaAndComandanciaAsync(string matricula, int comandancia);
     }
 }

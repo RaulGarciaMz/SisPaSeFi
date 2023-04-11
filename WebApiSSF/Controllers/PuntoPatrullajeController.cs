@@ -34,7 +34,7 @@ namespace WebApiSSF.Controllers
         /// Obtiene los puntos de patrullaje acorde a los parámetros indicados, siempre y cuando el usuario sea configurador
         /// </summary>
         /// <param name="opcion">Indicador del tipo de filtro a realizar (0 - Por ubicación del punto, 1 - Por estado de la república) </param>
-        /// <param name="valor">Descripción de la ubicación del punto o del estado de la república. Debe ser acorde al parámetro opción</param>
+        /// <param name="criterio">Descripción de la ubicación del punto o del estado de la república. Debe ser acorde al parámetro opción</param>
         /// <param name="usuario">Nombre del usuario con privilegios de configurador</param>
         /// <returns></returns>
         [HttpGet]
@@ -42,13 +42,13 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<PuntoDto>>> GetValues([Required] int opcion, [Required] string valor, [Required] string usuario)
+        public async Task<ActionResult<IEnumerable<PuntoDto>>> GetValues([Required] int opcion, [Required] string criterio, [Required] string usuario)
         {
             try
             {
                 FiltroPunto filtro = (FiltroPunto)opcion;
 
-                var puntos = await _pp.ObtenerPorOpcionAsync(filtro, valor, usuario);
+                var puntos = await _pp.ObtenerPorOpcionAsync(filtro, criterio, usuario);
 
                 if (puntos == null)
                 {
@@ -59,7 +59,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener puntos de patrullaje para la opcion: {opcion}, criterio: {valor}, usuario: {usuario}", ex);
+                _log.LogInformation($"error al obtener puntos de patrullaje para la opcion: {opcion}, criterio: {criterio}, usuario: {usuario}", ex);
                 string error = "Ocurrió un problema mientras se procesaba la petición " + ex.ToString();
                 return StatusCode(500, error);
                 //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");

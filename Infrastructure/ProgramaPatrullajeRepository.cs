@@ -295,6 +295,43 @@ namespace SqlServerAdapter
         }
 
         /// <summary>
+        /// Método <c>ObtenerPatrullajesEnRutaAndFechaEspecificaAsync</c> implementa la interface para obtener patrullajes de una ruta y fecha específica
+        /// </summary>
+        public async Task<List<PatrullajeVista>> ObtenerPatrullajesEnRutaAndFechaEspecificaAsync(int ruta, int anio, int mes, int dia)
+        {
+
+            string sqlQuery = @"SELECT a.id_programa, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable
+                                   ,a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje
+                                   ,a.observaciones, a.riesgopatrullaje
+                                   ,COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision
+                                   ,COALESCE(a.oficiocomision,'') oficiocomision   
+                                   ,b.clave, b.regionmilitarsdn, b.regionssf, b.observaciones observacionesruta
+                                   ,c.descripcionestadopatrullaje, d.descripcionnivel
+                                   ,COALESCE((SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC) as recorrido 
+                                       FROM ssf.itinerario f
+                                	   JOIN ssf.puntospatrullaje g ON f.id_ruta=a.id_ruta AND f.id_punto=g.id_punto
+                                        ),'') as itinerario
+                                FROM ssf.programapatrullajes a
+                                JOIN ssf.rutas b ON a.id_ruta=b.id_ruta
+                                JOIN ssf.estadopatrullaje c on a.id_estadopatrullaje=c.id_estadopatrullaje
+                                JOIN ssf.niveles d ON a.riesgopatrullaje=d.id_nivel
+                                JOIN ssf.tipopatrullaje e ON b.id_tipopatrullaje=e.id_tipopatrullaje
+                                WHERE a.id_ruta=@pRuta AND YEAR(a.fechapatrullaje)=@pAnio
+                                AND MONTH(a.fechapatrullaje)=@pMes AND DAY(a.fechapatrullaje)=@pDia     
+                                ORDER BY a.ultimaActualizacion DESC, a.fechapatrullaje,a.inicio";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pAnio", anio),
+                new SqlParameter("@pMes", mes),
+                new SqlParameter("@pDia", dia),
+                new SqlParameter("@pRuta", ruta)
+            };
+
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        /// <summary>
         /// Método <c>ObtenerProgramasEnProgresoPorDia</c> implementa la interface para obtener programas en progreso por fecha.
         /// Caso 1 Programas EN PROGRESO Periodo 1 - Un día
         /// </summary>

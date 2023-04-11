@@ -242,6 +242,17 @@ namespace DomainServices.DomServ
                             break;
                     }
                     break;
+                case FiltroProgramaOpcion.PropuestaTodas:
+                    estadoPropuesta = "Rechazada";
+                    if (clase == "EXTRAORDINARIO")
+                    {
+                        patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
+                    }
+                    else
+                    {
+                        patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
+                    }
+                    break;
                 case FiltroProgramaOpcion.PropuestasPendientes:
                     if (clase == "EXTRAORDINARIO")
                     {
@@ -274,17 +285,7 @@ namespace DomainServices.DomServ
                         patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
                     }
                     break;
-                case FiltroProgramaOpcion.PropuestaTodas:
-                    estadoPropuesta = "Rechazada";
-                    if (clase == "EXTRAORDINARIO")
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
-                    }
-                    else
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
-                    }
-                    break;
+
                 case FiltroProgramaOpcion.PropuestasEnviadas:
                     estadoPropuesta = "Aprobada por comandancia regional";
                     if (clase == "EXTRAORDINARIO")
@@ -295,6 +296,10 @@ namespace DomainServices.DomServ
                     {
                         patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
                     }
+                    break;
+
+                case FiltroProgramaOpcion.PatrullajesEnRutaFechaEspecifica:
+                        patrullajes = await _repo.ObtenerPatrullajesEnRutaAndFechaEspecificaAsync(region, anio, mes, dia);
                     break;
             }
 

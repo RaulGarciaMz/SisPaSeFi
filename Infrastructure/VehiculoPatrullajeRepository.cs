@@ -190,5 +190,11 @@ namespace SqlServerAdapter
 
             return await _vehiculoPatContext.VehiculosPatrullajeVistas.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
+
+        public async Task<int> ObtenerNumeroDeVehiculosPorMatriculaAndComandanciaAsync(string matricula, int comandancia)
+        {
+           var v = await _vehiculoPatContext.Vehiculos.Where(x => x.Matricula == matricula && x.IdComandancia == comandancia).ToListAsync();
+           return v.Count;
+        }
     }
 }

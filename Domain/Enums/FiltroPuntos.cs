@@ -9,6 +9,8 @@ namespace Domain.Enums
     public enum FiltroPunto
     {
         Ubicacion,
-        Estado     
+        Estado,
+        Ruta,
+        Region
     }
 }

@@ -38,7 +38,11 @@ namespace DomainServices.DomServ
 
             if (user != null)
             {
-                await _repo.AgregaAsync( vehiculo.Matricula, vehiculo.NumeroEconomico, vehiculo.Habilitado, vehiculo.TipoPatrullaje, vehiculo.TipoVehiculo, vehiculo.Comandancia);
+                var existe = await ExisteVehiculo(vehiculo);
+                if (! existe )
+                {
+                    await _repo.AgregaAsync(vehiculo.Matricula, vehiculo.NumeroEconomico, vehiculo.Habilitado, vehiculo.TipoPatrullaje, vehiculo.TipoVehiculo, vehiculo.Comandancia);
+                }                
             }
         }
 
@@ -112,6 +116,20 @@ namespace DomainServices.DomServ
             }
 
             return l;
+        }
+
+        private async Task<bool> ExisteVehiculo(VehiculoDtoForCreate vehiculo)
+        {
+            var vehis = await _repo.ObtenerNumeroDeVehiculosPorMatriculaAndComandanciaAsync(vehiculo.Matricula, vehiculo.Comandancia);
+
+            if (vehis > 0) 
+            {
+                return true;
+            }
+            else 
+            {
+                return false;
+            }
         }
     }
 }

@@ -69,13 +69,17 @@ namespace DomainServices.DomServ
         {
             var puntos = new List<PuntoPatrullaje>();
             var r = new List<PuntoDto>();
+            var b = int.TryParse(valor, out int j);
 
             if (await EsUsuarioConfigurador(usuario))
             {
                 switch (opcion)
                 {
+                    case FiltroPunto.Ubicacion:
+                        puntos = await _repo.ObtenerPorUbicacionAsync(valor);
+                        break;
+
                     case FiltroPunto.Estado:
-                        var b = int.TryParse(valor, out int j);
                         if (!b)
                         {
                             return r;
@@ -83,8 +87,20 @@ namespace DomainServices.DomServ
                         puntos = await _repo.ObtenerPorEstadoAsync(j);
                         break;
 
-                    case FiltroPunto.Ubicacion:
-                        puntos = await _repo.ObtenerPorUbicacionAsync(valor);
+                    case FiltroPunto.Ruta:
+                        if (!b)
+                        {
+                            return r;
+                        }
+                        puntos = await _repo.ObtenerPorRutaAsync(j);
+                        break;
+
+                    case FiltroPunto.Region:
+                        if (!b)
+                        {
+                            return r;
+                        }
+                        puntos = await _repo.ObtenerPorRegionAsync(j);
                         break;
                 }
 
@@ -130,19 +146,24 @@ namespace DomainServices.DomServ
         /// </summary>
         private PuntoPatrullaje ConvierteDtoToDominio(PuntoDto p)
         {
+            var coor = p.coordenadas.Trim();
+            var coorXY = p.coordenadas.Split(",");
+            var lat = coorXY[0].Trim();
+            var longi = coorXY[1].Trim();
+
             return new PuntoPatrullaje
             {
                 IdPunto = p.id_punto,
                 Ubicacion = p.ubicacion,
-                Coordenadas = p.coordenadas,
+                Coordenadas = coor,
                 EsInstalacion = p.esInstalacion,
                 IdNivelRiesgo = p.id_nivelRiesgo,
                 IdComandancia = p.id_comandancia,
                 IdProcesoResponsable = p.id_ProcesoResponsable,
                 IdGerenciaDivision = p.id_GerenciaDivision,
                 Bloqueado = p.bloqueado,
-                //Latitud =  ,
-                //Longitud = ,
+                Latitud =  lat,
+                Longitud = longi,
                 IdMunicipio = p.id_municipio,
                 IdUsuario= p.id_usuario
             };
@@ -157,14 +178,14 @@ namespace DomainServices.DomServ
             {
                 id_punto = p.IdPunto,
                 ubicacion = p.Ubicacion,
-                coordenadas = p.Coordenadas,
+                coordenadas = p.Coordenadas.Trim(),
                 esInstalacion = p.EsInstalacion,
                 id_nivelRiesgo = p.IdNivelRiesgo,
                 id_comandancia = p.IdComandancia,
                 id_ProcesoResponsable = p.IdProcesoResponsable,
                 id_GerenciaDivision = p.IdGerenciaDivision,
                 bloqueado = p.Bloqueado,
-                //Latitud =  ,
+                //Latitud =  p.Latitud,
                 //Longitud = ,
                 id_municipio = p.IdMunicipio,
                 id_estado = p.IdMunicipioNavigation.IdEstado,

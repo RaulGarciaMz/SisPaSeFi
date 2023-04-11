@@ -17,6 +17,8 @@ namespace Domain.Ports.Driven
 
         Task<List<PuntoPatrullaje>> ObtenerPorEstadoAsync(int id_estado);
         Task<List<PuntoPatrullaje>> ObtenerPorUbicacionAsync(string ubicacion);
+        Task<List<PuntoPatrullaje>> ObtenerPorRutaAsync(int ruta);
+        Task<List<PuntoPatrullaje>> ObtenerPorRegionAsync(int region);
         Task<int> ObtenerItinerariosPorPuntoAsync(int id);
         Task<int> ObtenerIdUsuarioConfiguradorAsync(string usuario_nom);
     }

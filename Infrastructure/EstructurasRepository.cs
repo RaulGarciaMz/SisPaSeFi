@@ -26,13 +26,15 @@ namespace SqlServerAdapter
 
         public async Task ActualizaUbicacionAsync(int idEstructura, string nombre, int idMunicipio, string latitud, string longitud)
         {
+            var lat = latitud.Trim();
+            var longi = longitud.Trim();
             var estructura = await _estructuraContext.Estructuras.Where(x => x.IdEstructura == idEstructura).FirstOrDefaultAsync();
 
             if (estructura != null) 
             {
-                estructura.Latitud = latitud;
-                estructura.Longitud = longitud;
-                estructura.Coordenadas = latitud + "," + longitud;
+                estructura.Latitud = lat;
+                estructura.Longitud = longi;
+                estructura.Coordenadas = lat + "," + longi;
                 estructura.Nombre = nombre;
                 estructura.IdMunicipio = idMunicipio;
 
@@ -43,14 +45,17 @@ namespace SqlServerAdapter
         }
         public async Task AgregaAsync(int idLinea, string nombre, int idMunicipio, string latitud, string longitud)
         {
+            var lat = latitud.Trim();
+            var longi = longitud.Trim();
+
             var estruct = new Estructura()
             { 
                 Nombre= nombre,
                 IdLinea = idLinea,
                 IdMunicipio= idMunicipio,
-                Latitud = latitud,
-                Longitud = longitud,
-                Coordenadas = latitud + "," + longitud
+                Latitud = lat,
+                Longitud = longi,
+                Coordenadas = longitud + "," + longi
             };
 
             _estructuraContext.Estructuras.Add(estruct);
@@ -88,10 +93,10 @@ namespace SqlServerAdapter
                                 JOIN ssf.municipios c ON a.id_municipio = c.id_municipio
                                 JOIN ssf.estadospais d ON c.id_estado = d.id_estado,
                                 (
-                                    SELECT MAX(TRY_CAST(c.latitud as float)) + 0.05 maxLatitud, 
-                                           MIN(TRY_CAST(c.latitud as float)) - 0.05 minLatitud, 
-                                	       MAX(TRY_CAST(c.longitud as float)) - 0.01 minLongitud, 
-                                           MIN(TRY_CAST(c.longitud as float)) + 0.01 maxLongitud
+                                    SELECT MAX(TRY_CAST(c.latitud as decimal(10,5))) + 0.05 maxLatitud, 
+                                           MIN(TRY_CAST(c.latitud as decimal(10,5))) - 0.05 minLatitud, 
+                                	       MAX(TRY_CAST(c.longitud as decimal(10,5))) - 0.01 minLongitud, 
+                                           MIN(TRY_CAST(c.longitud as decimal(10,5))) + 0.01 maxLongitud
                                     FROM ssf.rutas a                                
                                     JOIN ssf.itinerario b ON a.id_ruta = b.id_ruta                                
                                     JOIN ssf.puntospatrullaje c ON b.id_punto = c.id_punto                                
