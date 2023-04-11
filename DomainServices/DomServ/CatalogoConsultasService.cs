@@ -76,6 +76,15 @@ namespace DomainServices.DomServ
                 case "TipoDocumento":
                     cat = await ObtenerTiposDocumentosAsync(usuario);
                     break;
+                case "EstadosPatrullaje":
+                    cat = await ObtenerEstadosPatrullajeAsync(usuario);
+                    break;
+                case "ApoyoPatrullaje":
+                    cat = await ObtenerApoyosPatrullajeAsync(usuario);
+                    break;
+                case "InstalacionesDeComandancia":
+                    cat = await ObtenerInstalacionesDeComandanciaAsync(dtoComplementario, usuario);
+                    break;
             }
             
             return cat;           
@@ -398,6 +407,79 @@ namespace DomainServices.DomServ
             }
 
             return cat;
-        }        
+        }
+
+        public async Task<List<CatalogoGenerico>> ObtenerEstadosPatrullajeAsync(string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var clas = await _repo.ObtenerEstadosPatrullajeAsync();
+
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = Convert.ToInt32(c.IdEstadoPatrullaje),
+                        Descripcion = c.DescripcionEstadoPatrullaje
+                    };
+
+                    cat.Add(row);
+                }
+            }
+
+            return cat;
+        }
+
+        public async Task<List<CatalogoGenerico>> ObtenerApoyosPatrullajeAsync(string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var clas = await _repo.ObtenerApoyosPatrullajeAsync();
+
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = Convert.ToInt32(c.IdApoyoPatrullaje),
+                        Descripcion = c.Descripcion
+                    };
+
+                    cat.Add(row);
+                }
+            }
+
+            return cat;
+        }
+
+        public async Task<List<CatalogoGenerico>> ObtenerInstalacionesDeComandanciaAsync(int idComandancia, string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var clas = await _repo.ObtenerInstalacionesDeComandanciaAsync(idComandancia);
+
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = Convert.ToInt32(c.IdPunto),
+                        Descripcion = c.Ubicacion
+                    };
+
+                    cat.Add(row);
+                }
+            }
+
+            return cat;
+        }
+
     }
 }

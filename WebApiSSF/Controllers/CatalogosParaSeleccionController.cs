@@ -482,7 +482,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de registros de un catálogo correspondiente a la opción indicada 
         /// </summary>
-        /// <param name="opcion">Nombre de la opción para catálogo ("RSF", "TipoPatrullaje", "TipoVehiculo", "ClasificacionIncidencia", "Niveles", "ConceptosAfectacion", "RegionesSDN", "ResultadoPatrullaje", "EstadosDelPais", "MunicipiosEstado", "ProcesosResponsables", "GerenciaDivision", "TipoDocumento")</param>
+        /// <param name="opcion">Nombre de la opción para catálogo ("RSF", "TipoPatrullaje", "TipoVehiculo", "ClasificacionIncidencia", "Niveles", "ConceptosAfectacion", "RegionesSDN", "ResultadoPatrullaje", "EstadosDelPais", "MunicipiosEstado", "ProcesosResponsables", "GerenciaDivision", "TipoDocumento", "EstadosPatrullaje", "ApoyoPatrullaje", "InstalacionesDeComandancia")</param>
         /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [HttpGet]

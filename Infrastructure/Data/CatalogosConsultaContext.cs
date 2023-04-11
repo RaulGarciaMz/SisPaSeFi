@@ -30,6 +30,9 @@ namespace SqlServerAdapter.Data
         public virtual DbSet<TipoDocumento> TiposDocumentos { get; set; }
         public virtual DbSet<ResultadoPatrullaje> ResultadosPatrullaje { get; set; }
         public virtual DbSet<CatalogoVista> CatalogosVista { get; set; }
+        public virtual DbSet<EstadoPatrullaje> EstadosPatrullaje { get; set; }
+        public virtual DbSet<ApoyoPatrullaje> ApoyosPatrullaje { get; set; }
+        public virtual DbSet<PuntoPatrullaje> PuntosPatrullaje { get; set; }
     }
 }
 

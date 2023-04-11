@@ -69,6 +69,19 @@ namespace Domain.Ports.Driven
         Task<List<ResultadoPatrullaje>> ObtenerResultadosPatrullajeAsync();
     }
 
+    public interface IEstadoPatrullajeQuery
+    {
+        Task<List<EstadoPatrullaje>> ObtenerEstadosPatrullajeAsync();
+    }
 
-    
+    public interface IApoyoPatrullajeQuery
+    {
+        Task<List<ApoyoPatrullaje>> ObtenerApoyosPatrullajeAsync();
+    }
+
+    public interface IInstalacionesQuery
+    {
+        Task<List<PuntoPatrullaje>> ObtenerInstalacionesDeComandanciaAsync(int idComandancia);
+    }
+
 }
