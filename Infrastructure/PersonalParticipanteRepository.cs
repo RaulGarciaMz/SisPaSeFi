@@ -23,7 +23,7 @@ namespace SqlServerAdapter
 
         public async Task<List<PersonalParticipanteVista>> ObtenerPersonalAsignadoEnProgramaAsync(int idPrograma) 
         {
-            string sqlQuery = @"SELECT a.id_usuario, a.usuario_nom, a.nombre, a.apellido1, a.apellido2, a.correoelectronico, a.cel, a.configurador
+            string sqlQuery = @"SELECT a.id_usuario, a.usuario_nom, a.nombre, a.apellido1, a.apellido2, a.correoelectronico, COALESCE(a.cel,'') cel, COALESCE(a.configurador,0) configurador
                                 FROM ssf.usuarios a
                                 JOIN ssf.usuariopatrullaje b ON a.id_usuario = b.id_usuario
                                 WHERE b.id_programa = @pIdPrograma";
@@ -39,7 +39,7 @@ namespace SqlServerAdapter
 
         public async Task<List<PersonalParticipanteVista>> ObtenerPersonalNoAsignadoEnProgramaAsync(int idPrograma, int region)
         {
-            string sqlQuery = @"SELECT a.id_usuario, a.usuario_nom, a.nombre, a.apellido1, a.apellido2, a.correoelectronico, a.cel, a.configurador
+            string sqlQuery = @"SELECT a.id_usuario, a.usuario_nom, a.nombre, a.apellido1, a.apellido2, a.correoelectronico, COALESCE(a.cel,'') cel, COALESCE(a.configurador,0) configurador
                                 FROM ssf.usuarios a
                                 WHERE a.regionssf=@pRegion
                                 AND a.id_usuario NOT IN (SELECT id_usuario FROM ssf.usuariopatrullaje WHERE id_programa=@pIdPrograma)";
