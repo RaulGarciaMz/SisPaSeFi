@@ -24,5 +24,6 @@ namespace Domain.Entities.Vistas
         public int id_usuario { get; set; }
         public string descripciontipodocumento { get; set; }
         public string usuario { get; set; }
+        public string correoelectronico { get; set; }
     }
 }

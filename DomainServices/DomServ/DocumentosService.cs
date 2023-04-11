@@ -24,15 +24,47 @@ namespace DomainServices.DomServ
             _user = uc;
         }
 
-        public async Task<List<DocumentoDto>> ObtenerDocumentosAsync(int idComandancia, int anio, int mes, string usuario) 
+        public async Task<List<DocumentoDto>> ObtenerDocumentosAsync(string opcion, string criterio, int anio, int mes, string usuario) 
         {
             var l = new List<DocumentoDto>();
+            var docs = new List<DocumentosVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
             {
-                var docs = await _repo.ObtenerDocumentosAsync(idComandancia, anio, mes);
-                l= ConvierteListaDocumentosToDto(docs);
+                switch (opcion)
+                {
+                    case "DocumentosPatrullaje":
+                        var idComandancia = Int32.Parse(criterio);
+                         docs = await _repo.ObtenerDocumentosPatrullajeAsync(idComandancia, anio, mes);
+                        
+                        break;
+                    case "DocumentosDeUnUsuario":
+                        switch (criterio)
+                        {
+                            case "TODO":
+                                docs = await _repo.ObtenerDocumentosDeUnUsuarioTodosAsync(user.IdUsuario);
+                                break;
+                            case "MES":
+                                docs = await _repo.ObtenerDocumentosDeUnUsuarioMesAsync(user.IdUsuario, anio, mes);
+                                break;
+                        }
+                        break;
+                    case "DocumentosParaUnUsuario":
+                        switch (criterio)
+                        {
+                            case "TODO":
+                                docs = await _repo.ObtenerDocumentosParaUnUsuarioTodosAsync(user.IdUsuario);
+                                break;
+                            case "MES":
+                                docs = await _repo.ObtenerDocumentosParaUnUsuarioMesAsync(user.IdUsuario, anio, mes);
+                                break;
+                        }
+                        break;
+                }
+
+                l = ConvierteListaDocumentosToDto(docs);
+
             }
 
             return l;
@@ -53,7 +85,8 @@ namespace DomainServices.DomServ
                 Descripcion = d.descripcion,
                 IdUsuario = d.id_usuario,
                 DescripcionTipoDocumento = d.descripciontipodocumento,
-                Usuario = d.usuario                 
+                Usuario = d.usuario,
+                CorreoElectronico = d.correoelectronico
             };
 
             return doc;

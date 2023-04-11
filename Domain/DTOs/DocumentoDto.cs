@@ -64,6 +64,10 @@ namespace Domain.DTOs
         /// Nombre y apellido del usuario que registró el documento
         /// </summary>
         public string Usuario { get; set; }
+        /// <summary>
+        /// Correo electrónico del usuario
+        /// </summary>
+        public string CorreoElectronico { get; set; }
     }
 
     /// <summary>

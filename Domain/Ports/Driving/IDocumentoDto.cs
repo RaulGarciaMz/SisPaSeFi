@@ -10,6 +10,6 @@ namespace Domain.Ports.Driving
 {
     public interface IDocumentoDtoQuery
     {
-        Task<List<DocumentoDto>> ObtenerDocumentosAsync(int idComandancia, int anio, int mes, string usuario);
+        Task<List<DocumentoDto>> ObtenerDocumentosAsync(string opcion, string criterio, int anio, int mes, string usuario);
     }
 }
