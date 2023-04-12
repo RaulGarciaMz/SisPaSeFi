@@ -67,7 +67,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener programas para el tipo: {tipo}, region: {region}, usuario: {usuario}, año: {anio}, mes {mes}, día: {dia}, clase: {clase}, opción: {opcion}, período: {periodo}", ex);
+                _log.LogInformation($"error al obtener programas para el tipo: {tipo}, region: {region}, usuario: {usuario}, año: {anio}, mes {mes}, día: {dia}, clase: {clase}, opción: {opcion}, período: {periodo} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -94,7 +94,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al registrar un programa para el usuario: {usuario}, clase: {clase}, opción: {opcion}", ex);
+                _log.LogInformation($"error al registrar un programa para el usuario: {usuario}, clase: {clase}, opción: {opcion} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }           
         }
@@ -119,7 +119,32 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al registrar una propuesta para el usuario: {usuario}", ex);
+                _log.LogInformation($"error al registrar una propuesta para el usuario: {usuario} ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+        /// <summary>
+        /// Actualiza programas o propuestas de patrullaje acorde a la opción indicada en sus parámetros
+        /// </summary>
+        /// <param name="opcion">Descripción de la opción para actualización ("CambioRuta", "InicioPatrullaje", "AutorizaPropuesta", "RegionalApruebaPropuesta", "RegistrarSolicitudOficioComision", "RegistrarSolicitudOficioAutorizacion", "RegistrarOficioComision", "RegistrarOficioAutorizacion")</param>
+        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <param name="p">Programa o propuesta a actualizar acorde a la opción indicada</param>
+        /// <returns></returns>
+        [HttpPut("{usuario}")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> PutPorOpcion([Required] string opcion, [Required] string usuario, [FromBody] ProgramaDtoForUpdatePorOpcion p)
+        {
+            try
+            {
+                await _pp.ActualizaProgramasOrPropuestasPorOpcion(p, opcion,usuario);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al actualizar un programa o propuesta por opción: {opcion}, usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -143,7 +168,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al actualizar un programa por cambio de ruta para el usuario: {usuario}", ex);
+                _log.LogInformation($"error al actualizar un programa por cambio de ruta para el usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -167,7 +192,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al actualizar un programa por inicio de patrullaje para el usuario: {usuario}", ex);
+                _log.LogInformation($"error al actualizar un programa por inicio de patrullaje para el usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -193,7 +218,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al actualizar una propuesta como programa para el usuario: {usuario}, opcion: {opcion}, acción: {accion}", ex);
+                _log.LogInformation($"error al actualizar una propuesta como programa para el usuario: {usuario}, opcion: {opcion}, acción: {accion} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -216,7 +241,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al eliminar la propuesta id: {id} para el usuario: {usuario}", ex);
+                _log.LogInformation($"error al eliminar la propuesta id: {id} para el usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

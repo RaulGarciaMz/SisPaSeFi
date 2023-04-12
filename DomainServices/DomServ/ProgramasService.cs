@@ -21,152 +21,6 @@ namespace DomainServices.DomServ
             _repo= repo;
         }
 
-        public async Task AgregaPrograma(string opcion, string clase, ProgramaDto p, string usuario) 
-        {
-            var user = await _repo.ObtenerUsuarioConfiguradorAsync(usuario);
-
-            if (EsUsuarioConfigurador(user))
-            {
-                switch (opcion)
-                {
-                    case "Propuesta":
-                        switch (clase)
-                        {
-                            case "EXTRAORDINARIO":
-
-                                var pp = new PropuestaExtraordinariaAdd()
-                                {
-                                    Propuesta = ConvierteProgramaDtoToPropuestaDominio(p),
-                                    Vehiculos = ConvierteListaVehiculosDtoToVehiculosDomain(p),
-                                    Lineas = ConvierteListaLineasDtoToLineasDomain(p)
-                                };
-                                await _repo.AgregaPropuestaExtraordinariaAsync(pp, clase, user.IdUsuario);
-
-                                break;
-
-                            default:
-
-                                await _repo.AgregaPropuestasFechasMultiplesAsync(ConvierteProgramaDtoToPropuestaDominio(p),
-                                                                      ConvierteStringFechaToDateTime(p.LstPropuestasPatrullajesFechas),
-                                                                      clase, user.IdUsuario);
-                                break;
-                        }
-                        break;
-                    case "Programa":
-
-                        var prog = ConvierteProgramaDtoToProgramaDominio(p);
-                        var fechas = ConvierteStringFechaToDateTime(p.LstPropuestasPatrullajesFechas);
-                        await _repo.AgregaProgramaFechasMultiplesAsync(prog, fechas, user.IdUsuario);
-
-                        break;
-                }
-            }
-        }
-
-        public async Task AgregaPropuestasComoProgramas(List<ProgramaDto> p, string usuario)
-        {
-            var userId = await _repo.ObtenerIdUsuarioAsync(usuario);
-
-            if (EsUsuarioRegistrado(userId))
-            {
-                var programas = new List<ProgramaPatrullaje>();
-                foreach (ProgramaDto prog in p)
-                {
-                    programas.Add(ConvierteProgramaDtoToProgramaDominio(prog));
-                }
-
-                await _repo.AgregaPropuestasComoProgramasActualizaPropuestasAsync(programas, userId);
-            }
-        }
-
-        public async Task ActualizaPropuestasComoProgramasActualizaPropuestas(List<ProgramaDto> p, string opcion, int accion, string usuario)
-        {
-            var userId = await _repo.ObtenerIdUsuarioAsync(usuario);
-
-            if (EsUsuarioRegistrado(userId))
-            {
-                switch (opcion)
-                {
-                    case "Programa":
-                        var lstProgramas = new List<ProgramaPatrullaje>();
-
-                        foreach (ProgramaDto prog in p)
-                        {
-                            var a = ConvierteProgramaDtoToProgramaDominio(prog);
-                            lstProgramas.Add(a);
-                        }
-                        await _repo.ActualizaProgramasConPropuestasAsync(lstProgramas);
-
-                        break;
-
-                    case "Propuesta":
-
-                        var lstPropuestas = new List<PropuestaPatrullaje>();
-
-                        foreach (ProgramaDto prog in p)
-                        {
-                            var a = ConvierteProgramaDtoToPropuestaDominio(prog);
-                            lstPropuestas.Add(a);
-                        }
-
-                        switch (accion)
-                        {
-                            case 2:
-                                await _repo.ActualizaPropuestasAutorizadaToRechazadaAsync(lstPropuestas, userId);
-                                break;
-                            case 3:
-                                await _repo.ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(lstPropuestas, userId);
-                                break;
-                            case 4:
-                                await _repo.ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(lstPropuestas, userId);
-                                break;
-                        }
-                        break;
-                }
-            }
-        }
-
-        public async Task ActualizaProgramaPorCambioDeRuta(ProgramaDtoForUpdateRuta p, string usuario)
-        {
-            var user =await  _repo.ObtenerIdUsuarioAsync(usuario);
-
-            if (EsUsuarioRegistrado(user))
-            {
-                await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.IdPrograma, p.IdRuta, user);
-            }                
-        }
-
-        public async Task ActualizaProgramasPorInicioPatrullajeAsync(ProgramaDtoForUpdateInicio p, string usuario)
-        {
-            var user = await _repo.ObtenerIdUsuarioAsync(usuario);
-
-            if (EsUsuarioRegistrado(user))
-            {
-                TimeSpan ini = TimeSpan.Parse(p.Inicio);
-                await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.IdPrograma, p.IdRiesgoPatrullaje, p.IdUsuario,p.IdEstadoPatrullaje, ini);
-            }
-        }
-
-        public async Task DeletePropuesta(int id, string usuario)
-        {
-            var user = await _repo.ObtenerIdUsuarioAsync(usuario);
-
-            if (EsUsuarioRegistrado(user))
-            {
-                await _repo.DeletePropuestaAsync(id);
-            }                
-        }
-
-        private bool EsUsuarioConfigurador(Usuario? user) 
-        {
-            return user != null;
-        }
-
-        private bool EsUsuarioRegistrado(int user)
-        {
-            return user >= 0;
-        }
-
         public async Task<List<PatrullajeDto>> ObtenerPorFiltro(string tipo, int region, string clase, int anio, int mes, int dia = 1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia)
         {
             string estadoPropuesta;
@@ -174,23 +28,25 @@ namespace DomainServices.DomServ
             List<PatrullajeVista> patrullajes = new List<PatrullajeVista>();
             List<PatrullajeDto> patrullajesDto = new List<PatrullajeDto>();
 
-            switch (opcion) {
+            switch (opcion)
+            {
 
                 case FiltroProgramaOpcion.ExtraordinariosyProgramados:
 
-                    if (clase == "EXTRAORDINARIO") 
+                    if (clase == "EXTRAORDINARIO")
                     {
                         patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorAnioMesDiaAsync(tipo, region, anio, mes, dia);
-                    } 
-                    else 
+                    }
+                    else
                     {
                         patrullajes = await _repo.ObtenerProgramasPorMesAsync(tipo, region, anio, mes);
                     }
                     break;
                 case FiltroProgramaOpcion.PatrullajesEnProgreso:
-                    switch (periodo) {
+                    switch (periodo)
+                    {
                         case PeriodoOpcion.UnDia:
-                            patrullajes = await _repo.ObtenerProgramasEnProgresoPorDiaAsync(tipo, region, anio, mes,dia);
+                            patrullajes = await _repo.ObtenerProgramasEnProgresoPorDiaAsync(tipo, region, anio, mes, dia);
                             break;
                         case PeriodoOpcion.UnMes:
                             patrullajes = await _repo.ObtenerProgramasEnProgresoPorMesAsync(tipo, region, anio, mes);
@@ -299,7 +155,7 @@ namespace DomainServices.DomServ
                     break;
 
                 case FiltroProgramaOpcion.PatrullajesEnRutaFechaEspecifica:
-                        patrullajes = await _repo.ObtenerPatrullajesEnRutaAndFechaEspecificaAsync(region, anio, mes, dia);
+                    patrullajes = await _repo.ObtenerPatrullajesEnRutaAndFechaEspecificaAsync(region, anio, mes, dia);
                     break;
             }
 
@@ -312,6 +168,197 @@ namespace DomainServices.DomServ
             return patrullajesDto;
         }
 
+        public async Task AgregaPrograma(string opcion, string clase, ProgramaDto p, string usuario) 
+        {
+            var user = await _repo.ObtenerUsuarioConfiguradorAsync(usuario);
+
+            if (EsUsuarioConfigurador(user))
+            {
+                switch (opcion)
+                {
+                    case "Propuesta":
+                        switch (clase)
+                        {
+                            case "EXTRAORDINARIO":
+
+                                var pp = new PropuestaExtraordinariaAdd()
+                                {
+                                    Propuesta = ConvierteProgramaDtoToPropuestaDominio(p),
+                                    Vehiculos = ConvierteListaVehiculosDtoToVehiculosDomain(p),
+                                    Lineas = ConvierteListaLineasDtoToLineasDomain(p)
+                                };
+                                await _repo.AgregaPropuestaExtraordinariaAsync(pp, clase, user.IdUsuario);
+
+                                break;
+
+                            default:
+
+                                await _repo.AgregaPropuestasFechasMultiplesAsync(ConvierteProgramaDtoToPropuestaDominio(p),
+                                                                      ConvierteStringFechaToDateTime(p.LstPropuestasPatrullajesFechas),
+                                                                      clase, user.IdUsuario);
+                                break;
+                        }
+                        break;
+                    case "Programa":
+
+                        var prog = ConvierteProgramaDtoToProgramaDominio(p);
+                        var fechas = ConvierteStringFechaToDateTime(p.LstPropuestasPatrullajesFechas);
+                        await _repo.AgregaProgramaFechasMultiplesAsync(prog, fechas, user.IdUsuario);
+
+                        break;
+                }
+            }
+        }
+
+        public async Task AgregaPropuestasComoProgramas(List<ProgramaDto> p, string usuario)
+        {
+            var userId = await _repo.ObtenerIdUsuarioAsync(usuario);
+
+            if (EsUsuarioRegistrado(userId))
+            {
+                var programas = new List<ProgramaPatrullaje>();
+                foreach (ProgramaDto prog in p)
+                {
+                    programas.Add(ConvierteProgramaDtoToProgramaDominio(prog));
+                }
+
+                await _repo.AgregaPropuestasComoProgramasActualizaPropuestasAsync(programas, userId);
+            }
+        }
+
+        public async Task ActualizaPropuestasComoProgramasActualizaPropuestas(List<ProgramaDto> p, string opcion, int accion, string usuario)
+        {
+            var userId = await _repo.ObtenerIdUsuarioAsync(usuario);
+
+            if (EsUsuarioRegistrado(userId))
+            {
+                switch (opcion)
+                {
+                    case "Programa":
+                        var lstProgramas = new List<ProgramaPatrullaje>();
+
+                        foreach (ProgramaDto prog in p)
+                        {
+                            var a = ConvierteProgramaDtoToProgramaDominio(prog);
+                            lstProgramas.Add(a);
+                        }
+                        await _repo.ActualizaProgramasConPropuestasAsync(lstProgramas);
+
+                        break;
+
+                    case "Propuesta":
+
+                        var lstPropuestas = new List<PropuestaPatrullaje>();
+
+                        foreach (ProgramaDto prog in p)
+                        {
+                            var a = ConvierteProgramaDtoToPropuestaDominio(prog);
+                            lstPropuestas.Add(a);
+                        }
+
+                        switch (accion)
+                        {
+                            case 2:
+                                await _repo.ActualizaPropuestasAutorizadaToRechazadaAsync(lstPropuestas, userId);
+                                break;
+                            case 3:
+                                await _repo.ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(lstPropuestas, userId);
+                                break;
+                            case 4:
+                                await _repo.ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(lstPropuestas, userId);
+                                break;
+                        }
+                        break;
+                }
+            }
+        }
+
+        public async Task ActualizaProgramasOrPropuestasPorOpcion(ProgramaDtoForUpdatePorOpcion p, string opcion, string usuario)
+        {
+            var userId = await _repo.ObtenerIdUsuarioAsync(usuario);
+
+            if (EsUsuarioRegistrado(userId))
+            {
+                switch (opcion)
+                {
+                    case "CambioRuta":
+                        await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.IdPrograma, p.IdRuta, userId);
+                        break;
+
+                    case "InicioPatrullaje":
+                        TimeSpan ini = TimeSpan.Parse(p.Inicio);
+                        await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.IdPrograma, p.IdRiesgoPatrullaje, p.IdUsuario, p.IdEstadoPatrullaje, ini);
+                        break;
+
+                    case "AutorizaPropuesta":
+                        await _repo.ActualizaPropuestaToAutorizadaAsync(p.IdPrograma);
+                        break;
+
+                    case "RegionalApruebaPropuesta":
+                        await _repo.ActualizaPropuestaToAprobadaComandanciaRegionalAsync(p.IdPrograma);
+                        break;
+
+                    case "RegistrarSolicitudOficioComision":
+                        await _repo.ActualizaProgramaRegistraSolicitudOficioComisionAsync(p.IdPrograma, p.SolicitudOficioComision);
+                        break;
+
+                    case "RegistrarSolicitudOficioAutorizacion":
+                        await _repo.ActualizaPropuestaRegistraSolicitudOficioAutorizacionAsync(p.IdPrograma, p.SolicitudOficioComision);
+                        break;
+
+                    case "RegistrarOficioComision":
+                        await _repo.ActualizaProgramaRegistraOficioComisionAsync(p.IdPrograma, p.OficioComision);
+                        break;
+
+                    case "RegistrarOficioAutorizacion":
+                        await _repo.ActualizaPropuestaRegistraOficioAutorizacionAsync(p.IdPrograma, p.OficioComision);
+                        break;
+                }
+            }
+        }
+
+        public async Task ActualizaProgramaPorCambioDeRuta(ProgramaDtoForUpdateRuta p, string usuario)
+        {
+            var user =await  _repo.ObtenerIdUsuarioAsync(usuario);
+
+            if (EsUsuarioRegistrado(user))
+            {
+                await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.IdPrograma, p.IdRuta, user);
+            }                
+        }
+
+        public async Task ActualizaProgramasPorInicioPatrullajeAsync(ProgramaDtoForUpdateInicio p, string usuario)
+        {
+            var user = await _repo.ObtenerIdUsuarioAsync(usuario);
+
+            if (EsUsuarioRegistrado(user))
+            {
+                TimeSpan ini = TimeSpan.Parse(p.Inicio);
+                await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.IdPrograma, p.IdRiesgoPatrullaje, p.IdUsuario,p.IdEstadoPatrullaje, ini);
+            }
+        }
+
+        public async Task DeletePropuesta(int id, string usuario)
+        {
+            var user = await _repo.ObtenerIdUsuarioAsync(usuario);
+
+            if (EsUsuarioRegistrado(user))
+            {
+                await _repo.DeletePropuestaAsync(id);
+            }                
+        }
+
+        private bool EsUsuarioConfigurador(Usuario? user) 
+        {
+            return user != null;
+        }
+
+        private bool EsUsuarioRegistrado(int user)
+        {
+            return user >= 0;
+        }
+
+      
         private PatrullajeDto ConviertePatrullajeDominioToPatrullajeDto(PatrullajeVista p) 
         {
             return new PatrullajeDto(){

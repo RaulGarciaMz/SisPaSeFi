@@ -14,6 +14,7 @@ namespace Domain.Ports.Driving
         Task AgregaPrograma(string opcion, string clase, ProgramaDto p, string usuario);
         Task AgregaPropuestasComoProgramas(List<ProgramaDto> p, string usuario);
 
+        Task ActualizaProgramasOrPropuestasPorOpcion(ProgramaDtoForUpdatePorOpcion p, string opcion, string usuario);
         Task ActualizaPropuestasComoProgramasActualizaPropuestas(List<ProgramaDto> p, string opcion, int accion, string usuario);
         Task ActualizaProgramaPorCambioDeRuta(ProgramaDtoForUpdateRuta p, string usuario);
         Task ActualizaProgramasPorInicioPatrullajeAsync(ProgramaDtoForUpdateInicio p, string usuario);

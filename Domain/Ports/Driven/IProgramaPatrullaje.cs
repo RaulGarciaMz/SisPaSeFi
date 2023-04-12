@@ -19,6 +19,13 @@ namespace Domain.Ports.Driven
         Task ActualizaProgramaPorCambioDeRutaAsync(int idPrograma, int idRuta, int usuarioId);
         Task ActualizaProgramasConPropuestasAsync(List<ProgramaPatrullaje> programas);
         Task ActualizaProgramasPorInicioPatrullajeAsync(int idPrograma, int idRiesgo, int idUsuario, int idEstadoPatrullaje, TimeSpan inicio);
+        Task ActualizaPropuestaToAutorizadaAsync(int idPropuesta);
+        Task ActualizaPropuestaToAprobadaComandanciaRegionalAsync(int idPropuesta);
+        Task ActualizaProgramaRegistraSolicitudOficioComisionAsync(int idPrograma, string oficio);
+        Task ActualizaPropuestaRegistraSolicitudOficioAutorizacionAsync(int idPropuesta, string oficio);
+        Task ActualizaProgramaRegistraOficioComisionAsync(int idPrograma, string oficio);
+        Task ActualizaPropuestaRegistraOficioAutorizacionAsync(int idPropuesta, string oficio);
+
         Task ActualizaPropuestasAutorizadaToRechazadaAsync(List<PropuestaPatrullaje> propuestas, int usuarioId);
         Task ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(List<PropuestaPatrullaje> propuestas, int usuarioId);
         Task ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(List<PropuestaPatrullaje> propuestas, int usuarioId);        

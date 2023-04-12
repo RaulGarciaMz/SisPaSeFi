@@ -980,6 +980,116 @@ namespace SqlServerAdapter
         }
 
         /// <summary>
+        /// Método <c>ActualizaPropuestaToAutorizadaAsync</c> implementa la interface para actualizar propuestas (autorizar propuesta)
+        /// </summary>
+        public async Task ActualizaPropuestaToAutorizadaAsync(int idPropuesta)
+        {
+            var pa = await _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == idPropuesta).SingleOrDefaultAsync();
+            if (pa != null)
+            {
+                string decEdo = "Autorizada";
+                var edo = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == decEdo).SingleOrDefaultAsync();
+                if (edo != null)
+                {
+                    pa.IdEstadoPropuesta = edo.IdEstadoPropuesta;
+                    _programaContext.PropuestasPatrullajes.Update(pa);
+                    await _programaContext.SaveChangesAsync();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Método <c>ActualizaPropuestaToAprobadaComandanciaRegionalAsync</c> implementa la interface para actualizar propuestas (Aprobada por comandancia regional)
+        /// </summary>
+        public async Task ActualizaPropuestaToAprobadaComandanciaRegionalAsync(int idPropuesta)
+        {
+            string decEdo = "Aprobada por comandancia regional";
+            var edo = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == decEdo).SingleOrDefaultAsync();
+
+            if (edo != null)
+            {
+                var pa = await _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == idPropuesta && x.IdEstadoPropuesta < edo.IdEstadoPropuesta).SingleOrDefaultAsync();
+
+                if (pa != null )
+                {
+
+                    pa.IdEstadoPropuesta = edo.IdEstadoPropuesta;
+              
+                    _programaContext.PropuestasPatrullajes.Update(pa);
+                    await _programaContext.SaveChangesAsync();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Método <c>ActualizaProgramaRegistraSolicitudOficioComisionAsync</c> implementa la interface para actualizar programas (solicitud de oficio de comisión del programa)
+        /// </summary>
+        public async Task ActualizaProgramaRegistraSolicitudOficioComisionAsync(int idPrograma, string oficio)
+        {
+            var programa = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
+
+            if (programa != null) 
+            {
+                programa.SolicitudOficioComision = oficio;
+                programa.UltimaActualizacion = DateTime.UtcNow;
+
+                _programaContext.ProgramasPatrullajes.Update(programa);
+                await _programaContext.SaveChangesAsync();
+            }            
+        }
+
+        /// <summary>
+        /// Método <c>ActualizaPropuestaRegistraSolicitudOficioAutorizacionAsync</c> implementa la interface para actualizar programas (solicitud de oficio de comisión del programa)
+        /// </summary>
+        public async Task ActualizaPropuestaRegistraSolicitudOficioAutorizacionAsync(int idPropuesta, string oficio)
+        {
+            var propuesta = await _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == idPropuesta).SingleOrDefaultAsync();
+
+            if (propuesta != null)
+            {
+                propuesta.SolicitudOficioAutorizacion = oficio;
+                propuesta.UltimaActualizacion = DateTime.UtcNow;
+
+                _programaContext.PropuestasPatrullajes.Update(propuesta);
+                await _programaContext.SaveChangesAsync();
+            }
+        }
+
+        /// <summary>
+        /// Método <c>ActualizaProgramaRegistraOficioComisionAsync</c> implementa la interface para actualizar programas (solicitud de oficio de comisión del programa)
+        /// </summary>
+        public async Task ActualizaProgramaRegistraOficioComisionAsync(int idPrograma, string oficio)
+        {
+            var programa = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
+
+            if (programa != null)
+            {
+                programa.OficioComision = oficio;
+                programa.UltimaActualizacion = DateTime.UtcNow;
+
+                _programaContext.ProgramasPatrullajes.Update(programa);
+                await _programaContext.SaveChangesAsync();
+            }
+        }
+
+        /// <summary>
+        /// Método <c>ActualizaPropuestaRegistraOficioAutorizacionAsync</c> implementa la interface para actualizar programas (solicitud de oficio de comisión del programa)
+        /// </summary>
+        public async Task ActualizaPropuestaRegistraOficioAutorizacionAsync(int idPropuesta, string oficio)
+        {
+            var propuesta = await _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == idPropuesta).SingleOrDefaultAsync();
+
+            if (propuesta != null)
+            {
+                propuesta.OficioAutorizacion = oficio;
+                propuesta.UltimaActualizacion = DateTime.UtcNow;
+
+                _programaContext.PropuestasPatrullajes.Update(propuesta);
+                await _programaContext.SaveChangesAsync();
+            }
+        }
+
+        /// <summary>
         /// Método <c>ActualizaPropuestasAutorizadaToRechazada</c> implementa la interface para actualizar el estado de propuestas autorizadas hacia propuestas rechazadas.
         /// </summary>
         public async Task ActualizaPropuestasAutorizadaToRechazadaAsync(List<PropuestaPatrullaje> propuestas, int usuarioId)
