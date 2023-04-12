@@ -35,7 +35,6 @@ namespace Domain.Entities.Vistas
         public int oficialesssf;
         public int personalnavalsemaroficial;
         public int personalnavalsemartropa;
-        //public string FechaTermino;
         public int id_estadopatrullaje;
         public string descripcionestadopatrullaje;
         public string matriculas;
@@ -44,14 +43,14 @@ namespace Domain.Entities.Vistas
         public string incidenciaeninstalacion; 
         public string odometros;
         public string KmVehiculos;
-        
-        
-        
-        
+        public DateTime fechaTermino;
+        public int idresultadopatrullaje;
+        public string resultadopatrullaje;
+        public string lineaestructurainstalacion;
+        public string responsablevuelo;
+        public int fuerzareaccion;
     }
 }
-
-
 
 
 

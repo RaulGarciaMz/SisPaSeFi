@@ -134,6 +134,26 @@ namespace Domain.DTOs
         /// <summary>
         /// Identificador del tipo de patrullaje realizado
         /// </summary>
-        public int IdTipoPatullaje { get; set; }
+        public int IdTipoPatrullaje { get; set; }
+        /// <summary>
+        /// Identificador del resultado del patrullaje realizado
+        /// </summary>
+        public int IdResultadoPatrullaje { get; set; }
+        /// <summary>
+        /// Descripción del resultado del patrullaje realizado
+        /// </summary>
+        public string ResultadoPatrullaje { get; set; }
+        /// <summary>
+        /// Descripción de la línea de la estructura en la instalación
+        /// </summary>
+        public string LineaEstructuraInstalacion { get; set; }
+        /// <summary>
+        /// Descripción del responsable del vuelo en el patrullaje
+        /// </summary>
+        public string ResponsableVuelo { get; set; }
+        /// <summary>
+        /// Indicador de existencia de fuerza de reacción en el patrullaje
+        /// </summary>
+        public int FuerzaReaccion { get; set; }
     }
 }

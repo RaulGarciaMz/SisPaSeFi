@@ -1,6 +1,7 @@
 ﻿using Domain.DTOs;
 using Domain.Entities;
 using Domain.Entities.Vistas;
+using Domain.Enums;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
 using System;
@@ -35,7 +36,6 @@ namespace DomainServices.DomServ
 
                 await _repo.AgregaAsync(t, tarjeta.IdEstadoPatrullaje, userId);
             }
-                
         }
 
         public async  Task Update(TarjetaDto tarjeta, string usuario) 
@@ -72,15 +72,47 @@ namespace DomainServices.DomServ
             }    
         }
 
-        public async Task<List<TarjetaDto>> ObtenerPorAnioMes(string tipo, string region, int anio, int mes, string usuario) 
+        public async Task<List<TarjetaDto>> ObtenerPorOpcion(int opcion, string tipo, string region, int anio, int mes, int dia, string usuario)
         {
             var regreso = new List<TarjetaDto>();
             var userId = await _repo.ObtenerIdUsuarioRegistradoAsync(usuario);
+            var laOpcion = (TarjetaInformativaOpcion)opcion;
 
             if (EsUsuarioRegistrado(userId))
             {
-                var tarjetas = await _repo.ObtenerPorAnioMesAsync(tipo, region, anio, mes);
+                var tarjetas = new List<TarjetaInformativaVista>();
+                switch (laOpcion)
+                {
+                    case TarjetaInformativaOpcion.TarjetaPorRegion:
+                        tarjetas = await _repo.ObtenerTarjetasPorRegionAsync(tipo, region, anio, mes);
+                        break;
+                    case TarjetaInformativaOpcion.ParteNovedades:
+                        tarjetas = await _repo.ObtenerParteNovedadesPorDiaAsync(tipo, anio, mes, dia);
+                        break;
+                    case TarjetaInformativaOpcion.Monitoreo:
+                        tarjetas = await _repo.ObtenerMonitoreoAsync(tipo, userId, anio, mes, dia);
+                        break;
+                }
 
+                foreach (var t in tarjetas)
+                {
+                    var tiv = ConvierteTarjetaVistaDomainToDto(t);
+                    regreso.Add(tiv);
+                }
+            }
+
+            return regreso;
+        }
+
+        public async Task<List<TarjetaDto>> ObtenerPorId(int idTarjeta, string usuario)
+        {
+            var regreso = new List<TarjetaDto>();
+            var userId = await _repo.ObtenerIdUsuarioRegistradoAsync(usuario);  
+
+            if (EsUsuarioRegistrado(userId))
+            {
+                var tarjetas = await _repo.ObtenerPorIdAsync(idTarjeta);
+    
                 foreach (var t in tarjetas)
                 {
                     var tiv = ConvierteTarjetaVistaDomainToDto(t);
@@ -115,7 +147,7 @@ namespace DomainServices.DomServ
                 FechaPatrullaje = t.fechapatrullaje.Value.ToString("yyyy-MM-dd"), 
                 IdRuta = t.id_ruta,
                 Region = Int32.Parse(t.regionssf),
-                IdTipoPatullaje = t.id_tipopatrullaje,
+                IdTipoPatrullaje = t.id_tipopatrullaje,
                 UltimaActualizacion = t.ultimaactualizacion.ToString("yyyy-MM-dd HH:mm:ss"), 
                 IdUsuario = t.id_usuario.ToString(),
                 Inicio = t.inicio.ToString(),
@@ -139,8 +171,13 @@ namespace DomainServices.DomServ
                 Itinerarios = t.itinerario,
                 Reportes = t.incidenciaenestructura + t.incidenciaeninstalacion,
                 Odometros = t.odometros,
-                KmVehiculos = t.KmVehiculos
-                //FechaTermino = t.fechatermino.ToString("yyyy-MM-dd")
+                KmVehiculos = t.KmVehiculos,
+                FechaTermino = t.fechaTermino.ToString("yyyy-MM-dd"),
+                IdResultadoPatrullaje = t.idresultadopatrullaje,
+                ResultadoPatrullaje = t.resultadopatrullaje,
+                LineaEstructuraInstalacion = t.lineaestructurainstalacion,
+                ResponsableVuelo = t.responsablevuelo,
+                FuerzaReaccion = t.fuerzareaccion
             };
 
             return r;
@@ -178,5 +215,7 @@ namespace DomainServices.DomServ
 
             return r;
         }
+
+
     }
 }

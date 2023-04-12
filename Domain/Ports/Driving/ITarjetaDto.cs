@@ -15,6 +15,7 @@ namespace Domain.Ports.Driving
 
     public interface ITarjetaDtoQuery
     {
-        Task<List<TarjetaDto>> ObtenerPorAnioMes(string tipo, string region, int anio, int mes, string usuario);
+        Task<List<TarjetaDto>> ObtenerPorOpcion(int opcion, string tipo, string region, int anio, int mes, int dia, string usuario);
+        Task<List<TarjetaDto>> ObtenerPorId(int idTarjeta, string usuario);
     }
 }

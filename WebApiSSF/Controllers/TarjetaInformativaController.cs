@@ -31,29 +31,50 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de tarjetas informativas acorde a los parámetros indicados
         /// </summary>
+        /// <param name="opcion">Indicador del tipo de tarjeta iformativa a obtener (1 - Tarjetas informativas por región indicada,  2 - Parte de novedades para un día específico, 3 - Monitoreo de un día en específico)</param>
         /// <param name="tipo">Tipo de patrullaje (TERRESTRE o AEREO)</param>
-        /// <param name="region">Región de SSF</param>
         /// <param name="anio">Año</param>
         /// <param name="mes">Mes</param>
-        /// <param name="usuario">Nombre del usuario que solicita la información</param>
-        /// <returns>ActionResult con lista de tajetas informativas</returns>
+        /// <param name="dia">Día (utilizado para las opciones 2 y 3)</param>
+        /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+        /// <param name="region">Región de SSF (utilizado sólo para la opción 1)</param>
+        /// <returns>ActionResult con lista de tarjetas informativas</returns>
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<TarjetaDto>>> Get([Required] string tipo, [Required] string region, [Required] int anio, [Required] int mes, [Required] string usuario)
+        public async Task<ActionResult<IEnumerable<TarjetaDto>>> ObtenerPorOpcion([Required] int opcion, [Required] string tipo, [Required] int anio, [Required] int mes, int dia, [Required] string usuario, string region)
         {
             try
             {
-                var tarjetas = await _t.ObtenerPorAnioMes(tipo, region, anio, mes, usuario);
+                var tarjetas = await _t.ObtenerPorOpcion(opcion, tipo, region, anio, mes, dia, usuario);
 
                 return Ok(tarjetas);
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener tarjetas informativas el tipo: {tipo}, región: {region},  año: {anio}, mes {mes}, usuario: {usuario}", ex);
+                _log.LogInformation($"error al obtener tarjetas informativas para la opción: {opcion}, tipo: {tipo}, usuario: {usuario}, año: {anio}, mes {mes}, día: {dia}, región: {region} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }            
+        }
+
+        [HttpGet("{id}")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<TarjetaDto>>> ObtenerPorId([Required] int id, [Required] string usuario)
+        {
+            try
+            {
+                var tarjetas = await _t.ObtenerPorId(id, usuario);
+
+                return Ok(tarjetas);
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al obtener tarjetas informativas para el id: {id}, usuario: {usuario} ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
         }
 
         /// <summary>
@@ -75,7 +96,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al registrar tarjetas informativas para el usuario: {usuario}", ex);
+                _log.LogInformation($"error al registrar tarjetas informativas para el usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -100,7 +121,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al actualizar la tarjeta informativa con id: {id}, para el usuario: {usuario}", ex);
+                _log.LogInformation($"error al actualizar la tarjeta informativa con id: {id}, para el usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
