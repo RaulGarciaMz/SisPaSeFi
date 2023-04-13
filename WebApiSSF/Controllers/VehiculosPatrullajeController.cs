@@ -28,7 +28,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de vehiculos para patrullaje acorde a los parámetros indicados
         /// </summary>
-        /// <param name="opcion">Descripción del tipo de patrullaje al que se asigna al vehículo ("TODOS", "AEREO", "TERRESTRE", "VEHICULOSPATRULLAJEEXTRAORDINARIO-XX"). Cuando la opción es VEHICULOSPATRULLAJEEXTRAORDINARIO-XX, XX debe contener la descripción del tipo de patrullaje</param>
+        /// <param name="opcion">Descripción del tipo de patrullaje al que se asigna al vehículo ("TODOS", "AEREO", "TERRESTRE", "VEHICULOSPATRULLAJEEXTRAORDINARIO-XX", "AEREOHABILITADOS", "TERRESTREHABILITADOS"). Cuando la opción es VEHICULOSPATRULLAJEEXTRAORDINARIO-XX, XX debe contener la descripción del tipo de patrullaje</param>
         /// <param name="region">Identificador de la comandancia (región) a la que está asignado el vehículo. Este parámetro es obligatorio para las opciones: "TODOS", "AEREO" y "TERRESTRE"</param>
         /// <param name="criterio">Patrón de texto para buscar en matrícula o en número económico excepto si la opción es VEHICULOSPATRULLAJEEXTRAORDINARIO, en cuyo caso criterio es el identificador de la propuesta</param>
         /// <param name="usuario">Nombre del usuario (alias o usuario_nom) que realiza la consulta</param>
@@ -58,7 +58,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener la lista de vehículos para opción: {opcion}, región: {region}, criterio: {criterio}, usuario: {usuario}", ex);
+                _log.LogInformation($"error al obtener la lista de vehículos para opción: {opcion}, región: {region}, criterio: {criterio}, usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }            
         }
@@ -81,7 +81,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al crear un vehículo para el usuario: {vehiculo.Usuario}", ex);
+                _log.LogInformation($"error al crear un vehículo para el usuario: {vehiculo.Usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -105,7 +105,31 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al actualizar un vehículo para el usuario: {vehiculo.Usuario}", ex);
+                _log.LogInformation($"error al actualizar un vehículo para el usuario: {vehiculo.Usuario} ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+        /// <summary>
+        /// Borra un uso de vehículo acorde a las opciones indicadas
+        /// </summary>
+        /// <param name="opcion">Descripción de la opción de borrado ("EliminarVehiculoDePrograma")</param>
+        /// <param name="dato">Cadena de texto que indica separado por "-" el identificador del program y el identificador del vehículo. por ejemplo: "324-89"</param>
+        /// <param name="usuario">Nombre del usuario (alias o usuario_nom) que realiza la operación</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> BorraPorOpcion(string opcion, string dato, string usuario )
+        {
+            try
+            {
+                await _pp.BorraPorOpcionAsync(opcion,  dato,  usuario);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _log.LogInformation($"error al borrar un vehículo para la opcion: {opcion}, dato: {dato}, usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

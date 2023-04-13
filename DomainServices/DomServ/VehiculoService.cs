@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.DTOs;
 using Domain.Entities.Vistas;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DomainServices.DomServ
 {
@@ -46,19 +49,38 @@ namespace DomainServices.DomServ
             }
         }
 
+        public async Task BorraPorOpcionAsync(string opcion, string dato, string usuario)
+        {
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                switch (opcion)
+                {
+                    case "EliminarVehiculoDePrograma":
+                        
+                        if (dato.IsNullOrEmpty() ||  ! dato.Contains("-")) return;
+
+                        var datos = dato.Split("-");
+                        var idPrograma = Int32.Parse(datos[0]);
+                        var idVehiculo = Int32.Parse(datos[1]);
+
+                        await _repo.BorraPorOpcionAsync(idPrograma, idVehiculo);
+                        break;
+                }
+            }
+        }
         public async Task<List<VehiculoPatrullajeVista>> ObtenerVehiculosPorOpcionAsync(string opcion, int region, string? criterio, string usuario)
         {
             var l = new List<VehiculoPatrullajeVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
             string descripcion = "";
-
             if (opcion.Contains("-"))
-            { 
+            {
                 var chunks = opcion.Split('-');
                 opcion = chunks[0];
                 descripcion = chunks[1];
             }
-
             if (criterio == null)
             {
                 criterio = "";
@@ -111,6 +133,31 @@ namespace DomainServices.DomServ
                         var idPropuesta =  Int32.Parse(criterio);
                         l = await _repo.ObtenerVehiculosPatrullajeExtraordinarioPorDescripcionAsync(idPropuesta, descripcion);
 
+                        break;
+                    case "AEREOHABILITADOS":
+
+                        switch (criterio)
+                        {
+                            case "":
+                                l = await _repo.ObtenerVehiculosHabilitadosPorRegionAereoAsync(region);
+                                break;
+                            default:
+                                l = await _repo.ObtenerVehiculosHabilitadosPorRegionCriterioAereoAsync(region, criterio);
+                                break;
+                        }
+                        break;
+
+                    case "TERRESTREHABILITADOS":
+
+                        switch (criterio)
+                        {
+                            case "":
+                                l = await _repo.ObtenerVehiculosHabilitadosPorRegionTerrestreAsync(region);
+                                break;
+                            default:
+                                l = await _repo.ObtenerVehiculosHabilitadosPorRegionCriterioTerrestreAsync(region, criterio);
+                                break;
+                        }
                         break;
                 }
             }

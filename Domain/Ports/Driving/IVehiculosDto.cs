@@ -13,6 +13,7 @@ namespace Domain.Ports.Driving
     {
         Task AgregaAsync(VehiculoDtoForCreate vehiculo);
         Task ActualizaAsync(VehiculoDtoForUpdate vehiculo);
+        Task BorraPorOpcionAsync(string opcion, string dato, string usuario);
     }
 
     public interface IVehiculosDtoQuery

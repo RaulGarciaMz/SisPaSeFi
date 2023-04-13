@@ -18,5 +18,6 @@ namespace SqlServerAdapter.Data
 
         public DbSet<VehiculoPatrullajeVista> VehiculosPatrullajeVistas { get; set; }
         public DbSet<Vehiculo> Vehiculos { get; set; }
+        public DbSet<UsoVehiculo> UsosVehiculos { get; set; }
     }
 }

@@ -56,6 +56,17 @@ namespace SqlServerAdapter
             await _vehiculoPatContext.SaveChangesAsync();
         }
 
+        public async Task BorraPorOpcionAsync(int idPrograma, int idVehiculo)
+        {
+            var v = await _vehiculoPatContext.UsosVehiculos.Where(x => x.IdPrograma == idPrograma && x.IdVehiculo == idVehiculo).SingleOrDefaultAsync();
+
+            if (v == null) return;
+
+            _vehiculoPatContext.UsosVehiculos.Remove(v);
+
+            await _vehiculoPatContext.SaveChangesAsync();
+        }
+    
 
         public async Task<List<VehiculoPatrullajeVista>> ObtenerVehiculosPorRegionAsync(int region)
         {
@@ -186,6 +197,86 @@ namespace SqlServerAdapter
             {
                 new SqlParameter("@pDescripcion", descripcion),
                 new SqlParameter("@pPropuesta", idPropuesta)
+            };
+
+            return await _vehiculoPatContext.VehiculosPatrullajeVistas.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<List<VehiculoPatrullajeVista>> ObtenerVehiculosHabilitadosPorRegionAereoAsync(int region)
+        {
+            string sqlQuery = @"SELECT a.id_vehiculo, a.id_tipopatrullaje, a.matricula ,a.id_comandancia, a.id_tipovehiculo,
+                                       CASE WHEN a.numeroeconomico IS NULL THEN '' ELSE a.numeroeconomico END numeroeconomico,
+                                       a.habilitado, b.descripcion, c.descripciontipovehiculo
+                                FROM ssf.vehiculos a
+                                JOIN ssf.tipopatrullaje b ON a.id_tipopatrullaje = b.id_tipopatrullaje
+                                JOIN ssf.tipovehiculo c ON a.id_tipovehiculo=c.id_tipovehiculo
+                                WHERE a.habilitado=1 AND b.descripcion='AEREO'
+                                AND a.id_comandancia= @pRegion";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pRegion", region)
+            };
+
+            return await _vehiculoPatContext.VehiculosPatrullajeVistas.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<List<VehiculoPatrullajeVista>> ObtenerVehiculosHabilitadosPorRegionCriterioAereoAsync(int region, string criterio)
+        {
+            string sqlQuery = @"SELECT a.id_vehiculo, a.id_tipopatrullaje, a.matricula ,a.id_comandancia, a.id_tipovehiculo,
+                                       CASE WHEN a.numeroeconomico IS NULL THEN '' ELSE a.numeroeconomico END numeroeconomico,
+                                       a.habilitado, b.descripcion, c.descripciontipovehiculo
+                                FROM ssf.vehiculos a
+                                JOIN ssf.tipopatrullaje b ON a.id_tipopatrullaje = b.id_tipopatrullaje
+                                JOIN ssf.tipovehiculo c ON a.id_tipovehiculo=c.id_tipovehiculo
+                                WHERE a.habilitado=1 AND b.descripcion='AEREO'
+                                AND a.id_comandancia= @pRegion
+                                AND (a.matricula like @pCriterio OR a.numeroeconomico like @pCriterio)";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pCriterio", criterio)
+            };
+
+            return await _vehiculoPatContext.VehiculosPatrullajeVistas.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<List<VehiculoPatrullajeVista>> ObtenerVehiculosHabilitadosPorRegionTerrestreAsync(int region)
+        {
+            string sqlQuery = @"SELECT a.id_vehiculo, a.id_tipopatrullaje, a.matricula ,a.id_comandancia, a.id_tipovehiculo,
+                                       CASE WHEN a.numeroeconomico IS NULL THEN '' ELSE a.numeroeconomico END numeroeconomico,
+                                       a.habilitado, b.descripcion, c.descripciontipovehiculo
+                                FROM ssf.vehiculos a
+                                JOIN ssf.tipopatrullaje b ON a.id_tipopatrullaje = b.id_tipopatrullaje
+                                JOIN ssf.tipovehiculo c ON a.id_tipovehiculo=c.id_tipovehiculo
+                                WHERE a.habilitado=1 AND b.descripcion='TERRESTRE'
+                                AND a.id_comandancia= @pRegion";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pRegion", region)
+            };
+
+            return await _vehiculoPatContext.VehiculosPatrullajeVistas.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<List<VehiculoPatrullajeVista>> ObtenerVehiculosHabilitadosPorRegionCriterioTerrestreAsync(int region, string criterio)
+        {
+            string sqlQuery = @"SELECT a.id_vehiculo, a.id_tipopatrullaje, a.matricula ,a.id_comandancia, a.id_tipovehiculo,
+                                       CASE WHEN a.numeroeconomico IS NULL THEN '' ELSE a.numeroeconomico END numeroeconomico,
+                                       a.habilitado, b.descripcion, c.descripciontipovehiculo
+                                FROM ssf.vehiculos a
+                                JOIN ssf.tipopatrullaje b ON a.id_tipopatrullaje = b.id_tipopatrullaje
+                                JOIN ssf.tipovehiculo c ON a.id_tipovehiculo=c.id_tipovehiculo
+                                WHERE a.habilitado=1 AND b.descripcion='TERRESTRE'
+                                AND a.id_comandancia= @pRegion
+                                AND (a.matricula like @pCriterio OR a.numeroeconomico like @pCriterio)";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pCriterio", criterio)
             };
 
             return await _vehiculoPatContext.VehiculosPatrullajeVistas.FromSqlRaw(sqlQuery, parametros).ToListAsync();
