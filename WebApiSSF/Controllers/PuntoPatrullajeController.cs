@@ -33,7 +33,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene los puntos de patrullaje acorde a los parámetros indicados, siempre y cuando el usuario sea configurador
         /// </summary>
-        /// <param name="opcion">Indicador del tipo de filtro a realizar (0 - Por ubicación del punto, 1 - Por estado de la república) </param>
+        /// <param name="opcion">Indicador del tipo de filtro a realizar (0 - Por ubicación del punto, 1 - Por estado de la república, 2 - Por ruta, 3 - Por región) </param>
         /// <param name="criterio">Descripción de la ubicación del punto o del estado de la república. Debe ser acorde al parámetro opción</param>
         /// <param name="usuario">Nombre del usuario con privilegios de configurador</param>
         /// <returns></returns>

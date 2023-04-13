@@ -79,19 +79,20 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ObtenerPorRegionAsync</c> Obtiene puntos de patrullaje cuya comandancia coincida con el parámetro. se limita a sólo instalaciones estratégicas
         /// </summary>
-        public async Task<List<PuntoPatrullaje>> ObtenerPorRegionAsync(int region)
+        public async Task<List<PuntoPatrullaje>> ObtenerPorRegionAsync(int region, int nivel)
         {
             string sqlQuery = @"SELECT a.*
                                 FROM ssf.puntospatrullaje a
                                 JOIN ssf.municipios b ON a.id_municipio=b.id_municipio
                                 JOIN ssf.estadospais c ON b.id_estado=c.id_estado
-                                WHERE a.esInstalacion=1 AND a.id_nivelriesgo=3
-                                AND a.id_comandancia= @pRegion
+                                WHERE  a.esInstalacion=1 AND a.id_comandancia= @pRegion
+                                AND a.id_nivelriesgo=@pNivel
                                 ORDER BY a.ubicacion";
 
             object[] parametros = new object[]
             {
-                new SqlParameter("@pRegion", region)
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pNivel", nivel)
             };
 
             return await _patrullajeContext.puntospatrullaje.FromSqlRaw(sqlQuery, parametros).ToListAsync();

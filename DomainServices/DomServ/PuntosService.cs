@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SqlServerAdapter.Data;
 using System;
 using System.Collections.Generic;
@@ -65,18 +66,18 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>ObtenerPorOpcion</c> Implementa la interfaz para el caso de uso de obtener puntos de patrullaje acorde a un filtro indicado
         /// </summary>
-        public async Task<List<PuntoDto>> ObtenerPorOpcionAsync(FiltroPunto opcion, string valor, string usuario)
+        public async Task<List<PuntoDto>> ObtenerPorOpcionAsync(FiltroPunto opcion, string criterio, string usuario)
         {
             var puntos = new List<PuntoPatrullaje>();
             var r = new List<PuntoDto>();
-            var b = int.TryParse(valor, out int j);
+            var b = int.TryParse(criterio, out int j);
 
             if (await EsUsuarioConfigurador(usuario))
             {
                 switch (opcion)
                 {
                     case FiltroPunto.Ubicacion:
-                        puntos = await _repo.ObtenerPorUbicacionAsync(valor);
+                        puntos = await _repo.ObtenerPorUbicacionAsync(criterio);
                         break;
 
                     case FiltroPunto.Estado:
@@ -96,11 +97,23 @@ namespace DomainServices.DomServ
                         break;
 
                     case FiltroPunto.Region:
-                        if (!b)
+                        int idInstalacionEstrategica = 3;
+                        int idComandancia = 0;
+                        int idNivelRiesgo = 0;
+
+                        if (criterio.Contains("-"))
                         {
-                            return r;
+                            var datos = criterio.Split('-');
+                            idComandancia = Int32.Parse(datos[0]);
+                            idNivelRiesgo = Int32.Parse(datos[1]);
                         }
-                        puntos = await _repo.ObtenerPorRegionAsync(j);
+                        else 
+                        {
+                            idComandancia = Int32.Parse(criterio);
+                            idNivelRiesgo = idInstalacionEstrategica;
+                        }
+
+                        puntos = await _repo.ObtenerPorRegionAsync(idComandancia, idNivelRiesgo);
                         break;
                 }
 
