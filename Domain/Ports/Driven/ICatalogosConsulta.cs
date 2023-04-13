@@ -84,4 +84,9 @@ namespace Domain.Ports.Driven
         Task<List<PuntoPatrullaje>> ObtenerInstalacionesDeComandanciaAsync(int idComandancia);
     }
 
+    public interface INivelRiesgoQuery
+    {
+        Task<List<NivelRiesgo>> ObtenerNivelDeRiesgoAsync();
+    }
+    
 }

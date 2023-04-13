@@ -85,6 +85,9 @@ namespace DomainServices.DomServ
                 case "InstalacionesDeComandancia":
                     cat = await ObtenerInstalacionesDeComandanciaAsync(dtoComplementario, usuario);
                     break;
+                case "NivelRiesgo":
+                    cat = await ObtenerNivelDeRiesgoAsync(usuario);
+                    break;
             }
             
             return cat;           
@@ -472,6 +475,30 @@ namespace DomainServices.DomServ
                     {
                         Id = Convert.ToInt32(c.IdPunto),
                         Descripcion = c.Ubicacion
+                    };
+
+                    cat.Add(row);
+                }
+            }
+
+            return cat;
+        }
+
+        public async Task<List<CatalogoGenerico>> ObtenerNivelDeRiesgoAsync(string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var clas = await _repo.ObtenerNivelDeRiesgoAsync();
+
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdNivelRiesgo,
+                        Descripcion = c.Nivel
                     };
 
                     cat.Add(row);

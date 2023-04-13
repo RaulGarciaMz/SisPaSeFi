@@ -120,5 +120,10 @@ namespace SqlServerAdapter
         {
             return await _catalogosConsultaContext.PuntosPatrullaje.Where(x => x.EsInstalacion == 1 && x.IdComandancia == idComandancia).ToListAsync();
         }
+
+        public async Task<List<NivelRiesgo>> ObtenerNivelDeRiesgoAsync()
+        {
+            return await _catalogosConsultaContext.NivelesRiesgo.ToListAsync();
+        }
     }
 }

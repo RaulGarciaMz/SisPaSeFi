@@ -33,6 +33,7 @@ namespace SqlServerAdapter.Data
         public virtual DbSet<EstadoPatrullaje> EstadosPatrullaje { get; set; }
         public virtual DbSet<ApoyoPatrullaje> ApoyosPatrullaje { get; set; }
         public virtual DbSet<PuntoPatrullaje> PuntosPatrullaje { get; set; }
+        public virtual DbSet<NivelRiesgo> NivelesRiesgo { get; set; }
     }
 }
 
