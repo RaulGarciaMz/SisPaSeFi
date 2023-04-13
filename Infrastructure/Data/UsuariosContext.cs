@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
+using Domain.Entities.Vistas;
 
 namespace SqlServerAdapter.Data
 {
@@ -16,5 +17,7 @@ namespace SqlServerAdapter.Data
         }
 
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<UsuarioVista> UsuariosVista { get; set; }
+        public DbSet<UsuarioDocumento> UsuarioDocumentos { get; set; }
     }
 }

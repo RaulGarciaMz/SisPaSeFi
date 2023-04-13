@@ -1,6 +1,8 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Vistas;
 using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
 using System;
@@ -59,6 +61,28 @@ namespace SqlServerAdapter
             }
         }
 
+        public async Task AgregaUsuarioDeDocumentoAsync(int idDocumento, int idUsuario)
+        {
+            var u = new UsuarioDocumento()
+            {
+                IdDocumentoPatrullaje = idDocumento,
+                IdUsuario = idUsuario
+            };
+            
+            _userContext.UsuarioDocumentos.Add(u);
+            await _userContext.SaveChangesAsync();
+        }
+
+        public async Task BorraUsuarioDeDocumentoAsync(int idDocumento, int idUsuario)
+        {
+            var u = await _userContext.UsuarioDocumentos.Where(x => x.IdDocumentoPatrullaje == idDocumento && x.IdUsuario == idUsuario).FirstOrDefaultAsync();
+            if (u != null)
+            {
+                _userContext.UsuarioDocumentos.Remove(u);
+                await _userContext.SaveChangesAsync();
+            }
+        }
+
         public async Task<Usuario?> ObtenerUsuarioConfiguradorPorIdAsync(int idUsuario)
         {
             return await _userContext.Usuarios.Where(x => x.IdUsuario == idUsuario && x.Configurador == 1).FirstOrDefaultAsync();
@@ -69,9 +93,53 @@ namespace SqlServerAdapter
             return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefaultAsync();
         }
 
-        public async Task<Usuario?> ObtenerUsuarioPorCriterioAsync(string criterio)
+        public async Task<List<UsuarioVista>> ObtenerUsuariosPorCriterioAsync(string criterio)
         {
-            return await _userContext.Usuarios.Where(x => x.Nombre.Contains(criterio) || x.Apellido1.Contains(criterio) || x.Apellido2.Contains(criterio) || x.UsuarioNom.Contains(criterio)).FirstOrDefaultAsync(); 
+            string sqlQuery = @"SELECT id_usuario, usuario_nom, nombre, apellido1, apellido2, correoelectronico, cel, 
+                                       configurador, regionSSF, desbloquearregistros, tiempoespera
+                                FROM ssf.usuarios 
+                                WHERE nombre like @pCriterio OR apellido1 LIKE @pCriteri OR apellido2 LIKE @pCriteri 
+                                OR usuario_nom LIKE @pCriterio";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pCriterio", criterio)
+            };
+
+            return await _userContext.UsuariosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<List<UsuarioVista>> ObtenerUsuariosDeDocumentoAsync(int id)
+        {
+            string sqlQuery = @"SELECT a.id_usuario, a.usuario_nom, a.nombre, a.apellido1, a.apellido2, a.correoelectronico, a.cel, a.configurador, a.regionSSF, a.desbloquearregistros, a.tiempoespera
+                                FROM ssf.usuarios a
+                                JOIN ssf.usuariodocumento b ON a.id_usuario=b.id_usuario
+                                WHERE b.id_documentopatrullaje=@pIdDocumento";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pIdDocumento", id)
+            };
+
+            return await _userContext.UsuariosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<List<UsuarioVista>> ObtenerUsuariosNoIncluidosEnDocumentoAsync(string criterio, int idDocumento)
+        {
+            string sqlQuery = @"SELECT id_usuario, usuario_nom,nombre,apellido1,apellido2,correoelectronico,cel,configurador,regionSSF,desbloquearregistros,tiempoespera
+                                FROM ssf.usuarios 
+                                WHERE id_usuario NOT IN (SELECT id_usuario FROM ssf.usuariodocumento WHERE id_documentopatrullaje=@pIdDocumento)
+                                AND (nombre like @pCriterio OR apellido1 LIKE @pCriterio OR apellido2 LIKE @pCriterio 
+                                OR usuario_nom LIKE @pCriterio)";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pIdDocumento", criterio),
+                new SqlParameter("@pIdDocumento", idDocumento)
+            };
+
+            return await _userContext.UsuariosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+
         }
 
         public async Task<bool> SaveChangesAsync()
@@ -87,6 +155,7 @@ namespace SqlServerAdapter
                             .Replace("-", "");
             }
         }
+
 
     }
 }

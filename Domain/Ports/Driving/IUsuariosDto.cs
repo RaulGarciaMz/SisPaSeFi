@@ -1,4 +1,6 @@
 ﻿using Domain.DTOs;
+using Domain.Entities;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +15,19 @@ namespace Domain.Ports.Driving
         Task DesbloqueaUsuarioAsync(string usuario);
         Task ReiniciaClaveUsuarioAsync(string usuario);
         Task ActualizaUsuarioPorOpcionAsync(string opcion, string usuario);
+        Task AgregaPorOpcionAsync(string opcion, string dato, string usuario);
+        Task BorraPorOpcionAsync(string opcion, string dato, string usuario);
     }
 
     public interface IUsuariosDtoQuery
     {
+        Task<List<UsuarioDto>> ObtenerUsuarioPorOpcionAsync(string opcion, string criterio, string usuario);
+        //Task<UsuarioDto?> ObtenerUsuarioPorCriterioAsync(string criterio);
+        //Task<List<UsuarioDto>> ObtenerUsuariosPorCriterioAsync(string criterio);
+        // Task<List<UsuarioDto>> ObtenerUsuarioPorOpcionAsync(string opcion, string criterio, string usuario);
+
+        //Métodos comunes para ser usados por otros controladores
         Task<UsuarioDto?> ObtenerUsuarioConfiguradorPorIdAsync(int idUsuario);
         Task<UsuarioDto?> ObtenerUsuarioConfiguradorPorNombreAsync(string usuario);
-        Task<UsuarioDto?> ObtenerUsuarioPorCriterioAsync(string criterio);
     }
 }
