@@ -24,7 +24,8 @@ namespace SqlServerAdapter
         public async Task<List<UsoVehiculoVista>> ObtenerUsoVehiculosPorProgramaAsync(int idPrograma)
         {
             string sqlQuery = @"select a.id_usovehiculo, a.id_programa, a.id_vehiculo, a.id_usuariovehiculo, a.kminicio, 
-                                       a.kmfin, a.consumocombustible, a.estadovehiculo, b.numeroeconomico, b.matricula 
+                                       a.kmfin, a.consumocombustible, a.estadovehiculo, 
+                                       COALESCE(b.numeroeconomico,'') numeroeconomico, COALESCE(b.matricula, '') matricula
                                 FROM ssf.usovehiculo a
                                 JOIN ssf.vehiculos b ON  a.id_vehiculo=b.id_vehiculo
                                 WHERE a.id_programa= @pPrograma";
