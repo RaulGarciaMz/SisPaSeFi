@@ -1,17 +1,11 @@
 ﻿using Domain.Entities;
 using Domain.Entities.Vistas;
-using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlServerAdapter
 {
@@ -98,7 +92,7 @@ namespace SqlServerAdapter
             string sqlQuery = @"SELECT id_usuario, usuario_nom, nombre, apellido1, apellido2, correoelectronico, cel, 
                                        configurador, regionSSF, desbloquearregistros, tiempoespera
                                 FROM ssf.usuarios 
-                                WHERE nombre like @pCriterio OR apellido1 LIKE @pCriteri OR apellido2 LIKE @pCriteri 
+                                WHERE nombre like @pCriterio OR apellido1 LIKE @pCriterio OR apellido2 LIKE @pCriterio 
                                 OR usuario_nom LIKE @pCriterio";
 
             object[] parametros = new object[]
@@ -140,6 +134,37 @@ namespace SqlServerAdapter
 
             return await _userContext.UsuariosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
 
+        }
+
+
+        //Métodos para el controlador de registro
+        public async Task<UsuarioRegistroVista?> ObtenerUsuarioParaRegistroAsync(string usuario)
+        {
+            UsuarioRegistroVista? ur = null;
+            var u = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleOrDefaultAsync();
+
+            if (u != null)
+            {
+                ur = new UsuarioRegistroVista() 
+                { 
+                    nombre = u.Nombre,
+                    apellido1 = u.Apellido1,
+                    apellido2 = u.Apellido2,
+                    cel = u.Cel,
+                    configurador = u.Configurador,
+                    bloqueado = u.Bloqueado,
+                    AceptacionAvisoLegal = u.AceptacionAvisoLegal,
+                    intentos = u.Intentos,
+                    NotificarAcceso = u.NotificarAcceso,
+                    EstampaTiempoUltimoAcceso = u.EstampaTiempoUltimoAcceso,
+                    correoelectronico = u.CorreoElectronico,
+                    regionSSF = u. RegionSsf,
+                    tiempoEspera = u.TiempoEspera,
+                    desbloquearregistros = u.DesbloquearRegistros
+                };
+            }
+
+            return ur;
         }
 
         public async Task<bool> SaveChangesAsync()
