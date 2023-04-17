@@ -1,17 +1,11 @@
 ﻿using Domain.Entities.Vistas;
-using Domain.Ports.Driven;
-using Microsoft.Data.SqlClient;
+using Domain.Ports.Driven.Repositories;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlServerAdapter
 {
-    public class EstadisticasRepository : IEstadisticasQuery
+    public class EstadisticasRepository : IEstadisticasRepo
     {
         public EstadisticasRepository()
         {
