@@ -10,6 +10,7 @@ using Domain.Enums;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
 using Microsoft.VisualBasic;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace DomainServices.DomServ
@@ -104,8 +105,56 @@ namespace DomainServices.DomServ
             }
 
             var opcionFiltro = (FiltroRutaOpcion)opcion;
+            bool hayUsuarioConRegion = false;
+
             switch (opcionFiltro)
             {
+                case FiltroRutaOpcion.RutaItinerarioObservacion:
+                    switch (actividad)
+                    {
+                        case "Propuesta":
+                            var regionSsf = await ObtenerRegionSsfPorUsuario(usuario);
+                            hayUsuarioConRegion = regionSsf is null;
+
+                            if (hayUsuarioConRegion)
+                            {
+                                encontradas = await _repo.ObtenerPropuestasPorCombinacionFiltrosConRegionSsfAsync(tipo, criterio, regionSsf.Value);
+                            }
+                            else
+                            {
+                                encontradas = await _repo.ObtenerRutasPorCombinacionFiltrosAsync(tipo, criterio);
+                            }
+                            break;
+
+                        case "Programa":
+                            encontradas = await _repo.ObtenerRutasPorCombinacionFiltrosAsync(tipo, criterio);
+                            break;
+                    }
+                    break;
+
+                case FiltroRutaOpcion.RegionMilitar:
+                    switch (actividad)
+                    {
+                        case "Propuesta":
+                            var regionSsf = await ObtenerRegionSsfPorUsuario(usuario);
+                            hayUsuarioConRegion = regionSsf is null;
+
+                            if (hayUsuarioConRegion)
+                            {
+                                encontradas = await _repo.ObtenerPropuestasPorRegionMilitarAndRegionSsfAsync(tipo, criterio, regionSsf.Value);
+                            }
+                            else
+                            {
+                                encontradas = await _repo.ObtenerRutasPorRegionMilitarAsync(tipo, criterio);
+                            }
+                            break;
+
+                        case "Programa":
+                            encontradas = await _repo.ObtenerRutasPorRegionMilitarAsync(tipo, criterio);
+                            break;
+                    }
+                    break;
+
                 case FiltroRutaOpcion.RegionSsf:
 
                     if (Int32.TryParse(criterio, out int j))
@@ -113,57 +162,16 @@ namespace DomainServices.DomServ
                         encontradas = await _repo.ObtenerRutasPorRegionSsfAsync(tipo, j);
                     }
                     break;
-                default:
-
-                    switch (actividad)
-                    {
-                        case "Propuesta":
-                            var regionSsf = await ObtenerRegionSsfPorUsuario(usuario);
-                            var hayUsuarioConRegion = regionSsf is null;
-
-                            switch (opcionFiltro)
-                            {
-                                case FiltroRutaOpcion.RegionMilitar:
-                                    if (hayUsuarioConRegion) 
-                                    {
-                                        encontradas = await _repo.ObtenerPropuestasPorRegionMilitarAndRegionSsfAsync(tipo, criterio, regionSsf.Value);
-                                    }
-                                    else
-                                    {
-                                        encontradas = await _repo.ObtenerRutasPorRegionMilitarAsync(tipo, criterio);
-                                    }                                    
-                                    break;
-                                case FiltroRutaOpcion.RutaItinerarioObservacion:
-                                    if (hayUsuarioConRegion)
-                                    {
-                                        encontradas = await _repo.ObtenerPropuestasPorCombinacionFiltrosConRegionSsfAsync(tipo, criterio, regionSsf.Value);
-                                    }
-                                    else 
-                                    {
-                                        encontradas = await _repo.ObtenerRutasPorCombinacionFiltrosAsync(tipo, criterio);
-                                    }                                    
-                                    break;
-                            }
-                            break;
-                        default:
-                            switch (opcionFiltro)
-                            {
-                                case FiltroRutaOpcion.RegionMilitar:
-                                    encontradas = await _repo.ObtenerRutasPorRegionMilitarAsync(tipo, criterio);
-                                    break;
-                                case FiltroRutaOpcion.RutaItinerarioObservacion:
-                                    encontradas = await _repo.ObtenerRutasPorCombinacionFiltrosAsync(tipo, criterio);
-                                    break;
-                            }
-                            break;
-                    }
-                    break;
             }
 
             if (encontradas.Count > 0)
             {
+                
+
                 foreach (var item in encontradas)
                 {
+                    var itinPat = new List<RecorridoDto>();
+
                     var miruta = new RutaDto()
                     {
                        IdRuta = item.id_ruta,
@@ -176,8 +184,33 @@ namespace DomainServices.DomServ
                        TotalRutasRegionMilitarSDN = item.totalRutasRegionMilitarSDN,
                        Bloqueado = item.bloqueado,
                        Itinerario = item.itinerarioruta,
-                       Habilitado= item.habilitado
-                };
+                       Habilitado= item.habilitado,
+                       IdTipoPatrullaje = item.id_tipopatrullaje
+                    };
+
+                    if(item.itinerariorutapatrullaje.Length > 0) 
+                    {
+                        var ptosItinerario = item.itinerariorutapatrullaje.Split("¦");
+
+                        foreach (var pto in ptosItinerario)
+                        {
+                            var strPto = pto.Replace("[!:!]", "¦");
+                            var datosPtos = strPto.Split("¦");
+                            var reco = new RecorridoDto() 
+                            {
+                                Posicion = Int32.Parse(datosPtos[0]),
+                                Ubicacion = datosPtos[1],
+                                Coordenadas = datosPtos[2],
+                                IdItinerario = Int32.Parse(datosPtos[3]),
+                                IdPunto = Int32.Parse(datosPtos[4])
+                            };
+
+                            itinPat.Add(reco);
+                        }
+                         miruta.Recorridos = itinPat;
+                    }
+
+
                     retornadas.Add(miruta);
                 }              
             }

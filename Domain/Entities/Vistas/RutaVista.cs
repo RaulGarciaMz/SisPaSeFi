@@ -22,5 +22,8 @@ namespace Domain.Entities.Vistas
         public int bloqueado { get; set; } 
         public int habilitado { get; set; }
         public string itinerarioruta { get; set; }
+        public string itinerariorutapatrullaje { get; set; }
+        public int id_tipopatrullaje { get; set; }
+        
     }
 }

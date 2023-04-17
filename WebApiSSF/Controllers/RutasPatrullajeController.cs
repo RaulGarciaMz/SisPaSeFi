@@ -40,7 +40,14 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                return Ok(await _rp.ObtenerPorFiltro(usuario, opcion, tipo, criterio, actividad));
+                var rutas = await _rp.ObtenerPorFiltro(usuario, opcion, tipo, criterio, actividad);
+
+                if (rutas != null && rutas.Count > 0) 
+                {
+                    return Ok(rutas);
+                }
+                
+                return NotFound();
             }
             catch (Exception ex)
             {
