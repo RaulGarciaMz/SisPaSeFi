@@ -4,6 +4,7 @@ using Domain.Ports.Driving;
 using DomainServices.DomServ;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using SqlServerAdapter;
 using SqlServerAdapter.Data;
@@ -33,6 +34,12 @@ builder.Services.AddSwaggerGen(setup => {
     var xmlCommPath = Path.Combine(AppContext.BaseDirectory, xmlCommFile);
     setup.IncludeXmlComments(xmlCommPath);
 
+    setup.SwaggerDoc("v1", new OpenApiInfo 
+    { 
+        Version = "v1",
+        Title= "Sistema de Patrullaje Aéreo y Terrestre de la CFE",
+        Description = "ASP.NET Core Web API para el Sistema de Patrullaje",    
+    });
     //TODO Eliminar esto posterior a dar resolución de conflicto de operaciones Para eliminar conflictos de operaciones múltiples
   /*  setup.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     setup.IgnoreObsoleteActions();

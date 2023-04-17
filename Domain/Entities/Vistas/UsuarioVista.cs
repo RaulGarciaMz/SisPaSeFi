@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities.Vistas
 {
@@ -22,4 +17,25 @@ namespace Domain.Entities.Vistas
         public int desbloquearregistros { get; set; }
         public int tiempoEspera { get; set; }
     }
+
+    [Keyless]
+    public class UsuarioRegistroVista
+    {
+        public string nombre { get; set; }
+        public string apellido1 { get; set; }
+        public string apellido2 { get; set; }
+        public string? cel { get; set; }
+        public int? configurador { get; set; }
+        public int? bloqueado { get; set; }
+        public int? AceptacionAvisoLegal { get; set; }
+        public int? intentos { get; set; }
+        public int? NotificarAcceso { get; set; }
+        public string? correoelectronico { get; set; }
+        public int regionSSF { get; set; }
+        public int desbloquearregistros { get; set; }
+        public int tiempoEspera { get; set; }
+        public DateTime? EstampaTiempoUltimoAcceso { get; set; }
+    }
 }
+
+
