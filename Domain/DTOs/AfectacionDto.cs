@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-
-namespace Domain.DTOs
+﻿namespace Domain.DTOs
 {
     public class AfectacionDtoForCreate
     {

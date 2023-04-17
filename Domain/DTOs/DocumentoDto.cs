@@ -1,19 +1,8 @@
-﻿using Domain.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.DTOs
+﻿namespace Domain.DTOs
 {
-     /// <summary>
-     /// Documento de patrullaje
-     /// </summary>
+    /// <summary>
+    /// Documento de patrullaje
+    /// </summary>
     public class DocumentoDto
     {
         /// <summary>

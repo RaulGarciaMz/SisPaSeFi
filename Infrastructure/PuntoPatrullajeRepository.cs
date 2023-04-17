@@ -1,16 +1,8 @@
 ﻿using Domain.Entities;
+using Domain.Ports.Driven.Repositories;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
-using Domain.Ports.Driven.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using System.Drawing;
-using Domain.Enums;
-using Microsoft.Data.SqlClient;
 
 namespace SqlServerAdapter
 {
