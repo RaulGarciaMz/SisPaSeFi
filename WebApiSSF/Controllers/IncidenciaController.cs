@@ -1,9 +1,6 @@
 ﻿using Domain.DTOs;
-using Domain.Entities;
 using Domain.Ports.Driving;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Serilog;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 

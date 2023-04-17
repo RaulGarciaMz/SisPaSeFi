@@ -1,14 +1,8 @@
 ﻿using Domain.DTOs;
 using Domain.Ports.Driving;
 using Microsoft.AspNetCore.Mvc;
-using SqlServerAdapter.Data;
-using DomainServices.DomServ;
-using System.Drawing;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Authorization;
-using System.Net.Mime;
-using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Mime;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

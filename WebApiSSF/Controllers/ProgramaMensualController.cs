@@ -1,5 +1,4 @@
 ﻿using Domain.DTOs;
-using Domain.Entities;
 using Domain.Ports.Driving;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
