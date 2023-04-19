@@ -51,7 +51,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener evidencias del tipo: {tipo}, para el reporte: {idReporte}, usuario: {usuario}", ex);
+                _log.LogError($"error al obtener evidencias del tipo: {tipo}, para el reporte: {idReporte}, usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -73,7 +73,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al registrar una evidencia de tipo: {evidencia.TipoIncidencia} para el usuario: {evidencia.Usuario}", ex);
+                _log.LogError($"error al registrar una evidencia de tipo: {evidencia.TipoIncidencia} para el usuario: {evidencia.Usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -97,7 +97,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al eliminar la evidencia: {id}, de tipo: {tipo} para el usuario: {usuario}", ex);
+                _log.LogError($"error al eliminar la evidencia: {id}, de tipo: {tipo} para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

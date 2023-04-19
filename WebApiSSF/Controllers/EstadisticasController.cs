@@ -46,7 +46,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener las estadísticas para usuario: {usuario} ", ex);
+                _log.LogError($"error al obtener las estadísticas para usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

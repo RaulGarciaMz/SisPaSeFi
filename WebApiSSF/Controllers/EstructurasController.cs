@@ -50,7 +50,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener las estructuras por identificador de línea", ex);
+                _log.LogError($"error al obtener las estructuras por identificador de línea", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -78,7 +78,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener la estructura por identificador", ex);
+                _log.LogError($"error al obtener la estructura por identificador", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -104,7 +104,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener las estructuras por identificador de línea para una ruta dada", ex);
+                _log.LogError($"error al obtener las estructuras por identificador de línea para una ruta dada", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -130,7 +130,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener las estructuras por identificador de línea para una ruta dada", ex);
+                _log.LogError($"error al obtener las estructuras por identificador de línea para una ruta dada", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

@@ -55,7 +55,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener líneas de patrullaje para la opción: {opcion}, criterio: {criterio} para el usuario: {usuario}", ex);
+                _log.LogError($"error al obtener líneas de patrullaje para la opción: {opcion}, criterio: {criterio} para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -78,7 +78,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al agregar línea de patrullaje para el usuario: {l.Usuario}", ex);
+                _log.LogError($"error al agregar línea de patrullaje para el usuario: {l.Usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -102,7 +102,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al actualizar la línea de patrullaje: {l.IdLinea} para el usuario: {l.Usuario}", ex);
+                _log.LogError($"error al actualizar la línea de patrullaje: {l.IdLinea} para el usuario: {l.Usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -125,7 +125,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al eliminar la línea de patrullaje: {id} para el usuario: {usuario}", ex);
+                _log.LogError($"error al eliminar la línea de patrullaje: {id} para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

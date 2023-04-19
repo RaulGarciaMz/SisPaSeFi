@@ -51,7 +51,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener rutas para la opcion: {opcion}, tipo: {tipo}, criterio: {criterio}, usuario: {usuario}, actividad {actividad}", ex);
+                _log.LogError($"error al obtener rutas para la opcion: {opcion}, tipo: {tipo}, criterio: {criterio}, usuario: {usuario}, actividad {actividad}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }    
         }
@@ -75,7 +75,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al agregar rutas para el usuario: {usuario}", ex);
+                _log.LogError($"error al agregar rutas para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -100,7 +100,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al actualizar la ruta con id: {id} para el usuario: {usuario}", ex);
+                _log.LogError($"error al actualizar la ruta con id: {id} para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }            
         }
@@ -123,7 +123,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al eliminar la ruta con id: {id} para el usuario: {usuario}", ex);
+                _log.LogError($"error al eliminar la ruta con id: {id} para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

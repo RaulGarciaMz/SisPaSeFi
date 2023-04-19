@@ -56,7 +56,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener la lista de vehículos para opción: {opcion}, región: {region}, criterio: {criterio}, usuario: {usuario} ", ex);
+                _log.LogError($"error al obtener la lista de vehículos para opción: {opcion}, región: {region}, criterio: {criterio}, usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }            
         }
@@ -79,7 +79,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al crear un vehículo para el usuario: {vehiculo.Usuario} ", ex);
+                _log.LogError($"error al crear un vehículo para el usuario: {vehiculo.Usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -103,7 +103,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al actualizar un vehículo para el usuario: {vehiculo.Usuario} ", ex);
+                _log.LogError($"error al actualizar un vehículo para el usuario: {vehiculo.Usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -127,7 +127,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al borrar un vehículo para la opcion: {opcion}, dato: {dato}, usuario: {usuario} ", ex);
+                _log.LogError($"error al borrar un vehículo para la opcion: {opcion}, dato: {dato}, usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

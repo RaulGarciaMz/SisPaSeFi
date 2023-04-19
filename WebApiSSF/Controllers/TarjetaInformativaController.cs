@@ -48,7 +48,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener tarjetas informativas para la opción: {opcion}, tipo: {tipo}, usuario: {usuario}, año: {anio}, mes {mes}, día: {dia}, región: {region} ", ex);
+                _log.LogError($"error al obtener tarjetas informativas para la opción: {opcion}, tipo: {tipo}, usuario: {usuario}, año: {anio}, mes {mes}, día: {dia}, región: {region} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }            
         }
@@ -67,7 +67,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener tarjetas informativas para el id: {id}, usuario: {usuario} ", ex);
+                _log.LogError($"error al obtener tarjetas informativas para el id: {id}, usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -91,7 +91,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al registrar tarjetas informativas para el usuario: {usuario} ", ex);
+                _log.LogError($"error al registrar tarjetas informativas para el usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -116,7 +116,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al actualizar la tarjeta informativa con id: {id}, para el usuario: {usuario} ", ex);
+                _log.LogError($"error al actualizar la tarjeta informativa con id: {id}, para el usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

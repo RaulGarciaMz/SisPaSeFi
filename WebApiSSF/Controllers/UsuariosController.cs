@@ -49,7 +49,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener los usuarios para opción: {opcion}, criterio: {criterio}, usuario: {usuario} ", ex);
+                _log.LogError($"error al obtener los usuarios para opción: {opcion}, criterio: {criterio}, usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -73,7 +73,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al agregar el usuario ", ex);
+                _log.LogError($"error al agregar el usuario ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -97,7 +97,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al actualizar el usuario ", ex);
+                _log.LogError($"error al actualizar el usuario ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -121,7 +121,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al eliminar usuario para la opcion: {opcion}, dato: {dato}, usuario: {usuario} ", ex);
+                _log.LogError($"error al eliminar usuario para la opcion: {opcion}, dato: {dato}, usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -152,7 +152,7 @@ namespace WebApiSSF.Controllers
                     }
                     catch (Exception ex)
                     {
-                        _log.LogInformation($"error al obtener el usuario del catálogo, que cumpla con el criterio indicado ", ex);
+                        _log.LogError($"error al obtener el usuario del catálogo, que cumpla con el criterio indicado ", ex);
                         return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
                     }
                 }
@@ -183,7 +183,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener al usuario configurador para el alias de usuario indicado ", ex);
+                _log.LogError($"error al obtener al usuario configurador para el alias de usuario indicado ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -213,7 +213,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener al usuario configurador por id ", ex);
+                _log.LogError($"error al obtener al usuario configurador por id ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -236,7 +236,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al bloquear usuario ", ex);
+                _log.LogError($"error al bloquear usuario ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -259,7 +259,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al desbloquear usuario ", ex);
+                _log.LogError($"error al desbloquear usuario ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -282,7 +282,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al reiniciar la clave del usuario ", ex);
+                _log.LogError($"error al reiniciar la clave del usuario ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

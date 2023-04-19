@@ -56,7 +56,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener personal participante en el patrullaje: {idPrograma}, opción: {opcion}, usuario: {usuario}, region {region}", ex);
+                _log.LogError($"error al obtener personal participante en el patrullaje: {idPrograma}, opción: {opcion}, usuario: {usuario}, region {region}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -79,7 +79,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener registrar personal participante en el patrullaje: {u.IdPrograma}, id del usuario: {u.IdUsuario}, usuario: {u.Usuario}", ex);
+                _log.LogError($"error al obtener registrar personal participante en el patrullaje: {u.IdPrograma}, id del usuario: {u.IdUsuario}, usuario: {u.Usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -103,7 +103,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al borrar personal participante en el patrullaje: {u.IdPrograma}, id del usuario: {u.IdUsuario}, usuario: {u.Usuario}", ex);
+                _log.LogError($"error al borrar personal participante en el patrullaje: {u.IdPrograma}, id del usuario: {u.IdUsuario}, usuario: {u.Usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

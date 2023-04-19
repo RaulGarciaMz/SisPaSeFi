@@ -11,14 +11,22 @@ using SqlServerAdapter.Data;
 using System.Reflection;
 using System.Text;
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .WriteTo.File("SSF.log", rollingInterval: RollingInterval.Day)
-    .CreateLogger();
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog();
+var logger = new LoggerConfiguration()
+  .ReadFrom.Configuration(builder.Configuration)
+  .Enrich.FromLogContext()
+  .CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+
+/*Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.File("SSF.log", rollingInterval: RollingInterval.Day)
+    .CreateLogger();*/
+
+//builder.Host.UseSerilog();
 
 // Add services to the container.
 

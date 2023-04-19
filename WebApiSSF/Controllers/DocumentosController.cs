@@ -52,7 +52,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener documentos de patrullaje para la opción: {opcion}, criterio: {criterio}, del Año: {anio} y Mes: {mes} para el usuario: {usuario}", ex);
+                _log.LogError($"error al obtener documentos de patrullaje para la opción: {opcion}, criterio: {criterio}, del Año: {anio} y Mes: {mes} para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

@@ -55,7 +55,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener incidencias para la opcion: {opcion}, idActivo: {idActivo}, dias: {dias}, usuario: {usuario}", ex);
+                _log.LogError($"error al obtener incidencias para la opcion: {opcion}, idActivo: {idActivo}, dias: {dias}, usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -78,7 +78,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al agregar incidencia para el reporte/punto: {v.Id}, tipo: {v.TipoIncidencia}, usuario: {v.Usuario}", ex);
+                _log.LogError($"error al agregar incidencia para el reporte/punto: {v.Id}, tipo: {v.TipoIncidencia}, usuario: {v.Usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -102,7 +102,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al actualizar incidencia de tipoo: {v.TipoIncidencia}, reporte/punto: {v.IdReporte}, usuario: {v.Usuario}", ex);
+                _log.LogError($"error al actualizar incidencia de tipoo: {v.TipoIncidencia}, reporte/punto: {v.IdReporte}, usuario: {v.Usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

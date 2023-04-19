@@ -48,7 +48,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener los permisos de edición del proceso de conducción para el usuario: {usuario}", ex);
+                _log.LogError($"error al obtener los permisos de edición del proceso de conducción para el usuario: {usuario}", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
                 return StatusCode(500, m);
             }
@@ -83,7 +83,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener el permiso de edición del proceso de conducción para el usuario: {usuario} region: {region}, anio: {anio}, mes: {mes}", ex);
+                _log.LogError($"error al obtener el permiso de edición del proceso de conducción para el usuario: {usuario} region: {region}, anio: {anio}, mes: {mes}", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
                 return StatusCode(500, m);
             }
@@ -109,7 +109,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al agregar el permiso de edición del proceso de conducción para el usuario: {usuario} region: {p.Region}, anio: {p.Anio}, mes: {p.Mes}", ex);
+                _log.LogError($"error al agregar el permiso de edición del proceso de conducción para el usuario: {usuario} region: {p.Region}, anio: {p.Anio}, mes: {p.Mes}", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
                 return StatusCode(500, m);
             }
@@ -136,7 +136,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al borrar el permiso de edición del proceso de conducción para el usuario: {usuario} region: {region}, anio: {anio}, mes: {mes}", ex);
+                _log.LogError($"error al borrar el permiso de edición del proceso de conducción para el usuario: {usuario} region: {region}, anio: {anio}, mes: {mes}", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
                 return StatusCode(500, m);
             }

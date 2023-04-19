@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Infrastructure\SqlServerAdapter.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="logs\" />
+  </ItemGroup>
+
 </Project>

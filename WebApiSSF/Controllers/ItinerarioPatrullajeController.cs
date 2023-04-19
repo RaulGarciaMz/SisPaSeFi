@@ -54,7 +54,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener itinerarios para la ruta: {idRuta}, usuario: {usuario}", ex);
+                _log.LogError($"error al obtener itinerarios para la ruta: {idRuta}, usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -78,7 +78,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al agregar itinerario la ruta: {v.IdRuta}, punto: {v.IdPunto}, posición: {v.Posicion}, usuario: {v.Usuario}", ex);
+                _log.LogError($"error al agregar itinerario la ruta: {v.IdRuta}, punto: {v.IdPunto}, posición: {v.Posicion}, usuario: {v.Usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -102,7 +102,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al agregar itinerario la ruta: {v.IdRuta}, punto: {v.IdPunto}, posición: {v.Posicion}, usuario: {v.Usuario}", ex);
+                _log.LogError($"error al agregar itinerario la ruta: {v.IdRuta}, punto: {v.IdPunto}, posición: {v.Posicion}, usuario: {v.Usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -125,7 +125,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al borrar el itinerario: {id}, usuario: {usuario}", ex);
+                _log.LogError($"error al borrar el itinerario: {id}, usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

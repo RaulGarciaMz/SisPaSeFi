@@ -53,7 +53,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al obtener puntos de patrullaje para la opcion: {opcion}, criterio: {criterio}, usuario: {usuario}", ex);
+                _log.LogError($"error al obtener puntos de patrullaje para la opcion: {opcion}, criterio: {criterio}, usuario: {usuario}", ex);
                 string error = "Ocurrió un problema mientras se procesaba la petición " + ex.ToString();
                 return StatusCode(500, error);
                 //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
@@ -79,7 +79,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al agregar el punto de patrullaje para el usuario: {usuario}", ex);
+                _log.LogError($"error al agregar el punto de patrullaje para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -104,7 +104,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al actualizar el punto de patrullaje para el usuario: {usuario}", ex);
+                _log.LogError($"error al actualizar el punto de patrullaje para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -127,7 +127,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogInformation($"error al eliminar el punto de patrullaje con id: {id} para el usuario: {usuario}", ex);
+                _log.LogError($"error al eliminar el punto de patrullaje con id: {id} para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
