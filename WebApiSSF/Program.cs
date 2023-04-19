@@ -47,6 +47,21 @@ builder.Services.AddSwaggerGen(setup => {
     setup.CustomSchemaIds(type => type.FullName);*/
 });
 
+builder.Services.AddCors(policyBuilder =>
+    policyBuilder.AddDefaultPolicy(policy =>
+        policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod())
+);
+
+/*builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyAllowedOrigins",
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:8081") // Agregar todos los urls permitidos 
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});*/
 
 builder.Services.AddScoped<IRutasRepo, RutaRepository>();
 builder.Services.AddScoped<IRutaService, RutaService>();
@@ -85,6 +100,8 @@ builder.Services.AddScoped<IAfectacionesRepo, AfectacionIncidenciaRepository>();
 builder.Services.AddScoped<IAfectacionesService, AfectacionesService>();
 builder.Services.AddScoped<IPermisosConduccionRepo, PermisosEdicionConduccionRepository>();
 builder.Services.AddScoped<IPermisoEdicionConduccionService, PermisosEdicionConduccionService>();
+builder.Services.AddScoped<IEstadisticasRepo, EstadisticasRepository>();
+builder.Services.AddScoped<IEstadisticasService, EstadisticasService>();
 
 builder.Services.AddDbContext<PatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<ProgramaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
@@ -104,6 +121,7 @@ builder.Services.AddDbContext<ProgramaMensualContext>(dbCtxtOptions => dbCtxtOpt
 builder.Services.AddDbContext<LineasContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<AfectacionIncidenciasContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<PermisosEdicionConduccionContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
+builder.Services.AddDbContext<EstadisticasContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 
 /*builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
@@ -131,6 +149,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors();
+
+//app.UseCors("MyAllowedOrigins");
 //app.UseAuthentication();
 app.UseAuthorization();
 
