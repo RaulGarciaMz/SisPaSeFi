@@ -24,6 +24,13 @@ namespace DomainServices.DomServ
             _user = uc;
         }
 
+        public async Task AgregarAsync(DocumentoDtoForCreate d)
+        {
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(d.Usuario);
+
+            await _repo.AgregarAsync(d.IdReferencia, d.IdTipoDocumento, d.IdComandancia, d.RutaArchivo, d.NombreArchivo, d.Descripcion, d.FechaReferencia, d.IdUsuario);
+        }
+
         public async Task<List<DocumentoDto>> ObtenerDocumentosAsync(string opcion, string criterio, int anio, int mes, string usuario) 
         {
             var l = new List<DocumentoDto>();
