@@ -33,7 +33,7 @@ namespace WebApiSSF.Controllers
             try
             {
 
-                var use = await _pp.ObtenerUsuarioRegistradoAsync(u, ""); // ConfigurationManager.AppSettings(["LDAP_path"]);
+                var use = await _pp.ObtenerUsuarioRegistradoAsync(u, "LDAP://jasl.com"); // ConfigurationManager.AppSettings(["LDAP_path"]);
 
                 return use;
             }

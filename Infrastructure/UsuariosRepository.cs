@@ -137,7 +137,7 @@ namespace SqlServerAdapter
         }
 
 
-        //Métodos para el controlador de registro
+        //Método para el controlador de registro
         public async Task<UsuarioRegistroVista?> ObtenerUsuarioParaRegistroAsync(string usuario)
         {
             UsuarioRegistroVista? ur = null;
@@ -155,7 +155,7 @@ namespace SqlServerAdapter
                     bloqueado = u.Bloqueado,
                     AceptacionAvisoLegal = u.AceptacionAvisoLegal,
                     intentos = u.Intentos,
-                    NotificarAcceso = u.NotificarAcceso,
+                    NotificarAcceso = u.NotificarAcceso,                    
                     EstampaTiempoUltimoAcceso = u.EstampaTiempoUltimoAcceso,
                     correoelectronico = u.CorreoElectronico,
                     regionSSF = u. RegionSsf,
@@ -165,6 +165,14 @@ namespace SqlServerAdapter
             }
 
             return ur;
+        }
+
+        public async Task<int> IdentificaUsuarioLocalAsync(string usuario, string clave)
+        {
+            var md5Pass = ComputeMD5(clave);
+
+            var u = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Pass == md5Pass).ToListAsync();
+            return u.Count;
         }
 
         public async Task<bool> SaveChangesAsync()

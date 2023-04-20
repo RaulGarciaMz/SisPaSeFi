@@ -57,6 +57,39 @@ namespace Domain.DTOs
         /// </summary>
         public int tiempoespera { get; set; }
     }
+
+    public class UsuarioDtoForAutentication
+    {
+        public string Nombre { get; set; }
+        public string Clave { get; set; }
+    }
+
+    public class UsuarioDtoRegistro
+    {
+        public string Nombre { get; set; }
+        public string Apellido1 { get; set; }
+        public string Apellido2 { get; set; }
+        public string? Cel { get; set; }
+        public int? Configurador { get; set; }
+        public int? Bloqueado { get; set; }
+        public int? AceptacionAvisoLegal { get; set; }
+        public int? Intentos { get; set; }
+        public int? NotificarAcceso { get; set; }
+        public string? CorreoElectronico { get; set; }
+        public int RegionSSF { get; set; }
+        public int TiempoEspera { get; set; }
+        public int DesbloquearRegistros { get; set; }
+        public DateTime? UltimoAcceso { get; set; }
+        public string Resultado { get; set; }
+        public string Token { get; set; }
+    }
 }
 
-                
+
+
+
+
+
+
+
+

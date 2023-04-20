@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Ports.Driven.Repositories
 {
-    public interface IUsuariosRepo : IUsuariosCommand, IUsuariosQuery, IUsuariosConfiguradorQuery
+    public interface IUsuariosRepo : IUsuariosCommand, IUsuariosQuery, IUsuariosConfiguradorQuery, IUsuariosRegistroQuery
     {
     }
 }
