@@ -26,26 +26,26 @@ namespace DomainServices.DomServ
 
         public async Task AgregaAsync(AfectacionDtoForCreate a) 
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(a.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(a.strUsuario);
 
             if (user != null)
             {
-                var existe = await ExisteAfectacionRegistrada(a.IdIncidencia, a.IdConceptoAfectacion, a.TipoIncidencia);
+                var existe = await ExisteAfectacionRegistrada(a.intIdIncidencia, a.intIdConceptoAfectacion, a.strTipoIncidencia);
 
                 if (!existe)
                 {
-                    await _repo.AgregaAsync(a.IdIncidencia, a.IdConceptoAfectacion, a.Cantidad, a.PrecioUnitario, a.IdTipoIncidencia);
+                    await _repo.AgregaAsync(a.intIdIncidencia, a.intIdConceptoAfectacion, a.intCantidad, a.sngPrecioUnitario, a.intIdTipoIncidencia);
                 }                
             }
         }
 
         public async Task ActualizaAsync(AfectacionDtoForUpdate a)
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(a.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(a.strUsuario);
 
             if (user != null)
             {
-                await _repo.ActualizaAsync(a.IdAfectacionIncidencia, a.Cantidad, a.PrecioUnitario);
+                await _repo.ActualizaAsync(a.intIdAfectacionIncidencia, a.intCantidad, a.sngPrecioUnitario);
             }
         }
 

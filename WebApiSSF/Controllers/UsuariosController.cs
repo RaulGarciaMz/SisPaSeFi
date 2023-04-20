@@ -84,7 +84,7 @@ namespace WebApiSSF.Controllers
         /// <param name="opcion">Opción de actualización ("Desbloquear", "Bloquear" ó "ReiniciarClave")</param>
         /// <param name="usuario">Usuario (alias - usuario_nom) al que se aplicará la actualización</param>
         /// <returns></returns>
-        [HttpPut("{usuario}/actualiza")]
+        [HttpPut]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

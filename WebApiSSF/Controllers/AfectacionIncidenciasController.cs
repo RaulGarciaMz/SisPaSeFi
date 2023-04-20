@@ -76,7 +76,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al agregar afectación para el usuario: {a.Usuario}", ex);
+                _log.LogError($"error al agregar afectación para el usuario: {a.strUsuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -84,14 +84,13 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actuliza una incidencia
         /// </summary>
-        /// <param name="id">Identificador de la incidencia</param>
         /// <param name="a">Incidencia a actualizar</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Actualiza(int id, [FromBody] AfectacionDtoForUpdate a)
+        public async Task<ActionResult> Actualiza([FromBody] AfectacionDtoForUpdate a)
         {
             try
             {
@@ -101,7 +100,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al actualizar afectación: {a.IdAfectacionIncidencia} para el usuario: {a.Usuario}", ex);
+                _log.LogError($"error al actualizar afectación: {a.intIdAfectacionIncidencia} para el usuario: {a.strUsuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
