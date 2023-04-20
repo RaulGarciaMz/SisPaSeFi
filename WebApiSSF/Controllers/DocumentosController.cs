@@ -1,6 +1,8 @@
 ﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.Ports.Driving;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 
@@ -53,6 +55,30 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al obtener documentos de patrullaje para la opción: {opcion}, criterio: {criterio}, del Año: {anio} y Mes: {mes} para el usuario: {usuario}", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+        /// <summary>
+        /// Agrega un documento de patrullaje
+        /// </summary>
+        /// <param name="d">Documento a agregar</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Agregar([FromBody] DocumentoDtoForCreate d)
+        {
+            try
+            {
+                await _pp.AgregarAsync(d);
+  
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"error al agregar documento de patrullaje para la referencia: {d.IdReferencia}, tipo de documento: {d.IdTipoDocumento}, del Año: {d.NombreArchivo} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

@@ -1,16 +1,9 @@
-﻿using Domain.DTOs.catalogos;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Intrinsics.X86;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlServerAdapter
 {
@@ -128,5 +121,28 @@ namespace SqlServerAdapter
 
             return await _documentosContext.DocumentosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
+
+        public async Task AgregarAsync(long idReferencia, long idTipoDocumento, int idComandancia, string rutaArchivo, string nombreArchivo, string descripcionArchivo, DateTime fechaReferencia, int idUsuario)
+        {
+
+            var doc = new DocumentoPatrullaje() 
+            { 
+                IdReferencia = idReferencia,
+                IdTipoDocumento = idTipoDocumento,
+                IdComandancia = idComandancia,
+                IdUsuario = idUsuario,
+                RutaArchivo = rutaArchivo,
+                NombreArchivo = nombreArchivo,
+                Descripcion = descripcionArchivo,
+                FechaReferencia = fechaReferencia,
+                FechaRegistro = DateTime.UtcNow
+            };
+
+            _documentosContext.DocumentosPatrullaje.Add(doc);
+
+            await _documentosContext.SaveChangesAsync();
+
+        }
+
     }
 }

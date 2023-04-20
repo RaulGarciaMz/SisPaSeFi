@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 
 namespace Domain.Ports.Driving
 {
+
+    public interface IDocumentoDtoCommand
+    {
+        Task AgregarAsync(DocumentoDtoForCreate d);
+    }
+
     public interface IDocumentoDtoQuery
     {
         Task<List<DocumentoDto>> ObtenerDocumentosAsync(string opcion, string criterio, int anio, int mes, string usuario);

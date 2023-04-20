@@ -62,6 +62,50 @@
     /// <summary>
     /// Documento de patrullaje
     /// </summary>
+    public class DocumentoDtoForCreate
+    {
+        /// <summary>
+        /// Identificador de la referencia del documento
+        /// </summary>
+        public long IdReferencia { get; set; }
+        /// <summary>
+        /// Identificador del tipo de documento
+        /// </summary>
+        public long IdTipoDocumento { get; set; }
+        /// <summary>
+        /// Identificador de la comandancia a donde pertenece el documento
+        /// </summary>
+        public int IdComandancia { get; set; }
+
+        /// <summary>
+        /// Fecha de referencia del documento
+        /// </summary>
+        public DateTime FechaReferencia { get; set; }
+        /// <summary>
+        /// Ruta o ubicación (path) del archivo
+        /// </summary>
+        public string RutaArchivo { get; set; }
+        /// <summary>
+        /// Nombre del archivo
+        /// </summary>
+        public string NombreArchivo { get; set; }
+        /// <summary>
+        /// Descripción del documento
+        /// </summary>
+        public string Descripcion { get; set; }
+        /// <summary>
+        /// Identificador del usuario que registró el documento
+        /// </summary>
+        public int IdUsuario { get; set; }
+        /// <summary>
+        /// Nombre del usuario que realiza la operación
+        /// </summary>
+        public string Usuario { get; set; }
+    }
+
+    /// <summary>
+    /// Documento de patrullaje
+    /// </summary>
     public class DocumentoDtoForQuery
     {
         /// <summary>

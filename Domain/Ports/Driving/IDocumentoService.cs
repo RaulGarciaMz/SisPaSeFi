@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Ports.Driving
 {
-    public interface IDocumentoService : IDocumentoDtoQuery
+    public interface IDocumentoService : IDocumentoDtoCommand, IDocumentoDtoQuery
     {
     }
 }
