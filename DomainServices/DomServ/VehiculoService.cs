@@ -37,14 +37,14 @@ namespace DomainServices.DomServ
 
         public async Task AgregaAsync(VehiculoDtoForCreate vehiculo)
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(vehiculo.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(vehiculo.strUsuario);
 
             if (user != null)
             {
                 var existe = await ExisteVehiculo(vehiculo);
                 if (! existe )
                 {
-                    await _repo.AgregaAsync(vehiculo.Matricula, vehiculo.NumeroEconomico, vehiculo.Habilitado, vehiculo.TipoPatrullaje, vehiculo.TipoVehiculo, vehiculo.Comandancia);
+                    await _repo.AgregaAsync(vehiculo.strMatricula, vehiculo.strNumeroEconomico, vehiculo.intHabilitado, vehiculo.intTipoPatrullaje, vehiculo.intTipoVehiculo, vehiculo.intRegionSSF);
                 }                
             }
         }
@@ -167,7 +167,7 @@ namespace DomainServices.DomServ
 
         private async Task<bool> ExisteVehiculo(VehiculoDtoForCreate vehiculo)
         {
-            var vehis = await _repo.ObtenerNumeroDeVehiculosPorMatriculaAndComandanciaAsync(vehiculo.Matricula, vehiculo.Comandancia);
+            var vehis = await _repo.ObtenerNumeroDeVehiculosPorMatriculaAndComandanciaAsync(vehiculo.strMatricula, vehiculo.intRegionSSF);
 
             if (vehis > 0) 
             {

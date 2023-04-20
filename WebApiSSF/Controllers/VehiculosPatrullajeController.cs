@@ -27,7 +27,7 @@ namespace WebApiSSF.Controllers
         /// Obtiene la lista de vehiculos para patrullaje acorde a los parámetros indicados
         /// </summary>
         /// <param name="opcion">Descripción del tipo de patrullaje al que se asigna al vehículo ("TODOS", "AEREO", "TERRESTRE", "VEHICULOSPATRULLAJEEXTRAORDINARIO-XX", "AEREOHABILITADOS", "TERRESTREHABILITADOS"). Cuando la opción es VEHICULOSPATRULLAJEEXTRAORDINARIO-XX, XX debe contener la descripción del tipo de patrullaje</param>
-        /// <param name="region">Identificador de la comandancia (región) a la que está asignado el vehículo. Este parámetro es obligatorio para las opciones: "TODOS", "AEREO" y "TERRESTRE"</param>
+        /// <param name="regionSSF">Identificador de la comandancia (región) a la que está asignado el vehículo. Este parámetro es obligatorio para las opciones: "TODOS", "AEREO" y "TERRESTRE"</param>
         /// <param name="criterio">Patrón de texto para buscar en matrícula o en número económico excepto si la opción es VEHICULOSPATRULLAJEEXTRAORDINARIO, en cuyo caso criterio es el identificador de la propuesta</param>
         /// <param name="usuario">Nombre del usuario (alias o usuario_nom) que realiza la consulta</param>
         /// <returns></returns>
@@ -36,11 +36,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<VehiculoPatrullajeVista>>> ObtenerVehiculosPorOpcion([Required] string opcion, int region,  [Required] string usuario, string? criterio)
+        public async Task<ActionResult<IEnumerable<VehiculoPatrullajeVista>>> ObtenerVehiculosPorOpcion([Required] string opcion, int regionSSF,  [Required] string usuario, string? criterio)
         {
             try
             {
-                var v = await _pp.ObtenerVehiculosPorOpcionAsync(opcion, region, criterio, usuario);
+                var v = await _pp.ObtenerVehiculosPorOpcionAsync(opcion, regionSSF, criterio, usuario);
 
                 if (v == null)
                 {
@@ -56,7 +56,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener la lista de vehículos para opción: {opcion}, región: {region}, criterio: {criterio}, usuario: {usuario} ", ex);
+                _log.LogError($"error al obtener la lista de vehículos para opción: {opcion}, región: {regionSSF}, criterio: {criterio}, usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }            
         }
@@ -79,7 +79,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al crear un vehículo para el usuario: {vehiculo.Usuario} ", ex);
+                _log.LogError($"error al crear un vehículo para el usuario: {vehiculo.strUsuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -87,14 +87,13 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza un vehículo
         /// </summary>
-        /// <param name="id">Identificador del vehículo a actualizar</param>
         /// <param name="vehiculo">Vehículo a actualizar</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Actualiza(int id, [FromBody] VehiculoDtoForUpdate vehiculo)
+        public async Task<ActionResult> Actualiza([FromBody] VehiculoDtoForUpdate vehiculo)
         {
             try
             {
@@ -118,7 +117,7 @@ namespace WebApiSSF.Controllers
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> BorraPorOpcion(string opcion, string dato, string usuario )
+        public async Task<ActionResult> BorraPorOpcion([Required] string opcion, string dato, [Required] string usuario )
         {
             try
             {
