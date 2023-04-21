@@ -1,15 +1,19 @@
 ﻿namespace Domain.DTOs
 {
-    public class ItinerarioDto
+    public class ItinerarioDtoForCreate
     {
-        public int IdItinerario { get; set; }
-        public int IdRuta { get; set; }
-        public int IdPunto { get; set; }
-        public int Posicion { get; set; }
-        public int IdProcesoResponsable { get; set; }
-        public int IdGerenciaDivision { get; set; }
-        public string Ubicacion { get; set; }
-        public string Coordenadas { get; set; }
-        public string Usuario { get; set; }
+        public int intIdRuta { get; set; }
+        public int intIdPunto { get; set; }
+        public int intPosicion { get; set; }
+        public string strUsuario { get; set; }
+    }
+
+    public class ItinerarioDtoForUpdate
+    {
+        public int intIdRuta { get; set; }
+        public int intIdPunto { get; set; }
+        public int intPosicion { get; set; }
+        public string strUsuario { get; set; }
+        public int intIdItinerario { get; set; }
     }
 }

@@ -36,37 +36,37 @@ namespace DomainServices.DomServ
             return itinerarios;
         }
 
-        public async Task AgregaItinerarioAsync(ItinerarioDto it)
+        public async Task AgregaItinerarioAsync(ItinerarioDtoForCreate it)
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(it.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(it.strUsuario);
 
             if (user != null)
             {
                 var i = new Itinerario()
                 {
-                    IdRuta = it.IdRuta,
-                    IdPunto = it.IdPunto,
-                    Posicion = it.Posicion
+                    IdRuta = it.intIdRuta,
+                    IdPunto = it.intIdPunto,
+                    Posicion = it.intPosicion
                 };
 
-                var existe = await ExistePosicionEnRuta(it.IdRuta, it.Posicion);
+                var existe = await ExistePosicionEnRuta(it.intIdRuta, it.intPosicion);
                 if (!existe)
                 {
-                    await _repo.AgregaItinerarioAsync(it.IdRuta, it.IdPunto, it.Posicion);
+                    await _repo.AgregaItinerarioAsync(it.intIdRuta, it.intIdPunto, it.intPosicion);
                 }
             }
         }
 
-        public async Task ActualizaItinerarioAsync(ItinerarioDto it)
+        public async Task ActualizaItinerarioAsync(ItinerarioDtoForUpdate it)
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(it.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(it.strUsuario);
 
             if (user != null)
             {                   
-                var existe = await ExistePuntoEnMismaPosicionEnRuta(it.IdRuta, it.Posicion, it.IdPunto);
+                var existe = await ExistePuntoEnMismaPosicionEnRuta(it.intIdRuta, it.intPosicion, it.intIdPunto);
                 if (!existe)
                 {
-                    await _repo.ActualizaItinerarioAsync(it.IdRuta, it.IdPunto, it.Posicion);
+                    await _repo.ActualizaItinerarioAsync(it.intIdRuta, it.intIdPunto, it.intPosicion);
                 }
             }
         }

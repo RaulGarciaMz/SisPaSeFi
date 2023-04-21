@@ -69,7 +69,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> AgregaItinerario([FromBody] ItinerarioDto v)
+        public async Task<ActionResult> AgregaItinerario([FromBody] ItinerarioDtoForCreate v)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al agregar itinerario la ruta: {v.IdRuta}, punto: {v.IdPunto}, posición: {v.Posicion}, usuario: {v.Usuario}", ex);
+                _log.LogError($"error al agregar itinerario la ruta: {v.intIdRuta}, punto: {v.intIdPunto}, posición: {v.intPosicion}, usuario: {v.strUsuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -86,14 +86,13 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza itinerarios
         /// </summary>
-        /// <param name="id">Identificador del itinerario</param>
         /// <param name="v">Itinerario a actualizar</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Put(int id, [FromBody] ItinerarioDto v)
+        public async Task<ActionResult> Put( [FromBody] ItinerarioDtoForUpdate v)
         {
             try
             {
@@ -102,7 +101,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al agregar itinerario la ruta: {v.IdRuta}, punto: {v.IdPunto}, posición: {v.Posicion}, usuario: {v.Usuario}", ex);
+                _log.LogError($"error al agregar itinerario la ruta: {v.intIdRuta}, punto: {v.intIdPunto}, posición: {v.intPosicion}, usuario: {v.strUsuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
