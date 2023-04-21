@@ -2,8 +2,8 @@
 {
     public class PermisoEdicionConduccionDto
     {
-        public int Region { get; set; }
-        public int Anio { get; set; }
-        public int Mes { get; set; }
+        public int intRSF { get; set; }
+        public int intAnio { get; set; }
+        public int intMes { get; set; }
     }
 }

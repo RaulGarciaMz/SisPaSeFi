@@ -57,7 +57,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene el permiso de edición correspondiente con las opciones indicadas
         /// </summary>
-        /// <param name="region">Identificador de la región SSF</param>
+        /// <param name="rsf">Identificador de la región SSF</param>
         /// <param name="anio">Año dl permiso</param>
         /// <param name="mes">Mes del permiso</param>
         /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
@@ -68,11 +68,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Permisosedicionprocesoconduccion>> ObtenerPermisosPorOpcion([Required] int region, [Required] int anio, [Required] int mes, [Required] string usuario)
+        public async Task<ActionResult<Permisosedicionprocesoconduccion>> ObtenerPermisosPorOpcion([Required] int rsf, [Required] int anio, [Required] int mes, [Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerPermisosPorOpcionAsync(region, anio, mes, usuario);
+                var coms = await _pp.ObtenerPermisosPorOpcionAsync(rsf, anio, mes, usuario);
 
                 if (coms == null)
                 {
@@ -83,7 +83,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener el permiso de edición del proceso de conducción para el usuario: {usuario} region: {region}, anio: {anio}, mes: {mes}", ex);
+                _log.LogError($"error al obtener el permiso de edición del proceso de conducción para el usuario: {usuario} region: {rsf}, anio: {anio}, mes: {mes}", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
                 return StatusCode(500, m);
             }
@@ -103,13 +103,13 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                 await _pp.AgregarPorOpcionAsync(p.Region, p.Anio, p.Mes, usuario);
+                 await _pp.AgregarPorOpcionAsync(p.intRSF, p.intAnio, p.intMes, usuario);
   
                 return Ok();
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al agregar el permiso de edición del proceso de conducción para el usuario: {usuario} region: {p.Region}, anio: {p.Anio}, mes: {p.Mes}", ex);
+                _log.LogError($"error al agregar el permiso de edición del proceso de conducción para el usuario: {usuario} region: {p.intRSF}, anio: {p.intAnio}, mes: {p.intMes}", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
                 return StatusCode(500, m);
             }
@@ -118,25 +118,25 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Borra un permiso de edición
         /// </summary>
-        /// <param name="region">Identificador de la región ssf</param>
+        /// <param name="rsf">Identificador de la región ssf</param>
         /// <param name="anio">Año del permiso</param>
         /// <param name="mes">Mes del permiso</param>
         /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
-        [HttpDelete()]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete([Required] int region, [Required] int anio, [Required] int mes, [Required] string usuario)
+        public async Task<ActionResult> Delete([Required] int rsf, [Required] int anio, [Required] int mes, [Required] string usuario)
         {
             try
             {
-                await _pp.BorraPorOpcionAsync(region, anio, mes, usuario);
+                await _pp.BorraPorOpcionAsync(rsf, anio, mes, usuario);
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al borrar el permiso de edición del proceso de conducción para el usuario: {usuario} region: {region}, anio: {anio}, mes: {mes}", ex);
+                _log.LogError($"error al borrar el permiso de edición del proceso de conducción para el usuario: {usuario} region: {rsf}, anio: {anio}, mes: {mes}", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
                 return StatusCode(500, m);
             }
