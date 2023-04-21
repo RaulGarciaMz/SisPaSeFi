@@ -2,22 +2,22 @@
 {
     public class LineaDtoForCreate
     {
-        public string Clave { get; set; }
-        public string Descripcion { get; set; }
-        public int IdPuntoInicio { get; set; }
-        public int IdPuntoFin { get; set; }
-        public string Usuario { get; set; }
+        public string strClave { get; set; }
+        public string strDescripcion { get; set; }
+        public int intIdPuntoInicio { get; set; }
+        public int intIdPuntoFin { get; set; }
+        public string strUsuario { get; set; }
 
     }
     public class LineaDtoForUpdate
     {
-        public int IdLinea { get; set; }
-        public string Clave { get; set; }
-        public string Descripcion { get; set; }
-        public int IdPuntoInicio { get; set; }
-        public int IdPuntoFin { get; set; }
-        public int Bloqueado { get; set; }
-        public string Usuario { get; set; }       
+        public int intIdLinea { get; set; }
+        public string strClave { get; set; }
+        public string strDescripcion { get; set; }
+        public int intIdPuntoInicio { get; set; }
+        public int intIdPuntoFin { get; set; }
+        public int intBloqueado { get; set; }
+        public string strUsuario { get; set; }       
     }
 }
 

@@ -82,7 +82,7 @@ namespace WebApiSSF.Controllers
         }
 
         /// <summary>
-        /// Actuliza una incidencia
+        /// Actualiza una incidencia
         /// </summary>
         /// <param name="a">Incidencia a actualizar</param>
         /// <returns></returns>

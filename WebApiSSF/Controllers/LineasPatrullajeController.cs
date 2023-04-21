@@ -78,7 +78,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al agregar línea de patrullaje para el usuario: {l.Usuario}", ex);
+                _log.LogError($"error al agregar línea de patrullaje para el usuario: {l.strUsuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -86,14 +86,13 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza líneas de patrullaje
         /// </summary>
-        /// <param name="id">Identificador de la línea</param>
         /// <param name="l">Datos de la línea a actualizar</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Actualizar(int id, [FromBody] LineaDtoForUpdate l)
+        public async Task<ActionResult> Actualizar([FromBody] LineaDtoForUpdate l)
         {
             try
             {
@@ -102,7 +101,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al actualizar la línea de patrullaje: {l.IdLinea} para el usuario: {l.Usuario}", ex);
+                _log.LogError($"error al actualizar la línea de patrullaje: {l.intIdLinea} para el usuario: {l.strUsuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -113,10 +112,10 @@ namespace WebApiSSF.Controllers
         /// <param name="id">Identificador de la línea a eliminar</param>
         /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete(int id, [Required]string usuario)
+        public async Task<ActionResult> Delete([Required] int id, [Required]string usuario)
         {
             try
             {

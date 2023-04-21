@@ -28,20 +28,20 @@ namespace DomainServices.DomServ
 
         public async Task ActualizaAsync(LineaDtoForUpdate linea)
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(linea.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(linea.strUsuario);
 
             if (user != null)
             {
-                await _repo.ActualizaAsync(linea.IdLinea, linea.Clave, linea.Descripcion, linea.IdPuntoInicio, linea.IdPuntoFin, user.IdUsuario, linea.Bloqueado);
+                await _repo.ActualizaAsync(linea.intIdLinea, linea.strClave, linea.strDescripcion, linea.intIdPuntoInicio, linea.intIdPuntoFin, user.IdUsuario, linea.intBloqueado);
             }
         }
         public async Task AgregarAsync(LineaDtoForCreate linea)
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(linea.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(linea.strUsuario);
 
             if (user != null)
             {
-                await _repo.AgregarAsync(linea.Clave, linea.Descripcion, linea.IdPuntoInicio, linea.IdPuntoFin);
+                await _repo.AgregarAsync(linea.strClave, linea.strDescripcion, linea.intIdPuntoInicio, linea.intIdPuntoFin);
             }
         }
         public async Task BorraAsync(int idLinea, string usuario)
