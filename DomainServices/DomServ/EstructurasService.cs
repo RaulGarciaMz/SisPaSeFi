@@ -162,20 +162,20 @@ namespace DomainServices.DomServ
         {
             return new EstructuraDto()
             { 
-                IdEstructura = e.id_estructura,
-                Clave = e.clave,
-                Coordenadas = e.coordenadas,
-                Descripcion = e.descripcion,
-                Estado = e.estado,
-                IdEstado = e.id_estado,
-                IdGerenciaDivision = e.id_GerenciaDivision,
-                IdLinea = e.id_linea,
-                IdMunicipio = e.id_municipio,
-                IdProcesoResponsable   = e.id_ProcesoResponsable,
+                intIdEstructura = e.id_estructura,
+                strClaveLinea = e.clave,
+                strCoordenadas = e.coordenadas,
+                strDescripcionLinea = e.descripcion,
+                strEstado = e.estado,
+                intIdEstado = e.id_estado,
+                intIdGerenciaDivision = e.id_GerenciaDivision,
+                intIdLinea = e.id_linea,
+                intIdMunicipio = e.id_municipio,
+                intIdProcesoResponsable   = e.id_ProcesoResponsable,
                 Latitud = e.latitud,
                 Longitud = e.longitud,
-                Municipio = e.municipio,
-                Nombre = e.nombre
+                strMunicipio = e.municipio,
+                strNombre = e.nombre
             };
         }
     }
