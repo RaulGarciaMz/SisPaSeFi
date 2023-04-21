@@ -10,7 +10,7 @@ namespace Domain.Ports.Driving
     public interface IIncidenciasDtoComand
     {
         Task AgregaIncidenciaAsync(IncidenciasDtoForCreate i);
-        Task ActualizaIncidenciaAsync(IncidenciasDtoForUpdate i);
+        Task ActualizaIncidenciaAsync(IncidenciasDtoForCreate i);
     }
 
     public interface IIncidenciasDtoQuery

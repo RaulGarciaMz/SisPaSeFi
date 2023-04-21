@@ -63,24 +63,24 @@ namespace DomainServices.DomServ
             return incids;
         }
 
-        public async Task ActualizaIncidenciaAsync(IncidenciasDtoForUpdate i)
+        public async Task ActualizaIncidenciaAsync(IncidenciasDtoForCreate i)
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(i.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(i.strUsuario);
 
             if (user != null)
             {
-                switch (i.TipoIncidencia)
+                switch (i.strTipoIncidencia)
                 {
                     case "INSTALACION":
-                        await _repo.ActualizaReporteEnInstalacionAsync(i.IdReporte, i.DescripcionIncidencia, i.PrioridadIncidencia, i.IdClasificacionIncidencia, i.EstadoIncidencia);
+                        await _repo.ActualizaReporteEnInstalacionAsync(i.intIdReporte, i.strDescripcionIncidencia, i.intIdPrioridadIncidencia, i.intIdClasificacionIncidencia, i.intIdEstadoIncidencia);
                         break;
                     case "ESTRUCTURA":
-                        await _repo.ActualizaReporteEnEstructuraAsync(i.IdReporte, i.DescripcionIncidencia, i.PrioridadIncidencia, i.IdClasificacionIncidencia, i.EstadoIncidencia);
+                        await _repo.ActualizaReporteEnEstructuraAsync(i.intIdReporte, i.strDescripcionIncidencia, i.intIdPrioridadIncidencia, i.intIdClasificacionIncidencia, i.intIdEstadoIncidencia);
                         break;
                 }
 
                 //TODO falta implementar la inserción en tarjetainformativa reporte
-                if (i.IdReporte > 0 && i.IdTarjeta > 0)
+                if (i.intIdReporte > 0 && i.intIdTarjeta > 0)
                 {
                     /*                    strInstruccionSQL = "INSERT INTO tarjetainformativareporte (idtarjeta,idreporte,idtiporeporte)
                                                                     SELECT " & objIncidencia.intIdTarjeta & "
@@ -97,12 +97,12 @@ namespace DomainServices.DomServ
 
         public async Task AgregaIncidenciaAsync(IncidenciasDtoForCreate i) 
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(i.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(i.strUsuario);
             int idReporte=-1;
 
             if (user != null)
             {
-                switch (i.TipoIncidencia)
+                switch (i.strTipoIncidencia)
                 {
                     case "INSTALACION":
                         idReporte = await AgregaIncidenciaDeInstalacion(i);
@@ -113,16 +113,16 @@ namespace DomainServices.DomServ
                 }
 
                 //TODO falta revisar si es correcta esta funcionalidad
-                if (idReporte != -1 && i.IdTarjeta > 0)
+                if (idReporte != -1 && i.intIdTarjeta > 0)
                 {
-                    await _repo.AgregaTarjetaInformativaReporteAsync(i.IdTarjeta, idReporte, i.TipoIncidencia);
+                    await _repo.AgregaTarjetaInformativaReporteAsync(i.intIdTarjeta, idReporte, i.strTipoIncidencia);
                 }
             }
         }
 
         private async Task<int> AgregaIncidenciaDeInstalacion(IncidenciasDtoForCreate i) 
         {
-            var abiertos = await _repo.ObtenerReportesAbiertosPorInstalacionAsync(i.Id, i.IdClasificacionIncidencia);
+            var abiertos = await _repo.ObtenerReportesAbiertosPorInstalacionAsync(i.intIdActivo, i.intIdClasificacionIncidencia);
             int idReporte = -1;
 
             if (abiertos != null)
@@ -131,15 +131,15 @@ namespace DomainServices.DomServ
                 {
                     case 0:
                         //No existe incidencia reportada
-                        var rnvo = await _repo.AgregaReporteInstalacionAsync(i.Id, i.IdNota, i.DescripcionIncidencia, i.EstadoIncidencia, i.PrioridadIncidencia, i.IdClasificacionIncidencia);
+                        var rnvo = await _repo.AgregaReporteInstalacionAsync(i.intIdActivo, i.intIdReporte, i.strDescripcionIncidencia, i.intIdEstadoIncidencia, i.intIdPrioridadIncidencia, i.intIdClasificacionIncidencia);
                         idReporte = rnvo.IdReportePunto;
                         break;
                     default:
                         // Ya existe incidencia reportada
                         idReporte = abiertos[0].id_reporte;
-                        var incidenciaActualizada = abiertos[0].incidencia + " / " + i.DescripcionIncidencia;
+                        var incidenciaActualizada = abiertos[0].incidencia + " / " + i.strDescripcionIncidencia;
 
-                        await _repo.ActualizaReporteEnInstalacionPorIncidenciaExistenteAsync(idReporte, incidenciaActualizada, i.PrioridadIncidencia);
+                        await _repo.ActualizaReporteEnInstalacionPorIncidenciaExistenteAsync(idReporte, incidenciaActualizada, i.intIdPrioridadIncidencia);
                         break;
                 }
             }
@@ -149,7 +149,7 @@ namespace DomainServices.DomServ
 
         private async Task<int> AgregaIncidenciaDeEstructura(IncidenciasDtoForCreate i)
         {
-            var abiertos = await _repo.ObtenerReportesAbiertosPorEstructuraAsync(i.Id, i.IdClasificacionIncidencia);
+            var abiertos = await _repo.ObtenerReportesAbiertosPorEstructuraAsync(i.intIdActivo, i.intIdClasificacionIncidencia);
             int idReporte = -1;
 
             if (abiertos != null)
@@ -158,15 +158,15 @@ namespace DomainServices.DomServ
                 {
                     case 0:
                         //No existe incidencia reportada
-                        var rnvo = await _repo.AgregaReporteEstructuraAsync(i.Id, i.IdNota, i.DescripcionIncidencia, i.EstadoIncidencia, i.PrioridadIncidencia, i.IdClasificacionIncidencia);
+                        var rnvo = await _repo.AgregaReporteEstructuraAsync(i.intIdActivo, i.intIdReporte, i.strDescripcionIncidencia, i.intIdEstadoIncidencia, i.intIdPrioridadIncidencia, i.intIdClasificacionIncidencia);
                         idReporte = rnvo.IdReporte;
                         break;
                     default:
                         // Ya existe incidencia reportada
                         idReporte = abiertos[0].id_reporte;
-                        var incidenciaActualizada = abiertos[0].incidencia + " / " + i.DescripcionIncidencia;
+                        var incidenciaActualizada = abiertos[0].incidencia + " / " + i.strDescripcionIncidencia;
 
-                        await _repo.ActualizaReporteEnEstructuraPorIncidenciaExistenteAsync(idReporte, incidenciaActualizada, i.PrioridadIncidencia);
+                        await _repo.ActualizaReporteEnEstructuraPorIncidenciaExistenteAsync(idReporte, incidenciaActualizada, i.intIdPrioridadIncidencia);
                         break;
                 }
             }

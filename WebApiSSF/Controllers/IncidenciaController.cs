@@ -78,7 +78,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al agregar incidencia para el reporte/punto: {v.Id}, tipo: {v.TipoIncidencia}, usuario: {v.Usuario}", ex);
+                _log.LogError($"error al agregar incidencia para el reporte/punto: {v.intIdActivo}, tipo: {v.strTipoIncidencia}, usuario: {v.strUsuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -86,14 +86,13 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza una incidencia
         /// </summary>
-        /// <param name="id">Identificador del reporte de incidencia</param>
         /// <param name="v">Incidencia a actualizar</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> Put(int id, [FromBody] IncidenciasDtoForUpdate v)
+        public async Task<ActionResult> Put([FromBody] IncidenciasDtoForCreate v)
         {
             try
             {
@@ -102,7 +101,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al actualizar incidencia de tipoo: {v.TipoIncidencia}, reporte/punto: {v.IdReporte}, usuario: {v.Usuario}", ex);
+                _log.LogError($"error al actualizar incidencia de tipoo: {v.strTipoIncidencia}, reporte/punto: {v.intIdReporte}, usuario: {v.strUsuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
