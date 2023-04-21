@@ -28,7 +28,7 @@ namespace WebApiSSF.Controllers
         /// Obtiene las evidencias de acuerdo a los parámetros indicados
         /// </summary>
         /// <param name="idReporte">Identificador del reporte</param>
-        /// <param name="tipo">Tipo de incidencia ("INSTALACION" o "ESTRUCTURA")</param>
+        /// <param name="opcion">Tipo de incidencia ("INSTALACION" o "ESTRUCTURA")</param>
         /// <param name="usuario">Usuario (alias o usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [HttpGet]
@@ -36,11 +36,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<EvidenciaVista>>> Get([Required]int idReporte, [Required] string tipo, [Required] string usuario)
+        public async Task<ActionResult<IEnumerable<EvidenciaVista>>> Get([Required]int idReporte, [Required] string opcion, [Required] string usuario)
         {
             try
             {
-                var evidencias = await _pp.ObtenerEvidenciasPorTipo(idReporte, tipo, usuario);
+                var evidencias = await _pp.ObtenerEvidenciasPorTipo(idReporte, opcion, usuario);
 
                 if (evidencias == null || evidencias.Count() == 0) 
                 {
@@ -51,7 +51,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener evidencias del tipo: {tipo}, para el reporte: {idReporte}, usuario: {usuario}", ex);
+                _log.LogError($"error al obtener evidencias del tipo: {opcion}, para el reporte: {idReporte}, usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -73,7 +73,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al registrar una evidencia de tipo: {evidencia.TipoIncidencia} para el usuario: {evidencia.Usuario}", ex);
+                _log.LogError($"error al registrar una evidencia de tipo: {evidencia.strTipoIncidencia} para el usuario: {evidencia.strUsuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -81,23 +81,23 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Elimina evidencias acorde a los parámetros indicados
         /// </summary>
-        /// <param name="id">Identificador de la evidencia</param>
-        /// <param name="tipo">Tipo de la evidencia ("INSTALACION", "ESTRUCTURA")</param>
+        /// <param name="idEvidencia">Identificador de la evidencia</param>
+        /// <param name="tipoIncidencia">Tipo de la evidencia ("INSTALACION", "ESTRUCTURA")</param>
         /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete(int id, [Required] string tipo, [Required] string usuario)
+        public async Task<ActionResult> Delete(int idEvidencia, [Required] string tipoIncidencia, [Required] string usuario)
         {
             try
             {
-                await _pp.BorrarEvidenciaPorTipo(id, tipo, usuario);
+                await _pp.BorrarEvidenciaPorTipo(idEvidencia, tipoIncidencia, usuario);
                 return Ok();
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al eliminar la evidencia: {id}, de tipo: {tipo} para el usuario: {usuario}", ex);
+                _log.LogError($"error al eliminar la evidencia: {idEvidencia}, de tipo: {tipoIncidencia} para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

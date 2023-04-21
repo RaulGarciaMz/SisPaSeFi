@@ -25,17 +25,17 @@ namespace DomainServices.DomServ
 
         public async Task AgregarEvidenciaPorTipo(EvidenciaDto evidencia)
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(evidencia.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(evidencia.strUsuario);
 
             if (user != null) 
             {
-                switch(evidencia.TipoIncidencia) 
+                switch(evidencia.strTipoIncidencia) 
                 {
                     case "INSTALACION":
-                        await _repo.AgregarEvidenciaDeInstalacionAsync(evidencia.IdReporte, evidencia.RutaArchivo, evidencia.NombreArchivo, evidencia.Descripcion);
+                        await _repo.AgregarEvidenciaDeInstalacionAsync(evidencia.intIdReporte, evidencia.strRutaArchivo, evidencia.strNombreArchivo, evidencia.strDescripcion);
                         break;
                     case "ESTRUCTURA":
-                        await _repo.AgregarEvidenciaDeInstalacionAsync(evidencia.IdReporte, evidencia.RutaArchivo, evidencia.NombreArchivo, evidencia.Descripcion);
+                        await _repo.AgregarEvidenciaDeInstalacionAsync(evidencia.intIdReporte, evidencia.strRutaArchivo, evidencia.strNombreArchivo, evidencia.strDescripcion);
                         break;
                 }
             }            
@@ -68,10 +68,10 @@ namespace DomainServices.DomServ
             {
                 switch (tipo)
                 {
-                    case "INSTALACION":
+                    case "EvidenciaIncidenciaEnINSTALACION":
                         l = await _repo.ObtenerEvidenciaDeInstalacionAsync(idReporte);
                         break;
-                    case "ESTRUCTURA":
+                    case "EvidenciaIncidenciaEnESTRUCTURA":
                         l =await _repo.ObtenerEvidenciaDeEstructuraAsync(idReporte);
                         break;
                 }

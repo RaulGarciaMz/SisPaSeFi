@@ -8,26 +8,26 @@
         /// <summary>
         /// Nombre del usuario (alias o usuario_nom) q
         /// </summary>
-        public string Usuario { get; set; }
+        public string strUsuario { get; set; }
         /// <summary>
         /// Identificador del reporte
         /// </summary>
-        public int IdReporte { get; set; }
+        public int intIdReporte { get; set; }
         /// <summary>
         /// Ruta (path) del archivo de la evidencia
         /// </summary>
-        public string RutaArchivo { get; set; }
+        public string strRutaArchivo { get; set; }
         /// <summary>
         /// Nombre del archivo de evidencia
         /// </summary>
-        public string NombreArchivo { get; set; }
+        public string strNombreArchivo { get; set; }
         /// <summary>
         /// Descripción de la evidencia
         /// </summary>
-        public string Descripcion { get; set; }
+        public string strDescripcion { get; set; }
         /// <summary>
         /// Descripción del tipo de incidencia a la que se refiere la evidencia
         /// </summary>
-        public string TipoIncidencia { get; set; }
+        public string strTipoIncidencia { get; set; }
     }
 }
