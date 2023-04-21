@@ -29,18 +29,18 @@ namespace WebApiSSF.Controllers
         /// <param name="opcion">Tipo de personal participante en el patrullaje ("PersonalAsignado" o "PersonalNoAsignado")</param>
         /// <param name="idPrograma">Identificador del programa de patrullaje</param>
         /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la consulta</param>
-        /// <param name="region">Identificador de la región SSF a la que pertenece el patrullaje</param>
+        /// <param name="regionSSF">Identificador de la región SSF a la que pertenece el patrullaje</param>
         /// <returns></returns>
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<PersonalParticipanteVista>>> ObtenerPersonalParticipantePorOpcion([Required]string opcion, [Required] int idPrograma, [Required] string usuario, int region = 0)
+        public async Task<ActionResult<List<PersonalParticipanteVista>>> ObtenerPersonalParticipantePorOpcion([Required]string opcion, [Required] int idPrograma, [Required] string usuario, int regionSSF = 0)
         {
             try
             {
-                var user = await _pp.ObtenerPersonalParticipantePorOpcionAsync(opcion, idPrograma, region, usuario);
+                var user = await _pp.ObtenerPersonalParticipantePorOpcionAsync(opcion, idPrograma, regionSSF, usuario);
 
                 if (user == null)
                 {
@@ -56,7 +56,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener personal participante en el patrullaje: {idPrograma}, opción: {opcion}, usuario: {usuario}, region {region}", ex);
+                _log.LogError($"error al obtener personal participante en el patrullaje: {idPrograma}, opción: {opcion}, usuario: {usuario}, region {regionSSF}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -65,21 +65,23 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Agrega un usuario participante en un patrullaje
         /// </summary>
-        /// <param name="u"></param>
+        /// <param name="idPrograma">Identificador del programa de patrullaje</param>
+        /// <param name="u">Personal a agregar</param>
         /// <returns></returns>
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Agregar([FromBody] PersonalParticipanteDto u)
+        public async Task<ActionResult> Agregar([Required] int idPrograma, [FromBody] PersonalParticipanteDto u)
         {
             try
             {
+                u.IdPrograma = idPrograma;
                 await _pp.Agregar(u);
                 return Ok();
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener registrar personal participante en el patrullaje: {u.IdPrograma}, id del usuario: {u.IdUsuario}, usuario: {u.Usuario}", ex);
+                _log.LogError($"error al obtener registrar personal participante en el patrullaje: {u.IdPrograma}, id del usuario: {u.intIdUsuario}, usuario: {u.strNombreDeUsuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -103,7 +105,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al borrar personal participante en el patrullaje: {u.IdPrograma}, id del usuario: {u.IdUsuario}, usuario: {u.Usuario}", ex);
+                _log.LogError($"error al borrar personal participante en el patrullaje: {u.IdPrograma}, id del usuario: {u.intIdUsuario}, usuario: {u.strNombreDeUsuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

@@ -50,18 +50,18 @@ namespace DomainServices.DomServ
         public async Task Agregar(PersonalParticipanteDto u)
         {
             var l = new List<PersonalParticipanteVista>();
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(u.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(u.strNombreDeUsuario);
 
             if (user != null)
             {
 
-                var usAsignado = await _repo.ObtenerUsuarioPatrullajeAsignadoEnProgramaAsync(u.IdPrograma, u.IdUsuario);
+                var usAsignado = await _repo.ObtenerUsuarioPatrullajeAsignadoEnProgramaAsync(u.IdPrograma, u.intIdUsuario);
 
                 if (usAsignado != null)
                 {
                     if (usAsignado.Count() > 0)
                     {
-                        await _repo.AgregaUsuarioPatrullajeAsync(u.IdPrograma, u.IdUsuario);
+                        await _repo.AgregaUsuarioPatrullajeAsync(u.IdPrograma, u.intIdUsuario);
                     }
                 }
             }
@@ -70,11 +70,11 @@ namespace DomainServices.DomServ
         public async Task Borrar(PersonalParticipanteDto u)
         {
             var l = new List<PersonalParticipanteVista>();
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(u.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(u.strNombreDeUsuario);
 
             if (user != null)
             {
-                await _repo.BorraUsuarioPatrullajeAsync(u.IdPrograma, u.IdUsuario);
+                await _repo.BorraUsuarioPatrullajeAsync(u.IdPrograma, u.intIdUsuario);
             }
         }
     }

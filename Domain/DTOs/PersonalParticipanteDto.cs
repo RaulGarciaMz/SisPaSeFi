@@ -12,10 +12,10 @@
         /// <summary>
         /// Identificador del usuario participante en el patrullaje
         /// </summary>
-        public int IdUsuario { get; set; }
+        public int intIdUsuario { get; set; }
         /// <summary>
         /// Nombre del usuario (alias o usuario_nom) que realiza el registro
         /// </summary>
-        public string Usuario { get; set; }
+        public string strNombreDeUsuario { get; set; }
     }
 }
