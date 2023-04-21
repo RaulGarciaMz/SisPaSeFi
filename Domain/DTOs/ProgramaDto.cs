@@ -111,6 +111,83 @@
         public int ApoyoPatrullaje { get; set; }
     }
 
+    public class ProgramaDtoForCreateExtraordinario
+    {
+        /// <summary>
+        /// Nombre del usuario
+        /// </summary>
+        public string strUsuario { get; set; }
+        /// <summary>
+        /// Fecha del patrullaje
+        /// </summary>
+        public string strFechaPatrullaje { get; set; }
+        /// <summary>
+        /// Identificador de la ruta del programa de patrullaje
+        /// </summary>
+        public int intIdRuta { get; set; }
+        /// <summary>
+        /// Identificador de la ruta de patrullaje original solicitada para el programa de patrullaje
+        /// </summary>
+        public int intidrutaoriginal { get; set; }
+        /// <summary>
+        /// Identificador del punto de patrullaje responsable del programa de patrullaje
+        /// </summary>
+        public int intIdPuntoResponsable { get; set; }
+        /// <summary>
+        /// Identificador del nivel de riesgo del programa de patrullaje
+        /// </summary>
+        public string intIdRiesgoPatrullaje { get; set; }
+        /// <summary>
+        /// Identificador de la propuesta de patrullaje correspondiente al programa
+        /// </summary>
+        public int intidpropuestapatrullaje { get; set; }
+        /// <summary>
+        /// Indicador para conocer si se requiere apoyo para el programa de patrullaje
+        /// </summary>
+        public int intApoyoPatrullaje { get; set; }
+    }
+
+    public class ProgramaDtoForCreateWithListas
+    {
+        /// <summary>
+        /// Nombre del usuario
+        /// </summary>
+        public string strUsuario { get; set; }
+        /// <summary>
+        /// Fecha del patrullaje
+        /// </summary>
+        public string strFechaPatrullaje { get; set; }
+        /// <summary>
+        /// Identificador de la ruta del programa de patrullaje
+        /// </summary>
+        public int intIdRuta { get; set; }
+        /// <summary>
+        /// Identificador de la ruta de patrullaje original solicitada para el programa de patrullaje
+        /// </summary>
+        public int intidrutaoriginal { get; set; }
+        /// <summary>
+        /// Identificador del punto de patrullaje responsable del programa de patrullaje
+        /// </summary>
+        public int intIdPuntoResponsable { get; set; }
+        /// <summary>
+        /// Identificador del nivel de riesgo del programa de patrullaje
+        /// </summary>
+        public string intIdRiesgoPatrullaje { get; set; }
+        /// <summary>
+        /// Identificador de la propuesta de patrullaje correspondiente al programa
+        /// </summary>
+        public int intidpropuestapatrullaje { get; set; }
+        /// <summary>
+        /// Indicador para conocer si se requiere apoyo para el programa de patrullaje
+        /// </summary>
+        public int intApoyoPatrullaje { get; set; }
+
+        public string strFechaTermino { get; set; }
+        public List<string> lstPropuestasPatrullajesFechas { get; set; }
+        public List<int> lstPropuestasPatrullajesVehiculos { get; set; }
+        public List<int> lstPropuestasPatrullajesLineas { get; set; }
+    }
+
     /// <summary>
     /// Programa de patrullaje para actualización por inicio de patrullaje
     /// </summary>
