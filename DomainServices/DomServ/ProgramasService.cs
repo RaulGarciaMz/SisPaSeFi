@@ -168,7 +168,7 @@ namespace DomainServices.DomServ
             return patrullajesDto;
         }
 
-        public async Task AgregaPrograma(string opcion, string clase, ProgramaDto p, string usuario) 
+        public async Task AgregaPrograma(string opcion, string clase, ProgramaDtoForCreateWithListas p, string usuario) 
         {
             var user = await _repo.ObtenerUsuarioConfiguradorAsync(usuario);
 
@@ -194,7 +194,7 @@ namespace DomainServices.DomServ
                             default:
 
                                 await _repo.AgregaPropuestasFechasMultiplesAsync(ConvierteProgramaDtoToPropuestaDominio(p),
-                                                                      ConvierteStringFechaToDateTime(p.LstPropuestasPatrullajesFechas),
+                                                                      ConvierteStringFechaToDateTime(p.lstPropuestasPatrullajesFechas),
                                                                       clase, user.IdUsuario);
                                 break;
                         }
@@ -202,7 +202,7 @@ namespace DomainServices.DomServ
                     case "Programa":
 
                         var prog = ConvierteProgramaDtoToProgramaDominio(p);
-                        var fechas = ConvierteStringFechaToDateTime(p.LstPropuestasPatrullajesFechas);
+                        var fechas = ConvierteStringFechaToDateTime(p.lstPropuestasPatrullajesFechas);
                         await _repo.AgregaProgramaFechasMultiplesAsync(prog, fechas, user.IdUsuario);
 
                         break;
@@ -210,14 +210,14 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task AgregaPropuestasComoProgramas(List<ProgramaDto> p, string usuario)
+        public async Task AgregaPropuestasComoProgramas(List<ProgramaDtoForCreate> p, string usuario)
         {
             var userId = await _repo.ObtenerIdUsuarioAsync(usuario);
 
             if (EsUsuarioRegistrado(userId))
             {
                 var programas = new List<ProgramaPatrullaje>();
-                foreach (ProgramaDto prog in p)
+                foreach (ProgramaDtoForCreate prog in p)
                 {
                     programas.Add(ConvierteProgramaDtoToProgramaDominio(prog));
                 }
@@ -226,7 +226,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task ActualizaPropuestasComoProgramasActualizaPropuestas(List<ProgramaDto> p, string opcion, int accion, string usuario)
+        public async Task ActualizaPropuestasOrProgramasPorOpcionAndAccion(List<ProgramaDto> p, string opcion, int accion, string usuario)
         {
             var userId = await _repo.ObtenerIdUsuarioAsync(usuario);
 
@@ -239,7 +239,7 @@ namespace DomainServices.DomServ
 
                         foreach (ProgramaDto prog in p)
                         {
-                            var a = ConvierteProgramaDtoToProgramaDominio(prog);
+                            var a = ConvierteProgramaDtoForUpdateToProgramaDominio(prog);
                             lstProgramas.Add(a);
                         }
                         await _repo.ActualizaProgramasConPropuestasAsync(lstProgramas);
@@ -252,7 +252,7 @@ namespace DomainServices.DomServ
 
                         foreach (ProgramaDto prog in p)
                         {
-                            var a = ConvierteProgramaDtoToPropuestaDominio(prog);
+                            var a = ConvierteProgramaDtoForUpdateToPropuestaDominio(prog);
                             lstPropuestas.Add(a);
                         }
 
@@ -282,36 +282,36 @@ namespace DomainServices.DomServ
                 switch (opcion)
                 {
                     case "CambioRuta":
-                        await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.IdPrograma, p.IdRuta, userId);
+                        await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.intIdPrograma, p.intIdRuta, userId);
                         break;
 
                     case "InicioPatrullaje":
-                        TimeSpan ini = TimeSpan.Parse(p.Inicio);
-                        await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.IdPrograma, p.IdRiesgoPatrullaje, p.IdUsuario, p.IdEstadoPatrullaje, ini);
+                        TimeSpan ini = TimeSpan.Parse(p.strInicio);
+                        await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.intIdPrograma, p.intIdRiesgoPatrullaje, p.IdUsuario, p.intIdEstadoPatrullaje, ini);
                         break;
 
                     case "AutorizaPropuesta":
-                        await _repo.ActualizaPropuestaToAutorizadaAsync(p.IdPrograma);
+                        await _repo.ActualizaPropuestaToAutorizadaAsync(p.intIdPrograma);
                         break;
 
                     case "RegionalApruebaPropuesta":
-                        await _repo.ActualizaPropuestaToAprobadaComandanciaRegionalAsync(p.IdPrograma);
+                        await _repo.ActualizaPropuestaToAprobadaComandanciaRegionalAsync(p.intIdPrograma);
                         break;
 
                     case "RegistrarSolicitudOficioComision":
-                        await _repo.ActualizaProgramaRegistraSolicitudOficioComisionAsync(p.IdPrograma, p.SolicitudOficioComision);
+                        await _repo.ActualizaProgramaRegistraSolicitudOficioComisionAsync(p.intIdPrograma, p.strSolicitudOficio);
                         break;
 
                     case "RegistrarSolicitudOficioAutorizacion":
-                        await _repo.ActualizaPropuestaRegistraSolicitudOficioAutorizacionAsync(p.IdPrograma, p.SolicitudOficioComision);
+                        await _repo.ActualizaPropuestaRegistraSolicitudOficioAutorizacionAsync(p.intIdPrograma, p.strSolicitudOficio);
                         break;
 
                     case "RegistrarOficioComision":
-                        await _repo.ActualizaProgramaRegistraOficioComisionAsync(p.IdPrograma, p.OficioComision);
+                        await _repo.ActualizaProgramaRegistraOficioComisionAsync(p.intIdPrograma, p.strOficio);
                         break;
 
                     case "RegistrarOficioAutorizacion":
-                        await _repo.ActualizaPropuestaRegistraOficioAutorizacionAsync(p.IdPrograma, p.OficioComision);
+                        await _repo.ActualizaPropuestaRegistraOficioAutorizacionAsync(p.intIdPrograma, p.strOficio);
                         break;
                 }
             }
@@ -362,44 +362,44 @@ namespace DomainServices.DomServ
         private PatrullajeDto ConviertePatrullajeDominioToPatrullajeDto(PatrullajeVista p) 
         {
             return new PatrullajeDto(){
-                IdPrograma = p.id,
-                IdRuta = p.id_ruta,
-                Clave = p.clave,
-                DescripcionEstadoPatrullaje = p.descripcionestadopatrullaje,
-                DescripcionNivelRiesgo = p.descripcionnivel,
-                FechaPatrullaje = p.fechapatrullaje.ToString("yyyy-MM-dd"),
-                FechaTermino = p.fechatermino.ToString("yyyy-MM-dd"),
-                IdPuntoResponsable= p.id_puntoresponsable,
-                IdUsuario= p.id_usuario,
-                Itinerario=p.itinerario,
-                ObservacionesPrograma= p.observaciones,
-                ObservacionesRuta= p.observacionesruta,
-                OficioComision=p.oficiocomision,
-                RegionMilitarSDN= Int32.Parse(p.regionmilitarsdn),
-                RegionSSF= Int32.Parse(p.regionssf),
-                SolicitudOficioComision=p.solicitudoficiocomision,
-                UltimaActualizacion= p.ultimaactualizacion.ToString("yyyy-MM-dd"),
-                UsuarioResponsablePatrullaje=p.id_usuarioresponsablepatrullaje,
-                Inicio= p.inicio.ToString()
+                intIdPrograma = p.id,
+                intIdRuta = p.id_ruta,
+                strClave = p.clave,
+                strDescripcionEstadoPatrullaje = p.descripcionestadopatrullaje,
+                strDescripcionNivelRiesgo = p.descripcionnivel,
+                strFechaPatrullaje = p.fechapatrullaje.ToString("yyyy-MM-dd"),
+                strFechaTermino = p.fechatermino.ToString("yyyy-MM-dd"),
+                intIdPuntoResponsable= p.id_puntoresponsable,
+                intIdUsuario= p.id_usuario,
+                strItinerario=p.itinerario,
+                strObservacionesPrograma= p.observaciones,
+                strObservacionesRuta= p.observacionesruta,
+                strOficio=p.oficiocomision,
+                intRegionMilitarSDN= Int32.Parse(p.regionmilitarsdn),
+                intRegionSSF= Int32.Parse(p.regionssf),
+                strSolicitudOficio=p.solicitudoficiocomision,
+                strUltimaActualizacion= p.ultimaactualizacion.ToString("yyyy-MM-dd"),
+                intUsuarioResponsablePatrullaje=p.id_usuarioresponsablepatrullaje,
+                strInicio= p.inicio.ToString()
             };
         }
 
-        private ProgramaPatrullaje ConvierteProgramaDtoToProgramaDominio(ProgramaDto p) 
+        private ProgramaPatrullaje ConvierteProgramaDtoToProgramaDominio(ProgramaDtoForCreate p) 
         {
             var pp = new ProgramaPatrullaje()
             {
                 UltimaActualizacion = DateTime.UtcNow,
-                IdRuta = p.IdRuta,            
-                IdUsuario = p.IdUsuario,
-                IdPuntoResponsable = p.IdPuntoResponsable,
-                Observaciones = p.ObservacionesPrograma,
-                IdApoyoPatrullaje = p.ApoyoPatrullaje,
-                RiesgoPatrullaje = Int32.Parse(p.IdRiesgoPatrullaje),
-                IdPropuestaPatrullaje = p.IdPropuestaPatrullaje                
+                IdRuta = p.intIdRuta,            
+                //IdUsuario = p.IdUsuario,
+                IdPuntoResponsable = p.intIdPuntoResponsable,
+                //Observaciones = p.ObservacionesPrograma,
+                IdApoyoPatrullaje = p.intApoyoPatrullaje,
+                RiesgoPatrullaje = Int32.Parse(p.intIdRiesgoPatrullaje),
+                IdPropuestaPatrullaje = p.intidpropuestapatrullaje                
             };
 
             DateTime dateValue;
-            if (DateTime.TryParse(p.FechaPatrullaje, out dateValue))
+            if (DateTime.TryParse(p.strFechaPatrullaje, out dateValue))
             {
                 pp.FechaPatrullaje = dateValue;
             }
@@ -407,12 +407,58 @@ namespace DomainServices.DomServ
             return pp;
         }
 
-        private List<PropuestaPatrullajeVehiculo> ConvierteListaVehiculosDtoToVehiculosDomain(ProgramaDto p) 
+        private ProgramaPatrullaje ConvierteProgramaDtoToProgramaDominio(ProgramaDtoForCreateWithListas p)
+        {
+            var pp = new ProgramaPatrullaje()
+            {
+                UltimaActualizacion = DateTime.UtcNow,
+                IdRuta = p.intIdRuta,
+                //IdUsuario = p.IdUsuario,
+                IdPuntoResponsable = p.intIdPuntoResponsable,
+                //Observaciones = p.ObservacionesPrograma,
+                IdApoyoPatrullaje = p.intApoyoPatrullaje,
+                RiesgoPatrullaje = Int32.Parse(p.intIdRiesgoPatrullaje),
+                IdPropuestaPatrullaje = p.intidpropuestapatrullaje
+            };
+
+            DateTime dateValue;
+            if (DateTime.TryParse(p.strFechaPatrullaje, out dateValue))
+            {
+                pp.FechaPatrullaje = dateValue;
+            }
+
+            return pp;
+        }
+
+        private ProgramaPatrullaje ConvierteProgramaDtoForUpdateToProgramaDominio(ProgramaDto p)
+        {
+            var pp = new ProgramaPatrullaje()
+            {
+                UltimaActualizacion = DateTime.UtcNow,
+                IdRuta = p.intIdRuta,
+                IdUsuario = p.IdUsuario,
+                IdPuntoResponsable = p.intIdPuntoResponsable,
+                Observaciones = p.ObservacionesPrograma,
+                IdApoyoPatrullaje = p.intApoyoPatrullaje,
+                RiesgoPatrullaje = Int32.Parse(p.intIdRiesgoPatrullaje),
+                IdPropuestaPatrullaje = p.intidpropuestapatrullaje
+            };
+
+            DateTime dateValue;
+            if (DateTime.TryParse(p.strFechaPatrullaje, out dateValue))
+            {
+                pp.FechaPatrullaje = dateValue;
+            }
+
+            return pp;
+        }
+
+        private List<PropuestaPatrullajeVehiculo> ConvierteListaVehiculosDtoToVehiculosDomain(ProgramaDtoForCreateWithListas p) 
         {
         
             var lstVehiculos = new List<PropuestaPatrullajeVehiculo>();
 
-            foreach (var item in p.LstPropuestasPatrullajesVehiculos)
+            foreach (var item in p.lstPropuestasPatrullajesVehiculos)
             {
                 var pv = new PropuestaPatrullajeVehiculo() 
                 { 
@@ -425,12 +471,12 @@ namespace DomainServices.DomServ
             return lstVehiculos;
         }
 
-        private List<PropuestaPatrullajeLinea> ConvierteListaLineasDtoToLineasDomain(ProgramaDto p)
+        private List<PropuestaPatrullajeLinea> ConvierteListaLineasDtoToLineasDomain(ProgramaDtoForCreateWithListas p)
         {
 
             var lstLineas = new List<PropuestaPatrullajeLinea>();
 
-            foreach (var item in p.LstPropuestasPatrullajesLineas)
+            foreach (var item in p.lstPropuestasPatrullajesLineas)
             {
                 var pv = new PropuestaPatrullajeLinea()
                 {
@@ -443,21 +489,43 @@ namespace DomainServices.DomServ
             return lstLineas;
         }
         
-        private PropuestaPatrullaje ConvierteProgramaDtoToPropuestaDominio(ProgramaDto p)
+        private PropuestaPatrullaje ConvierteProgramaDtoToPropuestaDominio(ProgramaDtoForCreateWithListas p)
         {
             var pp = new PropuestaPatrullaje()
             {
                 UltimaActualizacion = DateTime.UtcNow,
-                IdRuta = p.IdRuta,
-                IdUsuario = p.IdUsuario,
-                IdPuntoResponsable = p.IdPuntoResponsable,
-                Observaciones = p.ObservacionesPrograma,
-                IdApoyoPatrullaje = p.ApoyoPatrullaje,
-                RiesgoPatrullaje = Int32.Parse(p.IdRiesgoPatrullaje),
+                IdRuta = p.intIdRuta,
+//                IdUsuario = p.IdUsuario,
+                IdPuntoResponsable = p.intIdPuntoResponsable,
+                //Observaciones = p.ObservacionesPrograma,
+                IdApoyoPatrullaje = p.intApoyoPatrullaje,
+                RiesgoPatrullaje = Int32.Parse(p.intIdRiesgoPatrullaje),
             };
 
             DateTime dateValue;
-            if (DateTime.TryParse(p.FechaPatrullaje, out dateValue))
+            if (DateTime.TryParse(p.strFechaPatrullaje, out dateValue))
+            {
+                pp.FechaPatrullaje = dateValue;
+            }
+
+            return pp;
+        }
+
+        private PropuestaPatrullaje ConvierteProgramaDtoForUpdateToPropuestaDominio(ProgramaDto p)
+        {
+            var pp = new PropuestaPatrullaje()
+            {
+                UltimaActualizacion = DateTime.UtcNow,
+                IdRuta = p.intIdRuta,
+                IdUsuario = p.IdUsuario,
+                IdPuntoResponsable = p.intIdPuntoResponsable,
+                Observaciones = p.ObservacionesPrograma,
+                IdApoyoPatrullaje = p.intApoyoPatrullaje,
+                RiesgoPatrullaje = Int32.Parse(p.intIdRiesgoPatrullaje),
+            };
+
+            DateTime dateValue;
+            if (DateTime.TryParse(p.strFechaPatrullaje, out dateValue))
             {
                 pp.FechaPatrullaje = dateValue;
             }

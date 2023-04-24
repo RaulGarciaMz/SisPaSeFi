@@ -11,11 +11,11 @@ namespace Domain.Ports.Driving
 {
     public interface IProgramaDtoCommand
     {
-        Task AgregaPrograma(string opcion, string clase, ProgramaDto p, string usuario);
-        Task AgregaPropuestasComoProgramas(List<ProgramaDto> p, string usuario);
+        Task AgregaPrograma(string opcion, string clase, ProgramaDtoForCreateWithListas p, string usuario);
+        Task AgregaPropuestasComoProgramas(List<ProgramaDtoForCreate> p, string usuario);
 
         Task ActualizaProgramasOrPropuestasPorOpcion(ProgramaDtoForUpdatePorOpcion p, string opcion, string usuario);
-        Task ActualizaPropuestasComoProgramasActualizaPropuestas(List<ProgramaDto> p, string opcion, int accion, string usuario);
+        Task ActualizaPropuestasOrProgramasPorOpcionAndAccion(List<ProgramaDto> p, string opcion, int accion, string usuario);
         Task ActualizaProgramaPorCambioDeRuta(ProgramaDtoForUpdateRuta p, string usuario);
         Task ActualizaProgramasPorInicioPatrullajeAsync(ProgramaDtoForUpdateInicio p, string usuario);
         Task DeletePropuesta(int id, string usuario);

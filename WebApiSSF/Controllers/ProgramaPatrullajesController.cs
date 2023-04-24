@@ -73,12 +73,12 @@ namespace WebApiSSF.Controllers
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
         /// <param name="p">Programa de patrullaje a registrar</param>
         /// <returns></returns>   
-        [Route("programas")]
+        //[Route("programas")]
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PostPrograma([Required] string opcion,  [Required] string clase,  [Required] string usuario, [FromBody] ProgramaDto p)
+        public async Task<ActionResult> PostProgramaOrPropuesta([Required] string opcion,  [Required] string clase,  [Required] string usuario, [FromBody] ProgramaDtoForCreateWithListas p)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PostPropuestas([Required] string usuario, [FromBody] List<ProgramaDto> p)
+        public async Task<ActionResult> PostPropuestas([Required] string usuario, [FromBody] List<ProgramaDtoForCreate> p)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace WebApiSSF.Controllers
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
         /// <param name="p">Programa o propuesta a actualizar acorde a la opción indicada</param>
         /// <returns></returns>
-        [HttpPut("{usuario}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -132,12 +132,62 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.ActualizaProgramasOrPropuestasPorOpcion(p, opcion,usuario);
+                await _pp.ActualizaProgramasOrPropuestasPorOpcion(p, opcion, usuario);
                 return Ok();
             }
             catch (Exception ex)
             {
                 _log.LogError($"error al actualizar un programa o propuesta por opción: {opcion}, usuario: {usuario} ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+  
+        /// <summary>
+        /// Actualiza el estado de una propuesta o programa de patrullaje
+        /// </summary>
+        /// <param name="opcion">Tipo de elemento a actualizar ("Propuesta" o "Programa")</param>
+        /// <param name="accion">Tipo de acción a realizar 2 - Rechazar propuestas autorizadas, 3 - Cambiar propuestas aprobadas por comandancia a Pendiente de aprobación , 4 - Cambiar de propuesta autorizada a pendiente de autorización por SSF</param>
+        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <param name="p">Propuesta de patrullaje</param>
+        /// <returns></returns>        
+        [HttpPut("propuestas")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> PutPropuestasToProgramas([Required] string opcion, [FromQuery] int accion, [Required] string usuario, [FromBody] List<ProgramaDto> p)
+        {
+            try
+            {
+                await _pp.ActualizaPropuestasOrProgramasPorOpcionAndAccion(p, opcion, accion, usuario);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"error al actualizar una propuesta como programa para el usuario: {usuario}, opcion: {opcion}, acción: {accion} ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+            }
+        }
+
+        /// <summary>
+        /// Elimina una propuesta de patrullaje
+        /// </summary>
+        /// <param name="id">Identificador de la propuesta a eliminar</param>
+        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Delete([Required] int id, [Required] string usuario)
+        {
+            try
+            {
+                await _pp.DeletePropuesta(id, usuario);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"error al eliminar la propuesta id: {id} para el usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -190,53 +240,5 @@ namespace WebApiSSF.Controllers
             }
         }
 
-        /// <summary>
-        /// Actualiza el estado de una propuesta o programa de patrullaje
-        /// </summary>
-        /// <param name="opcion">Tipo de elemento a actualizar ("Propuesta" o "Programa")</param>
-        /// <param name="accion">Tipo de acción a realizar 2 - Rechazar propuestas autorizadas, 3 - Cambiar propuestas aprobadas por comandancia a Pendiente de aprobación , 4 - Cambiar de propuesta autorizada a pendiente de autorización por SSF</param>
-        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
-        /// <param name="p">Propuesta de patrullaje</param>
-        /// <returns></returns>        
-        [HttpPut("{usuario}/propuestas")]
-        [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PutPropuestasToProgramas([Required] string opcion, [FromQuery] int accion, [Required] string usuario, [FromBody] List<ProgramaDto> p)
-        {
-            try
-            {
-                await _pp.ActualizaPropuestasComoProgramasActualizaPropuestas(p, opcion, accion, usuario);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _log.LogError($"error al actualizar una propuesta como programa para el usuario: {usuario}, opcion: {opcion}, acción: {accion} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
-            }
-        }
-
-        /// <summary>
-        /// Elimina una propuesta de patrullaje
-        /// </summary>
-        /// <param name="id">Identificador de la propuesta a eliminar</param>
-        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
-        /// <returns></returns>
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete([Required] int id, [Required] string usuario)
-        {
-            try
-            {
-                await _pp.DeletePropuesta(id, usuario);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _log.LogError($"error al eliminar la propuesta id: {id} para el usuario: {usuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
-            }
-        }
     }
 }
