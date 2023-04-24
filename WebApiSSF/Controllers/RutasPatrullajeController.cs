@@ -83,15 +83,14 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza una ruta de patrullaje
         /// </summary>
-        /// <param name="id">Identificador de la ruta de patrullaje a actualizar</param>
         /// <param name="usuario">Nombre del usuario que realiza la actualización de la ruta de patrullaje</param>
         /// <param name="r">Ruta de patrullaje con los datos a actualizar</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> PutValue([Required] int id, [Required] string usuario, [FromBody] RutaDto r)
+        public async Task<ActionResult> PutValue([Required] string usuario, [FromBody] RutaDto r)
         {
             try
             {
@@ -100,7 +99,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al actualizar la ruta con id: {id} para el usuario: {usuario}", ex);
+                _log.LogError($"error al actualizar la ruta con id: {r.intIdRuta} para el usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }            
         }
@@ -111,7 +110,7 @@ namespace WebApiSSF.Controllers
         /// <param name="id">Identificador de la ruta de patrullaje</param>
         /// <param name="usuario">Nombre del usuario que elimina la ruta de patrullaje</param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> DeleteValue([Required] int id, [Required] string usuario)

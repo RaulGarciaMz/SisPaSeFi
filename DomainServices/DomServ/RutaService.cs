@@ -31,17 +31,17 @@ namespace DomainServices.DomServ
         {
             if (await EsUsuarioConfigurador(usuario))
             {
-                if (await ExisteItinerarioConfiguradoEnRegionesZona(pp.IdTipoPatrullaje, pp.RegionSSF, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, pp.Itinerario))
+                if (await ExisteItinerarioConfiguradoEnRegionesZona(pp.intIdTipoPatrullaje, pp.intRegionSSF, pp.intRegionMilitarSDN, pp.intZonaMilitarSDN, pp.strItinerario))
                 {
                     return;
                 }
 
-                int totalRutas = await CalculaTotalRutas(pp.IdTipoPatrullaje, pp.RegionMilitarSDN);
-                pp.Clave = await GeneraClaveRuta(pp.IdTipoPatrullaje, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, totalRutas);
-                pp.TotalRutasRegionMilitarSDN = totalRutas;
+                int totalRutas = await CalculaTotalRutas(pp.intIdTipoPatrullaje, pp.intRegionMilitarSDN);
+                pp.strClave = await GeneraClaveRuta(pp.intIdTipoPatrullaje, pp.intRegionMilitarSDN, pp.intZonaMilitarSDN, totalRutas);
+                pp.intTotalRutasRegionMilitarSDN = totalRutas;
 
                 var rp = ConvierteRutaDto(pp);
-                var itinerarios = ConvierteRecorridosAItinearios(pp.Recorridos);
+                var itinerarios = ConvierteRecorridosAItinearios(pp.objRecorridoRuta);
 
                 await _repo.AgregaAsync(rp, itinerarios);
             }
@@ -54,20 +54,20 @@ namespace DomainServices.DomServ
         {
             if (await EsUsuarioConfigurador(usuario))
             {
-                if (await ExisteRutaConMismaClave(pp.IdRuta, pp.Clave))
+                if (await ExisteRutaConMismaClave(pp.intIdRuta, pp.strClave))
                 {
                     return;
                 }
 
-                if (await ExisteItinerarioConfiguradoEnOtraRuta(pp.IdTipoPatrullaje, pp.RegionSSF, pp.RegionMilitarSDN, pp.ZonaMilitarSDN, pp.IdRuta, pp.Itinerario))
+                if (await ExisteItinerarioConfiguradoEnOtraRuta(pp.intIdTipoPatrullaje, pp.intRegionSSF, pp.intRegionMilitarSDN, pp.intZonaMilitarSDN, pp.intIdRuta, pp.strItinerario))
                 {
                     return;
                 }
 
-                int totalRutas = await CalculaTotalRutas(pp.IdTipoPatrullaje, pp.RegionMilitarSDN);
+                int totalRutas = await CalculaTotalRutas(pp.intIdTipoPatrullaje, pp.intRegionMilitarSDN);
                 var strClave = await AsignaClaveRuta(pp, totalRutas);
 
-                pp.Clave = strClave;
+                pp.strClave = strClave;
 
                 var rp = ConvierteRutaDto(pp);
 
@@ -174,18 +174,18 @@ namespace DomainServices.DomServ
 
                     var miruta = new RutaDto()
                     {
-                       IdRuta = item.id_ruta,
-                       Clave = item.clave,  
-                       RegionMilitarSDN = item.regionMilitarSDN,
-                       RegionSSF= item.regionSSF,   
-                       ZonaMilitarSDN= item.zonaMilitarSDN,
-                       Observaciones = item.observaciones,  
-                       ConsecutivoRegionMilitarSDN= item.consecutivoRegionMilitarSDN,
-                       TotalRutasRegionMilitarSDN = item.totalRutasRegionMilitarSDN,
-                       Bloqueado = item.bloqueado,
-                       Itinerario = item.itinerarioruta,
-                       Habilitado= item.habilitado,
-                       IdTipoPatrullaje = item.id_tipopatrullaje
+                       intIdRuta = item.id_ruta,
+                       strClave = item.clave,  
+                       intRegionMilitarSDN = item.regionMilitarSDN,
+                       intRegionSSF= item.regionSSF,   
+                       intZonaMilitarSDN= item.zonaMilitarSDN,
+                       strObservaciones = item.observaciones,  
+                       intConsecutivoRegionMilitarSDN= item.consecutivoRegionMilitarSDN,
+                       intTotalRutasRegionMilitarSDN = item.totalRutasRegionMilitarSDN,
+                       intBloqueado = item.bloqueado,
+                       strItinerario = item.itinerarioruta,
+                       intHabilitado= item.habilitado,
+                       intIdTipoPatrullaje = item.id_tipopatrullaje
                     };
 
                     if(item.itinerariorutapatrullaje.Length > 0) 
@@ -198,16 +198,16 @@ namespace DomainServices.DomServ
                             var datosPtos = strPto.Split("¦");
                             var reco = new RecorridoDto() 
                             {
-                                Posicion = Int32.Parse(datosPtos[0]),
-                                Ubicacion = datosPtos[1],
-                                Coordenadas = datosPtos[2],
-                                IdItinerario = Int32.Parse(datosPtos[3]),
-                                IdPunto = Int32.Parse(datosPtos[4])
+                                intPosicion = Int32.Parse(datosPtos[0]),
+                                strUbicacion = datosPtos[1],
+                                strCoordenadas = datosPtos[2],
+                                intIdItinerario = Int32.Parse(datosPtos[3]),
+                                intIdPunto = Int32.Parse(datosPtos[4])
                             };
 
                             itinPat.Add(reco);
                         }
-                         miruta.Recorridos = itinPat;
+                         miruta.objRecorridoRuta = itinPat;
                     }
 
 
@@ -325,12 +325,12 @@ namespace DomainServices.DomServ
         /// </summary>
         private async Task<string> AsignaClaveRuta(RutaDto pp, int totalRutas)
         {
-            var clave = await GeneraPrefijoClave(pp.IdTipoPatrullaje, totalRutas);
+            var clave = await GeneraPrefijoClave(pp.intIdTipoPatrullaje, totalRutas);
 
-            var strClave = clave + "-" + ConvierteARomano(pp.RegionMilitarSDN) + "-" + pp.ZonaMilitarSDN;
-            if ((Strings.Left(pp.Clave, strClave.Length) ?? "") == (strClave ?? ""))
+            var strClave = clave + "-" + ConvierteARomano(pp.intRegionMilitarSDN) + "-" + pp.intZonaMilitarSDN;
+            if ((Strings.Left(pp.strClave, strClave.Length) ?? "") == (strClave ?? ""))
             {
-                strClave = pp.Clave;
+                strClave = pp.strClave;
             }
             else
             {
@@ -415,8 +415,8 @@ namespace DomainServices.DomServ
             {
                 var iti = new Itinerario()
                 {
-                    IdPunto = reco.IdPunto,
-                    Posicion = reco.Posicion
+                    IdPunto = reco.intIdPunto,
+                    Posicion = reco.intPosicion
                 };
                 itinerarios.Add(iti);
             }
@@ -431,14 +431,14 @@ namespace DomainServices.DomServ
         {
             return new Ruta()
             {
-                Clave = r.Clave,
-                RegionMilitarSdn = r.RegionMilitarSDN,
-                RegionSsf = r.RegionSSF,
-                IdTipoPatrullaje = r.IdTipoPatrullaje,
-                Bloqueado = r.Bloqueado,
-                ZonaMilitarSdn = r.ZonaMilitarSDN,
-                Observaciones = r.Observaciones,
-                Habilitado = r.Habilitado
+                Clave = r.strClave,
+                RegionMilitarSdn = r.intRegionMilitarSDN,
+                RegionSsf = r.intRegionSSF,
+                IdTipoPatrullaje = r.intIdTipoPatrullaje,
+                Bloqueado = r.intBloqueado,
+                ZonaMilitarSdn = r.intZonaMilitarSDN,
+                Observaciones = r.strObservaciones,
+                Habilitado = r.intHabilitado
             };
         }
     }

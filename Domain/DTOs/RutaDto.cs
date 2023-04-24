@@ -8,59 +8,59 @@
         /// <summary>
         /// Identificador de la ruta de patrullaje
         /// </summary>
-        public int IdRuta { get; set; }
+        public int intIdRuta { get; set; }
         /// <summary>
         /// Clave de la ruta de patrullaje
         /// </summary>
-        public string Clave { get; set; }
+        public string strClave { get; set; }
         /// <summary>
         /// Región militar de SDN de la ruta de patrullaje
         /// </summary>
-        public string RegionMilitarSDN { get; set; }
+        public string intRegionMilitarSDN { get; set; }
         /// <summary>
         /// Región SSF de la ruta de patrullaje
         /// </summary>
-        public string RegionSSF { get; set; }
+        public string intRegionSSF { get; set; }
         /// <summary>
         /// Identificador del tipo de patrullaje
         /// </summary>
-        public int IdTipoPatrullaje { get; set; }
+        public int intIdTipoPatrullaje { get; set; }
         /// <summary>
         /// Indicador del estado (bloqueado o desbloqueado) del registro de la ruta
         /// </summary>
-        public int Bloqueado { get; set; }
+        public int intBloqueado { get; set; }
         /// <summary>
         /// Indicador de la zona miklitar de la ruta de patrullaje
         /// </summary>
-        public int ZonaMilitarSDN { get; set; }
+        public int intZonaMilitarSDN { get; set; }
         /// <summary>
         /// Observaciones de la ruta de patrullaje
         /// </summary>
-        public string Observaciones { get; set; }
+        public string strObservaciones { get; set; }
         /// <summary>
         /// Consecutivo de la región militar SDN de la ruta de patrullaje
         /// </summary>
-        public int ConsecutivoRegionMilitarSDN { get; set; }
+        public int intConsecutivoRegionMilitarSDN { get; set; }
         /// <summary>
         /// Cantidad de rutas en la región militar SDN de la ruta de patrullaje
         /// </summary>
-        public int TotalRutasRegionMilitarSDN { get; set; }
+        public int intTotalRutasRegionMilitarSDN { get; set; }
         /// <summary>
         /// Fecha de la última actualización del registro de la ruta de patrullaje
         /// </summary>
-        public string UltimaActualizacion { get; set; }
+        public string strUltimaActualizacion { get; set; }
         /// <summary>
         /// Indicador del estado (habilitado o deshabilitado) del registro de la ruta de patrullaje
         /// </summary>
-        public int Habilitado { get; set; }
+        public int intHabilitado { get; set; }
         /// <summary>
         /// Descripción del itinerario de la ruta de patrullaje
         /// </summary>
-        public string Itinerario { get; set; }
+        public string strItinerario { get; set; }
         /// <summary>
         /// Lista de recorridos de la ruta de patrullaje
         /// </summary>
-        public List<RecorridoDto> Recorridos { get; set; }
+        public List<RecorridoDto> objRecorridoRuta { get; set; }
     }
 
     /// <summary>
@@ -71,22 +71,22 @@
         /// <summary>
         /// Identificador del itinerario al que pertenece el recorrido
         /// </summary>
-        public int IdItinerario { get; set; }
+        public int intIdItinerario { get; set; }
         /// <summary>
         /// Identificador del punto de patrullaje incluido en el recorrido
         /// </summary>
-        public int IdPunto { get; set; }
+        public int intIdPunto { get; set; }
         /// <summary>
         /// Indicador del orden o secuencia del recorrido en una ruta
         /// </summary>
-        public int Posicion { get; set; }
+        public int intPosicion { get; set; }
         /// <summary>
         /// Descripción de la ubicación del recorrido
         /// </summary>
-        public string Ubicacion { get; set; }
+        public string strUbicacion { get; set; }
         /// <summary>
         /// Coordenadas X, Y del recorrido
         /// </summary>
-        public string Coordenadas { get; set; }
+        public string strCoordenadas { get; set; }
     }
 }
