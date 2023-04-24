@@ -122,7 +122,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al actualizar la tarjeta informativa con id: {id}, para el usuario: {usuario} ", ex);
+                _log.LogError($"error al actualizar la tarjeta informativa con id de nota: {tarjeta.intIdNota}, para el usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
