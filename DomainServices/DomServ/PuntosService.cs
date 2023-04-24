@@ -159,26 +159,26 @@ namespace DomainServices.DomServ
         /// </summary>
         private PuntoPatrullaje ConvierteDtoToDominio(PuntoDto p)
         {
-            var coor = p.coordenadas.Trim();
-            var coorXY = p.coordenadas.Split(",");
+            var coor = p.strCoordenadas.Trim();
+            var coorXY = p.strCoordenadas.Split(",");
             var lat = coorXY[0].Trim();
             var longi = coorXY[1].Trim();
 
             return new PuntoPatrullaje
             {
-                IdPunto = p.id_punto,
-                Ubicacion = p.ubicacion,
+                IdPunto = p.intIdPunto,
+                Ubicacion = p.strUbicacion,
                 Coordenadas = coor,
-                EsInstalacion = p.esInstalacion,
-                IdNivelRiesgo = p.id_nivelRiesgo,
-                IdComandancia = p.id_comandancia,
-                IdProcesoResponsable = p.id_ProcesoResponsable,
-                IdGerenciaDivision = p.id_GerenciaDivision,
-                Bloqueado = p.bloqueado,
+                EsInstalacion = p.intEsInstalacion,
+                IdNivelRiesgo = p.intIdNivelRiesgo,
+                IdComandancia = p.intIdComandancia,
+                IdProcesoResponsable = p.intIdProcesoResponsable,
+                IdGerenciaDivision = p.intIdGerenciaDivision,
+                Bloqueado = p.intBloqueado,
                 Latitud =  lat,
                 Longitud = longi,
-                IdMunicipio = p.id_municipio,
-                IdUsuario= p.id_usuario
+                IdMunicipio = p.intIdMunicipio,
+                IdUsuario= p.intIdUsuario
             };
         }
 
@@ -189,21 +189,21 @@ namespace DomainServices.DomServ
         {
             return new PuntoDto
             {
-                id_punto = p.IdPunto,
-                ubicacion = p.Ubicacion,
-                coordenadas = p.Coordenadas.Trim(),
-                esInstalacion = p.EsInstalacion,
-                id_nivelRiesgo = p.IdNivelRiesgo,
-                id_comandancia = p.IdComandancia,
-                id_ProcesoResponsable = p.IdProcesoResponsable,
-                id_GerenciaDivision = p.IdGerenciaDivision,
-                bloqueado = p.Bloqueado,
+                intIdPunto = p.IdPunto,
+                strUbicacion = p.Ubicacion,
+                strCoordenadas = p.Coordenadas.Trim(),
+                intEsInstalacion = p.EsInstalacion,
+                intIdNivelRiesgo = p.IdNivelRiesgo,
+                intIdComandancia = p.IdComandancia,
+                intIdProcesoResponsable = p.IdProcesoResponsable,
+                intIdGerenciaDivision = p.IdGerenciaDivision,
+                intBloqueado = p.Bloqueado,
                 //Latitud =  p.Latitud,
                 //Longitud = ,
-                id_municipio = p.IdMunicipio,
-                id_estado = p.IdMunicipioNavigation.IdEstado,
-                municipio = p.IdMunicipioNavigation.Nombre,
-                estado = p.IdMunicipioNavigation.IdEstadoNavigation.Nombre  
+                intIdMunicipio = p.IdMunicipio,
+                intIdEstado = p.IdMunicipioNavigation.IdEstado,
+                strNombreMunicipio = p.IdMunicipioNavigation.Nombre,
+                strNombreEstado = p.IdMunicipioNavigation.IdEstadoNavigation.Nombre  
             };
         }
 

@@ -91,7 +91,7 @@ namespace WebApiSSF.Controllers
         /// <param name="usuario">Nombre del usuario que relaiza la actualización</param>
         /// <param name="pto">Punto de patrullaje con datos a actualizar</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -115,7 +115,7 @@ namespace WebApiSSF.Controllers
         /// <param name="id">Identificador del punto de patrullaje a eliminar</param>
         /// <param name="usuario">Nombre del usuario que elimina el punto de patrullaje</param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> DeleteValue([Required] int id, [Required] string usuario)

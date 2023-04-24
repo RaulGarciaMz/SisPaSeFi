@@ -10,71 +10,71 @@ namespace Domain.DTOs
         /// <summary>
         /// Identificador del punto de patrullaje
         /// </summary>
-        public int id_punto { get; set; }
+        public int intIdPunto { get; set; }
 
         /// <summary>
         /// descripción de la ubicación del punto de patrullaje
         /// </summary>
         [Required]
         [StringLength(50)]
-        public string ubicacion { get; set; }
+        public string strUbicacion { get; set; }
 
         /// <summary>
         /// Coordenadas X, y del punto de patrullaje
         /// </summary>
         [Required]
         [StringLength(50)]
-        public string coordenadas { get; set; }
+        public string strCoordenadas { get; set; }
 
         /// <summary>
         /// Indicador para conocer si el punto de patrulaje es una instalación física
         /// </summary>
         [Required]
-        public int esInstalacion { get; set; }
+        public int intEsInstalacion { get; set; }
 
         /// <summary>
         /// Identificador del nivel de riesgo del punto de patrullaje
         /// </summary>
-        public int? id_nivelRiesgo { get; set; }
+        public int? intIdNivelRiesgo { get; set; }
         /// <summary>
         /// Identificador de la comandancia a la que pertenece el punto de patrullaje
         /// </summary>
-        public int? id_comandancia { get; set; }
+        public int? intIdComandancia { get; set; }
         /// <summary>
         /// Identificador del proceso responsable del punto de patrullaje
         /// </summary>
         [Required]
-        public int id_ProcesoResponsable { get; set; }
+        public int intIdProcesoResponsable { get; set; }
         /// <summary>
         /// Identificador de la gerencia y división encargada del punto de patrullaje
         /// </summary>
         [Required]
-        public int id_GerenciaDivision { get; set; }    
+        public int intIdGerenciaDivision { get; set; }    
         /// <summary>
         /// Indicador del estado (Bloqueado o desbloqueado) del registro del punto de patrullaje
         /// </summary>
         [Required]
-        public int bloqueado { get; set; }
+        public int intBloqueado { get; set; }
         /// <summary>
         /// Identificador del municipio al que pertenece el punto de patrullaje
         /// </summary>
         [Required]
-        public int id_municipio { get; set; }
+        public int intIdMunicipio { get; set; }
         /// <summary>
         /// Nombre del municipio al que pertenece el punto de patrullaje
         /// </summary>
-        public string municipio { get; set; }
+        public string strNombreMunicipio { get; set; }
         /// <summary>
         /// Identificador del estado de la república al que pertenece el punto de patrullaje
         /// </summary>
-        public int id_estado { get; set; }
+        public int intIdEstado { get; set; }
         /// <summary>
         /// Nombre de estado de la república al que pertenece el punto de patrullaje
         /// </summary>
-        public string estado { get; set; }
+        public string strNombreEstado { get; set; }
         /// <summary>
         /// Identificador del usuario que registra el punto de patrullaje
         /// </summary>
-        public int id_usuario { get; set; }
+        public int intIdUsuario { get; set; }
     }
 }
