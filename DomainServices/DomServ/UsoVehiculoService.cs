@@ -23,7 +23,7 @@ namespace DomainServices.DomServ
             _user = uc;
         }
 
-        public async Task AgregaAsync(UsoVehiculoDto uv)
+        public async Task AgregaAsync(UsoVehiculoDtoForCreateOrUpdate uv)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(uv.Usuario);
 
@@ -33,7 +33,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task ActualizaAsync(UsoVehiculoDto uv)
+        public async Task ActualizaAsync(UsoVehiculoDtoForCreateOrUpdate uv)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(uv.Usuario);
 

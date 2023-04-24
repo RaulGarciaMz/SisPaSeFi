@@ -26,30 +26,31 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene 
         /// </summary>
-        /// <param name="id">Identificador del programa de patrullaje</param>
+        /// <param name="idPrograma">Identificador del programa de patrullaje</param>
         /// <param name="usuario">Nombre del usuario (alias o usuario_nom) que realiza la operación</param>
         /// <returns></returns>
-        [HttpGet("{id}")]
+        [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<UsoVehiculoVista>>> ObtenerUsoVehiculosPorPrograma(int id, [Required] string usuario)
+        public async Task<ActionResult<IEnumerable<UsoVehiculoDtoGet>>> ObtenerUsoVehiculosPorPrograma([Required] int idPrograma, [Required] string usuario)
         {
             try
             {
-                var usos = await _pp.ObtenerUsoVehiculosPorProgramaAsync(id, usuario);
+                var usos = await _pp.ObtenerUsoVehiculosPorProgramaAsync(idPrograma, usuario);
 
                 if (usos == null || usos.Count() == 0)
                 {
                     return NotFound();
                 }
 
-                return Ok(usos);
+                var lsta = ConvierteListaUsoVehiculaVistaToListaDto(usos);
+                return Ok(lsta);
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener usos de vehículos para el programa: {id}, usuario: {usuario}", ex);
+                _log.LogError($"error al obtener usos de vehículos para el programa: {idPrograma}, usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -63,7 +64,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Agrega([FromBody] UsoVehiculoDto uso)
+        public async Task<ActionResult> Agrega([FromBody] UsoVehiculoDtoForCreateOrUpdate uso)
         {
             try
             {
@@ -80,14 +81,13 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza el uso de un vehículo para un programa de patrullaje
         /// </summary>
-        /// <param name="id">Identificador del programa de patrullaje</param>
         /// <param name="uso">Uso de vehículo a actualizar</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Actualiza(int id, [FromBody] UsoVehiculoDto uso)
+        public async Task<ActionResult> Actualiza([FromBody] UsoVehiculoDtoForCreateOrUpdate uso)
         {
             try
             {
@@ -104,25 +104,56 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Borra un uso de vehículo para un progrma de patrullaje
         /// </summary>
-        /// <param name="id">Identificador del programa de patrullaje</param>
+        /// <param name="idPrograma">Identificador del programa de patrullaje</param>
         /// <param name="idVehiculo">Identificador del vehículo a borrar</param>
         /// <param name="usuario">Nombre del usuario (alias o usuario_nom) que realiza la operación</param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete(int id, int idVehiculo, string usuario)
+        public async Task<ActionResult> Delete([Required] int idPrograma, [Required] int idVehiculo, [Required] string usuario)
         {
             try
             {
-                await _pp.BorraAsync(id,idVehiculo,usuario);
+                await _pp.BorraAsync(idPrograma,idVehiculo,usuario);
                 return Ok();
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al eliminar un uso de vehículo para el programa: {id}, usuario: {usuario}", ex);
+                _log.LogError($"error al eliminar un uso de vehículo para el programa: {idPrograma}, usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
+        }
+
+        private UsoVehiculoDtoGet ConvierteUsoVehiculoVistaToDto(UsoVehiculoVista v)
+        {
+            return new UsoVehiculoDtoGet() 
+            {
+                intConsumoCombustible = v.consumoCombustible,
+                intIdPrograma = v.id_programa,
+                intIdUsoVehiculo = v.id_usoVehiculo,
+                intIdUsuarioVehiculo = v.id_usuarioVehiculo,
+                intIdVehiculo = v.id_vehiculo,
+                intKmFin = v.kmFin,
+                intKmInicio = v.kmInicio,
+                strEstadoVehiculo = v.estadoVehiculo,
+                strMatricula = v.matricula,
+                strNumeroEconomico = v.numeroEconomico,               
+            };
+        }
+
+        private List<UsoVehiculoDtoGet> ConvierteListaUsoVehiculaVistaToListaDto(List<UsoVehiculoVista> cv)
+        { 
+            var lsta = new List<UsoVehiculoDtoGet>();
+
+            foreach (var v in cv) 
+            {
+                var nvo = ConvierteUsoVehiculoVistaToDto(v);
+
+                lsta.Add(nvo);
+            }
+
+            return lsta;
         }
     }
 }

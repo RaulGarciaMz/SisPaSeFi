@@ -10,8 +10,8 @@ namespace Domain.Ports.Driving
 {
     public interface IUsoVehiculoDtoCommand
     {
-        Task AgregaAsync(UsoVehiculoDto uv);
-        Task ActualizaAsync(UsoVehiculoDto uv);
+        Task AgregaAsync(UsoVehiculoDtoForCreateOrUpdate uv);
+        Task ActualizaAsync(UsoVehiculoDtoForCreateOrUpdate uv);
         Task BorraAsync(int idPrograma, int idVehiculo, string usuario);
     }
 
