@@ -53,21 +53,28 @@ namespace WebApiSSF.Controllers
             }            
         }
 
-        [HttpGet("{id}")]
+        /// <summary>
+        /// Obtiene tqarjeta informativa acorde al identificador indicado
+        /// </summary>
+        /// <param name="IdTarjeta">Identificador de la tarjeta informativa</param>
+        /// <param name="usuario">Nombre del usuario</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("id")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<TarjetaDto>>> ObtenerPorId([Required] int id, [Required] string usuario)
+        public async Task<ActionResult<TarjetaDto>> ObtenerPorId([Required] int IdTarjeta, [Required] string usuario)
         {
             try
             {
-                var tarjetas = await _t.ObtenerPorId(id, usuario);
+                var tarjetas = await _t.ObtenerPorId(IdTarjeta, usuario);
 
                 return Ok(tarjetas);
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener tarjetas informativas para el id: {id}, usuario: {usuario} ", ex);
+                _log.LogError($"error al obtener tarjetas informativas para el id: {IdTarjeta}, usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
@@ -99,15 +106,14 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza una tarjeta informativa indicada
         /// </summary>
-        /// <param name="id">Identificador de la tarjeta informativa</param>
         /// <param name="usuario">Nombre del usuario que realiza la actualización</param>
         /// <param name="tarjeta">Tarjeta informativa con datos a actualizar</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Put([Required] int id, [Required] string usuario, [FromBody] TarjetaDto tarjeta)
+        public async Task<ActionResult> Put([Required] string usuario, [FromBody] TarjetaDto tarjeta)
         {
             try
             {

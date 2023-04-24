@@ -14,146 +14,146 @@ namespace Domain.DTOs
         /// <summary>
         /// Identificador del usuario que registra la tarjeta
         /// </summary>
-        public string IdUsuario { get; set; }
+        public string strIdUsuario { get; set; }
         /// <summary>
         /// Identificador de la tarjeta informativa
         /// </summary>
-        public int IdNota { get; set; }
+        public int intIdNota { get; set; }
         /// <summary>
         /// Identificador del programa al que se refiere la tarjeta informativa
         /// </summary>
-        public int IdPrograma { get; set; }
+        public int intIdPrograma { get; set; }
         /// <summary>
         /// Hora de inicio del patrullaje
         /// </summary>
-        public string Inicio { get; set; }
+        public string strInicio { get; set; }
         /// <summary>
         /// Hora de término del patrullaje
         /// </summary>
-        public string Termino { get; set; }
+        public string strTermino { get; set; }
         /// <summary>
         /// Tiempo de vuelo del patrullaje
         /// </summary>
-        public string TiempoVuelo { get; set; }
+        public string strTiempoVuelo { get; set; }
         /// <summary>
         /// CALZONAZO !!!
         /// </summary>
-        public string CalzoCalzo { get; set; }
+        public string strCalzoCalzo { get; set; }
         /// <summary>
         /// Observaciones del patrullaje
         /// </summary>
-        public string Observaciones { get; set; }
+        public string strObservaciones { get; set; }
         /// <summary>
         /// Fecha del patrullaje
         /// </summary>
-        public string FechaPatrullaje { get; set; }
+        public string strFechaPatrullaje { get; set; }
         /// <summary>
         /// Cantidad de comandantes de la instalación participante en el patrullaje
         /// </summary>
-        public int ComandantesInstalacionSSF { get; set; }
+        public int intComandantesInstalacionSSF { get; set; }
         /// <summary>
         /// cantidad de personal militar oficial de SEDENA participante en el patrullaje
         /// </summary>
-        public int PersonalMilitarSEDENAOficial { get; set; }
+        public int intPersonalMilitarSEDENAOficial { get; set; }
         /// <summary>
         /// Kilómetros recorridos en el patrullaje
         /// </summary>
-        public int KmRecorrido { get; set; }
+        public int intKmRecorrido { get; set; }
         /// <summary>
         /// Indicador del estado de la tarjeta informativa
         /// </summary>
-        public int IdEstadoTarjetaInformativa { get; set; }
+        public int intIdEstadoTarjetaInformativa { get; set; }
         /// <summary>
         /// cantidad de personal mimilat de tropa de la SEDENA participante en el patrullaje
         /// </summary>
-        public int PersonalMilitarSEDENATropa { get; set; }
+        public int intPersonalMilitarSEDENATropa { get; set; }
         /// <summary>
         /// Cantidad de linieros participantes en el patrullaje
         /// </summary>
-        public int Linieros { get; set; }
+        public int intLinieros { get; set; }
         /// <summary>
         /// Cantidad de comandantes de turno de SSF participantes en el patrullaje
         /// </summary>
-        public int ComandantesTurnoSSF { get; set; }
+        public int intComandantesTurnoSSF { get; set; }
         /// <summary>
         /// Cantidad de oficiales de SSF participantes en el patrullaje
         /// </summary>
-        public int OficialesSSF { get; set; }
+        public int intOficialesSSF { get; set; }
         /// <summary>
         /// Cantidad de personal naval oficial de la SEMAR participante en el patrullaje
         /// </summary>
-        public int PersonalNavalSEMAROficial { get; set; }
+        public int intPersonalNavalSEMAROficial { get; set; }
         /// <summary>
         /// Cantidad de personal naval de tropa de la SEMAR participante en el patrullaje
         /// </summary>
-        public int PersonalNavalSEMARTropa { get; set; }
+        public int intPersonalNavalSEMARTropa { get; set; }
         /// <summary>
         /// Fecha de término del patrullaje
         /// </summary>
-        public string FechaTermino { get; set; }
+        public string strFechaTermino { get; set; }
         /// <summary>
         /// Identificador del estado del patrullaje
         /// </summary>
-        public int IdEstadoPatrullaje { get; set; }
+        public int intIdEstadoPatrullaje { get; set; }
         /// <summary>
         /// Descripción del estado del patrullaje
         /// </summary>
-        public string DescripcionEstadoPatrullaje { get; set; }
+        public string strDescripcionEstadoPatrullaje { get; set; }
         /// <summary>
         /// Descirpción de las matrículas participantes en el patrullaje
         /// </summary>
-        public string Matriculas { get; set; }
+        public string strMatriculas { get; set; }
         /// <summary>
         /// Descripción de los itinerarios realizados en el patrullaje
         /// </summary>
-        public string Itinerarios { get; set; }
+        public string strItinerarios { get; set; }
         /// <summary>
         /// Descripción de los reportes del patrullaje
         /// </summary>
-        public string Reportes { get; set; }
+        public string strReportes { get; set; }
         /// <summary>
         /// Descripción de los odómetros generados en el patrullaje
         /// </summary>
-        public string Odometros { get; set; }
+        public string strOdometros { get; set; }
         /// <summary>
         /// Descripción de kilómetros recorridos por vehiculos durante el patrullaje
         /// </summary>
-        public string KmVehiculos { get; set; }
+        public string strKmVehiculos { get; set; }
         /// <summary>
         /// Fecha de última actualización de la tarjeta informativa
         /// </summary>
-        public string UltimaActualizacion { get; set; }
+        public string strUltimaActualizacion { get; set; }
         /// <summary>
         /// Identificador de la región SSf del patrullaje
         /// </summary>
-        public int Region { get; set; }
+        public int intRegion { get; set; }
         /// <summary>
         /// Identificador de la ruta realizada en el patrullaje
         /// </summary>
-        public int IdRuta { get; set; }
+        public int intIdRuta { get; set; }
         /// <summary>
         /// Identificador del tipo de patrullaje realizado
         /// </summary>
-        public int IdTipoPatrullaje { get; set; }
+        public int intIdTipoPatullaje { get; set; }
         /// <summary>
         /// Identificador del resultado del patrullaje realizado
         /// </summary>
-        public int IdResultadoPatrullaje { get; set; }
+        public int intIdResultadoPatrullaje { get; set; }
         /// <summary>
         /// Descripción del resultado del patrullaje realizado
         /// </summary>
-        public string ResultadoPatrullaje { get; set; }
+        public string strResultadoPatrullaje { get; set; }
         /// <summary>
         /// Descripción de la línea de la estructura en la instalación
         /// </summary>
-        public string LineaEstructuraInstalacion { get; set; }
+        public string strLineaEstructuraInstalacion { get; set; }
         /// <summary>
         /// Descripción del responsable del vuelo en el patrullaje
         /// </summary>
-        public string ResponsableVuelo { get; set; }
+        public string strResponsableVuelo { get; set; }
         /// <summary>
         /// Indicador de existencia de fuerza de reacción en el patrullaje
         /// </summary>
-        public int FuerzaReaccion { get; set; }
+        public int intFuerzaDeReaccion { get; set; }
     }
 }

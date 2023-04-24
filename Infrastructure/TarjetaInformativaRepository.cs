@@ -231,7 +231,7 @@ namespace SqlServerAdapter
             return await _tarjetaContext.TarjetasInformativasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
-        public async Task<List<TarjetaInformativaVista>> ObtenerPorIdAsync(int id)
+        public async Task<TarjetaInformativaVista> ObtenerPorIdAsync(int id)
         {
             string sqlQuery = @"SELECT a.id_nota, a.id_programa, b.fechapatrullaje, b.id_ruta, c.regionssf, c.id_tipopatrullaje, a.ultimaactualizacion,
                                        a.id_usuario, a.inicio, a.termino, a.tiempovuelo, a.calzoacalzo, a.observaciones, d.id_estadopatrullaje,
@@ -279,7 +279,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pIdTarjeta", id)
              };
 
-            return await _tarjetaContext.TarjetasInformativasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _tarjetaContext.TarjetasInformativasVista.FromSqlRaw(sqlQuery, parametros).SingleOrDefaultAsync();
         }
         public async Task<int> ObtenerIdUsuarioRegistradoAsync(string usuario)
         {

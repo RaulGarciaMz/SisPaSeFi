@@ -1,9 +1,4 @@
 ﻿using Domain.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Ports.Driving
 {
@@ -16,6 +11,6 @@ namespace Domain.Ports.Driving
     public interface ITarjetaDtoQuery
     {
         Task<List<TarjetaDto>> ObtenerPorOpcion(int opcion, string tipo, string region, int anio, int mes, int dia, string usuario);
-        Task<List<TarjetaDto>> ObtenerPorId(int idTarjeta, string usuario);
+        Task<TarjetaDto> ObtenerPorId(int idTarjeta, string usuario);
     }
 }
