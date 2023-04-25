@@ -1,15 +1,8 @@
-﻿using Domain.Ports.Driven.Repositories;
-using Domain.Ports.Driven;
-using Domain.Ports.Driving;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.DTOs;
+﻿using Domain.DTOs;
 using Domain.Entities.Vistas;
-using Domain.Entities;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Domain.Ports.Driven;
+using Domain.Ports.Driven.Repositories;
+using Domain.Ports.Driving;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DomainServices.DomServ
@@ -27,11 +20,11 @@ namespace DomainServices.DomServ
 
         public async Task ActualizaAsync(VehiculoDtoForUpdate vehiculo)
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(vehiculo.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(vehiculo.strUsuario);
 
             if (user != null)
             {
-                await _repo.ActualizaAsync(vehiculo.IdVehiculo, vehiculo.Matricula, vehiculo.NumeroEconomico, vehiculo.Habilitado, vehiculo.TipoPatrullaje, vehiculo.TipoVehiculo);
+                await _repo.ActualizaAsync(vehiculo.intIdVehiculo, vehiculo.strMatricula, vehiculo.strNumeroEconomico, vehiculo.intHabilitado, vehiculo.intTipoPatrullaje, vehiculo.intTipoVehiculo);
             }
         }
 
@@ -70,7 +63,7 @@ namespace DomainServices.DomServ
                 }
             }
         }
-        public async Task<List<VehiculoPatrullajeVista>> ObtenerVehiculosPorOpcionAsync(string opcion, int region, string? criterio, string usuario)
+        public async Task<List<VehiculoDto>> ObtenerVehiculosPorOpcionAsync(string opcion, int region, string? criterio, string usuario)
         {
             var l = new List<VehiculoPatrullajeVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
@@ -162,7 +155,7 @@ namespace DomainServices.DomServ
                 }
             }
 
-            return l;
+            return ConvierteListaVehiculosToDto(l);
         }
 
         private async Task<bool> ExisteVehiculo(VehiculoDtoForCreate vehiculo)
@@ -177,6 +170,35 @@ namespace DomainServices.DomServ
             {
                 return false;
             }
+        }
+
+        private VehiculoDto ConvierteVehiculoPatrullajeToDto(VehiculoPatrullajeVista v)
+        {
+            return new VehiculoDto() 
+            {
+                intIdVehiculo = v.id_vehiculo,
+                intRegionSSF = v.id_comandancia,
+                intTipoVehiculo = v.id_tipovehiculo,
+                intTipoPatrullaje = v.id_tipopatrullaje,
+                strNumeroEconomico = v.numeroeconomico,
+                strMatricula = v.matricula,
+                strDescripcionTipoPatrullaje = v.descripcion,
+                strDescripcionTipoVehiculo = v.descripciontipoVehiculo,
+                intHabilitado = v.habilitado
+            };
+        }
+
+        private List<VehiculoDto> ConvierteListaVehiculosToDto(List<VehiculoPatrullajeVista> lstaVehiculos)
+        {
+            var lsta = new List<VehiculoDto>();
+
+            foreach (var v in lstaVehiculos)
+            { 
+                var nvoVehiculo = ConvierteVehiculoPatrullajeToDto(v);
+                lsta.Add(nvoVehiculo);
+            }
+
+            return lsta;
         }
     }
 }

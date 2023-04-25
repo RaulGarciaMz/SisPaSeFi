@@ -1,11 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.DTOs
+﻿namespace Domain.DTOs
 {
+    public class VehiculoDto 
+    {
+        public int intIdVehiculo { get; set; }
+        public int intTipoPatrullaje { get; set; }
+        public string strMatricula { get; set; }
+        public int? intRegionSSF { get; set; }
+        public int intTipoVehiculo { get; set; }
+        public string? strNumeroEconomico { get; set; }
+        public int intHabilitado { get; set; }
+        public string strDescripcionTipoPatrullaje { get; set; }
+        public string strDescripcionTipoVehiculo { get; set; }
+    }
+
     /// <summary>
     /// Vehículo (estructura para actualización
     /// </summary>
@@ -14,31 +21,31 @@ namespace Domain.DTOs
         /// <summary>
         /// Identificador del vehículo
         /// </summary>
-        public int IdVehiculo { get; set; }
+        public int intIdVehiculo { get; set; }
         /// <summary>
         /// Bandera indicadora del estado del vehículo (1- Habilitado, 0 - Deshabilitado)
         /// </summary>
-        public int Habilitado { get; set; }
+        public int intHabilitado { get; set; }
         /// <summary>
         /// Identificador del tipo de patrullaje
         /// </summary>
-        public int TipoPatrullaje { get; set; }
+        public int intTipoPatrullaje { get; set; }
         /// <summary>
         /// Identificador del tipo de vehículo
         /// </summary>
-        public int TipoVehiculo { get; set; }
+        public int intTipoVehiculo { get; set; }
         /// <summary>
         /// Número enconómico del vehículo
         /// </summary>
-        public string NumeroEconomico { get; set; }
+        public string strNumeroEconomico { get; set; }
         /// <summary>
         /// Matrícula del vehículo
         /// </summary>
-        public string Matricula { get; set; }
+        public string strMatricula { get; set; }
         /// <summary>
         /// Nombre del usuario (alias o usuario_nom) que realiza la actualización
         /// </summary>
-        public string Usuario { get; set; }
+        public string strUsuario { get; set; }
     }
 
     /// <summary>

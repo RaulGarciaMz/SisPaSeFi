@@ -36,7 +36,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<VehiculoPatrullajeVista>>> ObtenerVehiculosPorOpcion([Required] string opcion, int regionSSF,  [Required] string usuario, string? criterio)
+        public async Task<ActionResult<IEnumerable<VehiculoDto>>> ObtenerVehiculosPorOpcion([Required] string opcion, int regionSSF,  [Required] string usuario, string? criterio)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al actualizar un vehículo para el usuario: {vehiculo.Usuario} ", ex);
+                _log.LogError($"error al actualizar un vehículo para el usuario: {vehiculo.strUsuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
