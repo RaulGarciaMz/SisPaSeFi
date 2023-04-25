@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities.Vistas
 {
@@ -49,6 +44,7 @@ namespace Domain.Entities.Vistas
         public string lineaestructurainstalacion;
         public string responsablevuelo;
         public int fuerzareaccion;
+        public int id_puntoresponsable;
     }
 }
 

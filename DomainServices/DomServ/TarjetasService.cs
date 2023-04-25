@@ -33,7 +33,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async  Task Update(TarjetaDto tarjeta, string usuario) 
+        public async Task Update(TarjetaDto tarjeta, string usuario) 
         {
             var userId = await _repo.ObtenerIdUsuarioConfiguradorAsync(usuario);
 
@@ -55,7 +55,8 @@ namespace DomainServices.DomServ
                 t.ComandantesInstalacionSsf = tarjeta.intComandantesInstalacionSSF;
                 t.PersonalMilitarSedenaoficial = tarjeta.intPersonalMilitarSEDENAOficial;
                 t.KmRecorrido = tarjeta.intKmRecorrido;
-                //FechaPatrullaje = tarjeta.FechaPatrullaje; // En qué formato viene??
+                //TODO revisar fecha de patrullaje (format)
+                //t.FechaPatrullaje = tarjeta.FechaPatrullaje; // En qué formato viene??
                 t.PersonalMilitarSedenatropa = tarjeta.intPersonalMilitarSEDENATropa;
                 t.Linieros = tarjeta.intLinieros;
                 t.ComandantesTurnoSsf = tarjeta.intComandantesTurnoSSF;
@@ -63,7 +64,7 @@ namespace DomainServices.DomServ
                 t.PersonalNavalSemaroficial = tarjeta.intPersonalNavalSEMAROficial;
                 t.PersonalNavalSemartropa = tarjeta.intPersonalNavalSEMARTropa;
 
-                await _repo.UpdateAsync(t, tarjeta.intIdEstadoPatrullaje, userId);
+                await _repo.UpdateTarjetaAndProgramaAsync(t, tarjeta.intIdEstadoPatrullaje, userId, tarjeta.intIdInstalacionResponsable);
             }    
         }
 
@@ -168,7 +169,8 @@ namespace DomainServices.DomServ
                 strResultadoPatrullaje = t.resultadopatrullaje,
                 strLineaEstructuraInstalacion = t.lineaestructurainstalacion,
                 strResponsableVuelo = t.responsablevuelo,
-                intFuerzaDeReaccion = t.fuerzareaccion
+                intFuerzaDeReaccion = t.fuerzareaccion,
+                intIdInstalacionResponsable = t.id_puntoresponsable
             };
 
             return r;

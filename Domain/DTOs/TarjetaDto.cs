@@ -155,5 +155,10 @@ namespace Domain.DTOs
         /// Indicador de existencia de fuerza de reacción en el patrullaje
         /// </summary>
         public int intFuerzaDeReaccion { get; set; }
+        /// <summary>
+        /// Identificador del punto responsable
+        /// </summary>
+        public int intIdInstalacionResponsable { get; set; }
+        
     }
 }

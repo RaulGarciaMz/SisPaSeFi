@@ -1,17 +1,12 @@
 ﻿using Domain.Entities;
 using Domain.Entities.Vistas;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Ports.Driven
 {
     public interface ITarjetaInformativaCommand
     {
         Task AgregaAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId);
-        Task UpdateAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId);
+        Task UpdateTarjetaAndProgramaAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId, int idPuntoResponsable);
     }
 
     public interface ITarjetaInformativaQuery

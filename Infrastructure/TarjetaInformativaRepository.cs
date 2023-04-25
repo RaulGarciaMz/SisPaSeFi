@@ -1,15 +1,9 @@
 ﻿using Domain.Entities;
-using Microsoft.Data.SqlClient;
-using SqlServerAdapter.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
-using System.Runtime.CompilerServices;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using SqlServerAdapter.Data;
 
 namespace SqlServerAdapter
 {
@@ -43,7 +37,7 @@ namespace SqlServerAdapter
             await _tarjetaContext.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId) 
+        public async Task UpdateTarjetaAndProgramaAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId, int idPuntoResponsable) 
         {
             tarjeta.IdUsuario= usuarioId;
             _tarjetaContext.TarjetasInformativas.Update(tarjeta);
@@ -56,6 +50,7 @@ namespace SqlServerAdapter
                 programa.IdEstadoPatrullaje = idEstadoPatrullaje;
                 programa.Termino = tarjeta.Termino;
                 programa.Observaciones = tarjeta.Observaciones;
+                programa.IdPuntoResponsable = idPuntoResponsable;
                 programa.UltimaActualizacion = tarjeta.UltimaActualizacion;
 
                 _tarjetaContext.Programas.Update(programa);
@@ -71,7 +66,7 @@ namespace SqlServerAdapter
                                        d.descripcionestadopatrullaje, a.kmrecorrido, a.comandantesinstalacionssf, a.personalmilitarsedenaoficial,
                                        a.id_estadotarjetainformativa, a.personalmilitarsedenatropa, a.linieros, a.comandantesturnossf, a.oficialesssf,
                                        a.personalnavalsemaroficial,a.personalnavalsemartropa, a.fechaTermino, a.idresultadopatrullaje, 
-									   rp.descripcion resultadopatrullaje, a.lineaestructurainstalacion, a.responsablevuelo, a.fuerzareaccion,
+									   rp.descripcion resultadopatrullaje, a.lineaestructurainstalacion, a.responsablevuelo, a.fuerzareaccion, b.id_puntoresponsable,
                                        COALESCE((SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC) 
                                                 FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto=g.id_punto
                                                 WHERE f.id_ruta=b.id_ruta),'') as itinerario,
@@ -126,7 +121,7 @@ namespace SqlServerAdapter
                                        d.descripcionestadopatrullaje, a.kmrecorrido, a.comandantesinstalacionssf, a.personalmilitarsedenaoficial,
                                        a.id_estadotarjetainformativa, a.personalmilitarsedenatropa, a.linieros, a.comandantesturnossf, a.oficialesssf,
                                        a.personalnavalsemaroficial,a.personalnavalsemartropa, a.fechaTermino, a.idresultadopatrullaje, 
-									   rp.descripcion resultadopatrullaje, a.lineaestructurainstalacion, a.responsablevuelo, a.fuerzareaccion,
+									   rp.descripcion resultadopatrullaje, a.lineaestructurainstalacion, a.responsablevuelo, a.fuerzareaccion, b.id_puntoresponsable,
                                        COALESCE((SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC) 
                                                 FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto=g.id_punto
                                                 WHERE f.id_ruta=b.id_ruta),'') as itinerario,
@@ -181,7 +176,7 @@ namespace SqlServerAdapter
                                        d.descripcionestadopatrullaje, a.kmrecorrido, a.comandantesinstalacionssf, a.personalmilitarsedenaoficial,
                                        a.id_estadotarjetainformativa, a.personalmilitarsedenatropa, a.linieros, a.comandantesturnossf, a.oficialesssf,
                                        a.personalnavalsemaroficial,a.personalnavalsemartropa, a.fechaTermino, a.idresultadopatrullaje, 
-									   rp.descripcion resultadopatrullaje, a.lineaestructurainstalacion, a.responsablevuelo, a.fuerzareaccion,
+									   rp.descripcion resultadopatrullaje, a.lineaestructurainstalacion, a.responsablevuelo, a.fuerzareaccion, b.id_puntoresponsable,
                                        COALESCE((SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC) 
                                                 FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto=g.id_punto
                                                 WHERE f.id_ruta=b.id_ruta),'') as itinerario,
@@ -238,7 +233,7 @@ namespace SqlServerAdapter
                                        d.descripcionestadopatrullaje, a.kmrecorrido, a.comandantesinstalacionssf, a.personalmilitarsedenaoficial,
                                        a.id_estadotarjetainformativa, a.personalmilitarsedenatropa, a.linieros, a.comandantesturnossf, a.oficialesssf,
                                        a.personalnavalsemaroficial,a.personalnavalsemartropa, a.fechaTermino, a.idresultadopatrullaje, 
-									   rp.descripcion resultadopatrullaje, a.lineaestructurainstalacion, a.responsablevuelo, a.fuerzareaccion,
+									   rp.descripcion resultadopatrullaje, a.lineaestructurainstalacion, a.responsablevuelo, a.fuerzareaccion, b.id_puntoresponsable,
                                        COALESCE((SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC) 
                                                 FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto=g.id_punto
                                                 WHERE f.id_ruta=b.id_ruta),'') as itinerario,
@@ -281,6 +276,7 @@ namespace SqlServerAdapter
 
             return await _tarjetaContext.TarjetasInformativasVista.FromSqlRaw(sqlQuery, parametros).SingleOrDefaultAsync();
         }
+
         public async Task<int> ObtenerIdUsuarioRegistradoAsync(string usuario)
         {
             var user = await _tarjetaContext.Usuarios.Where(x => x.UsuarioNom == usuario).Select(x => x.IdUsuario).ToListAsync();
@@ -324,9 +320,9 @@ namespace SqlServerAdapter
             return (await _tarjetaContext.SaveChangesAsync() >= 0);
         }
 
-        private async Task<ProgramaPatrullaje?> ObtenerProgramaPatrullajePorIdAsync(int id)
+        private async Task<ProgramaPatrullaje?> ObtenerProgramaPatrullajePorIdAsync(int idPrograma)
         {
-            return await _tarjetaContext.Programas.Where(x => x.IdPrograma == id).FirstOrDefaultAsync();
+            return await _tarjetaContext.Programas.Where(x => x.IdPrograma == idPrograma).FirstOrDefaultAsync();
         }
 
     }
