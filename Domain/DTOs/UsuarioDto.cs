@@ -15,47 +15,52 @@ namespace Domain.DTOs
         /// <summary>
         /// Identificador del usuario
         /// </summary>
-        public int id_usuario { get; set; }
+        public int intIdUsuario { get; set; }
         /// <summary>
         /// Nombre real del usuario
         /// </summary>
-        public string nombre { get; set; }
+        public string strNombre { get; set; }
         /// <summary>
         /// Nombre del usuario para la cuenta registrada
         /// </summary>
-        public string usuario_nom { get; set; }
+        public string strNombreDeUsuario { get; set; }
         /// <summary>
         /// Apellido paterno del usuario
         /// </summary>
-        public string apellido1 { get; set; }
+        public string strApellido1 { get; set; }
         /// <summary>
         /// Apellido materno del usuario
         /// </summary>
-        public string apellido2 { get; set; }
+        public string strApellido2 { get; set; }
         /// <summary>
         /// Correo electrónico del usuario
         /// </summary>
-        public string? correoelectronico { get; set; }
+        public string? strCorreoElectronico { get; set; }
         /// <summary>
         /// Número de celular del usuario
         /// </summary>
-        public string? cel { get; set; }
+        public string? strCel { get; set; }
         /// <summary>
         /// Indicador del estado como configurador del usuario (1 - es configurador)
         /// </summary>
-        public int? configurador { get; set; }
+        public int? intConfigurador { get; set; }
         /// <summary>
         /// Indicador de la región SSF
         /// </summary>
-        public int regionSSF { get; set; }
+        public int intRegionSSF { get; set; }
         /// <summary>
         /// Indicador del estado del usuario (bloqueado o desbloqueado)
         /// </summary>
-        public int desbloquearregistros { get; set; }
+        public int intDesbloquearRegistros { get; set; }
         /// <summary>
         /// Tiempo de espera de la sesión del usuario
         /// </summary>
-        public int tiempoespera { get; set; }
+        public int intTiempoEspera { get; set; }
+    }
+
+    public class UsuarioDtoForUpdate
+    {
+        public string strNombreDeUsuario { get; set; }
     }
 
     public class UsuarioDtoForAutentication

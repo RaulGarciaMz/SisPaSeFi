@@ -18,41 +18,83 @@ namespace SqlServerAdapter
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
         }
 
-        public async Task BloqueaUsuarioAsync(string usuario)
+        /*        public async Task BloqueaUsuarioAsync(string usuario)
+                {
+                    var record = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).FirstOrDefaultAsync();
+
+                    if (record != null) 
+                    {
+                        record.Bloqueado = 1;
+                        _userContext.Usuarios.Update(record);
+                        await _userContext.SaveChangesAsync();
+                    }
+                }
+
+                public async Task DesbloqueaUsuarioAsync(string usuario)
+                {
+                    var record = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).FirstOrDefaultAsync();
+
+                    if (record != null)
+                    {
+                        record.Bloqueado = 0;
+                        record.Intentos = 0;
+                        _userContext.Usuarios.Update(record);
+                        await _userContext.SaveChangesAsync();
+                    }
+                }
+
+                public async Task ReiniciaClaveUsuarioAsync(string usuario)
+                {
+                    var record = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).FirstOrDefaultAsync();
+
+                    if (record != null)
+                    {
+                        record.Pass = ComputeMD5(usuario);
+                        _userContext.Usuarios.Update(record);
+                        await _userContext.SaveChangesAsync();
+                    }
+                }*/
+
+        public async Task ActualizarListasDeUsuariosAsync(List<string> desbloquear, List<string> bloquear, List<string> reiniciar, string usuario) 
         {
-            var record = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).FirstOrDefaultAsync();
+            var pDesbloq = new List<Usuario>();
+            var pBloq = new List<Usuario>();
+            var pReini = new List<Usuario>();
 
-            if (record != null) 
+            if (desbloquear.Count > 0) 
             {
-                record.Bloqueado = 1;
-                _userContext.Usuarios.Update(record);
-                await _userContext.SaveChangesAsync();
+                pDesbloq = await _userContext.Usuarios.Where(x => desbloquear.Contains(x.UsuarioNom)).ToListAsync();
+
+                foreach (var de in pDesbloq)
+                {
+                    de.Bloqueado = 0;
+                    de.Intentos = 0;
+                }
+                _userContext.Usuarios.AddRange(pDesbloq);
             }
-        }
 
-        public async Task DesbloqueaUsuarioAsync(string usuario)
-        {
-            var record = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).FirstOrDefaultAsync();
-
-            if (record != null)
+            if (bloquear.Count > 0) 
             {
-                record.Bloqueado = 0;
-                record.Intentos = 0;
-                _userContext.Usuarios.Update(record);
-                await _userContext.SaveChangesAsync();
+                pBloq = await _userContext.Usuarios.Where(x => bloquear.Contains(x.UsuarioNom)).ToListAsync();
+                foreach (var bl in pBloq)
+                {
+                    bl.Bloqueado = 1;
+                }
+                _userContext.Usuarios.AddRange(pBloq);
             }
-        }
 
-        public async Task ReiniciaClaveUsuarioAsync(string usuario)
-        {
-            var record = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).FirstOrDefaultAsync();
-
-            if (record != null)
+            if (reiniciar.Count > 0) 
             {
-                record.Pass = ComputeMD5(usuario);
-                _userContext.Usuarios.Update(record);
-                await _userContext.SaveChangesAsync();
+                pReini = await _userContext.Usuarios.Where(x => reiniciar.Contains(x.UsuarioNom)).ToListAsync();
+                foreach (var re in pReini)
+                {
+                    re.Pass = ComputeMD5(re.UsuarioNom);
+                }
+
+                _userContext.Usuarios.AddRange(pReini);
             }
+            
+            await _userContext.SaveChangesAsync();
         }
 
         public async Task AgregaUsuarioDeDocumentoAsync(int idDocumento, int idUsuario)

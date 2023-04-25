@@ -79,20 +79,20 @@ namespace WebApiSSF.Controllers
         }
 
         /// <summary>
-        /// Actualiza el usuario con respecto a la opción indicada
+        /// Actualiza una lista de usuarios con respecto a la opción indicada
         /// </summary>
         /// <param name="opcion">Opción de actualización ("Desbloquear", "Bloquear" ó "ReiniciarClave")</param>
-        /// <param name="usuario">Usuario (alias - usuario_nom) al que se aplicará la actualización</param>
+        /// <param name="usuario">Usuario (alias - usuario_nom) que realiza la actualización</param>
         /// <returns></returns>
         [HttpPut]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> ActualizaUsuarioPorOpcion([Required] string opcion, string usuario)
+        public async Task<ActionResult> ActualizaUsuariosPorOpcion([Required] string opcion, string usuario, [FromBody] List<UsuarioDto> users)
         {
             try
             {
-                await _pp.ActualizaUsuarioPorOpcionAsync(opcion, usuario);
+                await _pp.ActualizaUsuariosPorOpcionAsync(opcion, usuario, users);
                 return Ok();
             }
             catch (Exception ex)
@@ -125,6 +125,7 @@ namespace WebApiSSF.Controllers
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
+
 
         /*        /// <summary>
                 /// Obtiene al usuario que contenga la cadena del criterio en alguno de los campos nombre, apellidos o user_nom (alias)

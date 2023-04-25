@@ -11,10 +11,10 @@ namespace Domain.Ports.Driving
 {
     public interface IUsuariosDtoCommand
     {
-        Task BloqueaUsuarioAsync(string usuario);
+/*        Task BloqueaUsuarioAsync(string usuario);
         Task DesbloqueaUsuarioAsync(string usuario);
-        Task ReiniciaClaveUsuarioAsync(string usuario);
-        Task ActualizaUsuarioPorOpcionAsync(string opcion, string usuario);
+        Task ReiniciaClaveUsuarioAsync(string usuario);*/
+        Task ActualizaUsuariosPorOpcionAsync(string opcion, string usuario, List<UsuarioDto> users);
         Task AgregaPorOpcionAsync(string opcion, string dato, string usuario);
         Task BorraPorOpcionAsync(string opcion, string dato, string usuario);
     }

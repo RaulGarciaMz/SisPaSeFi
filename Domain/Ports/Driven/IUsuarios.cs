@@ -1,20 +1,15 @@
 ﻿using Domain.Entities;
 using Domain.Entities.Vistas;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Ports.Driven
 {
     public interface IUsuariosCommand
     {
-        Task DesbloqueaUsuarioAsync(string usuario);
+/*        Task DesbloqueaUsuarioAsync(string usuario);
         Task ReiniciaClaveUsuarioAsync(string usuario);
-        Task BloqueaUsuarioAsync(string usuario);
+        Task BloqueaUsuarioAsync(string usuario);*/
         Task AgregaUsuarioDeDocumentoAsync(int idDocumento, int idUsuario);
+        Task ActualizarListasDeUsuariosAsync(List<string> desbloquear, List<string> bloquear, List<string> reiniciar, string usuario);
         Task BorraUsuarioDeDocumentoAsync(int idDocumento, int idUsuario);
     }
 

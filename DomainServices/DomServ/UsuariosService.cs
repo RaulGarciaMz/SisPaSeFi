@@ -14,25 +14,38 @@ namespace DomainServices.DomServ
             _repo = repo;
         }
 
-        public async Task ActualizaUsuarioPorOpcionAsync(string opcion, string usuario)
+        public async Task ActualizaUsuariosPorOpcionAsync(string opcion, string usuario, List<UsuarioDto> users)
         {
             var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
             if (user != null)
             {
-                switch (opcion) 
+                var desbloquear = new List<string>();
+                var bloquear = new List<string>();
+                var reiniciar = new List<string>();
+
+                foreach (var u in users)
                 {
-                    case "Desbloquear":
-                        await _repo.DesbloqueaUsuarioAsync(usuario);
-                        break;
-                    case "Bloquear":
-                        await _repo.BloqueaUsuarioAsync(usuario);
-                        break;
-                    case "ReiniciarClave":
-                        await _repo.ReiniciaClaveUsuarioAsync(usuario);
-                        break;
-                }                
+                    switch (opcion)
+                    {
+                        case "Desbloquear":
+                            desbloquear.Add(u.strNombreDeUsuario);
+                            //await _repo.DesbloqueaUsuarioAsync(u.strNombreDeUsuario);
+                            break;
+                        case "Bloquear":
+                            bloquear.Add(u.strNombreDeUsuario);
+                            //await _repo.BloqueaUsuarioAsync(u.strNombreDeUsuario);
+                            break;
+                        case "ReiniciarClave":
+                            reiniciar.Add(u.strNombreDeUsuario);
+                            //await _repo.ReiniciaClaveUsuarioAsync(u.strNombreDeUsuario);
+                            break;
+                    }
+                }
+
+                await _repo.ActualizarListasDeUsuariosAsync(desbloquear, bloquear, reiniciar, usuario);
             }
         }
+
 
         public async Task AgregaPorOpcionAsync(string opcion, string dato, string usuario)
         {
@@ -76,7 +89,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task BloqueaUsuarioAsync(string usuario)
+/*        public async Task BloqueaUsuarioAsync(string usuario)
         {
             var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
             if (user != null) 
@@ -101,7 +114,7 @@ namespace DomainServices.DomServ
             {
                 await _repo.ReiniciaClaveUsuarioAsync(usuario);
             }
-        }
+        }*/
 
         public async Task<UsuarioDto?> ObtenerUsuarioConfiguradorPorIdAsync(int idUsuario)
         {
@@ -110,17 +123,17 @@ namespace DomainServices.DomServ
 
             if (user != null) 
             {
-                usDto.apellido1 = user.Apellido1;
-                usDto.apellido2 = user.Apellido2;
-                usDto.configurador = user.Configurador;
-                usDto.id_usuario = user.IdUsuario;
-                usDto.usuario_nom = user.UsuarioNom;
-                usDto.desbloquearregistros = user.DesbloquearRegistros;
-                usDto.cel = user.Cel;
-                usDto.nombre = user.Nombre;
-                usDto.regionSSF = user.RegionSsf;
-                usDto.correoelectronico = user.CorreoElectronico;
-                usDto.tiempoespera = user.TiempoEspera;
+                usDto.strApellido1 = user.Apellido1;
+                usDto.strApellido2 = user.Apellido2;
+                usDto.intConfigurador = user.Configurador;
+                usDto.intIdUsuario = user.IdUsuario;
+                usDto.strNombreDeUsuario = user.UsuarioNom;
+                usDto.intDesbloquearRegistros = user.DesbloquearRegistros;
+                usDto.strCel = user.Cel;
+                usDto.strNombre = user.Nombre;
+                usDto.intRegionSSF = user.RegionSsf;
+                usDto.strCorreoElectronico = user.CorreoElectronico;
+                usDto.intTiempoEspera = user.TiempoEspera;
             }
 
             return usDto;
@@ -133,17 +146,17 @@ namespace DomainServices.DomServ
 
             if (user != null)
             {
-                usDto.apellido1 = user.Apellido1;
-                usDto.apellido2 = user.Apellido2;
-                usDto.configurador = user.Configurador;
-                usDto.id_usuario = user.IdUsuario;
-                usDto.usuario_nom = user.UsuarioNom;
-                usDto.desbloquearregistros = user.DesbloquearRegistros;
-                usDto.cel = user.Cel;
-                usDto.nombre = user.Nombre;
-                usDto.regionSSF = user.RegionSsf;
-                usDto.correoelectronico = user.CorreoElectronico;
-                usDto.tiempoespera = user.TiempoEspera;
+                usDto.strApellido1 = user.Apellido1;
+                usDto.strApellido2 = user.Apellido2;
+                usDto.intConfigurador = user.Configurador;
+                usDto.intIdUsuario = user.IdUsuario;
+                usDto.strNombreDeUsuario = user.UsuarioNom;
+                usDto.intDesbloquearRegistros = user.DesbloquearRegistros;
+                usDto.strCel = user.Cel;
+                usDto.strNombre = user.Nombre;
+                usDto.intRegionSSF = user.RegionSsf;
+                usDto.strCorreoElectronico = user.CorreoElectronico;
+                usDto.intTiempoEspera = user.TiempoEspera;
             }
 
             return usDto;
@@ -207,17 +220,17 @@ namespace DomainServices.DomServ
         {
             return new UsuarioDto()
             {
-                apellido1 = user.apellido1,
-                apellido2 = user.apellido2,
-                configurador = user.configurador,
-                id_usuario = user.id_usuario,
-                usuario_nom = user.usuario_nom,
-                desbloquearregistros = user.desbloquearregistros,
-                cel = user.cel,
-                nombre = user.nombre,
-                regionSSF = user.regionSSF,
-                correoelectronico = user.correoelectronico,
-                tiempoespera = user.tiempoEspera
+                strApellido1 = user.apellido1,
+                strApellido2 = user.apellido2,
+                intConfigurador = user.configurador,
+                intIdUsuario = user.id_usuario,
+                strNombreDeUsuario = user.usuario_nom,
+                intDesbloquearRegistros = user.desbloquearregistros,
+                strCel = user.cel,
+                strNombre = user.nombre,
+                intRegionSSF = user.regionSSF,
+                strCorreoElectronico = user.correoelectronico,
+                intTiempoEspera = user.tiempoEspera
             };
         }
 
@@ -234,5 +247,7 @@ namespace DomainServices.DomServ
 
             return usersDto;
         }
+
+
     }
 }
