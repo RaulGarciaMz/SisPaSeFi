@@ -82,7 +82,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.AgregaPrograma(opcion, clase, p, usuario);
+                await _pp.AgregaPrograma(opcion, clase, p);
                 return StatusCode(201, "Ok");
             }
             catch (Exception ex)

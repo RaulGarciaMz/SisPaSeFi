@@ -4,11 +4,6 @@ using Domain.Entities.Vistas;
 using Domain.Enums;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DomainServices.DomServ
 {
@@ -168,9 +163,9 @@ namespace DomainServices.DomServ
             return patrullajesDto;
         }
 
-        public async Task AgregaPrograma(string opcion, string clase, ProgramaDtoForCreateWithListas p, string usuario) 
+        public async Task AgregaPrograma(string opcion, string clase, ProgramaDtoForCreateWithListas p) 
         {
-            var user = await _repo.ObtenerUsuarioConfiguradorAsync(usuario);
+            var user = await _repo.ObtenerUsuarioConfiguradorAsync(p.strUsuario);
 
             if (EsUsuarioConfigurador(user))
             {
@@ -417,7 +412,7 @@ namespace DomainServices.DomServ
                 IdPuntoResponsable = p.intIdPuntoResponsable,
                 //Observaciones = p.ObservacionesPrograma,
                 IdApoyoPatrullaje = p.intApoyoPatrullaje,
-                RiesgoPatrullaje = Int32.Parse(p.intIdRiesgoPatrullaje),
+                RiesgoPatrullaje = p.intIdRiesgoPatrullaje,
                 IdPropuestaPatrullaje = p.intidpropuestapatrullaje
             };
 
@@ -499,7 +494,7 @@ namespace DomainServices.DomServ
                 IdPuntoResponsable = p.intIdPuntoResponsable,
                 //Observaciones = p.ObservacionesPrograma,
                 IdApoyoPatrullaje = p.intApoyoPatrullaje,
-                RiesgoPatrullaje = Int32.Parse(p.intIdRiesgoPatrullaje),
+                RiesgoPatrullaje = p.intIdRiesgoPatrullaje,
             };
 
             DateTime dateValue;

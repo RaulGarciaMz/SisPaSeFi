@@ -1,17 +1,11 @@
 ﻿using Domain.DTOs;
-using Domain.Entities;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Ports.Driving
 {
     public interface IProgramaDtoCommand
     {
-        Task AgregaPrograma(string opcion, string clase, ProgramaDtoForCreateWithListas p, string usuario);
+        Task AgregaPrograma(string opcion, string clase, ProgramaDtoForCreateWithListas p);
         Task AgregaPropuestasComoProgramas(List<ProgramaDtoForCreate> p, string usuario);
 
         Task ActualizaProgramasOrPropuestasPorOpcion(ProgramaDtoForUpdatePorOpcion p, string opcion, string usuario);

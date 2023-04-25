@@ -172,7 +172,7 @@
         /// <summary>
         /// Identificador del nivel de riesgo del programa de patrullaje
         /// </summary>
-        public string intIdRiesgoPatrullaje { get; set; }
+        public int intIdRiesgoPatrullaje { get; set; }
         /// <summary>
         /// Identificador de la propuesta de patrullaje correspondiente al programa
         /// </summary>
