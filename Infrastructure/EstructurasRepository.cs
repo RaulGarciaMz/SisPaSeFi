@@ -72,7 +72,8 @@ namespace SqlServerAdapter
                                 JOIN ssf.linea b ON a.id_linea = b.id_linea
                                 JOIN ssf.municipios c ON a.id_municipio = c.id_municipio
                                 JOIN ssf.estadospais d ON c.id_estado = d.id_estado
-                                WHERE a.id_linea = @pLinea";
+                                WHERE a.id_linea = @pLinea
+                                ORDER BY a.nombre";
 
             object[] parametros = new object[]
             {
@@ -105,7 +106,8 @@ namespace SqlServerAdapter
                                 WHERE
                                 a.id_linea = @pLinea
                                  AND a.latitud BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
-                                AND a.longitud BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud";
+                                AND a.longitud BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud
+                                ORDER BY a.nombre";
 
             object[] parametros = new object[]
             {
@@ -130,7 +132,8 @@ namespace SqlServerAdapter
                                 SELECT @pLatitud+0.05 maxLatitud, @pLongitud-0.05 minLatitud, @pLatitud-0.01 minLongitud, @pLatitud+0.01 maxLongitud 
                                 ) cuadrante
                                 WHERE a.latitud BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
-                                AND a.longitud BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud";
+                                AND a.longitud BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud
+                                ORDER BY a.nombre";
 
             object[] parametros = new object[]
             {
@@ -151,7 +154,8 @@ namespace SqlServerAdapter
                                 JOIN ssf.linea b ON a.id_linea = b.id_linea
                                 JOIN ssf.municipios c ON a.id_municipio = c.id_municipio
                                 JOIN ssf.estadospais d ON c.id_estado = d.id_estado
-                                WHERE a.id_estructura = @pEstructura";
+                                WHERE a.id_estructura = @pEstructura
+                                ORDER BY a.nombre";
 
             object[] parametros = new object[]
             {
