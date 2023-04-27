@@ -845,6 +845,9 @@ namespace SqlServerAdapter
             var idClasePatrullaje = await _programaContext.ClasesPatrullaje.Where(x => x.Descripcion == clase).Select(x => x.IdClasePatrullaje).ToListAsync();
 
             var propuestas = new List<PropuestaPatrullaje>();
+            
+            string observacion = "";
+            if (pp.Observaciones != null) observacion = pp.Observaciones;
 
             foreach (var fecha in fechas)
             {
@@ -859,7 +862,7 @@ namespace SqlServerAdapter
                         FechaPatrullaje = pp.FechaPatrullaje,
                         IdUsuario = usuarioId,
                         IdPuntoResponsable = pp.IdPuntoResponsable,
-                        Observaciones = pp.Observaciones,
+                        Observaciones = observacion,
                         IdEstadoPropuesta = idEdoCreada[0],
                         RiesgoPatrullaje = pp.RiesgoPatrullaje,
                         IdClasePatrullaje = idClasePatrullaje[0],
@@ -939,7 +942,7 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ActualizaProgramasConPropuestas</c> implementa la interface para actualizar programas con propuestas.
         /// </summary>
-        public async Task ActualizaProgramasConPropuestasAsync(List<ProgramaPatrullaje> programas)
+        public async Task ActualizaPropuestasAgregaProgramasAsync(List<ProgramaPatrullaje> programas)
         {
             string edoAutorizada = "Autorizada";
             var idEdoAutorizada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToListAsync();
@@ -1092,13 +1095,12 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ActualizaPropuestasAutorizadaToRechazada</c> implementa la interface para actualizar el estado de propuestas autorizadas hacia propuestas rechazadas.
         /// </summary>
-        public async Task ActualizaPropuestasAutorizadaToRechazadaAsync(List<PropuestaPatrullaje> propuestas, int usuarioId)
+        public async Task ActualizaPropuestasAutorizadaToRechazadaAsync(List<int> idPropuestas, int usuarioId)
         {
             string edoAutorizada = "Autorizada";
             var idEdoAutorizada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToListAsync();
             string edoRechazada = "Rechazada";
             var idEdoRechazada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoRechazada).Select(x => x.IdEstadoPropuesta).ToListAsync();
-            var idPropuestas = propuestas.Select(x => x.IdPropuestaPatrullaje).ToList();
 
             var propuestasActualizar = await  (from c in _programaContext.PropuestasPatrullajes
                                where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
@@ -1121,13 +1123,12 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandancia</c> implementa la interface para actualizar el estado d elas propuestas de aprobada por comandancia hacia pendiente de aprobación.
         /// </summary>
-        public async Task ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(List<PropuestaPatrullaje> propuestas, int usuarioId)
+        public async Task ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(List<int> idPropuestas, int usuarioId)
         {
             string edoAprobada = "Aprobada por comandancia regional";
             var idEdoAprobada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAprobada).Select(x => x.IdEstadoPropuesta).ToListAsync();
             string edoPendiente = "Pendiente de aprobacion por comandancia regional";
             var idEdoPendiente = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoPendiente).Select(x => x.IdEstadoPropuesta).ToListAsync();
-            var idPropuestas = propuestas.Select(x => x.IdPropuestaPatrullaje).ToList();
 
             var propuestasActualizar = await (from c in _programaContext.PropuestasPatrullajes
                                         where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
@@ -1150,13 +1151,12 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsf</c> implementa la interface para actualizar el estado de las propuestas de autorizadas hacia pendiente de autorización SSF.
         /// </summary>
-        public async Task ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(List<PropuestaPatrullaje> propuestas, int usuarioId)
+        public async Task ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(List<int> idPropuestas, int usuarioId)
         {
             string edoAutorizada = "Autorizada";
             var idEdoAutorizada =await  _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToListAsync();
             string edoPendiente = "Pendiente de autorizacion por la SSF";
             var idEdoPendiente = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoPendiente).Select(x => x.IdEstadoPropuesta).ToListAsync();
-            var idPropuestas = propuestas.Select(x => x.IdPropuestaPatrullaje).ToList();
 
             var propuestasActualizar =await  (from c in _programaContext.PropuestasPatrullajes
                                         where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN

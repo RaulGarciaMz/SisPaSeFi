@@ -69,7 +69,7 @@ namespace WebApiSSF.Controllers
         /// Registra una propuesta o un programa de patrullaje
         /// </summary>
         /// <param name="opcion">Tipo de elemento a registrar ("Propuesta" o "Programa") </param>
-        /// <param name="clase">Clase de patrullaje a registrar ("EXTRAORDINARIO" o "") </param>
+        /// <param name="clase">Clase de patrullaje a registrar ("EXTRAORDINARIO" o "PROGRAMADO") </param>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
         /// <param name="p">Programa de patrullaje a registrar</param>
         /// <returns></returns>   
@@ -155,7 +155,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PutPropuestasToProgramas([Required] string opcion, [FromQuery] int accion, [Required] string usuario, [FromBody] List<ProgramaDto> p)
+        public async Task<ActionResult> PutPropuestasToProgramas([Required] string opcion, [FromQuery] int accion, [Required] string usuario, [FromBody] List<PropuestaDtoForListaUpdate> p)
         {
             try
             {

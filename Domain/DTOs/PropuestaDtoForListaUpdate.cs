@@ -1,116 +1,5 @@
 ﻿namespace Domain.DTOs
 {
-    /// <summary>
-    /// Programa de patrullaje
-    /// </summary>
-    public class ProgramaDto
-    {
-        /// <summary>
-        /// Identificador del programa de patrullaje
-        /// </summary>
-        public int IdPrograma { get; set; }
-        /// <summary>
-        /// Identificador de la ruta del programa de patrullaje
-        /// </summary>
-        public int intIdRuta { get; set; }
-        /// <summary>
-        /// Fecha del patrullaje
-        /// </summary>
-        public string strFechaPatrullaje { get; set; }
-        /// <summary>
-        /// Hora de inicio del patrullaje
-        /// </summary>
-        public string Inicio { get; set; }
-        /// <summary>
-        /// Identificador del punto de patrullaje responsable del programa de patrullaje
-        /// </summary>
-        public int intIdPuntoResponsable { get; set; }
-        /// <summary>
-        /// Clave del programa de patrullaje
-        /// </summary>
-        public string Clave { get; set; }
-        /// <summary>
-        /// Identificador de la región militar SDN del programa de patrullaje
-        /// </summary>
-        public int RegionMilitarSDN { get; set; }
-        /// <summary>
-        /// Ídentificador de la región SSF del programa de patrullaje
-        /// </summary>
-        public int RegionSSF { get; set; }
-        /// <summary>
-        /// Observaciones realizadas a las ruta del programa de patrullaje
-        /// </summary>
-        public string ObservacionesRuta { get; set; }
-        /// <summary>
-        /// Descripción del estado del patrullaje
-        /// </summary>
-        public string DescripcionEstadoPatrullaje { get; set; }
-        /// <summary>
-        /// Observaciones realizadas al programa de patrullaje
-        /// </summary>
-        public string ObservacionesPrograma { get; set; }
-        /// <summary>
-        /// Identificador del nivel de riesgo del programa de patrullaje
-        /// </summary>
-        public string intIdRiesgoPatrullaje { get; set; }
-        /// <summary>
-        /// Descripción de la solicitud del oficio de comisión del programa de patrullaje
-        /// </summary>
-        public string SolicitudOficioComision { get; set; }
-        /// <summary>
-        /// Descripción del oficio de comisión del programa de patrullaje
-        /// </summary>
-        public string OficioComision { get; set; }
-        /// <summary>
-        /// Descripción del nivel de riesgo del programa de patrullaje
-        /// </summary>
-        public string DescripcionNivelRiesgo { get; set; }
-        /// <summary>
-        /// Descripción del itinerario del programa de patrullaje
-        /// </summary>
-        public string Itinerario { get; set; }
-        /// <summary>
-        /// Fecha de la última actualización del registro del programa de patrullaje
-        /// </summary>
-        public string UltimaActualizacion { get; set; }
-        /// <summary>
-        /// Identificador del usuario que regstró el programa de patrullaje
-        /// </summary>
-        public int IdUsuario { get; set; }
-        /// <summary>
-        /// Identificador del usuario responsable del patrullaje en el programa
-        /// </summary>
-        public int UsuarioResponsablePatrullaje { get; set; }
-        /// <summary>
-        /// Identificador de la ruta de patrullaje original solicitada para el programa de patrullaje
-        /// </summary>
-        public int intidrutaoriginal { get; set; }
-        /// <summary>
-        /// Identificador de la propuesta de patrullaje correspondiente al programa
-        /// </summary>
-        public int intidpropuestapatrullaje { get; set; }
-        /// <summary>
-        /// FEcha de término del program de patrullaje
-        /// </summary>
-        public string FechaTermino { get; set; }
-        /// <summary>
-        /// Lista de identificadores de las propuestas de vehículos para el programa de patrullaje
-        /// </summary>
-        public List<int> LstPropuestasPatrullajesVehiculos { get; set; }
-        /// <summary>
-        /// Lista de identificadores de las propuestas de líneas para el programa de patrullaje
-        /// </summary>
-        public List<int> LstPropuestasPatrullajesLineas { get; set; }
-        /// <summary>
-        /// Lista de las propuestas de fechas patrullaje para el programa
-        /// </summary>
-        public List<string> LstPropuestasPatrullajesFechas { get; set; }
-        /// <summary>
-        /// Indicador para conocer si se requiere apoyo para el programa de patrullaje
-        /// </summary>
-        public int intApoyoPatrullaje { get; set; }
-    }
-
     public class ProgramaDtoForCreate
     {
         /// <summary>
@@ -255,6 +144,10 @@
         /// </summary>
         public int intIdPrograma { get; set; }
         /// <summary>
+        /// Identificador de la propuesta de patrullaje
+        /// </summary>
+        public int intidpropuestapatrullaje { get; set; }
+        /// <summary>
         /// Hora de inicio del patrullaje
         /// </summary>
         public string strInicio { get; set; }
@@ -266,10 +159,12 @@
         /// Identificador del nivel de riesgo del programa de patrullaje
         /// </summary>
         public int intIdRiesgoPatrullaje { get; set; }
+/*
         /// <summary>
         /// Identificador del usuario que regstró el programa de patrullaje
         /// </summary>
         public int IdUsuario { get; set; }
+*/
         /// <summary>
         /// Identificador del estado del patrullaje
         /// </summary>
@@ -284,6 +179,40 @@
         public string strOficio { get; set; }
     }
 
+    /// <summary>
+    /// Propuesta de patrullaje para actualizar ó actualizar y crear programa de patrullaje
+    /// </summary>
+    public class PropuestaDtoForListaUpdate
+    {
+        /// <summary>
+        /// Identificador de la propuesta de patrullaje
+        /// </summary>
+        public int intidpropuestapatrullaje { get; set; }
+        /// <summary>
+        /// Identificador de la ruta del programa de patrullaje
+        /// </summary>
+        public int intIdRuta { get; set; }
+        /// <summary>
+        /// Fecha del patrullaje
+        /// </summary>
+        public string strFechaPatrullaje { get; set; }
+        /// <summary>
+        /// Identificador del nivel de riesgo del programa de patrullaje
+        /// </summary>
+        public int intIdRiesgoPatrullaje { get; set; }
+                // <summary>
+        // Identificador del usuario que regstró el programa de patrullaje
+        // </summary>
+        public int intIdUsuario { get; set; }
+        /// <summary>
+        /// Identificador del punto de patrullaje responsable del programa de patrullaje
+        /// </summary>
+        public int intIdPuntoResponsable { get; set; }
+        /// <summary>
+        /// Identificador de la ruta de patrullaje original solicitada para el programa de patrullaje
+        /// </summary>
+        public int intidrutaoriginal { get; set; }
+    }
 
     /// <summary>
     /// Patrullaje

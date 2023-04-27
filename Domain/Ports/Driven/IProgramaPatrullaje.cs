@@ -17,7 +17,7 @@ namespace Domain.Ports.Driven
         Task AgregaPropuestasFechasMultiplesAsync(PropuestaPatrullaje pp, List<DateTime> fechas, string clase, int usuarioId);
         Task AgregaProgramaFechasMultiplesAsync(ProgramaPatrullaje pp, List<DateTime> fechas, int usuarioId);
         Task ActualizaProgramaPorCambioDeRutaAsync(int idPrograma, int idRuta, int usuarioId);
-        Task ActualizaProgramasConPropuestasAsync(List<ProgramaPatrullaje> programas);
+        Task ActualizaPropuestasAgregaProgramasAsync(List<ProgramaPatrullaje> programas);
         Task ActualizaProgramasPorInicioPatrullajeAsync(int idPrograma, int idRiesgo, int idUsuario, int idEstadoPatrullaje, TimeSpan inicio);
         Task ActualizaPropuestaToAutorizadaAsync(int idPropuesta);
         Task ActualizaPropuestaToAprobadaComandanciaRegionalAsync(int idPropuesta);
@@ -26,9 +26,9 @@ namespace Domain.Ports.Driven
         Task ActualizaProgramaRegistraOficioComisionAsync(int idPrograma, string oficio);
         Task ActualizaPropuestaRegistraOficioAutorizacionAsync(int idPropuesta, string oficio);
 
-        Task ActualizaPropuestasAutorizadaToRechazadaAsync(List<PropuestaPatrullaje> propuestas, int usuarioId);
-        Task ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(List<PropuestaPatrullaje> propuestas, int usuarioId);
-        Task ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(List<PropuestaPatrullaje> propuestas, int usuarioId);        
+        Task ActualizaPropuestasAutorizadaToRechazadaAsync(List<int> propuestas, int usuarioId);
+        Task ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(List<int> propuestas, int usuarioId);
+        Task ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(List<int> propuestas, int usuarioId);        
         Task DeletePropuestaAsync(int id);
     }
 

@@ -221,7 +221,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task ActualizaPropuestasOrProgramasPorOpcionAndAccion(List<ProgramaDto> p, string opcion, int accion, string usuario)
+        public async Task ActualizaPropuestasOrProgramasPorOpcionAndAccion(List<PropuestaDtoForListaUpdate> p, string opcion, int accion, string usuario)
         {
             var userId = await _repo.ObtenerIdUsuarioAsync(usuario);
 
@@ -232,35 +232,34 @@ namespace DomainServices.DomServ
                     case "Programa":
                         var lstProgramas = new List<ProgramaPatrullaje>();
 
-                        foreach (ProgramaDto prog in p)
+                        foreach (PropuestaDtoForListaUpdate prog in p)
                         {
-                            var a = ConvierteProgramaDtoForUpdateToProgramaDominio(prog);
+                            var a = ConvierteProgramaDtoForUpdateToProgramaDominioForCreate(prog);
                             lstProgramas.Add(a);
                         }
-                        await _repo.ActualizaProgramasConPropuestasAsync(lstProgramas);
+                        await _repo.ActualizaPropuestasAgregaProgramasAsync(lstProgramas);
 
                         break;
 
                     case "Propuesta":
 
-                        var lstPropuestas = new List<PropuestaPatrullaje>();
+                        var lstIdsPropuestas = new List<int>();
 
-                        foreach (ProgramaDto prog in p)
+                        foreach (PropuestaDtoForListaUpdate prog in p)
                         {
-                            var a = ConvierteProgramaDtoForUpdateToPropuestaDominio(prog);
-                            lstPropuestas.Add(a);
+                            lstIdsPropuestas.Add(prog.intidpropuestapatrullaje);
                         }
 
                         switch (accion)
                         {
                             case 2:
-                                await _repo.ActualizaPropuestasAutorizadaToRechazadaAsync(lstPropuestas, userId);
+                                await _repo.ActualizaPropuestasAutorizadaToRechazadaAsync(lstIdsPropuestas, userId);
                                 break;
                             case 3:
-                                await _repo.ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(lstPropuestas, userId);
+                                await _repo.ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(lstIdsPropuestas, userId);
                                 break;
                             case 4:
-                                await _repo.ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(lstPropuestas, userId);
+                                await _repo.ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(lstIdsPropuestas, userId);
                                 break;
                         }
                         break;
@@ -282,15 +281,15 @@ namespace DomainServices.DomServ
 
                     case "InicioPatrullaje":
                         TimeSpan ini = TimeSpan.Parse(p.strInicio);
-                        await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.intIdPrograma, p.intIdRiesgoPatrullaje, p.IdUsuario, p.intIdEstadoPatrullaje, ini);
+                        await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.intIdPrograma, p.intIdRiesgoPatrullaje, userId, p.intIdEstadoPatrullaje, ini);
                         break;
 
                     case "AutorizaPropuesta":
-                        await _repo.ActualizaPropuestaToAutorizadaAsync(p.intIdPrograma);
+                        await _repo.ActualizaPropuestaToAutorizadaAsync(p.intidpropuestapatrullaje);
                         break;
 
                     case "RegionalApruebaPropuesta":
-                        await _repo.ActualizaPropuestaToAprobadaComandanciaRegionalAsync(p.intIdPrograma);
+                        await _repo.ActualizaPropuestaToAprobadaComandanciaRegionalAsync(p.intidpropuestapatrullaje);
                         break;
 
                     case "RegistrarSolicitudOficioComision":
@@ -298,7 +297,7 @@ namespace DomainServices.DomServ
                         break;
 
                     case "RegistrarSolicitudOficioAutorizacion":
-                        await _repo.ActualizaPropuestaRegistraSolicitudOficioAutorizacionAsync(p.intIdPrograma, p.strSolicitudOficio);
+                        await _repo.ActualizaPropuestaRegistraSolicitudOficioAutorizacionAsync(p.intidpropuestapatrullaje, p.strSolicitudOficio);
                         break;
 
                     case "RegistrarOficioComision":
@@ -306,7 +305,7 @@ namespace DomainServices.DomServ
                         break;
 
                     case "RegistrarOficioAutorizacion":
-                        await _repo.ActualizaPropuestaRegistraOficioAutorizacionAsync(p.intIdPrograma, p.strOficio);
+                        await _repo.ActualizaPropuestaRegistraOficioAutorizacionAsync(p.intidpropuestapatrullaje, p.strOficio);
                         break;
                 }
             }
@@ -425,27 +424,20 @@ namespace DomainServices.DomServ
             return pp;
         }
 
-        private ProgramaPatrullaje ConvierteProgramaDtoForUpdateToProgramaDominio(ProgramaDto p)
+
+        private ProgramaPatrullaje ConvierteProgramaDtoForUpdateToProgramaDominioForCreate(PropuestaDtoForListaUpdate p)
         {
-            var pp = new ProgramaPatrullaje()
+            return new ProgramaPatrullaje()
             {
                 UltimaActualizacion = DateTime.UtcNow,
                 IdRuta = p.intIdRuta,
-                IdUsuario = p.IdUsuario,
+                IdUsuario = p.intIdUsuario,
                 IdPuntoResponsable = p.intIdPuntoResponsable,
-                Observaciones = p.ObservacionesPrograma,
-                IdApoyoPatrullaje = p.intApoyoPatrullaje,
-                RiesgoPatrullaje = Int32.Parse(p.intIdRiesgoPatrullaje),
-                IdPropuestaPatrullaje = p.intidpropuestapatrullaje
+                IdPropuestaPatrullaje = p.intidpropuestapatrullaje,
+                RiesgoPatrullaje = p.intIdRiesgoPatrullaje,
+                IdRutaOriginal = p.intidrutaoriginal,
+                FechaPatrullaje = DateTime.Parse(p.strFechaPatrullaje)
             };
-
-            DateTime dateValue;
-            if (DateTime.TryParse(p.strFechaPatrullaje, out dateValue))
-            {
-                pp.FechaPatrullaje = dateValue;
-            }
-
-            return pp;
         }
 
         private List<PropuestaPatrullajeVehiculo> ConvierteListaVehiculosDtoToVehiculosDomain(ProgramaDtoForCreateWithListas p) 
@@ -506,27 +498,6 @@ namespace DomainServices.DomServ
             return pp;
         }
 
-        private PropuestaPatrullaje ConvierteProgramaDtoForUpdateToPropuestaDominio(ProgramaDto p)
-        {
-            var pp = new PropuestaPatrullaje()
-            {
-                UltimaActualizacion = DateTime.UtcNow,
-                IdRuta = p.intIdRuta,
-                IdUsuario = p.IdUsuario,
-                IdPuntoResponsable = p.intIdPuntoResponsable,
-                Observaciones = p.ObservacionesPrograma,
-                IdApoyoPatrullaje = p.intApoyoPatrullaje,
-                RiesgoPatrullaje = Int32.Parse(p.intIdRiesgoPatrullaje),
-            };
-
-            DateTime dateValue;
-            if (DateTime.TryParse(p.strFechaPatrullaje, out dateValue))
-            {
-                pp.FechaPatrullaje = dateValue;
-            }
-
-            return pp;
-        }
 
         private List<DateTime> ConvierteStringFechaToDateTime(List<string> fechas) 
         {
