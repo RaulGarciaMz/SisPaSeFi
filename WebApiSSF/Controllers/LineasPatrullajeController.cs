@@ -26,8 +26,8 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene las líneas de patrullaje acorde a las opciones indicadas
         /// </summary>
-        /// <param name="opcion">Indicador del tipo de filtro para aplicar en la obtención de líneas (0 - Por clave de línea (valor de clave en criterio), 1 - Por ubicación del punto de inicio de la línea (valor de ubicacion en criterio), 2 - Por ubicación del punto de final de la línea (valor de ubicacion en criterio), 3 - Por un cuadrado definido alrededor de la ruta indicada (valor del identificador de la ruta en criterio), 4 - Por un radio de 5Km alrededor del punto indicado (valor del identificador del punto en criterio), 5 - Por un radio de 5Km alrededor de las coordenadas indicadas (valor de coordenadas en criterio))</param>
-        /// <param name="criterio">Criterio de búsqueda acorde a la opción indicada. si la opción es 4, debe representar el identificador de un punto de patrullaje (un entero)</param>
+        /// <param name="opcion">Indicador del tipo de filtro para aplicar en la obtención de líneas (0 - Por clave de línea, 1 - Por ubicación del punto de inicio de la línea, 2 - Por ubicación del punto de final de la línea, 3 - Por un cuadrado definido alrededor de la ruta indicada, 4 - Por un radio de 5Km alrededor del punto indicado, 5 - Por un radio de 5Km alrededor de las coordenadas indicadas)</param>
+        /// <param name="criterio">Criterio de búsqueda acorde a la opción indicada. Si la opción es: 0 - criterio es la clave de la línea (texto), 1 - criterio es la ubicación (o parte del texto) del punto de inicio de la línea (texto), 2 - criterio es la ubicación (o parte del texto) del punto de final de la línea (texto), 3 - criterio es el identificador de la ruta (entero), 4 - criterio es el identificador del punto de patrullaje (entero), 5 - criterio es el valor de las coordenadas x,y (texto)</param>
         /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [HttpGet]
