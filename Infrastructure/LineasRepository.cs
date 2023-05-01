@@ -114,8 +114,8 @@ namespace SqlServerAdapter
                                 	JOIN ssf.puntospatrullaje c ON b.id_punto=c.id_punto
                                 	WHERE a.id_ruta = @pCriterio 
                                 ) cuadrante
-                                WHERE a.latitud BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
-                                AND a.longitud BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud";
+                                WHERE TRY_CAST(c.latitud AS FLOAT) BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
+                                AND TRY_CAST(c.longitud AS FLOAT) BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud";
 
             object[] parametros = new object[]
             {
@@ -146,8 +146,8 @@ namespace SqlServerAdapter
                                 	JOIN ssf.puntospatrullaje c ON b.id_punto=c.id_punto
                                 	WHERE c.id_punto = @pCriterio 
                                 ) cuadrante
-                                WHERE a.latitud BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
-                                AND a.longitud BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud";
+                                WHERE TRY_CAST(c.latitud AS FLOAT) BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
+                                AND TRY_CAST(c.longitud AS FLOAT) BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud";
 
             object[] parametros = new object[]
             {
@@ -174,8 +174,8 @@ namespace SqlServerAdapter
                                   SELECT CAST(@pLatitud AS FLOAT)+0.05 maxLatitud,  CAST(@pLatitud AS FLOAT)-0.05 minLatitud, 
                                          CAST(@pLongitud AS FLOAT)-0.01 minLongitud, CAST(@pLongitud AS FLOAT)+0.01 maxLongitud 
                                 ) cuadrante
-                                WHERE a.latitud BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
-                                AND a.longitud BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud";
+                                WHERE TRY_CAST(c.latitud AS FLOAT) BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
+                                AND TRY_CAST(c.longitud AS FLOAT) BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud";
 
             object[] parametros = new object[]
             {
