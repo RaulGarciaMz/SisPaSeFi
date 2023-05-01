@@ -105,8 +105,8 @@ namespace SqlServerAdapter
                                 ) cuadrante
                                 WHERE
                                 a.id_linea = @pLinea
-                                 AND a.latitud BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
-                                AND a.longitud BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud
+                                 AND TRY_CAST(a.latitud AS FLOAT) BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
+                                AND TRY_CAST(a.longitud AS FLOAT) BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud
                                 ORDER BY a.nombre";
 
             object[] parametros = new object[]
@@ -131,8 +131,8 @@ namespace SqlServerAdapter
                                 (
                                 SELECT @pLatitud+0.05 maxLatitud, @pLongitud-0.05 minLatitud, @pLatitud-0.01 minLongitud, @pLatitud+0.01 maxLongitud 
                                 ) cuadrante
-                                WHERE a.latitud BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
-                                AND a.longitud BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud
+                                WHERE TRY_CAST(a.latitud AS FLOAT) BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
+                                AND TRY_CAST(a.longitud AS FLOAT) BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud
                                 ORDER BY a.nombre";
 
             object[] parametros = new object[]

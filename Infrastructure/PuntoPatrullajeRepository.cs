@@ -55,8 +55,8 @@ namespace SqlServerAdapter
                                   WHERE a.id_ruta = @pRuta 
                                   ) cuadrante
                                  WHERE a.esInstalacion=1
-                                  AND a.latitud BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
-                                  AND a.longitud BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud
+                                  AND TRY_CAST(a.latitud AS FLOAT) BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
+                                  AND TRY_CAST(a.longitud AS FLOAT) BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud
                                  ORDER BY a.ubicacion";
 
             object[] parametros = new object[]
