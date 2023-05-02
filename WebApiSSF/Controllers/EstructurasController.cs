@@ -34,11 +34,36 @@ namespace WebApiSSF.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<EstructuraDto>>> ObtenerEstructuraPorOpcion([Required] int idLinea, [Required] string usuario, int opcion = 0, string criterio ="")
         {
             try
             {
+                if (opcion <= 0 || opcion > 3) 
+                {
+                    return BadRequest("opción no válida. Debe ser 1,2 o 3");
+                }
+
+                if (opcion == 2) 
+                {                    
+                    var esEntero = Int32.TryParse(criterio, out int val);
+                    if (!esEntero)
+                        return BadRequest("error en criterio, para la opción 2, debe ser un entero");
+                }
+
+                if (opcion == 3)
+                {
+                    var coord = criterio.Split(",");
+                    var latOk = float.TryParse(coord[0], out float x);
+                    var longOk = float.TryParse(coord[1], out float y);
+                    
+                    if (!latOk)
+                        return BadRequest("coordenadas erróneas en x (latitud)");
+                    if (!longOk)
+                        return BadRequest("coordenadas erróneas en y (longitud)");
+                }
+
                 var coms = await _pp.ObtenerEstructuraPorOpcionAsync(opcion,idLinea,criterio, usuario);
 
                 if (coms.Count <= 0)
@@ -78,7 +103,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener la estructura por identificador", ex);
+                _log.LogError($"error al obtener la estructura por identificador ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

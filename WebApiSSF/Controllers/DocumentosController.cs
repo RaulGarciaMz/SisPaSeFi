@@ -38,11 +38,35 @@ namespace WebApiSSF.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<DocumentoDto>>> Get([Required] string opcion, [Required] string criterio, [Required] int anio, [Required] int mes, [Required] string usuario)
         {
             try
             {
+                var opciones = new List<string>()
+                                    {
+                                        "DocumentosPatrullaje",
+                                        "DocumentosDeUnUsuario",
+                                        "DocumentosParaUnUsuario"
+                                    };
+
+                var criterios = new List<string>()
+                                    {
+                                        "TODO",
+                                        "MES"
+                                    };
+
+                if(!opciones.Contains(opcion)) 
+                {
+                    return BadRequest("opción no válida");
+                }
+
+                if (!criterios.Contains(criterio))
+                {
+                    return BadRequest("criterio no válido");
+                }
+
                 var evidencias = await _pp.ObtenerDocumentosAsync(opcion, criterio, anio, mes, usuario);
 
                 if (evidencias == null || evidencias.Count() == 0)
@@ -54,7 +78,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener documentos de patrullaje para la opción: {opcion}, criterio: {criterio}, del Año: {anio} y Mes: {mes} para el usuario: {usuario}", ex);
+                _log.LogError($"error al obtener documentos de patrullaje para la opción: {opcion}, criterio: {criterio}, del Año: {anio} y Mes: {mes} para el usuario: {usuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

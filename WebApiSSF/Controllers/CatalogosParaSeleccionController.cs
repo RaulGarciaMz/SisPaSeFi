@@ -485,11 +485,38 @@ namespace WebApiSSF.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<CatalogoGenerico>>> ObtenerCatalogoPorOpcion([Required]string opcion, [Required] string usuario)
         {
             try
             {
+                var opciones = new List<string>()
+                                    {
+                                        "RSF",
+                                        "TipoPatrullaje",
+                                        "TipoVehiculo",
+                                        "ClasificacionIncidencia",
+                                        "Niveles",
+                                        "ConceptosAfectacion",
+                                        "RegionesSDN",
+                                        "ResultadoPatrullaje",
+                                        "EstadosDelPais",
+                                        "MunicipiosEstado",
+                                        "ProcesosResponsables",
+                                        "GerenciaDivision",
+                                        "TipoDocumento",
+                                        "EstadosPatrullaje",
+                                        "ApoyoPatrullaje",
+                                        "InstalacionesDeComandancia",
+                                        "NivelRiesgo",
+                                    };
+
+                if (!opciones.Contains(opcion)) 
+                {
+                    return BadRequest("opción desconocida");
+                }
+
                 var coms = await _pp.ObtenerCatalogoPorOpcionAsync(opcion, usuario);
 
                 if (coms == null)
