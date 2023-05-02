@@ -859,7 +859,7 @@ namespace SqlServerAdapter
                     {
                         UltimaActualizacion = pp.UltimaActualizacion,
                         IdRuta = pp.IdRuta,
-                        FechaPatrullaje = pp.FechaPatrullaje,
+                        FechaPatrullaje = fecha,
                         IdUsuario = usuarioId,
                         IdPuntoResponsable = pp.IdPuntoResponsable,
                         Observaciones = observacion,
