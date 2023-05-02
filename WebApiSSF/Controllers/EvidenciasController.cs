@@ -28,7 +28,7 @@ namespace WebApiSSF.Controllers
         /// Obtiene las evidencias de acuerdo a los parámetros indicados
         /// </summary>
         /// <param name="idReporte">Identificador del reporte</param>
-        /// <param name="opcion">Tipo de incidencia ("INSTALACION" o "ESTRUCTURA")</param>
+        /// <param name="opcion">Tipo de incidencia ("EvidenciaIncidenciaEnINSTALACION", "EvidenciaIncidenciaEnESTRUCTURA", "EvidenciaSeguimientoIncidenciaEnINSTALACION", "EvidenciaSeguimientoIncidenciaEnESTRUCTURA")</param>
         /// <param name="usuario">Usuario (alias o usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [HttpGet]
@@ -40,6 +40,19 @@ namespace WebApiSSF.Controllers
         {
             try
             {
+                var opciones = new List<string>() 
+                {
+                    "EvidenciaIncidenciaEnINSTALACION",
+                    "EvidenciaIncidenciaEnESTRUCTURA",
+                    "EvidenciaSeguimientoIncidenciaEnINSTALACION",
+                    "EvidenciaSeguimientoIncidenciaEnESTRUCTURA"
+                };
+
+                if(!opciones.Contains(opcion)) 
+                {
+                    return BadRequest("opción no válida");
+                }
+
                 var evidencias = await _pp.ObtenerEvidenciasPorTipo(idReporte, opcion, usuario);
 
                 if (evidencias == null || evidencias.Count() == 0) 
@@ -82,7 +95,7 @@ namespace WebApiSSF.Controllers
         /// Elimina evidencias acorde a los parámetros indicados
         /// </summary>
         /// <param name="idEvidencia">Identificador de la evidencia</param>
-        /// <param name="tipoIncidencia">Tipo de la evidencia ("INSTALACION", "ESTRUCTURA")</param>
+        /// <param name="tipoIncidencia">Tipo de la evidencia ("INSTALACION", "ESTRUCTURA", "SeguimientoINSTALACION", "SeguimientoESTRUCTURA")</param>
         /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [HttpDelete]

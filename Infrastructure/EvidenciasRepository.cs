@@ -4,11 +4,6 @@ using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlServerAdapter
 {
@@ -52,6 +47,36 @@ namespace SqlServerAdapter
             await _evidenciaContext.SaveChangesAsync();
         }
 
+        public async Task AgregarEvidenciaSeguimientoDeEstructuraAsync(int idReporte, string rutaArchivo, string nombreArchivo, string descripcion)
+        {
+            var evidencia = new EvidenciaSeguimientoIncidencia()
+            {
+                IdBitacoraSeguimientoIncidencia = idReporte,
+                RutaArchivo = rutaArchivo,
+                NombreArchivo = nombreArchivo,
+                Descripcion = descripcion
+            };
+
+            _evidenciaContext.EvidenciasSeguimientoEstructura.Add(evidencia);
+
+            await _evidenciaContext.SaveChangesAsync();
+        }
+
+        public async Task AgregarEvidenciaSeguimientoDeInstalacionAsync(int idReporte, string rutaArchivo, string nombreArchivo, string descripcion)
+        {
+            var evidencia = new EvidenciaSeguimientoIncidenciaPunto()
+            {
+                IdBitacoraSeguimientoIncidenciaPunto = idReporte,
+                RutaArchivo = rutaArchivo,
+                NombreArchivo = nombreArchivo,
+                Descripcion = descripcion
+            };
+
+            _evidenciaContext.EvidenciasSeguimientoInstalacion.Add(evidencia);
+
+            await _evidenciaContext.SaveChangesAsync();
+        }
+
         public async Task BorrarEvidenciaDeEstructuraAsync(int idEvidencia)
         {
             var ev = await _evidenciaContext.EvidenciasEstructura.Where(x => x.IdEvidenciaIncidencia == idEvidencia).FirstOrDefaultAsync();
@@ -72,6 +97,28 @@ namespace SqlServerAdapter
                 _evidenciaContext.EvidenciasInstalacion.Remove(ev);
                 await _evidenciaContext.SaveChangesAsync();
             }         
+        }
+
+        public async Task BorrarEvidenciaSeguimientoDeEstructuraAsync(int idEvidencia)
+        {
+            var ev = await _evidenciaContext.EvidenciasSeguimientoEstructura.Where(x => x.IdBitacoraSeguimientoIncidencia == idEvidencia).FirstOrDefaultAsync();
+
+            if (ev != null)
+            {
+                _evidenciaContext.EvidenciasSeguimientoEstructura.Remove(ev);
+                await _evidenciaContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task BorrarEvidenciaSeguimientoDeInstalacionAsync(int idEvidencia)
+        {
+            var ev = await _evidenciaContext.EvidenciasSeguimientoInstalacion.Where(x => x.IdBitacoraSeguimientoIncidenciaPunto == idEvidencia).FirstOrDefaultAsync();
+
+            if (ev != null)
+            {
+                _evidenciaContext.EvidenciasSeguimientoInstalacion.Remove(ev);
+                await _evidenciaContext.SaveChangesAsync();
+            }
         }
 
         public async Task<List<EvidenciaVista>> ObtenerEvidenciaDeEstructuraAsync(int idReporte)
@@ -97,6 +144,38 @@ namespace SqlServerAdapter
                                 FROM ssf.reportepunto a
                                 JOIN ssf.evidenciaincidenciaspunto b ON a.id_reportepunto=b.id_reportepunto
                                 WHERE a.id_reportepunto= @pReporte";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pReporte", idReporte),
+            };
+
+            return await _evidenciaContext.EvidenciasEstructuraVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<List<EvidenciaVista>> ObtenerEvidenciaSeguimientoDeEstructuraAsync(int idReporte)
+        {
+            string sqlQuery = @"SELECT b.id_evidenciaseguimientoincidencia IdEvidencia, b.id_bitacoraseguimientoincidencia IdReporte, b.rutaarchivo, 
+                                       b.nombrearchivo, b.descripcion,'SeguimientoESTRUCTURA' as tiporeporte
+                                FROM ssf.bitacoraseguimientoincidencia a
+                                JOIN ssf.evidenciaseguimientoincidencia b ON a.id_bitacoraseguimientoincidencia = b.id_bitacoraseguimientoincidencia
+                                WHERE a.id_bitacoraseguimientoincidencia = @pReporte";
+            
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pReporte", idReporte),
+            };
+
+            return await _evidenciaContext.EvidenciasEstructuraVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<List<EvidenciaVista>> ObtenerEvidenciaSeguimientoDeInstalacionAsync(int idReporte)
+        {
+            string sqlQuery = @"SELECT b.id_evidenciaseguimientoincidenciapunto IdEvidencia, b.id_bitacoraseguimientoincidenciapunto IdReporte, b.rutaarchivo, 
+                                       b.nombrearchivo, b.descripcion, 'SeguimientoINSTALACION' as tiporeporte
+                                FROM ssf.bitacoraseguimientoincidenciapunto a
+                                JOIN ssf.evidenciaseguimientoincidenciapunto b ON a.id_bitacoraseguimientoincidenciapunto = b.id_bitacoraseguimientoincidenciapunto
+                                WHERE a.id_bitacoraseguimientoincidenciapunto = @pReporte";
 
             object[] parametros = new object[]
             {

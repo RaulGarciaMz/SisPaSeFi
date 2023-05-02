@@ -3,12 +3,7 @@ using Domain.Entities.Vistas;
 using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DomainServices.DomServ
 {
@@ -35,7 +30,13 @@ namespace DomainServices.DomServ
                         await _repo.AgregarEvidenciaDeInstalacionAsync(evidencia.intIdReporte, evidencia.strRutaArchivo, evidencia.strNombreArchivo, evidencia.strDescripcion);
                         break;
                     case "ESTRUCTURA":
-                        await _repo.AgregarEvidenciaDeInstalacionAsync(evidencia.intIdReporte, evidencia.strRutaArchivo, evidencia.strNombreArchivo, evidencia.strDescripcion);
+                        await _repo.AgregarEvidenciaDeEstructuraAsync(evidencia.intIdReporte, evidencia.strRutaArchivo, evidencia.strNombreArchivo, evidencia.strDescripcion);
+                        break;
+                    case "SeguimientoINSTALACION":
+                        await _repo.AgregarEvidenciaSeguimientoDeInstalacionAsync(evidencia.intIdReporte, evidencia.strRutaArchivo, evidencia.strNombreArchivo, evidencia.strDescripcion);
+                        break;
+                    case "SeguimientoESTRUCTURA":
+                        await _repo.AgregarEvidenciaSeguimientoDeEstructuraAsync(evidencia.intIdReporte, evidencia.strRutaArchivo, evidencia.strNombreArchivo, evidencia.strDescripcion);
                         break;
                 }
             }            
@@ -55,10 +56,15 @@ namespace DomainServices.DomServ
                     case "ESTRUCTURA":
                         await _repo.BorrarEvidenciaDeEstructuraAsync(idEvidencia);
                         break;
+                    case "SeguimientoINSTALACION":
+                        await _repo.BorrarEvidenciaSeguimientoDeInstalacionAsync(idEvidencia);
+                        break;
+                    case "SeguimientoESTRUCTURA":
+                        await _repo.BorrarEvidenciaSeguimientoDeEstructuraAsync(idEvidencia);
+                        break;
                 }
             }
         }
-
         public async Task<List<EvidenciaVista>> ObtenerEvidenciasPorTipo( int idReporte, string tipo, string usuario)
         {
             var l = new List<EvidenciaVista>();
@@ -73,6 +79,12 @@ namespace DomainServices.DomServ
                         break;
                     case "EvidenciaIncidenciaEnESTRUCTURA":
                         l =await _repo.ObtenerEvidenciaDeEstructuraAsync(idReporte);
+                        break;
+                    case "EvidenciaSeguimientoIncidenciaEnINSTALACION":
+                        l = await _repo.ObtenerEvidenciaSeguimientoDeInstalacionAsync(idReporte);
+                        break;
+                    case "EvidenciaSeguimientoIncidenciaEnESTRUCTURA":
+                        l = await _repo.ObtenerEvidenciaSeguimientoDeEstructuraAsync(idReporte);
                         break;
                 }
             }

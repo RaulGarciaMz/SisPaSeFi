@@ -1,11 +1,6 @@
-﻿using Domain.Entities.Vistas;
-using Domain.Entities;
+﻿using Domain.Entities;
+using Domain.Entities.Vistas;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlServerAdapter.Data
 {
@@ -18,6 +13,8 @@ namespace SqlServerAdapter.Data
 
         public DbSet<EvidenciaIncidencia> EvidenciasEstructura { get; set; }
         public DbSet<EvidenciaIncidenciaPunto> EvidenciasInstalacion { get; set; }
+        public DbSet<EvidenciaSeguimientoIncidencia> EvidenciasSeguimientoEstructura { get; set; }
+        public DbSet<EvidenciaSeguimientoIncidenciaPunto> EvidenciasSeguimientoInstalacion { get; set; }
 
         public DbSet<EvidenciaVista> EvidenciasEstructuraVista { get; set; }
         public DbSet<EvidenciaVista> EvidenciasInstalacionVista { get; set; }
