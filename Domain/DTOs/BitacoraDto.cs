@@ -3,8 +3,10 @@
     public class BitacoraDtoForCreate
     {
         public int intIdReporte { get; set; }
+        public string strUsuario { get; set; }
         public int intIdEstadoIncidencia { get; set; }
         public string strDescripcion { get; set; }
+        public string strTipoIncidencia { get; set; }
     }
 
     public class BitacoraDto
