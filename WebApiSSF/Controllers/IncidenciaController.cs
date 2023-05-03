@@ -25,21 +25,21 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de incidencias acorde a los valores de los parámetros
         /// </summary>
-        /// <param name="opcion">Tipo de incidencias a obtener ("IncidenciaAbiertaEnINSTALACION",  "IncidenciaAbiertaEnESTRUCTURA" ó "IncidenciaSinAtenderPorVariosDiasEnESTRUCTURAS")</param>
+        /// <param name="opcion">Tipo de incidencias. Puede llevar información adicional del estado de la incidencia separada por un guión p. ej. "IncidenciaAbiertaEnINSTALACION-1" lo que sólo se requiere si la opción es: "EnUnEstadoEspecificoPorBusquedaINSTALACION" ó "EnUnEstadoEspecificoPorBusquedaESTRUCTURA". La opción puede tener los siguientes valores: "IncidenciaAbiertaEnINSTALACION",  "IncidenciaAbiertaEnESTRUCTURA" , "IncidenciaSinAtenderPorVariosDiasEnESTRUCTURAS", "IncidenciaReportadaEnProgramaINSTALACION", "IncidenciaReportadaEnProgramaESTRUCTURA", "TodosPorBusquedaINSTALACION", "TodosPorBusquedaESTRUCTURA", "NoConcluidosPorBusquedaINSTALACION", "NoConcluidosPorBusquedaESTRUCTURA", "EnUnEstadoEspecificoPorBusquedaINSTALACION", "EnUnEstadoEspecificoPorBusquedaESTRUCTURA"</param>
         /// <param name="idActivo">Identificador del activo (id de la estructura o id del punto en caso de instalación) </param>
+        /// <param name="criterio">Criterio de filtrado acorde a la opción indicada. Sólo se usa si las opciones es alguna de las siguientes: "TodosPorBusquedaINSTALACION", "TodosPorBusquedaESTRUCTURA" , "NoConcluidosPorBusquedaINSTALACION", "NoConcluidosPorBusquedaESTRUCTURA", "EnUnEstadoEspecificoPorBusquedaINSTALACION", "EnUnEstadoEspecificoPorBusquedaESTRUCTURA"   </param>
         /// <param name="usuario">Nombre del usuario (alias o usuario_nom) que realiza la operación</param>
-        /// <param name="dias">Cantidad de días anteriores a la fecha actual de la petición que se tomarán en cuenta para buscar incidencias sin atender</param>
         /// <returns></returns>
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<IncidenciasDto>>> ObtenerIncidenciasPorOpcion([Required]string opcion, int idActivo, string criterio, [Required] string usuario, int dias=0)
+        public async Task<ActionResult<IEnumerable<IncidenciaGeneralDto>>> ObtenerIncidenciasPorOpcion([Required]string opcion,  [Required] string usuario,int idActivo, string criterio = "")
         {//ByVal opcion As String, ByVal IdActivo As Integer, ByVal criterio As String, ByVal usuario As String
             try
             {
-                var l = await _rp.ObtenerIncidenciasPorOpcionAsync(opcion, idActivo, criterio, dias, usuario);
+                var l = await _rp.ObtenerIncidenciasPorOpcionAsync(opcion, idActivo, criterio, usuario);
 
                 if (l == null) 
                 {
@@ -55,7 +55,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener incidencias para la opcion: {opcion}, idActivo: {idActivo}, dias: {dias}, usuario: {usuario}", ex);
+                _log.LogError($"error al obtener incidencias para la opcion: {opcion}, idActivo: {idActivo}, usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

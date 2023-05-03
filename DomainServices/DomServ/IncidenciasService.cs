@@ -22,40 +22,73 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task<List<IncidenciasDto>> ObtenerIncidenciasPorOpcionAsync(string opcion, int idActivo, string criterio, int dias, string usuario)
+        public async Task<List<IncidenciaGeneralDto>> ObtenerIncidenciasPorOpcionAsync(string opcion, int idActivo, string criterio, string usuario)
         {
-            var incids = new List<IncidenciasDto>();
+            var incids = new List<IncidenciaGeneralDto>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
             {
+                var datosComplementarios = "";
+
+                if (opcion.Contains("-"))
+                {
+                    var dataOption = opcion.Split("-");
+                    opcion = dataOption[0];
+                    datosComplementarios = dataOption[1];
+                }
+
                 switch(opcion) 
                 {
                     case "IncidenciaAbiertaEnINSTALACION":
                         var abiertaInstalacion = await _repo.ObtenerIncidenciasAbiertasEnInstalacionAsync(idActivo);
-                        incids = ConvierteListaIncidenciasInstalacionToDto(abiertaInstalacion);
+                        incids = ConvierteListaIncidenciasGeneralesToDto(abiertaInstalacion);
                         break;
                     case "IncidenciaAbiertaEnESTRUCTURA":
                         var abiertaEstructura = await _repo.ObtenerIncidenciasAbiertasEnEstructuraAsync(idActivo);
-                        incids = ConvierteListaIncidenciasEstructuraToDto(abiertaEstructura);
+                        incids = ConvierteListaIncidenciasGeneralesToDto(abiertaEstructura);
                         break;
                     case "IncidenciaSinAtenderPorVariosDiasEnESTRUCTURAS":
-                        if (dias > 0) 
-                        {
+                            var dias = Int32.Parse(criterio);
                             var diasAtras = -dias;
                             var noAtendidas = await _repo.ObtenerIncidenciasNoAtendidasPorDiasEnEstructurasAsync(diasAtras);
-                            incids = ConvierteListaIncidenciasEstructuraToDto(noAtendidas);
-                        }
+                            incids = ConvierteListaIncidenciasGeneralesToDto(noAtendidas);                        
                         break;
                     case "IncidenciaReportadaEnProgramaINSTALACION":
                         var idProgInsta = Int32.Parse(criterio);
                         var repProgInstalacion = await _repo.ObtenerIncidenciasReportadasEnProgramaEnInstalacionAsync(idProgInsta);
-                        incids = ConvierteListaIncidenciasInstalacionToDto(repProgInstalacion);
+                        incids = ConvierteListaIncidenciasGeneralesToDto(repProgInstalacion);
                         break;
                     case "IncidenciaReportadaEnProgramaESTRUCTURA":
                         var idProgEstructura = Int32.Parse(criterio);
                         var repProgEstruct = await _repo.ObtenerIncidenciasReportadasEnProgramaEnEstructuraAsync(idProgEstructura);
-                        incids = ConvierteListaIncidenciasEstructuraToDto(repProgEstruct);
+                        incids = ConvierteListaIncidenciasGeneralesToDto(repProgEstruct);
+                        break;
+                    case "TodosPorBusquedaINSTALACION":
+                        var allInstalacion = await _repo.ObtenerIncidenciasInstalacionPorUbicacionOrIncidenciaAsync(criterio);
+                        incids = ConvierteListaIncidenciasGeneralesToDto(allInstalacion);
+                        break;
+                    case "TodosPorBusquedaESTRUCTURA":
+                        var allEstructura = await _repo.ObtenerIncidenciasEstructuraPorUbicacionOrIncidenciaAsync(criterio);
+                        incids = ConvierteListaIncidenciasGeneralesToDto(allEstructura);
+                        break;
+                    case "NoConcluidosPorBusquedaINSTALACION":
+                        var noConc = await _repo.ObtenerIncidenciasNoConcluidasInstalacionAsync(criterio);
+                        incids = ConvierteListaIncidenciasGeneralesToDto(noConc);
+                        break;
+                    case "NoConcluidosPorBusquedaESTRUCTURA":
+                        var noConcEst = await _repo.ObtenerIncidenciasNoConcluidasEstructuraAsync(criterio);
+                        incids = ConvierteListaIncidenciasGeneralesToDto(noConcEst);
+                        break;
+                    case "EnUnEstadoEspecificoPorBusquedaINSTALACION":
+                        var comp = Int32.Parse(datosComplementarios);
+                        var edoInsta = await _repo.ObtenerIncidenciasInstalacionEstadoEspecificoAsync(criterio, comp);
+                        incids = ConvierteListaIncidenciasGeneralesToDto(edoInsta);
+                        break;
+                    case "EnUnEstadoEspecificoPorBusquedaESTRUCTURA":
+                        var compEst = Int32.Parse(datosComplementarios);
+                        var edoEstruct = await _repo.ObtenerIncidenciasEstructuraEstadoEspecificoAsync(criterio, compEst);
+                        incids = ConvierteListaIncidenciasGeneralesToDto(edoEstruct);
                         break;
                 }
             }
@@ -174,74 +207,38 @@ namespace DomainServices.DomServ
             return idReporte;
         }
 
-        private IncidenciasDto ConvierteIncidenciaInstalacionToDto(IncidenciaInstalacionVista i) 
+        private IncidenciaGeneralDto ConvierteIncidenciaToIncidenciaGeneralDto(IncidenciaGeneralVista i)
         {
-            var incidencia = new IncidenciasDto() 
+            var incidencia = new IncidenciaGeneralDto()
             {
-                IdReporte = i.id_reportePunto,
-                IdNota = i.id_nota,
-                Incidencia = i.incidencia,
-                EstadoIncidencia = i.estadoIncidencia,
-                PrioridadIncidencia = i.prioridadIncidencia,
-                IdClasificacionIncidencia = i.id_clasificacionIncidencia,
-                UltimaActualizacion = i.ultimaActualizacion,
-                Coordenadas = i.coordenadas,
-                IdProcesoResponsable = i.id_ProcesoResponsable,
-                IdGerenciaDivision = i.id_GerenciaDivision,
-                DescripcionEstado = i.descripcionEstado,
-                DescripcionNivel = i.descripcionnivel,
-                TipoReporte = i.tiporeporte,
-
-                Punto = i.id_punto,
-                Ubicacion = i.ubicacion,
-            };
-
-            return incidencia;
-        }
-        private IncidenciasDto ConvierteIncidenciaEstructuraToDto(IncidenciaEstructuraVista i) 
-        {
-            var incidencia = new IncidenciasDto()
-            {
-                IdReporte = i.id_reporte,
-                IdNota = i.id_nota,                
-                Incidencia = i.incidencia,
-                EstadoIncidencia = i.estadoIncidencia,
-                PrioridadIncidencia = i.prioridadIncidencia,
-                IdClasificacionIncidencia = i.id_clasificacionIncidencia,
-                UltimaActualizacion = i.ultimaActualizacion,
-                Coordenadas = i.coordenadas,
-                IdProcesoResponsable = i.id_ProcesoResponsable,
-                IdGerenciaDivision = i.id_GerenciaDivision,
-                DescripcionEstado = i.descripcionEstado,
-                DescripcionNivel = i.descripcionnivel,
-                TipoReporte = i.tiporeporte,
-
-                IdEstructura = i.id_estructura,
-                Clave = i.clave,
-                Nombre = i.nombre,
+                intIdReporte = i.id_reporte,
+                intIdTarjeta = i.id_nota,
+                strLinea = i.ubicacion,
+                strEstructura = "",
+                strCoordenadas = i.coordenadas,
+                intIdProcesoResponsable = i.id_procesoresponsable,
+                intIdGerenciaDivision = i.id_gerenciadivision,
+                strDescripcionIncidencia = i.incidencia,
+                intIdEstadoIncidencia = i.estadoincidencia,
+                strEstadoIncidencia = i.descripcionestado,
+                strUltimaActualizacion = i.ultimaactualizacion?.ToString("yyyy-MM-dd HH:mm:ss"),
+                intIdPrioridadIncidencia = i.prioridadincidencia,
+                intIdClasificacionIncidencia = i.id_clasificacionincidencia,
+                strTipoIncidencia = i.tiporeporte,
+                strDescripcionPrioridadIncidencia = i.descripcionnivel,
+                strDescripcionClasificacionIncidencia = i.descripcion,
             };
 
             return incidencia;
         }
 
-        private List<IncidenciasDto> ConvierteListaIncidenciasEstructuraToDto(List<IncidenciaEstructuraVista> incidencias) 
+        private List<IncidenciaGeneralDto> ConvierteListaIncidenciasGeneralesToDto(List<IncidenciaGeneralVista> incidencias)
         {
-            var lstIncidencias = new List<IncidenciasDto>();
+            var lstIncidencias = new List<IncidenciaGeneralDto>();
 
             foreach (var item in incidencias)
             {
-                lstIncidencias.Add(ConvierteIncidenciaEstructuraToDto(item));
-            }
-
-            return lstIncidencias;
-        }
-        private List<IncidenciasDto> ConvierteListaIncidenciasInstalacionToDto(List<IncidenciaInstalacionVista> incidencias) 
-        {
-            var lstIncidencias = new List<IncidenciasDto>();
-            
-            foreach (var item in incidencias)
-            {
-                lstIncidencias.Add(ConvierteIncidenciaInstalacionToDto(item));
+                lstIncidencias.Add(ConvierteIncidenciaToIncidenciaGeneralDto(item));
             }
 
             return lstIncidencias;

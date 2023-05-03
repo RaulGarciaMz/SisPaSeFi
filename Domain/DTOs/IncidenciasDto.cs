@@ -1,80 +1,71 @@
 ﻿namespace Domain.DTOs
 {
-    public class IncidenciasDto
+     public class IncidenciaGeneralDto
     {
         /// <summary>
         /// Identificador del reporte de incidencia
         /// </summary>
-        public int IdReporte { get; set; }
+        public int intIdReporte { get; set; }
         /// <summary>
-        /// Identificador de la nota
+        /// Identificador de la nota informativa
         /// </summary>
-        public int IdNota { get; set; }
+        public int intIdTarjeta { get; set; }
         /// <summary>
-        /// Identificador de la estructura
+        /// Descripción de línea
         /// </summary>
-        public int IdEstructura { get; set; }
+        public string strLinea { get; set; }
+        /// <summary>
+        /// descripción de estructura
+        /// </summary>
+        public string strEstructura { get; set; }
+        /// <summary>
+        /// Coordenadas del activo
+        /// </summary>
+        public string strCoordenadas { get; set; }
+        /// <summary>
+        /// Identificador del proceso responsable del activo
+        /// </summary>
+        public int intIdProcesoResponsable { get; set; }
+        /// <summary>
+        /// Identigficador de la gerencia división a donde pertenece el activo
+        /// </summary>
+        public int intIdGerenciaDivision { get; set; }
         /// <summary>
         /// Descripción de la incidencia
         /// </summary>
-        public string Incidencia { get; set; }
+        public string strDescripcionIncidencia { get; set; }
         /// <summary>
         /// Estado de la incidencia
         /// </summary>
-        public int EstadoIncidencia { get; set; }
+        public int intIdEstadoIncidencia { get; set; }
         /// <summary>
-        /// Prioridad de la incidencia
+        /// descripción del estado de la incidencia
         /// </summary>
-        public int PrioridadIncidencia { get; set; }
-        /// <summary>
-        /// Identificador de la clasificación de la incidencia
-        /// </summary>
-        public int IdClasificacionIncidencia { get; set; }
+        public string strEstadoIncidencia { get; set; }
         /// <summary>
         /// Fecha de última actualización de la incidencia
         /// </summary>
-        public DateTime? UltimaActualizacion { get; set; }
+        public string strUltimaActualizacion { get; set; }
         /// <summary>
-        /// Clave de la línea de la estructura
+        /// Prioridad de la incidencia
         /// </summary>
-        public string? Clave { get; set; }
+        public int intIdPrioridadIncidencia { get; set; }
         /// <summary>
-        /// Nombre de la estructura
+        /// Identificador de la clasificación de la incidencia
         /// </summary>
-        public string Nombre { get; set; }
+        public int intIdClasificacionIncidencia { get; set; }
         /// <summary>
-        /// Coordenadas de la estructura
+        /// Descripción del tipo de incidencia
         /// </summary>
-        public string Coordenadas { get; set; }
+        public string strTipoIncidencia { get; set; }
         /// <summary>
-        /// Identificador del proceso responsable de la estructura
+        /// Descripción de la prioridad de la incidencia
         /// </summary>
-        public int IdProcesoResponsable { get; set; }
+        public string strDescripcionPrioridadIncidencia { get; set; }
         /// <summary>
-        /// Identigficador de la gerencia división a donde pertenece la estructura
+        /// Descripción de la clasificación de la incidencia
         /// </summary>
-        public int IdGerenciaDivision { get; set; }
-        /// <summary>
-        /// Descripción del estado de la incidencia
-        /// </summary>
-        public string DescripcionEstado { get; set; }
-        /// <summary>
-        /// Descripción del nivel de la incidencia
-        /// </summary>
-        public string DescripcionNivel { get; set; }
-        /// <summary>
-        /// Descripción del tipo de report "INSTALACION" o "ESTRUCTURA"
-        /// </summary>
-        public string TipoReporte { get; set; }
-        /// <summary>
-        /// Identificador del punto de la instalación
-        /// </summary>
-        public int Punto { get; set; }
-        /// <summary>
-        /// Ubicación de la instalación
-        /// </summary>
-        public string Ubicacion { get; set; }
-
+        public string strDescripcionClasificacionIncidencia { get; set; }
     }
 
     public class IncidenciasDtoForCreate

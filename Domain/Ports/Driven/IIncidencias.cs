@@ -1,10 +1,5 @@
 ﻿using Domain.Entities;
 using Domain.Entities.Vistas;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Ports.Driven
 {
@@ -21,13 +16,19 @@ namespace Domain.Ports.Driven
 
     public interface IIncidenciasQuery
     {
-        Task<List<IncidenciaInstalacionVista>> ObtenerIncidenciasAbiertasEnInstalacionAsync(int idActivo);
-        Task<List<IncidenciaEstructuraVista>> ObtenerIncidenciasAbiertasEnEstructuraAsync(int idEstructura);
-        Task<List<IncidenciaEstructuraVista>> ObtenerIncidenciasNoAtendidasPorDiasEnEstructurasAsync(int numeroDias);
-        Task<List<IncidenciaEstructuraVista>> ObtenerIncidenciasReportadasEnProgramaEnEstructuraAsync(int programa);
-        Task<List<IncidenciaInstalacionVista>> ObtenerIncidenciasReportadasEnProgramaEnInstalacionAsync(int programa);
+        Task<List<IncidenciaGeneralVista>> ObtenerIncidenciasAbiertasEnInstalacionAsync(int idActivo);
+        Task<List<IncidenciaGeneralVista>> ObtenerIncidenciasAbiertasEnEstructuraAsync(int idEstructura);
+        Task<List<IncidenciaGeneralVista>> ObtenerIncidenciasNoAtendidasPorDiasEnEstructurasAsync(int numeroDias);
+        Task<List<IncidenciaGeneralVista>> ObtenerIncidenciasReportadasEnProgramaEnInstalacionAsync(int programa);
+        Task<List<IncidenciaGeneralVista>> ObtenerIncidenciasInstalacionPorUbicacionOrIncidenciaAsync(string criterio);
+        Task<List<IncidenciaGeneralVista>> ObtenerIncidenciasEstructuraPorUbicacionOrIncidenciaAsync(string criterio);
+        Task<List<IncidenciaGeneralVista>> ObtenerIncidenciasNoConcluidasInstalacionAsync(string criterio);
+        Task<List<IncidenciaGeneralVista>> ObtenerIncidenciasNoConcluidasEstructuraAsync(string criterio);
+        Task<List<IncidenciaGeneralVista>> ObtenerIncidenciasInstalacionEstadoEspecificoAsync(string criterio, int complemento);
+        Task<List<IncidenciaGeneralVista>> ObtenerIncidenciasEstructuraEstadoEspecificoAsync(string criterio, int complemento);
+        
+        Task<List<IncidenciaGeneralVista>> ObtenerIncidenciasReportadasEnProgramaEnEstructuraAsync(int programa);
         Task<List<ReporteIncidenciaAbierto>> ObtenerReportesAbiertosPorInstalacionAsync(int idActivo, int claseIncidencia);
         Task<List<ReporteIncidenciaAbierto>> ObtenerReportesAbiertosPorEstructuraAsync(int idEstructura, int claseIncidencia);
- 
     }
 }
