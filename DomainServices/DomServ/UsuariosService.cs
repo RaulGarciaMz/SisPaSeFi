@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
@@ -14,35 +15,54 @@ namespace DomainServices.DomServ
             _repo = repo;
         }
 
+
+
         public async Task ActualizaUsuariosPorOpcionAsync(string opcion, string usuario, List<UsuarioDto> users)
         {
             var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
             if (user != null)
             {
-                var desbloquear = new List<string>();
-                var bloquear = new List<string>();
-                var reiniciar = new List<string>();
-
-                foreach (var u in users)
+                var idComandancia = -1;
+                if (opcion.Contains("-"))
                 {
-                    switch (opcion)
-                    {
-                        case "Desbloquear":
-                            desbloquear.Add(u.strNombreDeUsuario);
-                            //await _repo.DesbloqueaUsuarioAsync(u.strNombreDeUsuario);
-                            break;
-                        case "Bloquear":
-                            bloquear.Add(u.strNombreDeUsuario);
-                            //await _repo.BloqueaUsuarioAsync(u.strNombreDeUsuario);
-                            break;
-                        case "ReiniciarClave":
-                            reiniciar.Add(u.strNombreDeUsuario);
-                            //await _repo.ReiniciaClaveUsuarioAsync(u.strNombreDeUsuario);
-                            break;
-                    }
+                    var datos = opcion.Split("-");
+                    opcion = datos[0];
+                    idComandancia = Int32.Parse(datos[1]);
                 }
 
-                await _repo.ActualizarListasDeUsuariosAsync(desbloquear, bloquear, reiniciar, usuario);
+                switch (opcion)
+                {
+                    case "Desbloquear":
+                        await DesbloqueaListaDeUsuariosAsync(users);
+                        break;
+                    case "Bloquear":
+                        await BloqueaListaDeUsuariosAsync(users);
+                        break;
+                    case "ReiniciarClave":
+                        await ReiniciarClaveDeListaUsuariosAsync(users);
+                        break;
+                    case "Actualizar":
+                        await _repo.ActualizaListasDeUsuariosAsync(users);
+                        break;
+                    case "RegistrarComandancia":
+                        await RegistraListaDeUsuariosComandanciaAsync(users, idComandancia);
+                        break;
+                    case "QuitarComandancia":
+                        await BorraListaDeUsuariosComandanciaAsync(users, idComandancia);
+                        break;
+                    case "RegistrarRol":
+                        await RegistraListaDeUsuariosRolAsync(users, idComandancia);
+                        break;
+                    case "QuitarRol":
+                        await BorraListaDeUsuariosRolAsync(users, idComandancia);
+                        break;
+                    case "RegistrarGrupoCorreo":
+                        await RegistraListaDeUsuarioGrupoCorreoAsync(users, idComandancia);
+                        break;
+                    case "QuitarGrupoCorreo":
+                        await BorraListaDeUsuarioGrupoCorreoAsync(users, idComandancia);
+                        break;
+                }
             }
         }
 
@@ -88,33 +108,6 @@ namespace DomainServices.DomServ
                 }
             }
         }
-
-/*        public async Task BloqueaUsuarioAsync(string usuario)
-        {
-            var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
-            if (user != null) 
-            {
-                await _repo.BloqueaUsuarioAsync(usuario);
-            }                     
-        }
-
-        public async Task DesbloqueaUsuarioAsync(string usuario)
-        {
-            var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
-            if (user != null)
-            {
-                await _repo.DesbloqueaUsuarioAsync(usuario);
-            }
-        }
-
-        public async Task ReiniciaClaveUsuarioAsync(string usuario)
-        {
-            var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
-            if (user != null)
-            {
-                await _repo.ReiniciaClaveUsuarioAsync(usuario);
-            }
-        }*/
 
         public async Task<UsuarioDto?> ObtenerUsuarioConfiguradorPorIdAsync(int idUsuario)
         {
@@ -216,6 +209,162 @@ namespace DomainServices.DomServ
             return ConvierteListaUsuarioToDto(users);
         }
 
+        private async Task DesbloqueaListaDeUsuariosAsync(List<UsuarioDto> users)
+        {
+            var desbloquear = new List<string>();
+            foreach (var u in users)
+            {
+                desbloquear.Add(u.strNombreDeUsuario);
+            }
+
+            await _repo.ActualizaListasDeUsuariosDesbloquearAsync(desbloquear);
+        }
+
+        private async Task BloqueaListaDeUsuariosAsync(List<UsuarioDto> users)
+        {
+            var bloquear = new List<string>();
+            foreach (var u in users)
+            {
+                bloquear.Add(u.strNombreDeUsuario);
+            }
+
+            await _repo.ActualizaListasDeUsuariosBloquearAsync(bloquear);
+        }
+
+        private async Task ReiniciarClaveDeListaUsuariosAsync(List<UsuarioDto> users)
+        {
+            var bloquear = new List<string>();
+            foreach (var u in users)
+            {
+                bloquear.Add(u.strNombreDeUsuario);
+            }
+
+            await _repo.ActualizaListasDeUsuariosReiniciarClaveAsync(bloquear);
+        }
+
+        private async Task RegistraListaDeUsuariosComandanciaAsync(List<UsuarioDto> users, int idComandancia)
+        {
+            var usToRegistrar = new List<UsuarioComandancia>();
+            foreach (var u in users)
+            {
+                var uc = await _repo.ObtenerUsuariosComandanciaPorIdUsuarioAndIdComandanciaAsync(u.intIdUsuario, idComandancia);
+
+                if (uc == null || uc.Count == 0)
+                {
+                    var nu = new UsuarioComandancia()
+                    {
+                        IdComandancia = idComandancia,
+                        IdUsuario = u.intIdUsuario,
+                    };
+
+                    usToRegistrar.Add(nu);
+                }
+            }
+
+            await _repo.AgregaListaDeUsuariosComandanciaAsync(usToRegistrar);
+        }
+
+        private async Task BorraListaDeUsuariosComandanciaAsync(List<UsuarioDto> users, int idComandancia)
+        {
+            var usToBorrar = new List<UsuarioComandancia>();
+            foreach (var u in users)
+            {
+                var uc = await _repo.ObtenerUsuariosComandanciaPorIdUsuarioAndIdComandanciaAsync(u.intIdUsuario, idComandancia);
+
+                if (uc != null && uc.Count > 0)
+                {
+                    usToBorrar.AddRange(uc);
+                }
+            }
+
+            if (usToBorrar.Count > 0)
+            {
+                await _repo.BorraListaDeUsuariosComandanciaAsync(usToBorrar);
+            }
+        }
+
+        private async Task RegistraListaDeUsuariosRolAsync(List<UsuarioDto> users, int idRol)
+        {
+            var usToRegistrar = new List<UsuarioRol>();
+            foreach (var u in users)
+            {
+                var uc = await _repo.ObtenerUsuariosRolPorIdUsuarioAndIdRolAsync(u.intIdUsuario, idRol);
+
+                if (uc == null || uc.Count == 0)
+                {
+                    var nu = new UsuarioRol()
+                    {
+                        IdRol = idRol,
+                        IdUsuario = u.intIdUsuario,
+                    };
+
+                    usToRegistrar.Add(nu);
+                }
+            }
+
+            await _repo.AgregaListaDeUsuariosRolAsync(usToRegistrar);
+        }
+
+        private async Task BorraListaDeUsuariosRolAsync(List<UsuarioDto> users, int idComandancia)
+        {
+            var usToBorrar = new List<UsuarioRol>();
+            foreach (var u in users)
+            {
+                var uc = await _repo.ObtenerUsuariosRolPorIdUsuarioAndIdRolAsync(u.intIdUsuario, idComandancia);
+
+                if (uc != null && uc.Count > 0)
+                {
+                    usToBorrar.AddRange(uc);
+                }
+            }
+
+            if (usToBorrar.Count > 0)
+            {
+                await _repo.BorraListaDeUsuariosRolAsync(usToBorrar);
+            }
+        }
+
+        private async Task RegistraListaDeUsuarioGrupoCorreoAsync(List<UsuarioDto> users, int idGrupo)
+        {
+            var usToRegistrar = new List<UsuarioGrupoCorreoElectronico>();
+            foreach (var u in users)
+            {
+                var uc = await _repo.ObtenerUsuariosGrupoCorreoElectronicoPorIdUsuarioAndIdGrupoAsync(u.intIdUsuario, idGrupo);
+
+                if (uc == null || uc.Count == 0)
+                {
+                    var nu = new UsuarioGrupoCorreoElectronico()
+                    {
+                        IdGrupoCorreo = idGrupo,
+                        IdUsuario = u.intIdUsuario,
+                    };
+
+                    usToRegistrar.Add(nu);
+                }
+            }
+
+            await _repo.AgregaListaDeUsuariosGrupoCorreoElectronicoAsync(usToRegistrar);
+        }
+
+        private async Task BorraListaDeUsuarioGrupoCorreoAsync(List<UsuarioDto> users, int idGrupo)
+        {
+            var usToBorrar = new List<UsuarioGrupoCorreoElectronico>();
+            foreach (var u in users)
+            {
+                var uc = await _repo.ObtenerUsuariosGrupoCorreoElectronicoPorIdUsuarioAndIdGrupoAsync(u.intIdUsuario, idGrupo);
+
+                if (uc != null && uc.Count > 0)
+                {
+                    usToBorrar.AddRange(uc);
+                }
+            }
+
+            if (usToBorrar.Count > 0)
+            {
+                await _repo.BorraListaDeUsuariosGrupoCorreoElectronicoAsync(usToBorrar);
+            }
+        }
+
         private UsuarioDto ConvierteUsuarioToDto(UsuarioVista user)
         {
             return new UsuarioDto()
@@ -247,7 +396,6 @@ namespace DomainServices.DomServ
 
             return usersDto;
         }
-
 
     }
 }

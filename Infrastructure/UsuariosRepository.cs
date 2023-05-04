@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
@@ -18,52 +19,11 @@ namespace SqlServerAdapter
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
         }
 
-        /*        public async Task BloqueaUsuarioAsync(string usuario)
-                {
-                    var record = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).FirstOrDefaultAsync();
-
-                    if (record != null) 
-                    {
-                        record.Bloqueado = 1;
-                        _userContext.Usuarios.Update(record);
-                        await _userContext.SaveChangesAsync();
-                    }
-                }
-
-                public async Task DesbloqueaUsuarioAsync(string usuario)
-                {
-                    var record = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).FirstOrDefaultAsync();
-
-                    if (record != null)
-                    {
-                        record.Bloqueado = 0;
-                        record.Intentos = 0;
-                        _userContext.Usuarios.Update(record);
-                        await _userContext.SaveChangesAsync();
-                    }
-                }
-
-                public async Task ReiniciaClaveUsuarioAsync(string usuario)
-                {
-                    var record = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).FirstOrDefaultAsync();
-
-                    if (record != null)
-                    {
-                        record.Pass = ComputeMD5(usuario);
-                        _userContext.Usuarios.Update(record);
-                        await _userContext.SaveChangesAsync();
-                    }
-                }*/
-
-        public async Task ActualizarListasDeUsuariosAsync(List<string> desbloquear, List<string> bloquear, List<string> reiniciar, string usuario) 
+        public async Task ActualizaListasDeUsuariosDesbloquearAsync(List<string> desbloquear)
         {
-            var pDesbloq = new List<Usuario>();
-            var pBloq = new List<Usuario>();
-            var pReini = new List<Usuario>();
-
-            if (desbloquear.Count > 0) 
+            if (desbloquear.Count > 0)
             {
-                pDesbloq = await _userContext.Usuarios.Where(x => desbloquear.Contains(x.UsuarioNom)).ToListAsync();
+                var pDesbloq = await _userContext.Usuarios.Where(x => desbloquear.Contains(x.UsuarioNom)).ToListAsync();
 
                 foreach (var de in pDesbloq)
                 {
@@ -71,31 +31,81 @@ namespace SqlServerAdapter
                     de.Intentos = 0;
                 }
                 _userContext.Usuarios.AddRange(pDesbloq);
+                await _userContext.SaveChangesAsync();
             }
+        }
 
-            if (bloquear.Count > 0) 
+        public async Task ActualizaListasDeUsuariosBloquearAsync(List<string> bloquear)
+        {
+            if (bloquear.Count > 0)
             {
-                pBloq = await _userContext.Usuarios.Where(x => bloquear.Contains(x.UsuarioNom)).ToListAsync();
+                var pBloq = await _userContext.Usuarios.Where(x => bloquear.Contains(x.UsuarioNom)).ToListAsync();
                 foreach (var bl in pBloq)
                 {
                     bl.Bloqueado = 1;
                 }
-                _userContext.Usuarios.AddRange(pBloq);
-            }
 
-            if (reiniciar.Count > 0) 
+                _userContext.Usuarios.AddRange(pBloq);
+                await _userContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task ActualizaListasDeUsuariosReiniciarClaveAsync(List<string> reiniciar)
+        {
+            if (reiniciar.Count > 0)
             {
-                pReini = await _userContext.Usuarios.Where(x => reiniciar.Contains(x.UsuarioNom)).ToListAsync();
+                var pReini = await _userContext.Usuarios.Where(x => reiniciar.Contains(x.UsuarioNom)).ToListAsync();
                 foreach (var re in pReini)
                 {
                     re.Pass = ComputeMD5(re.UsuarioNom);
                 }
 
                 _userContext.Usuarios.AddRange(pReini);
+                await _userContext.SaveChangesAsync();
             }
-            
-            await _userContext.SaveChangesAsync();
         }
+
+        public async Task ActualizaListasDeUsuariosAsync(List<UsuarioDto> lstUsuarios)
+        {
+            if (lstUsuarios.Count > 0)
+            {
+                var lstUsuariosUpdate = new List<Usuario>();
+
+                foreach (var user in lstUsuarios)
+                {
+                    var nombreRepetido = await _userContext.Usuarios.Where(x => x.UsuarioNom == user.strNombreDeUsuario && x.IdUsuario != user.intIdUsuario).ToListAsync();
+
+                    if (nombreRepetido == null || nombreRepetido.Count == 0)
+                    { 
+                        var utu = await _userContext.Usuarios.Where(x => x.IdUsuario == user.intIdUsuario).SingleOrDefaultAsync();
+                        if (utu != null)
+                        { 
+                            utu.UsuarioNom = user.strNombreDeUsuario;
+                            utu.Nombre = user.strNombre;
+                            utu.Apellido1 = user.strApellido1;
+                            utu.Apellido2 = user.strApellido2;
+                            utu.CorreoElectronico = user.strCorreoElectronico;
+                            utu.Cel = user.strCel;
+                            utu.RegionSsf = user.intRegionSSF;
+                            utu.Configurador = user.intConfigurador;
+                            utu.DesbloquearRegistros = user.intDesbloquearRegistros;
+                            utu.TiempoEspera = user.intTiempoEspera;
+                            
+                            lstUsuariosUpdate.Add(utu);
+                        }
+                    }
+                }
+
+                if (lstUsuariosUpdate.Count > 0)
+                {
+                    _userContext.Usuarios.AddRange(lstUsuariosUpdate);
+                    await _userContext.SaveChangesAsync();
+                }
+            }
+        }
+
+        
+
 
         public async Task AgregaUsuarioDeDocumentoAsync(int idDocumento, int idUsuario)
         {
@@ -127,6 +137,11 @@ namespace SqlServerAdapter
         public async Task<Usuario?> ObtenerUsuarioConfiguradorPorNombreAsync(string usuario)
         {
             return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefaultAsync();
+        }
+
+        public async Task<Usuario?> ObtenerUsuarioPorNombreConDiferenteIdAsync(string usuario, int idUsuario)
+        {
+            return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.IdUsuario != idUsuario).FirstOrDefaultAsync();
         }
 
         public async Task<List<UsuarioVista>> ObtenerUsuariosPorCriterioAsync(string criterio)
@@ -177,6 +192,61 @@ namespace SqlServerAdapter
             return await _userContext.UsuariosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
 
         }
+
+        //Métodos de Usuarios comandacia
+        public async Task<List<UsuarioComandancia>> ObtenerUsuariosComandanciaPorIdUsuarioAndIdComandanciaAsync(int idUsuario, int idComandancia)
+        {
+            return await _userContext.UsuariosComandancia.Where(x => x.IdUsuario == idUsuario && x.IdComandancia == idComandancia).ToListAsync();          
+        }
+
+        public async Task AgregaListaDeUsuariosComandanciaAsync(List<UsuarioComandancia> usuarios)
+        {
+            _userContext.UsuariosComandancia.AddRange(usuarios);
+            await _userContext.SaveChangesAsync();
+        }
+
+        public async Task BorraListaDeUsuariosComandanciaAsync(List<UsuarioComandancia> usuarios)
+        {
+                _userContext.UsuariosComandancia.RemoveRange(usuarios);
+                await _userContext.SaveChangesAsync();
+        }
+
+        //Métodos de Usuarios Rol
+        public async Task<List<UsuarioRol>> ObtenerUsuariosRolPorIdUsuarioAndIdRolAsync(int idUsuario, int idRol)
+        {
+            return await _userContext.UsuariosRol.Where(x => x.IdUsuario == idUsuario && x.IdRol == idRol).ToListAsync();
+        }
+
+        public async Task AgregaListaDeUsuariosRolAsync(List<UsuarioRol> usuarios)
+        {
+            _userContext.UsuariosRol.AddRange(usuarios);
+            await _userContext.SaveChangesAsync();
+        }
+
+        public async Task BorraListaDeUsuariosRolAsync(List<UsuarioRol> usuarios)
+        {
+            _userContext.UsuariosRol.RemoveRange(usuarios);
+            await _userContext.SaveChangesAsync();
+        }
+
+        //Métodos de UsuarioGrupoCorreoElectronico
+        public async Task<List<UsuarioGrupoCorreoElectronico>> ObtenerUsuariosGrupoCorreoElectronicoPorIdUsuarioAndIdGrupoAsync(int idUsuario, int idGrupo)
+        {
+            return await _userContext.UsuariosGrupoCorreoElectronico.Where(x => x.IdUsuario == idUsuario && x.IdGrupoCorreo == idGrupo).ToListAsync();
+        }
+
+        public async Task AgregaListaDeUsuariosGrupoCorreoElectronicoAsync(List<UsuarioGrupoCorreoElectronico> usuarios)
+        {
+            _userContext.UsuariosGrupoCorreoElectronico.AddRange(usuarios);
+            await _userContext.SaveChangesAsync();
+        }
+
+        public async Task BorraListaDeUsuariosGrupoCorreoElectronicoAsync(List<UsuarioGrupoCorreoElectronico> usuarios)
+        {
+            _userContext.UsuariosGrupoCorreoElectronico.RemoveRange(usuarios);
+            await _userContext.SaveChangesAsync();
+        }
+
 
 
         //Método para el controlador de registro

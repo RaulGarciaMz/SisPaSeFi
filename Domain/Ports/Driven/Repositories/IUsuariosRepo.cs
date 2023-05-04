@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Ports.Driven.Repositories
+﻿namespace Domain.Ports.Driven.Repositories
 {
-    public interface IUsuariosRepo : IUsuariosCommand, IUsuariosQuery, IUsuariosConfiguradorQuery, IUsuariosRegistroQuery
+    public interface IUsuariosRepo : IUsuariosCommand, IUsuariosComandanciaCommand, IUsuariosRolCommand, IUsuarioGrupoCorreoElectronicoCommand,  IUsuariosComandanciaQuery, IUsuariosRolQuery, IUsuarioGrupoCorreoElectronicoQuery, IUsuariosQuery, IUsuariosConfiguradorQuery, IUsuariosRegistroQuery
     {
     }
 }
