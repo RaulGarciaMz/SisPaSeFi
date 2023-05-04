@@ -1,16 +1,9 @@
 ﻿using Domain.Entities;
 using Domain.Entities.Vistas;
-using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlServerAdapter
 {
