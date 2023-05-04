@@ -26,22 +26,22 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene los programas de patrullaje acorde a las opciones indicadas
         /// </summary>
-        /// <param name="tipo">Descripción del tipo de patrullaje (TERRESTRE o AEREO)</param>
+        /// <param name="tipo">Descripción del tipo de patrullaje ("TERRESTRE" ó "AEREO")</param>
         /// <param name="region">Región SSF</param>
+        /// <param name="opcion">Indicador del tipo de programa o propuesta a obtener. (0 - Extraordinarios o programados, 1 - En progreso, 2 - Concluidos, 3 - Cancelados, 4 - Todos, 5 - Propuestas (todas), 6 - Propuestas pendientes, 7 - Propuestas autorizadas, 8 - Propuestas Rechazadas, 9 - Propuestas enviadas)</param>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
-        /// <param name="clase">Descripción de la clase de patrullaje a incluir</param>
+        /// <param name="clase">Descripción de la clase de patrullaje a incluir ("PROGRAMADO" ó "EXTRAORDINARIO")</param>
         /// <param name="anio">Año</param>
         /// <param name="mes">Mes</param>
         /// <param name="dia">Día</param>
-        /// <param name="opcion">Indicador del tipo de propgrama o propuesta a obtener. (0 - Extraordinarios o programados, 1 - En progreso, 2 - Concluidos, 3 - Cancelados, 4 - Todos, 5 - Propuestas (todas), 6 - Propuestas pendientes, 7 - Propuestas autorizadas, 8 - Propuestas Rechazadas, 9 - Propuestas enviadas)</param>
-        /// <param name="periodo">Indicador del tipo de período que se requiere (0 - Un día, 1 - Un mes, 2 - Todos)</param>
+        /// <param name="periodo">Indicador del tipo de período que se requiere (0 - Un día, 1 - Un mes, 2 - Todos). Sólo se usa si la opciónes 1, 2, 3 ó 4</param>
         /// <returns></returns>
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<PatrullajeDto>>> GetValues([Required] string tipo, [Required] int region, [Required] string usuario, string clase, int anio, int mes, int dia, [Required] int opcion =0, int periodo=1)
+        public async Task<ActionResult<IEnumerable<PatrullajeDto>>> GetValues([Required] string tipo, [Required] int region, [Required] int opcion, [Required] string usuario, string clase, int anio, int mes, int dia,  int periodo=1)
         {
             try
             {

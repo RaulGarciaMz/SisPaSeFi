@@ -355,7 +355,7 @@ namespace DomainServices.DomServ
       
         private PatrullajeDto ConviertePatrullajeDominioToPatrullajeDto(PatrullajeVista p) 
         {
-            return new PatrullajeDto(){
+            var pd = new PatrullajeDto(){
                 intIdPrograma = p.id,
                 intIdRuta = p.id_ruta,
                 strClave = p.clave,
@@ -375,7 +375,13 @@ namespace DomainServices.DomServ
                 strUltimaActualizacion= p.ultimaactualizacion.ToString("yyyy-MM-dd"),
                 intUsuarioResponsablePatrullaje=p.id_usuarioresponsablepatrullaje,
                 strInicio= p.inicio.ToString()
+                
             };
+
+            if (p.id_apoyopatrullaje.HasValue)
+                pd.intApoyoPatrullaje = p.id_apoyopatrullaje.Value;
+
+            return pd;
         }
 
         private ProgramaPatrullaje ConvierteProgramaDtoToProgramaDominio(ProgramaDtoForCreate p) 

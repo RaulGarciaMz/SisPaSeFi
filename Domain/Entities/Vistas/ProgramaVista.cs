@@ -36,6 +36,7 @@ namespace Domain.Entities.Vistas
         public int id_usuario{ get; set; }
         public int id_usuarioresponsablepatrullaje{ get; set; }
         public DateTime fechatermino{ get; set; }
+        public int? id_apoyopatrullaje { get; set; }
     }
 }
 

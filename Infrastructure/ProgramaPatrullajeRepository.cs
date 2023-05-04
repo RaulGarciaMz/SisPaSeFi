@@ -34,7 +34,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.id_puntoresponsable, 
                    a.ultimaactualizacion,a.id_usuario, b.clave, b.regionmilitarsdn,b.regionssf, b.observaciones observacionesruta, 
-                   d.descripcionnivel, e.fechatermino, 0 id_usuarioresponsablepatrullaje, '' observaciones, 0 riesgopatrullaje,
+                   d.descripcionnivel, e.fechatermino, 0 id_usuarioresponsablepatrullaje, '' observaciones, 0 riesgopatrullaje, a.id_apoyopatrullaje,
                    COALESCE(a.solicitudoficioautorizacion, '') solicitudoficiocomision,
                    COALESCE(a.oficioautorizacion, '') as oficiocomision,
                    COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -84,7 +84,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.fechapatrullaje fechatermino, a.id_puntoresponsable, b.clave,
                    b.regionmilitarsdn,b.regionssf,b.observaciones observacionesruta, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,0 id_usuarioresponsablepatrullaje,
-                   '' observaciones, 0 riesgopatrullaje,
+                   '' observaciones, 0 riesgopatrullaje, a.id_apoyopatrullaje,
                    COALESCE(a.solicitudoficioautorizacion, '') solicitudoficiocomision,
                    COALESCE(a.oficioautorizacion, '') as oficiocomision, 
                    COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -135,7 +135,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.id_puntoresponsable, b.clave,
                    b.regionmilitarsdn,b.regionssf,b.observaciones observacionesruta, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,
-                   e.fechatermino, 0 id_usuarioresponsablepatrullaje, 0 riesgopatrullaje, '' observaciones,
+                   e.fechatermino, 0 id_usuarioresponsablepatrullaje, 0 riesgopatrullaje, '' observaciones, a.id_apoyopatrullaje,
                    COALESCE(a.solicitudoficioautorizacion, '') solicitudoficiocomision,
                    COALESCE(a.oficioautorizacion, '') as oficiocomision,
                    COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -191,7 +191,7 @@ namespace SqlServerAdapter
             // 9  - paramEstado='Aprobada por comandancia regional'
             string sqlQuery = @"SELECT a.id_propuestapatrullaje id,a.id_ruta,a.fechapatrullaje,a.fechapatrullaje fechatermino,a.id_puntoresponsable,b.clave,
                    b.regionmilitarsdn,b.regionssf,b.observaciones observacionesruta,a.ultimaactualizacion,a.id_usuario,d.descripcionnivel, 
-                   0 id_usuarioresponsablepatrullaje, '' observaciones, 0 riesgopatrullaje,
+                   0 id_usuarioresponsablepatrullaje, '' observaciones, 0 riesgopatrullaje, a.id_apoyopatrullaje,
                    COALESCE(a.solicitudoficioautorizacion, '') solicitudoficiocomision,
                    COALESCE(a.oficioautorizacion, '') as oficiocomision,
                    COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -248,7 +248,7 @@ namespace SqlServerAdapter
             // 9 -- 'Aprobada por comandancia regional'
             string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.id_puntoresponsable, b.clave,
                    b.regionmilitarsdn,b.regionssf,b.observaciones observacionesruta, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,
-                   e.fechatermino,0 id_usuarioresponsablepatrullaje, '' observaciones, 0 riesgopatrullaje,
+                   e.fechatermino,0 id_usuarioresponsablepatrullaje, '' observaciones, 0 riesgopatrullaje, a.id_apoyopatrullaje,
                    COALESCE(a.solicitudoficioautorizacion, '') solicitudoficiocomision,
                    COALESCE(a.oficioautorizacion, '') as oficiocomision,
                    COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -302,7 +302,7 @@ namespace SqlServerAdapter
 
             string sqlQuery = @"SELECT a.id_programa, a.id_ruta, a.fechapatrullaje, a.inicio, a.id_puntoresponsable
                                    ,a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje
-                                   ,a.observaciones, a.riesgopatrullaje
+                                   ,a.observaciones, a.riesgopatrullaje, -1 id_apoyopatrullaje
                                    ,COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision
                                    ,COALESCE(a.oficiocomision,'') oficiocomision   
                                    ,b.clave, b.regionmilitarsdn, b.regionssf, b.observaciones observacionesruta
@@ -339,7 +339,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
                                        COALESCE(a.oficiocomision,'') oficiocomision,
                                        COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -376,7 +376,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
                                        COALESCE(a.oficiocomision,'') oficiocomision,
                                        COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -410,9 +410,9 @@ namespace SqlServerAdapter
         /// </summary>
         public async Task<List<PatrullajeVista>> ObtenerProgramasEnProgresoAsync(string tipo, int region)
         {
-            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+                string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
                                        COALESCE(a.oficiocomision,'') oficiocomision,
                                        COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -428,13 +428,13 @@ namespace SqlServerAdapter
                                 AND a.id_estadopatrullaje = (SELECT id_estadopatrullaje FROM ssf.estadopatrullaje WHERE descripcionestadopatrullaje='En progreso') 
                                 ORDER BY a.fechapatrullaje,a.inicio";
 
-            object[] parametros = new object[]
-            {
+                object[] parametros = new object[]
+                {
                 new SqlParameter("@pTipo", tipo),
                 new SqlParameter("@pRegion", region),
-             };
+                 };
 
-            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+                return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
@@ -445,7 +445,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
                                        COALESCE(a.oficiocomision,'') oficiocomision,
                                        COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -482,7 +482,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
                                        COALESCE(a.oficiocomision,'') oficiocomision,
                                        COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -518,7 +518,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
                                        COALESCE(a.oficiocomision,'') oficiocomision,
                                        COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -552,7 +552,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
                                        COALESCE(a.oficiocomision,'') oficiocomision,
                                        COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -589,7 +589,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
                                        COALESCE(a.oficiocomision,'') oficiocomision,
                                        COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -625,7 +625,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
                                        COALESCE(a.oficiocomision,'') oficiocomision,
                                        COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -658,7 +658,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
                                        COALESCE(a.oficiocomision,'') oficiocomision,
                                        COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -694,7 +694,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
                                        COALESCE(a.oficiocomision,'') oficiocomision,
                                        COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -729,7 +729,7 @@ namespace SqlServerAdapter
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje,a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
-                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje,
+                                       d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
                                        COALESCE(a.oficiocomision,'') oficiocomision,
                                        COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)

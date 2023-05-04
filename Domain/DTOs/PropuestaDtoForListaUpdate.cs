@@ -295,6 +295,10 @@
         /// Fecha de término del patrullaje
         /// </summary>
         public string strFechaTermino { get; set; }
+        /// <summary>
+        /// Identificador del apoyo de patrullaje
+        /// </summary>
+        public int intApoyoPatrullaje { get; set; }
     }
 
 }
