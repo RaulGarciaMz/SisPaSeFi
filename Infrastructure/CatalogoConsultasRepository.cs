@@ -150,6 +150,10 @@ namespace SqlServerAdapter
         {
             return await _catalogosConsultaContext.UsuariosGrupoCorreoElectronico.Where(x => x.IdUsuario == idUsuario).Distinct().ToListAsync();
         }
-        
+
+        public async Task<List<UsuarioRol>> ObtenerRolesDeUnUsuarioAsync(int idUsuario)
+        {
+            return await _catalogosConsultaContext.UsuariosRoles.Where(x => x.IdUsuario == idUsuario).Distinct().ToListAsync();
+        }
     }
 }

@@ -110,4 +110,10 @@ namespace Domain.Ports.Driven
         Task<List<UsuarioGrupoCorreoElectronico>> ObtenerGruposCorreoDeUnUsuarioAsync(int idUsuario);
     }
 
+    public interface IRolesDeUnUsuarioQuery
+    {
+        Task<List<UsuarioRol>> ObtenerRolesDeUnUsuarioAsync(int idUsuario);
+    }
+
+    
 }

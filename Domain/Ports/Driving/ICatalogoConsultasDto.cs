@@ -21,5 +21,7 @@ namespace Domain.Ports.Driving
         Task<List<CatalogoGenerico>> ObtenerHallazgosAsync(string usuario);
         Task<List<CatalogoGenerico>> ObtenerEstadosIncidenciaAsync(string usuario);
         Task<List<CatalogoGenerico>> ObtenerComandanciasDeUnUsuarioAsync(int idUsuario, string usuario);
+        Task<List<CatalogoGenerico>> ObtenerGruposCorreoDeUnUsuarioAsync(int idUsuario, string usuario);
+        Task<List<CatalogoGenerico>> ObtenerRolesDeUnUsuarioAsync(int idUsuario, string usuario);
     }
 }

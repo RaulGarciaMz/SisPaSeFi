@@ -3,7 +3,8 @@
     public interface ICatalogosConsultaRepo: IComandanciasQuery, ITipoPatrullajeQuery, ITipoVehiculoQuery, IClasificacionIncidenciaQuery, 
         INivelesQuery, IConceptoAfectacionQuery, IRegionEnRutaQuery, IEstadoPaisQuery, IProcesoResponsableQuery, ITipoDocumentoQuery, 
         IMunicipioQuery, IGerenciaDivisionQuery, IResultadoPatrullajeQuery, IEstadoPatrullajeQuery, IApoyoPatrullajeQuery, IInstalacionesQuery,
-        INivelRiesgoQuery, IHallazgoQuery, ILocalidadQuery, IEstadoIncidenciaQuery, IComandanciasDeUnUsuarioQuery, IGruposCorreoDeUnUsuarioQuery
+        INivelRiesgoQuery, IHallazgoQuery, ILocalidadQuery, IEstadoIncidenciaQuery, IComandanciasDeUnUsuarioQuery, IGruposCorreoDeUnUsuarioQuery,
+        IRolesDeUnUsuarioQuery
     {
     }
 }
