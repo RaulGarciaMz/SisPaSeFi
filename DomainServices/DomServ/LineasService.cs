@@ -1,17 +1,9 @@
 ﻿using Domain.DTOs;
-using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Enums;
 using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DomainServices.DomServ
 {
@@ -35,6 +27,7 @@ namespace DomainServices.DomServ
                 await _repo.ActualizaAsync(linea.intIdLinea, linea.strClave, linea.strDescripcion, linea.intIdPuntoInicio, linea.intIdPuntoFin, user.IdUsuario, linea.intBloqueado);
             }
         }
+
         public async Task AgregarAsync(LineaDtoForCreate linea)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(linea.strUsuario);
