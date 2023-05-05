@@ -99,5 +99,11 @@ namespace Domain.Ports.Driven
     {
         Task<List<EstadoIncidencia>> ObtenerEstadosIncidenciaAsync();
     }
+
+    public interface IrComandanciasDeUnUsuarioQuery
+    {
+        Task<List<UsuarioComandancia>> ObtenerComandanciasDeUnUsuarioAsync(int idUsuario);
+    }
     
+
 }
