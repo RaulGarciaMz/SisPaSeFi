@@ -133,7 +133,12 @@ namespace SqlServerAdapter
 
         public async Task<List<Localidad>> ObtenerLocalidadesPorMunicipioAsync(int idMunicipio)
         {
-            return await _catalogosConsultaContext.Localidades.Where(x => x.IdMunicipio == idMunicipio).ToListAsync();
+            return await _catalogosConsultaContext.Localidades.Where(x => x.IdMunicipio == idMunicipio).OrderBy(x => x.Nombre).ToListAsync();
+        }
+
+        public async Task<List<EstadoIncidencia>> ObtenerEstadosIncidenciaAsync()
+        {
+            return await _catalogosConsultaContext.EstadosIncidencia.OrderBy(x => x.IdEstadoIncidencia).ToListAsync();
         }
     }
 }

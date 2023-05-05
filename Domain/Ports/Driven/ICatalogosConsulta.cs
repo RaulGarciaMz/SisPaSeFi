@@ -94,4 +94,10 @@ namespace Domain.Ports.Driven
     {
         Task<List<Localidad>> ObtenerLocalidadesPorMunicipioAsync(int idMunicipio);
     }
+
+    public interface IEstadoIncidenciaQuery
+    {
+        Task<List<EstadoIncidencia>> ObtenerEstadosIncidenciaAsync();
+    }
+    
 }
