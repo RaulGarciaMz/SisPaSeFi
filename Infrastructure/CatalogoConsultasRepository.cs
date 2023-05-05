@@ -155,5 +155,10 @@ namespace SqlServerAdapter
         {
             return await _catalogosConsultaContext.UsuariosRoles.Where(x => x.IdUsuario == idUsuario).Distinct().ToListAsync();
         }
+
+        public async Task<List<GrupoCorreoElectronico>> ObtenerGruposCorreoAsync()
+        {
+            return await _catalogosConsultaContext.GruposCorreoElectronico.OrderBy(x => x.IdGrupoCorreo).ToListAsync();
+        }
     }
 }
