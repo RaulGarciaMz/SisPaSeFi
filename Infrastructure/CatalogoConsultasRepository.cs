@@ -125,5 +125,10 @@ namespace SqlServerAdapter
         {
             return await _catalogosConsultaContext.NivelesRiesgo.ToListAsync();
         }
+
+        public async Task<List<CatalogoHallazgo>> ObtenerHallazgosAsync()
+        {
+            return await _catalogosConsultaContext.Hallazgos.ToListAsync();
+        }
     }
 }

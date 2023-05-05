@@ -34,6 +34,15 @@ namespace SqlServerAdapter.Data
         public virtual DbSet<ApoyoPatrullaje> ApoyosPatrullaje { get; set; }
         public virtual DbSet<PuntoPatrullaje> PuntosPatrullaje { get; set; }
         public virtual DbSet<NivelRiesgo> NivelesRiesgo { get; set; }
+
+        public virtual DbSet<CatalogoHallazgo> Hallazgos { get; set; }
+        public virtual DbSet<Localidad> Localidades { get; set; }
+        public virtual DbSet<EstadoIncidencia> EstadosIncidencia { get; set; }
+        public virtual DbSet<UsuarioComandancia> UsuariosComandancia { get; set; }
+        public virtual DbSet<UsuarioGrupoCorreoElectronico> UsuariosGrupoCorreoElectronico { get; set; }
+        public virtual DbSet<UsuarioRol> UsuariosRoles { get; set; }
+        public virtual DbSet<GrupoCorreoElectronico> GruposCorreoElectronico { get; set; }
+        public virtual DbSet<RolMenu> RolesMenu { get; set; }
     }
 }
 

@@ -1,10 +1,4 @@
 ﻿using Domain.DTOs.catalogos;
-using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Ports.Driving
 {
@@ -24,5 +18,6 @@ namespace Domain.Ports.Driving
         Task<List<CatalogoGenerico>> ObtenerGerenciaDivisionAsync(int idProceso, string usuario);
         Task<List<CatalogoGenerico>> ObtenerTiposDocumentosAsync(string usuario);        
         Task<List<CatalogoGenerico>> ObtenerCatalogoPorOpcionAsync(string opcion, string usuario);
+        Task<List<CatalogoGenerico>> ObtenerHallazgosAsync(string usuario);
     }
 }

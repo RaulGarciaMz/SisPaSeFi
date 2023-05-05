@@ -84,5 +84,10 @@ namespace Domain.Ports.Driven
     {
         Task<List<NivelRiesgo>> ObtenerNivelDeRiesgoAsync();
     }
-    
+
+    public interface IHallazgoQuery
+    {
+        Task<List<CatalogoHallazgo>> ObtenerHallazgosAsync();
+    }
+
 }
