@@ -6,9 +6,11 @@ namespace Domain.Ports.Driven
 {
     public interface IUsuariosCommand
     {
-
+        
+        Task AgregaUsuarioAsync(UsuarioDto user);
         Task AgregaUsuarioDeDocumentoAsync(int idDocumento, int idUsuario);
         Task BorraUsuarioDeDocumentoAsync(int idDocumento, int idUsuario);
+        Task BorraUsuarioDePatrullajeAsync(int idPrograma, int idUsuario);
 
         Task ActualizaListasDeUsuariosDesbloquearAsync(List<string> desbloquear);
         Task ActualizaListasDeUsuariosBloquearAsync(List<string> bloquear);

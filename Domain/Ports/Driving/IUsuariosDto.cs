@@ -1,11 +1,4 @@
 ﻿using Domain.DTOs;
-using Domain.Entities;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Ports.Driving
 {
@@ -15,7 +8,7 @@ namespace Domain.Ports.Driving
         Task DesbloqueaUsuarioAsync(string usuario);
         Task ReiniciaClaveUsuarioAsync(string usuario);*/
         Task ActualizaUsuariosPorOpcionAsync(string opcion, string usuario, List<UsuarioDto> users);
-        Task AgregaPorOpcionAsync(string opcion, string dato, string usuario);
+        Task AgregaPorOpcionAsync(string opcion, string dato, string usuario, UsuarioDto useDto);
         Task BorraPorOpcionAsync(string opcion, string dato, string usuario);
     }
 

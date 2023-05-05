@@ -104,15 +104,34 @@ namespace SqlServerAdapter
             }
         }
 
-        
+       
+        public async Task AgregaUsuarioAsync(UsuarioDto user)
+        {
+            var u = new Usuario() 
+            { 
+                UsuarioNom =user.strNombreDeUsuario,
+                Pass = ComputeMD5(user.strNombreDeUsuario),
+                Nombre = user.strNombre,
+                Apellido1 = user.strApellido1,
+                Apellido2 = user.strApellido2,
+                CorreoElectronico = user.strCorreoElectronico,
+                Cel = user.strCel,
+                RegionSsf = user.intRegionSSF,
+                Configurador    = user.intConfigurador,
+                DesbloquearRegistros = user.intDesbloquearRegistros,
+                TiempoEspera = user.intTiempoEspera
+            };
 
+            _userContext.Usuarios.Add(u);
+            await _userContext.SaveChangesAsync();
+        }
 
         public async Task AgregaUsuarioDeDocumentoAsync(int idDocumento, int idUsuario)
         {
             var u = new UsuarioDocumento()
             {
                 IdDocumentoPatrullaje = idDocumento,
-                IdUsuario = idUsuario
+                IdUsuario = idUsuario,
             };
             
             _userContext.UsuarioDocumentos.Add(u);
@@ -128,6 +147,17 @@ namespace SqlServerAdapter
                 await _userContext.SaveChangesAsync();
             }
         }
+
+        public async Task BorraUsuarioDePatrullajeAsync(int idPrograma, int idUsuario)
+        {
+            var u = await _userContext.UsuariosPatrullaje.Where(x => x.IdPrograma == idPrograma && x.IdUsuario == idUsuario).FirstOrDefaultAsync();
+            if (u != null)
+            {
+                _userContext.UsuariosPatrullaje.Remove(u);
+                await _userContext.SaveChangesAsync();
+            }
+        }
+        
 
         public async Task<Usuario?> ObtenerUsuarioConfiguradorPorIdAsync(int idUsuario)
         {

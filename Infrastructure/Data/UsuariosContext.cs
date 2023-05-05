@@ -18,6 +18,7 @@ namespace SqlServerAdapter.Data
         public DbSet<UsuarioComandancia> UsuariosComandancia { get; set; }
         public DbSet<UsuarioRol> UsuariosRol { get; set; }
         public DbSet<UsuarioGrupoCorreoElectronico> UsuariosGrupoCorreoElectronico { get; set; }
+        public DbSet<UsuarioPatrullaje> UsuariosPatrullaje { get; set; }
 
     }
 }

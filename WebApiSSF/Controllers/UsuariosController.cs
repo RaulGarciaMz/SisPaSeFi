@@ -55,20 +55,31 @@ namespace WebApiSSF.Controllers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="opcion"></param>
+        /// <param name="dato"></param>
+        /// <param name="usuario"></param>
+
+        /// <returns></returns>
+        /// 
+
+        /// <summary>
         /// Agrega usuarios acorde a la opción indicada
         /// </summary>
-        /// <param name="opcion">Opción de usuario a agregar ("AsignaUsuarioDeDocumento")</param>
+        /// <param name="opcion">Opción de usuario a agregar ("AsignaUsuarioDeDocumento" ó "CrearUsuario")</param>
         /// <param name="dato">Cadena de caracteres indicando el identificador del documento y el identificador de usuario a agregar, por ejemplo: "23-78"</param>
         /// <param name="usuario">Usuario (alias - usuario_nom) que realiza la operación</param>
+        /// <param name="userDto">Usuario a agregar. Sólo si la opción es "CrearUsuario"</param>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> AgregaPorOpcion([Required] string opcion, [Required] string dato, string usuario)
+        public async Task<ActionResult> AgregaPorOpcion([Required] string opcion, [Required] string dato, [Required] string usuario, [FromBody] UsuarioDto userDto)
         {
             try
             {
-                await _pp.AgregaPorOpcionAsync(opcion, dato, usuario);
+                await _pp.AgregaPorOpcionAsync(opcion, dato, usuario, userDto);
                 return StatusCode(201, "Ok");
             }
             catch (Exception ex)
@@ -81,7 +92,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza una lista de usuarios con respecto a la opción indicada
         /// </summary>
-        /// <param name="opcion">Opción de actualización ("Desbloquear", "Bloquear" ó "ReiniciarClave")</param>
+        /// <param name="opcion">Opción de actualización ("Desbloquear", "Bloquear", "ReiniciarClave", "Actualizar", "RegistrarComandancia", "QuitarComandancia", "RegistrarRol", "QuitarRol", "RegistrarGrupoCorreo", "QuitarGrupoCorreo")</param>
         /// <param name="usuario">Usuario (alias - usuario_nom) que realiza la actualización</param>
         /// <returns></returns>
         [HttpPut]
@@ -105,8 +116,8 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Elimina usuarios acorde a la opción indicada
         /// </summary>
-        /// <param name="opcion">Opción de usuario a eliminar ("EliminaUsuarioDeDocumento")</param>
-        /// <param name="dato">Cadena de caracteres indicando el identificador del documento y el identificador de usuario a agregar, por ejemplo: "23-78"</param>
+        /// <param name="opcion">Opción de usuario a eliminar ("EliminaUsuarioDeDocumento" ó "EliminaUsuarioDePatrullaje")</param>
+        /// <param name="dato">Cadena de caracteres indicando el identificador del documento ó programa y el identificador de usuario a agregar, por ejemplo: "23-78"</param>
         /// <param name="usuario">Usuario (alias - usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [HttpDelete]

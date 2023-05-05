@@ -15,8 +15,6 @@ namespace DomainServices.DomServ
             _repo = repo;
         }
 
-
-
         public async Task ActualizaUsuariosPorOpcionAsync(string opcion, string usuario, List<UsuarioDto> users)
         {
             var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
@@ -66,8 +64,7 @@ namespace DomainServices.DomServ
             }
         }
 
-
-        public async Task AgregaPorOpcionAsync(string opcion, string dato, string usuario)
+        public async Task AgregaPorOpcionAsync(string opcion, string dato, string usuario, UsuarioDto userDto)
         {
             var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
             if (user != null)
@@ -83,6 +80,9 @@ namespace DomainServices.DomServ
                         var idUsuario = Int32.Parse(datos[1]);
                         await _repo.AgregaUsuarioDeDocumentoAsync(idDocumento, idUsuario);
                         break;
+                    case "CrearUsuario":
+                        await _repo.AgregaUsuarioAsync(userDto);
+                        break;
 
                 }
             }
@@ -93,18 +93,21 @@ namespace DomainServices.DomServ
             var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
             if (user != null)
             {
+                if (!dato.Contains("-")) return;
+                var datos = dato.Split("-");
+                var idElemento = Int32.Parse(datos[0]);
+                var idUsuario = Int32.Parse(datos[1]);
+
                 switch (opcion)
                 {
                     case "EliminaUsuarioDeDocumento":
 
-                        if (!dato.Contains("-")) return;
-
-                        var datos = dato.Split("-");
-                        var idDocumento = Int32.Parse(datos[0]);
-                        var idUsuario = Int32.Parse(datos[1]);
-                        await _repo.BorraUsuarioDeDocumentoAsync(idDocumento, idUsuario);
+                        await _repo.BorraUsuarioDeDocumentoAsync(idElemento, idUsuario);
                         break;
 
+                    case "EliminaUsuarioDePatrullaje":
+                        await _repo.BorraUsuarioDePatrullajeAsync(idElemento, idUsuario);
+                        break;
                 }
             }
         }
