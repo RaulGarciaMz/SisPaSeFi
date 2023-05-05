@@ -21,12 +21,12 @@ namespace SqlServerAdapter
             _permisosContext = permisosContext ?? throw new ArgumentNullException(nameof(permisosContext));
         }
 
-        public async Task<List<Permisosedicionprocesoconduccion>> ObtenerPermisosAsync()
+        public async Task<List<PermisoEdicionProcesoConduccion>> ObtenerPermisosAsync()
         {
             return await _permisosContext.PermisosEdicionConduccion.OrderBy(x => x.Regionssf).ThenBy(x => x.Anio).ThenBy(x => x.Mes).ToListAsync();
         }
 
-        public async Task<Permisosedicionprocesoconduccion?> ObtenerPermisosPorOpcionAsync(int region, int anio, int mes)
+        public async Task<PermisoEdicionProcesoConduccion?> ObtenerPermisosPorOpcionAsync(int region, int anio, int mes)
         {
             return await _permisosContext.PermisosEdicionConduccion.Where(x => x.Regionssf == region && x.Anio == anio && x.Mes == mes ).SingleOrDefaultAsync();
         }
@@ -37,7 +37,7 @@ namespace SqlServerAdapter
 
             if (d == null)
             {
-                var nvo = new Permisosedicionprocesoconduccion() 
+                var nvo = new PermisoEdicionProcesoConduccion() 
                 { 
                     Regionssf = region,
                     Anio = anio,

@@ -33,7 +33,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<Permisosedicionprocesoconduccion>>> ObtenerPermisos([Required]string usuario)
+        public async Task<ActionResult<IEnumerable<PermisoEdicionProcesoConduccion>>> ObtenerPermisos([Required]string usuario)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Permisosedicionprocesoconduccion>> ObtenerPermisosPorOpcion([Required] int rsf, [Required] int anio, [Required] int mes, [Required] string usuario)
+        public async Task<ActionResult<PermisoEdicionProcesoConduccion>> ObtenerPermisosPorOpcion([Required] int rsf, [Required] int anio, [Required] int mes, [Required] string usuario)
         {
             try
             {

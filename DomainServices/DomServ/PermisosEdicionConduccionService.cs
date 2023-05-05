@@ -41,9 +41,9 @@ namespace DomainServices.DomServ
             }            
         }
 
-        public async Task<List<Permisosedicionprocesoconduccion>> ObtenerPermisosAsync(string usuario)
+        public async Task<List<PermisoEdicionProcesoConduccion>> ObtenerPermisosAsync(string usuario)
         {
-            var l = new List<Permisosedicionprocesoconduccion>();
+            var l = new List<PermisoEdicionProcesoConduccion>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
@@ -54,7 +54,7 @@ namespace DomainServices.DomServ
             return l;
         }
 
-        public async Task<Permisosedicionprocesoconduccion?> ObtenerPermisosPorOpcionAsync(int region, int anio, int mes, string usuario)
+        public async Task<PermisoEdicionProcesoConduccion?> ObtenerPermisosPorOpcionAsync(int region, int anio, int mes, string usuario)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 

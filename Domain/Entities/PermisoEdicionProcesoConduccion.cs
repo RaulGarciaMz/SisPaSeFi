@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Domain.Entities;
 
 [Table("permisosedicionprocesoconduccion", Schema = "ssf")]
-public partial class Permisosedicionprocesoconduccion
+public partial class PermisoEdicionProcesoConduccion
 {
     [Key]
     [Column("idpermisoedicionprocesoconduccion")]

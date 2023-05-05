@@ -15,7 +15,7 @@ namespace Domain.Ports.Driven
 
     public interface IPermisoEdicionConduccionQuery
     {
-        Task<List<Permisosedicionprocesoconduccion>> ObtenerPermisosAsync();
-        Task<Permisosedicionprocesoconduccion?> ObtenerPermisosPorOpcionAsync(int region, int anio, int mes);
+        Task<List<PermisoEdicionProcesoConduccion>> ObtenerPermisosAsync();
+        Task<PermisoEdicionProcesoConduccion?> ObtenerPermisosPorOpcionAsync(int region, int anio, int mes);
     }
 }

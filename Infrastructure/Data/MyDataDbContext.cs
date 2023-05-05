@@ -92,7 +92,7 @@ public partial class MyDataDbContext : DbContext
 
     public virtual DbSet<NotaInformativa> Notainformativas { get; set; }
 
-    public virtual DbSet<Permisosedicionprocesoconduccion> Permisosedicionprocesoconduccion { get; set; }
+    public virtual DbSet<PermisoEdicionProcesoConduccion> Permisosedicionprocesoconduccion { get; set; }
 
     public virtual DbSet<ProcesoResponsable> Procesosresponsables { get; set; }
 
@@ -150,7 +150,7 @@ public partial class MyDataDbContext : DbContext
 
     public virtual DbSet<UsuarioMenu> Usuariosmenus { get; set; }
 
-    public virtual DbSet<Usuariospotfire> Usuariospotfires { get; set; }
+    public virtual DbSet<UsuarioSpotfire> Usuariospotfires { get; set; }
 
     public virtual DbSet<Vehiculo> Vehiculos { get; set; }
     public virtual DbSet<Tiporeporte> Tiporeportes { get; set; }
@@ -454,7 +454,7 @@ public partial class MyDataDbContext : DbContext
             entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Notainformativas).HasConstraintName("notainformativa$notaInformativa_ibfk_2");
         });
 
-        modelBuilder.Entity<Permisosedicionprocesoconduccion>(entity =>
+        modelBuilder.Entity<PermisoEdicionProcesoConduccion>(entity =>
         {
             entity.HasKey(e => e.Idpermisoedicionprocesoconduccion).HasName("PK_permisosedicionprocesoconduccion_idpermisoedicionprocesoconduccion");
         });
@@ -718,7 +718,7 @@ public partial class MyDataDbContext : DbContext
             entity.HasOne(d => d.IdUsuarioNavigation).WithMany().HasConstraintName("usuariosmenus$usuariosmenus_ibfk_1");
         });
 
-        modelBuilder.Entity<Usuariospotfire>(entity =>
+        modelBuilder.Entity<UsuarioSpotfire>(entity =>
         {
             entity.HasKey(e => e.IdUsuario).HasName("PK_usuariospotfire_id_usuario");
 

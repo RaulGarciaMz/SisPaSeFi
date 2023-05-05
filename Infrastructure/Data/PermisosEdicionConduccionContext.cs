@@ -15,6 +15,6 @@ namespace SqlServerAdapter.Data
         {
         }
 
-        public DbSet<Permisosedicionprocesoconduccion> PermisosEdicionConduccion { get; set; }
+        public DbSet<PermisoEdicionProcesoConduccion> PermisosEdicionConduccion { get; set; }
     }
 }
