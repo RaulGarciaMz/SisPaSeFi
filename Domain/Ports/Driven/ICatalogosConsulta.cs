@@ -119,5 +119,9 @@ namespace Domain.Ports.Driven
     {
         Task<List<GrupoCorreoElectronico>> ObtenerGruposCorreoAsync();
     }
-    
+
+    public interface IRolMenuQuery
+    {
+        Task<List<RolMenu>> ObtenerMenusDeRolAsync(int idRol);
+    }
 }

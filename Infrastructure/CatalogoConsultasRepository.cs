@@ -160,5 +160,11 @@ namespace SqlServerAdapter
         {
             return await _catalogosConsultaContext.GruposCorreoElectronico.OrderBy(x => x.IdGrupoCorreo).ToListAsync();
         }
+
+        public async Task<List<RolMenu>> ObtenerMenusDeRolAsync(int idRol)
+        {
+            return await _catalogosConsultaContext.RolesMenu.Where(x => x.IdRol == idRol).Distinct().ToListAsync();
+        }
+        
     }
 }

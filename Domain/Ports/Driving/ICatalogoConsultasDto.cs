@@ -24,5 +24,8 @@ namespace Domain.Ports.Driving
         Task<List<CatalogoGenerico>> ObtenerGruposCorreoDeUnUsuarioAsync(int idUsuario, string usuario);
         Task<List<CatalogoGenerico>> ObtenerRolesDeUnUsuarioAsync(int idUsuario, string usuario);
         Task<List<CatalogoGenerico>> ObtenerGruposCorreoAsync(string usuario);
+        Task<List<CatalogoGenerico>> ObtenerMenusDeRolAsync(int idRol, string usuario);
+
+
     }
 }

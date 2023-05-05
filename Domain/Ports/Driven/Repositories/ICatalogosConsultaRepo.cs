@@ -4,7 +4,7 @@
         INivelesQuery, IConceptoAfectacionQuery, IRegionEnRutaQuery, IEstadoPaisQuery, IProcesoResponsableQuery, ITipoDocumentoQuery, 
         IMunicipioQuery, IGerenciaDivisionQuery, IResultadoPatrullajeQuery, IEstadoPatrullajeQuery, IApoyoPatrullajeQuery, IInstalacionesQuery,
         INivelRiesgoQuery, IHallazgoQuery, ILocalidadQuery, IEstadoIncidenciaQuery, IComandanciasDeUnUsuarioQuery, IGruposCorreoDeUnUsuarioQuery,
-        IRolesDeUnUsuarioQuery, IGruposCorreoQuery
+        IRolesDeUnUsuarioQuery, IGruposCorreoQuery, IRolMenuQuery
     {
     }
 }
