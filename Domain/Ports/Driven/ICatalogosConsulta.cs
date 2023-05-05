@@ -100,10 +100,14 @@ namespace Domain.Ports.Driven
         Task<List<EstadoIncidencia>> ObtenerEstadosIncidenciaAsync();
     }
 
-    public interface IrComandanciasDeUnUsuarioQuery
+    public interface IComandanciasDeUnUsuarioQuery
     {
         Task<List<UsuarioComandancia>> ObtenerComandanciasDeUnUsuarioAsync(int idUsuario);
     }
-    
+
+    public interface IGruposCorreoDeUnUsuarioQuery
+    {
+        Task<List<UsuarioGrupoCorreoElectronico>> ObtenerGruposCorreoDeUnUsuarioAsync(int idUsuario);
+    }
 
 }

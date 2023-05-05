@@ -98,7 +98,7 @@ namespace DomainServices.DomServ
                     cat = await ObtenerComandanciasDeUnUsuarioAsync(dtoComplementario, usuario);
                     break;
                 case "GrupoCorreoDeUnUsuario":
-                    //cat = await ObtenerGruposCorreoDeUnUsuarioAsync(dtoComplementario,usuario);
+                    cat = await ObtenerGruposCorreoDeUnUsuarioAsync(dtoComplementario,usuario);
                     break;
                 case "RolesDeUnUsuario":
                     //cat = await ObtenerRolesDeUnUsuarioAsync(dtoComplementario,usuario);
@@ -648,6 +648,31 @@ namespace DomainServices.DomServ
 
             return cat;
         }
+
+        public async Task<List<CatalogoGenerico>> ObtenerGruposCorreoDeUnUsuarioAsync(int idUsuario, string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var clas = await _repo.ObtenerGruposCorreoDeUnUsuarioAsync(idUsuario);
+
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdGrupoCorreo.Value,
+                        Descripcion = ""
+                    };
+
+                    cat.Add(row);
+                }
+            }
+
+            return cat;
+        }
+
         
     }
 }
