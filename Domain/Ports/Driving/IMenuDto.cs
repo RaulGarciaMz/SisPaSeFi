@@ -4,7 +4,7 @@ namespace Domain.Ports.Driving
 {
     public interface IMenuDtoCommand
     {
-        Task AgregaMenuAsync(string opcion, MenuDto menu, string usuario);
+        Task AgregaMenuAsync(MenuDto menu, string usuario);
         Task ActualizaMenuAsync(MenuDto menu, string usuario);
     }
 

@@ -41,7 +41,7 @@ namespace DomainServices.DomServ
             return menus;
         }
 
-        public async Task AgregaMenuAsync(string opcion, MenuDto menu, string usuario)
+        public async Task AgregaMenuAsync(MenuDto menu, string usuario)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
