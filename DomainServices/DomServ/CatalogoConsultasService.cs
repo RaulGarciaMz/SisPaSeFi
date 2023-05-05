@@ -89,7 +89,7 @@ namespace DomainServices.DomServ
                     cat = await ObtenerHallazgosAsync(usuario);
                     break;
                 case "LocalidadMunicipio":
-                    //cat = await ObtenerLocalidadesMunicipioAsync(dtoComplementario,usuario);
+                    cat = await ObtenerLocalidadesPorMunicipioAsync(dtoComplementario,usuario);
                     break;
                 case "EstadosIncidencia":
                     //cat = await ObtenerEstadosIncidenciaAsync(usuario);
@@ -576,6 +576,33 @@ namespace DomainServices.DomServ
 
             return cat;
         }
+
+        public async Task<List<CatalogoGenerico>> ObtenerLocalidadesPorMunicipioAsync(int idMunicipio, string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var clas = await _repo.ObtenerLocalidadesPorMunicipioAsync(idMunicipio);
+
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdLocalidad,
+                        Descripcion = c.Nombre
+                    };
+
+                    cat.Add(row);
+                }
+            }
+
+            return cat;
+        }
+
+
+        
 
     }
 }

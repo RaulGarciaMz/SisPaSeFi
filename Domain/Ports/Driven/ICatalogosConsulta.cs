@@ -90,4 +90,8 @@ namespace Domain.Ports.Driven
         Task<List<CatalogoHallazgo>> ObtenerHallazgosAsync();
     }
 
+    public interface ILocalidadQuery
+    {
+        Task<List<Localidad>> ObtenerLocalidadesPorMunicipioAsync(int idMunicipio);
+    }
 }
