@@ -1,13 +1,7 @@
 ﻿using Domain.DTOs.catalogos;
-using Domain.Entities;
 using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DomainServices.DomServ
 {
@@ -39,6 +33,9 @@ namespace DomainServices.DomServ
             {
                 case "RSF":
                     cat = await ObtenerComandanciaPorIdUsuarioAsync(usuario);
+                    break;
+                case "TodasLasRegiones":
+                    cat = await ObtenerComandanciasAsync(usuario);
                     break;
                 case "TipoPatrullaje":
                     cat = await ObtenerTiposPatrullajeAsync(usuario);
@@ -88,6 +85,30 @@ namespace DomainServices.DomServ
                 case "NivelRiesgo":
                     cat = await ObtenerNivelDeRiesgoAsync(usuario);
                     break;
+                case "Hallazgo":
+                    //cat = await ObtenerHallazgosAsync(usuario);
+                    break;
+                case "LocalidadMunicipio":
+                    //cat = await ObtenerLocalidadesMunicipioAsync(dtoComplementario,usuario);
+                    break;
+                case "EstadosIncidencia":
+                    //cat = await ObtenerEstadosIncidenciaAsync(usuario);
+                    break;
+                case "ComandanciasDeUnUsuario":
+                    //cat = await ObtenerComandanciasDeUnUsuarioAsync(dtoComplementario, usuario);
+                    break;
+                case "GrupoCorreoDeUnUsuario":
+                    //cat = await ObtenerGruposCorreoDeUnUsuarioAsync(dtoComplementario,usuario);
+                    break;
+                case "RolesDeUnUsuario":
+                    //cat = await ObtenerRolesDeUnUsuarioAsync(dtoComplementario,usuario);
+                    break;
+                case "GruposCorreo":
+                    //cat = await ObtenerGruposCorreoAsync(usuario);
+                    break;
+                case "MenusDeRol":
+                    //cat = await ObtenerMenusDeRolAsync(dtoComplementario,usuario);
+                    break;
             }
             
             return cat;           
@@ -117,6 +138,30 @@ namespace DomainServices.DomServ
             return cat;
         }
 
+        public async Task<List<CatalogoGenerico>> ObtenerComandanciasAsync(string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var clas = await _repo.ObtenerComandanciasAsync();
+
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = c.IdComandancia,
+                        Descripcion = c.Numero.ToString()
+                    };
+
+                    cat.Add(row);
+                }
+            }
+
+            return cat;
+        }
+        
         public async Task<List<CatalogoGenerico>> ObtenerTiposPatrullajeAsync(string usuario)
         {
             var cat = new List<CatalogoGenerico>();

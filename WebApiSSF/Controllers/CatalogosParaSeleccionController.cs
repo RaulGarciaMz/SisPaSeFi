@@ -494,6 +494,7 @@ namespace WebApiSSF.Controllers
                 var opciones = new List<string>()
                                     {
                                         "RSF",
+                                        "TodasLasRegiones",
                                         "TipoPatrullaje",
                                         "TipoVehiculo",
                                         "ClasificacionIncidencia",
@@ -510,6 +511,14 @@ namespace WebApiSSF.Controllers
                                         "ApoyoPatrullaje",
                                         "InstalacionesDeComandancia",
                                         "NivelRiesgo",
+                                        "Hallazgo",
+                                        "LocalidadMunicipio",
+                                        "EstadosIncidencia",
+                                        "ComandanciasDeUnUsuario",
+                                        "GrupoCorreoDeUnUsuario",
+                                        "RolesDeUnUsuario",
+                                        "GruposCorreo",
+                                        "MenusDeRol"
                                     };
 
                 if (!opciones.Contains(opcion)) 

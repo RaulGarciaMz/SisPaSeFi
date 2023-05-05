@@ -4,11 +4,6 @@ using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlServerAdapter
 {
@@ -32,6 +27,11 @@ namespace SqlServerAdapter
                           join u in _catalogosConsultaContext.Usuarios on c.IdUsuario equals u.IdUsuario
                           where u.IdUsuario == idUsuario && c.IdPunto > 0
                           select c).ToListAsync();
+        }
+
+        public async Task<List<ComandanciaRegional>> ObtenerComandanciasAsync()
+        {
+            return await _catalogosConsultaContext.Comandancias.Where(x => x.IdPunto > 0).ToListAsync();
         }
 
         public async Task<List<ConceptoAfectacion>> ObtenerConceptosAfectacionAsync()
