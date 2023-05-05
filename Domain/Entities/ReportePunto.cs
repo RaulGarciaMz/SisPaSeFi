@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities;
 
@@ -29,14 +27,14 @@ public partial class ReportePunto
     [Column("estadoIncidencia")]
     public int EstadoIncidencia { get; set; }
 
-    [Column("ultimaActualizacion")]
-    public DateTime? UltimaActualizacion { get; set; }
+    [Column("ultimaActualizacion", TypeName = "datetime")]
+    public DateTime UltimaActualizacion { get; set; }
 
     [Column("prioridadIncidencia")]
     public int PrioridadIncidencia { get; set; }
 
-    [Column("ultimoRegistroEnBitacora")]
-    public DateTime? UltimoRegistroEnBitacora { get; set; }
+    [Column("ultimoRegistroEnBitacora", TypeName = "datetime")]
+    public DateTime UltimoRegistroEnBitacora { get; set; }
 
     [Column("id_clasificacionIncidencia")]
     public int IdClasificacionIncidencia { get; set; }

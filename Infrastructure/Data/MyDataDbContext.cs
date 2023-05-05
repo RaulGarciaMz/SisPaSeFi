@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Domain.Entities;
 
-namespace SqlServerAdapter.Data;
+namespace Domain.Entities;
 
 public partial class MyDataDbContext : DbContext
 {
@@ -28,6 +27,8 @@ public partial class MyDataDbContext : DbContext
 
     public virtual DbSet<BitacoraSeguimientoIncidencia> Bitacoraseguimientoincidencia { get; set; }
 
+    public virtual DbSet<CatalogoHallazgo> Catalogohallazgos { get; set; }
+
     public virtual DbSet<ClasePatrullaje> Clasepatrullajes { get; set; }
 
     public virtual DbSet<ClasificacionIncidencia> Clasificacionincidencia { get; set; }
@@ -37,6 +38,10 @@ public partial class MyDataDbContext : DbContext
     public virtual DbSet<ComandanciaRegional> Comandanciasregionales { get; set; }
 
     public virtual DbSet<ConceptoAfectacion> Conceptosafectacions { get; set; }
+
+    public virtual DbSet<ConceptoAfectacionReporteIncidenciaTransmision> Conceptosafectacionreporteincidenciatransmisions { get; set; }
+
+    public virtual DbSet<Consolidado> Consolidados { get; set; }
 
     public virtual DbSet<DivisionDistribucion> Divisiondistribucions { get; set; }
 
@@ -53,8 +58,6 @@ public partial class MyDataDbContext : DbContext
     public virtual DbSet<EstadoPais> Estadospais { get; set; }
 
     public virtual DbSet<EstadoTarjetaInformativa> Estadotarjetainformativas { get; set; }
-
-    public virtual DbSet<TarjetaInformativaReporte> TarjetaInformativaReportes { get; set; }
 
     public virtual DbSet<Estructura> Estructuras { get; set; }
 
@@ -76,11 +79,15 @@ public partial class MyDataDbContext : DbContext
 
     public virtual DbSet<GrupoCorreoElectronico> Gruposcorreoelectronicos { get; set; }
 
+    public virtual DbSet<HorasVueloMensual> Horasvuelomensuales { get; set; }
+
     public virtual DbSet<Itinerario> Itinerarios { get; set; }
 
     public virtual DbSet<Linea> Lineas { get; set; }
 
     public virtual DbSet<LineaPunto> Lineapuntos { get; set; }
+
+    public virtual DbSet<Localidad> Localidades { get; set; }
 
     public virtual DbSet<Menu> Menus { get; set; }
 
@@ -92,7 +99,7 @@ public partial class MyDataDbContext : DbContext
 
     public virtual DbSet<NotaInformativa> Notainformativas { get; set; }
 
-    public virtual DbSet<PermisoEdicionProcesoConduccion> Permisosedicionprocesoconduccion { get; set; }
+    public virtual DbSet<PermisoEdicionProcesoConduccion> Permisosedicionprocesoconduccions { get; set; }
 
     public virtual DbSet<ProcesoResponsable> Procesosresponsables { get; set; }
 
@@ -110,9 +117,11 @@ public partial class MyDataDbContext : DbContext
 
     public virtual DbSet<ReporteEstructura> Reporteestructuras { get; set; }
 
+    public virtual DbSet<ReporteIncidenciaTransmision> Reporteincidenciatransmisions { get; set; }
+
     public virtual DbSet<ReportePunto> Reportepuntos { get; set; }
 
-    public virtual DbSet<ResultadoPatrullaje> ResultadoPatrullajes { get; set; }
+    public virtual DbSet<ResultadoPatrullaje> Resultadopatrullajes { get; set; }
 
     public virtual DbSet<Rol> Roles { get; set; }
 
@@ -126,11 +135,15 @@ public partial class MyDataDbContext : DbContext
 
     public virtual DbSet<TarjetaInformativa> Tarjetainformativas { get; set; }
 
-    public virtual DbSet<TempPuntoDeRutaPorEstado> Temppuntosderutasporestados { get; set; }
+    public virtual DbSet<TarjetaInformativaReporte> Tarjetainformativareportes { get; set; }
+
+    public virtual DbSet<TempPuntosdeRutasporEstado> Temppuntosderutasporestados { get; set; }
 
     public virtual DbSet<TipoDocumento> Tipodocumentos { get; set; }
 
     public virtual DbSet<TipoPatrullaje> Tipopatrullajes { get; set; }
+
+    public virtual DbSet<TipoReporte> Tiporeportes { get; set; }
 
     public virtual DbSet<TipoVehiculo> Tipovehiculos { get; set; }
 
@@ -153,7 +166,10 @@ public partial class MyDataDbContext : DbContext
     public virtual DbSet<UsuarioSpotfire> Usuariospotfires { get; set; }
 
     public virtual DbSet<Vehiculo> Vehiculos { get; set; }
-    public virtual DbSet<Tiporeporte> Tiporeportes { get; set; }
+
+    public virtual DbSet<Vista1> Vista1s { get; set; }
+
+    public virtual DbSet<Vista2> Vista2s { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -161,6 +177,8 @@ public partial class MyDataDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
         modelBuilder.Entity<AfectacionIncidencia>(entity =>
         {
             entity.HasKey(e => e.IdAfectacionIncidencia).HasName("PK_afectacionincidencia_id_afectacionIncidencia");
@@ -235,6 +253,11 @@ public partial class MyDataDbContext : DbContext
         modelBuilder.Entity<ConceptoAfectacion>(entity =>
         {
             entity.HasKey(e => e.IdConceptoAfectacion).HasName("PK_conceptosafectacion_id_conceptoAfectacion");
+        });
+
+        modelBuilder.Entity<Consolidado>(entity =>
+        {
+            entity.ToView("consolidado", "ssf");
         });
 
         modelBuilder.Entity<DivisionDistribucion>(entity =>
@@ -405,7 +428,11 @@ public partial class MyDataDbContext : DbContext
                 .HasConstraintName("lineapunto$lineaPunto_ibfk_1");
         });
 
- 
+        modelBuilder.Entity<Localidad>(entity =>
+        {
+            entity.HasKey(e => e.IdLocalidad).HasName("PK_localidades_id_localidad");
+        });
+
         modelBuilder.Entity<Menu>(entity =>
         {
             entity.HasKey(e => e.IdMenu).HasName("PK_menus_IdMenu");
@@ -429,11 +456,6 @@ public partial class MyDataDbContext : DbContext
             entity.HasKey(e => e.IdNivel).HasName("PK_niveles_id_nivel");
 
             entity.Property(e => e.IdNivel).ValueGeneratedNever();
-        });
-
-        modelBuilder.Entity<Tiporeporte>(entity =>
-        {
-            entity.Property(e => e.Idtiporeporte).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<NivelRiesgo>(entity =>
@@ -502,9 +524,7 @@ public partial class MyDataDbContext : DbContext
 
             entity.HasOne(d => d.IdRutaNavigation).WithMany(p => p.Propuestaspatrullajes).HasConstraintName("propuestaspatrullajes$propuestasPatrullajes_ibfk_1");
 
-            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Propuestaspatrullajes)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("propuestaspatrullajes$propuestasPatrullajes_ibfk_2");
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Propuestaspatrullajes).HasConstraintName("propuestaspatrullajes$propuestasPatrullajes_ibfk_2");
         });
 
         modelBuilder.Entity<PropuestaPatrullajeComplementossf>(entity =>
@@ -573,9 +593,9 @@ public partial class MyDataDbContext : DbContext
 
         modelBuilder.Entity<ResultadoPatrullaje>(entity =>
         {
-            entity.HasKey(e => e.IdResultadoPatrullaje).HasName("PK_resultadopatrullaje_idresultadopatrullaje");
+            entity.HasKey(e => e.Idresultadopatrullaje).HasName("PK_resultadopatrullaje_idresultadopatrullaje");
 
-            entity.Property(e => e.IdResultadoPatrullaje).ValueGeneratedNever();
+            entity.Property(e => e.Idresultadopatrullaje).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<Rol>(entity =>
@@ -609,9 +629,6 @@ public partial class MyDataDbContext : DbContext
         modelBuilder.Entity<Semana>(entity =>
         {
             entity.HasKey(e => e.Date).HasName("PK_semana_date");
-
-            entity.Property(e => e.Fin).HasComment("Fecha final");
-            entity.Property(e => e.Inicio).HasComment("AdventureWorks2012 Sample Database");
         });
 
         modelBuilder.Entity<Sesion>(entity =>
@@ -629,6 +646,8 @@ public partial class MyDataDbContext : DbContext
             entity.HasKey(e => e.IdNota).HasName("PK_tarjetainformativa_id_nota");
 
             entity.Property(e => e.IdEstadoTarjetaInformativa).HasDefaultValueSql("((1))");
+            entity.Property(e => e.Lineaestructurainstalacion).HasDefaultValueSql("(N'')");
+            entity.Property(e => e.Responsablevuelo).HasDefaultValueSql("(N'')");
             entity.Property(e => e.UltimaActualizacion).HasDefaultValueSql("(getdate())");
 
             entity.HasOne(d => d.IdEstadoTarjetaInformativaNavigation).WithMany(p => p.Tarjetainformativas).HasConstraintName("tarjetainformativa$tarjetaInformativa_ibfk_3");
@@ -650,6 +669,8 @@ public partial class MyDataDbContext : DbContext
         modelBuilder.Entity<TipoPatrullaje>(entity =>
         {
             entity.HasKey(e => e.IdTipoPatrullaje).HasName("PK_tipopatrullaje_id_tipoPatrullaje");
+
+            entity.Property(e => e.Clave).HasDefaultValueSql("(N'PAE')");
         });
 
         modelBuilder.Entity<TipoVehiculo>(entity =>
@@ -740,6 +761,16 @@ public partial class MyDataDbContext : DbContext
             entity.HasOne(d => d.IdTipoPatrullajeNavigation).WithMany(p => p.Vehiculos).HasConstraintName("vehiculos$vehiculos_ibfk_1");
 
             entity.HasOne(d => d.IdTipoVehiculoNavigation).WithMany(p => p.Vehiculos).HasConstraintName("vehiculos$vehiculos_ibfk_3");
+        });
+
+        modelBuilder.Entity<Vista1>(entity =>
+        {
+            entity.ToView("vista1", "ssf");
+        });
+
+        modelBuilder.Entity<Vista2>(entity =>
+        {
+            entity.ToView("vista2", "ssf");
         });
 
         OnModelCreatingPartial(modelBuilder);

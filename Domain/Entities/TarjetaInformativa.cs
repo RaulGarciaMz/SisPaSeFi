@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities;
 
@@ -74,6 +72,25 @@ public partial class TarjetaInformativa
 
     [Column("personalNavalSEMARTropa")]
     public int PersonalNavalSemartropa { get; set; }
+
+    [Column("fechaTermino", TypeName = "date")]
+    public DateTime? FechaTermino { get; set; }
+
+    [Column("idresultadopatrullaje")]
+    public int Idresultadopatrullaje { get; set; }
+
+    [Column("lineaestructurainstalacion")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string Lineaestructurainstalacion { get; set; } = null!;
+
+    [Column("responsablevuelo")]
+    [StringLength(200)]
+    [Unicode(false)]
+    public string Responsablevuelo { get; set; } = null!;
+
+    [Column("fuerzareaccion")]
+    public int Fuerzareaccion { get; set; }
 
     [ForeignKey("IdEstadoTarjetaInformativa")]
     [InverseProperty("Tarjetainformativas")]

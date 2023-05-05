@@ -321,7 +321,7 @@ namespace DomainServices.DomServ
                 {
                     var row = new CatalogoGenerico()
                     {
-                        Id = c.IdResultadoPatrullaje,
+                        Id = c.Idresultadopatrullaje,
                         Descripcion = c.Descripcion
                     };
 

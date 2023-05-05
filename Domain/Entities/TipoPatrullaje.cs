@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities;
 
@@ -17,6 +15,11 @@ public partial class TipoPatrullaje
     [StringLength(50)]
     [Unicode(false)]
     public string Descripcion { get; set; } = null!;
+
+    [Column("clave")]
+    [StringLength(3)]
+    [Unicode(false)]
+    public string Clave { get; set; } = null!;
 
     [InverseProperty("IdTipoPatrullajeNavigation")]
     public virtual ICollection<Ruta> Ruta { get; } = new List<Ruta>();

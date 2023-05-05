@@ -55,9 +55,11 @@ public partial class Usuario
 
     public int? NotificarAcceso { get; set; }
 
-    public DateTime? EstampaTiempoUltimoAcceso { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime EstampaTiempoUltimoAcceso { get; set; }
 
-    public DateTime? EstampaTiempoAceptacionUso { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime EstampaTiempoAceptacionUso { get; set; }
 
     [StringLength(100)]
     [Unicode(false)]

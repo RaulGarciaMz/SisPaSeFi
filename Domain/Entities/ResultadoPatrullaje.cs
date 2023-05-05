@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities;
 
@@ -11,7 +9,7 @@ public partial class ResultadoPatrullaje
 {
     [Key]
     [Column("idresultadopatrullaje")]
-    public int IdResultadoPatrullaje { get; set; }
+    public int Idresultadopatrullaje { get; set; }
 
     [Column("descripcion")]
     [StringLength(100)]

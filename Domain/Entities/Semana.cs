@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities;
 
@@ -13,15 +11,9 @@ public partial class Semana
     [Column("date", TypeName = "date")]
     public DateTime Date { get; set; }
 
-    /// <summary>
-    /// AdventureWorks2012 Sample Database
-    /// </summary>
     [Column("inicio", TypeName = "date")]
     public DateTime? Inicio { get; set; }
 
-    /// <summary>
-    /// Fecha final
-    /// </summary>
     [Column("fin", TypeName = "date")]
     public DateTime? Fin { get; set; }
 

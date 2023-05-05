@@ -16,6 +16,6 @@ namespace SqlServerAdapter.Data
         public DbSet<ReportePunto> ReportesInstalaciones { get; set; }
         public DbSet<ReporteIncidenciaAbierto> ReportesIncidenciasAbiertos { get; set; }       
         public DbSet<TarjetaInformativaReporte> TarjetaInformativaReportes { get; set; }
-        public DbSet<Tiporeporte> TiposReporte { get; set; }
+        public DbSet<TipoReporte> TiposReporte { get; set; }
     }
 }

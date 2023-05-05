@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities;
 
@@ -41,7 +39,7 @@ public partial class ProgramaPatrullaje
     public int IdEstadoPatrullaje { get; set; }
 
     [Column("observaciones")]
-    [StringLength(100)]
+    [StringLength(1000)]
     [Unicode(false)]
     public string? Observaciones { get; set; }
 

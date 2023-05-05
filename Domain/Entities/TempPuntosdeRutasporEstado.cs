@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities;
 
 [Keyless]
 [Table("temppuntosderutasporestado", Schema = "ssf")]
-public partial class TempPuntoDeRutaPorEstado
+public partial class TempPuntosdeRutasporEstado
 {
     [Column("id_ruta")]
     public int? IdRuta { get; set; }
