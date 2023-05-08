@@ -8,9 +8,9 @@ namespace DomainServices.DomServ
     public class CatalogoConsultasService : ICatalogosConsultaService
     {
         private readonly ICatalogosConsultaRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public CatalogoConsultasService(ICatalogosConsultaRepo repo, IUsuariosConfiguradorQuery u)
+        public CatalogoConsultasService(ICatalogosConsultaRepo repo, IUsuariosParaValidacionQuery u)
         {
             _repo = repo;
             _user = u;

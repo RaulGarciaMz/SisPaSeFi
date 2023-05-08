@@ -14,9 +14,9 @@ namespace DomainServices.DomServ
     public class IncidenciasService : IIncidenciasService 
     {
         private readonly IIncidenciasRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public IncidenciasService(IIncidenciasRepo repo, IUsuariosConfiguradorQuery u)
+        public IncidenciasService(IIncidenciasRepo repo, IUsuariosParaValidacionQuery u)
         {
             _repo = repo;
             _user = u;

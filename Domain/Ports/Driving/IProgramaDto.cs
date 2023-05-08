@@ -16,6 +16,6 @@ namespace Domain.Ports.Driving
     }
     public interface IProgramaDtoQuery
     {
-        Task<List<PatrullajeDto>> ObtenerPorFiltro(string tipo, int region, string clase,int anio, int mes, int dia=1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia);      
+        Task<List<PatrullajeDto>> ObtenerPorFiltro(string usuario, string tipo, int region, string clase,int anio, int mes, int dia=1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia);      
     }
 }

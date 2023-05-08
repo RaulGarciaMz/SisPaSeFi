@@ -10,9 +10,9 @@ namespace DomainServices.DomServ
     public class LineasService : ILineasService
     {
         private readonly ILineasRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public LineasService(ILineasRepo repo, IUsuariosConfiguradorQuery u)
+        public LineasService(ILineasRepo repo, IUsuariosParaValidacionQuery u)
         {
             _repo = repo;
             _user = u;

@@ -10,9 +10,9 @@ namespace DomainServices.DomServ
     public class VehiculoService : IVehiculoService
     {
         private readonly IVehiculosPatrullajeRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public VehiculoService(IVehiculosPatrullajeRepo repo, IUsuariosConfiguradorQuery uc)
+        public VehiculoService(IVehiculosPatrullajeRepo repo, IUsuariosParaValidacionQuery uc)
         {
             _repo = repo;
             _user = uc;

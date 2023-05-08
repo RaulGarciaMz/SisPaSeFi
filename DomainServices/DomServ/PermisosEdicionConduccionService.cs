@@ -13,9 +13,9 @@ namespace DomainServices.DomServ
     public class PermisosEdicionConduccionService : IPermisoEdicionConduccionService
     {
         private readonly IPermisosConduccionRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public PermisosEdicionConduccionService(IPermisosConduccionRepo repo, IUsuariosConfiguradorQuery u)
+        public PermisosEdicionConduccionService(IPermisosConduccionRepo repo, IUsuariosParaValidacionQuery u)
         {
             _repo = repo;
             _user = u;

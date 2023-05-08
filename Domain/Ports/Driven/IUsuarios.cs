@@ -61,10 +61,12 @@ namespace Domain.Ports.Driven
         Task<Usuario?> ObtenerUsuarioPorNombreConDiferenteIdAsync(string usuario, int idUsuario);
     }
 
-    public interface IUsuariosConfiguradorQuery
+    public interface IUsuariosParaValidacionQuery
     {
         Task<Usuario?> ObtenerUsuarioConfiguradorPorIdAsync(int idUsuario);
         Task<Usuario?> ObtenerUsuarioConfiguradorPorNombreAsync(string usuario);
+        Task<Usuario?> ObtenerUsuarioPorUsuarioNomAsync(string usuario);
+        Task<int?> ObtenerIdUsuarioPorUsuarioNomAsync(string usuario);
     }
 
     public interface IUsuariosRegistroQuery

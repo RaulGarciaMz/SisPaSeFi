@@ -8,9 +8,9 @@ namespace DomainServices.DomServ
     public class EstadisticasService : IEstadisticasService
     {
         private readonly IEstadisticasRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public EstadisticasService(IEstadisticasRepo repo, IUsuariosConfiguradorQuery u)
+        public EstadisticasService(IEstadisticasRepo repo, IUsuariosParaValidacionQuery u)
         {
             _repo = repo;
             _user = u;

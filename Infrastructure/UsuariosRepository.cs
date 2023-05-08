@@ -103,7 +103,6 @@ namespace SqlServerAdapter
                 }
             }
         }
-
        
         public async Task AgregaUsuarioAsync(UsuarioDto user)
         {
@@ -157,7 +156,6 @@ namespace SqlServerAdapter
                 await _userContext.SaveChangesAsync();
             }
         }
-        
 
         public async Task<Usuario?> ObtenerUsuarioConfiguradorPorIdAsync(int idUsuario)
         {
@@ -167,6 +165,15 @@ namespace SqlServerAdapter
         public async Task<Usuario?> ObtenerUsuarioConfiguradorPorNombreAsync(string usuario)
         {
             return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefaultAsync();
+        }
+        public async Task<Usuario?> ObtenerUsuarioPorUsuarioNomAsync(string usuario)
+        {
+            return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).FirstOrDefaultAsync();
+        }
+
+        public async Task<int?> ObtenerIdUsuarioPorUsuarioNomAsync(string usuario)
+        {
+            return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).Select(x => x.IdUsuario).FirstOrDefaultAsync();
         }
 
         public async Task<Usuario?> ObtenerUsuarioPorNombreConDiferenteIdAsync(string usuario, int idUsuario)

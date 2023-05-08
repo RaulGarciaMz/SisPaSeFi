@@ -15,9 +15,9 @@ namespace DomainServices.DomServ
     public class ItinerariosService : IItinerariosService
     {
         private readonly IItinerariosRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public ItinerariosService(IItinerariosRepo repo, IUsuariosConfiguradorQuery uc)
+        public ItinerariosService(IItinerariosRepo repo, IUsuariosParaValidacionQuery uc)
         {
             _repo = repo;
             _user = uc;

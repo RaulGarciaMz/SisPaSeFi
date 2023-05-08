@@ -9,9 +9,9 @@ namespace DomainServices.DomServ
     public class MenuService : IMenuService
     {
         private readonly IMenuRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public MenuService(IMenuRepo repo, IUsuariosConfiguradorQuery u)
+        public MenuService(IMenuRepo repo, IUsuariosParaValidacionQuery u)
         {
             _repo = repo;
             _user = u;

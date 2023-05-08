@@ -16,9 +16,9 @@ namespace DomainServices.DomServ
     public class PersonalParticipanteService : IPersonalParticipanteService
     {
         private readonly IPersonalParticipanteRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public PersonalParticipanteService(IPersonalParticipanteRepo repo, IUsuariosConfiguradorQuery u)
+        public PersonalParticipanteService(IPersonalParticipanteRepo repo, IUsuariosParaValidacionQuery u)
         {
             _repo = repo;
             _user = u;

@@ -16,9 +16,9 @@ namespace DomainServices.DomServ
     public class DocumentosService : IDocumentoService
     {
         private readonly IDocumentosRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public DocumentosService(IDocumentosRepo repo, IUsuariosConfiguradorQuery uc)
+        public DocumentosService(IDocumentosRepo repo, IUsuariosParaValidacionQuery uc)
         {
             _repo = repo;
             _user = uc;

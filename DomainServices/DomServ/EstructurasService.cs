@@ -16,9 +16,9 @@ namespace DomainServices.DomServ
     public class EstructurasService: IEstructurasService
     {
         private readonly IEstructurasRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _userConf;
+        private readonly IUsuariosParaValidacionQuery _userConf;
 
-        public EstructurasService(IEstructurasRepo repo, IUsuariosConfiguradorQuery uc)
+        public EstructurasService(IEstructurasRepo repo, IUsuariosParaValidacionQuery uc)
         {
             _repo = repo;
             _userConf = uc;

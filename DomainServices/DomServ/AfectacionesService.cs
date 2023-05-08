@@ -16,9 +16,9 @@ namespace DomainServices.DomServ
     public class AfectacionesService : IAfectacionesService
     {
         private readonly IAfectacionesRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public AfectacionesService(IAfectacionesRepo repo, IUsuariosConfiguradorQuery u)
+        public AfectacionesService(IAfectacionesRepo repo, IUsuariosParaValidacionQuery u)
         {
             _repo = repo;
             _user = u;

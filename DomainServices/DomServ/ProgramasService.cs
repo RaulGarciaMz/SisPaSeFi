@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Enums;
+using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
 
@@ -10,154 +11,162 @@ namespace DomainServices.DomServ
     public class ProgramasService : IProgramaService
     {
 
-        IProgramaPatrullajeRepo _repo;
-        public ProgramasService(IProgramaPatrullajeRepo repo)
+        private readonly IProgramaPatrullajeRepo _repo;
+        private readonly IUsuariosParaValidacionQuery _user;
+
+        public ProgramasService(IProgramaPatrullajeRepo repo, IUsuariosParaValidacionQuery u)
         {
-            _repo= repo;
+            _repo = repo;
+            _user = u;
         }
 
-        public async Task<List<PatrullajeDto>> ObtenerPorFiltro(string tipo, int region, string clase, int anio, int mes, int dia = 1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia)
+        public async Task<List<PatrullajeDto>> ObtenerPorFiltro(string usuario, string tipo, int region, string clase, int anio, int mes, int dia = 1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia)
         {
             string estadoPropuesta;
 
             List<PatrullajeVista> patrullajes = new List<PatrullajeVista>();
             List<PatrullajeDto> patrullajesDto = new List<PatrullajeDto>();
 
-            switch (opcion)
+            var user = await _user.ObtenerUsuarioPorUsuarioNomAsync(usuario);
+
+            if (user != null)
             {
+                switch (opcion)
+                {
 
-                case FiltroProgramaOpcion.ExtraordinariosyProgramados:
+                    case FiltroProgramaOpcion.ExtraordinariosyProgramados:
 
-                    if (clase == "EXTRAORDINARIO")
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorAnioMesDiaAsync(tipo, region, anio, mes, dia);
-                    }
-                    else
-                    {
-                        patrullajes = await _repo.ObtenerProgramasPorMesAsync(tipo, region, anio, mes);
-                    }
-                    break;
-                case FiltroProgramaOpcion.PatrullajesEnProgreso:
-                    switch (periodo)
-                    {
-                        case PeriodoOpcion.UnDia:
-                            patrullajes = await _repo.ObtenerProgramasEnProgresoPorDiaAsync(tipo, region, anio, mes, dia);
-                            break;
-                        case PeriodoOpcion.UnMes:
-                            patrullajes = await _repo.ObtenerProgramasEnProgresoPorMesAsync(tipo, region, anio, mes);
-                            break;
-                        case PeriodoOpcion.Todos:
-                            patrullajes = await _repo.ObtenerProgramasEnProgresoAsync(tipo, region);
-                            break;
-                    }
-                    break;
-                case FiltroProgramaOpcion.PatrullajesConcluidos:
-                    switch (periodo)
-                    {
-                        case PeriodoOpcion.UnDia:
-                            patrullajes = await _repo.ObtenerProgramasConcluidosPorDiaAsync(tipo, region, anio, mes, dia);
-                            break;
-                        case PeriodoOpcion.UnMes:
-                            patrullajes = await _repo.ObtenerProgramasConcluidosPorMesAsync(tipo, region, anio, mes);
-                            break;
-                        case PeriodoOpcion.Todos:
-                            patrullajes = await _repo.ObtenerProgramasConcluidosAsync(tipo, region);
-                            break;
-                    }
-                    break;
-                case FiltroProgramaOpcion.PatrullajesCancelados:
-                    switch (periodo)
-                    {
-                        case PeriodoOpcion.UnDia:
-                            patrullajes = await _repo.ObtenerProgramasCanceladosPorDiaAsync(tipo, region, anio, mes, dia);
-                            break;
-                        case PeriodoOpcion.UnMes:
-                            patrullajes = await _repo.ObtenerProgramasCanceladosPorMesAsync(tipo, region, anio, mes);
-                            break;
-                        case PeriodoOpcion.Todos:
-                            patrullajes = await _repo.ObtenerProgramasCanceladosAsync(tipo, region);
-                            break;
-                    }
-                    break;
-                case FiltroProgramaOpcion.PatrullajeTodos:
-                    switch (periodo)
-                    {
-                        case PeriodoOpcion.UnDia:
-                            patrullajes = await _repo.ObtenerProgramasPorDiaAsync(tipo, region, anio, mes, dia);
-                            break;
-                        case PeriodoOpcion.UnMes:
+                        if (clase == "EXTRAORDINARIO")
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorAnioMesDiaAsync(tipo, region, anio, mes, dia);
+                        }
+                        else
+                        {
                             patrullajes = await _repo.ObtenerProgramasPorMesAsync(tipo, region, anio, mes);
-                            break;
-                        case PeriodoOpcion.Todos:
-                            patrullajes = await _repo.ObtenerProgramasAsync(tipo, region);
-                            break;
-                    }
-                    break;
-                case FiltroProgramaOpcion.PropuestaTodas:
-                    estadoPropuesta = "Rechazada";
-                    if (clase == "EXTRAORDINARIO")
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
-                    }
-                    else
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
-                    }
-                    break;
-                case FiltroProgramaOpcion.PropuestasPendientes:
-                    if (clase == "EXTRAORDINARIO")
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroAsync(tipo, region, anio, mes, clase);
-                    }
-                    else
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasPendientesPorAutorizarPorFiltroAsync(tipo, region, anio, mes, clase);
-                    }
-                    break;
-                case FiltroProgramaOpcion.PropuestasAutorizadas:
-                    estadoPropuesta = "Pendiente de autorizacion por la SSF";
-                    if (clase == "EXTRAORDINARIO")
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
-                    }
-                    else
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
-                    }
-                    break;
-                case FiltroProgramaOpcion.PropuestasRechazadas:
-                    estadoPropuesta = "Autorizada";
-                    if (clase == "EXTRAORDINARIO")
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
-                    }
-                    else
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
-                    }
-                    break;
+                        }
+                        break;
+                    case FiltroProgramaOpcion.PatrullajesEnProgreso:
+                        switch (periodo)
+                        {
+                            case PeriodoOpcion.UnDia:
+                                patrullajes = await _repo.ObtenerProgramasEnProgresoPorDiaAsync(tipo, region, anio, mes, dia);
+                                break;
+                            case PeriodoOpcion.UnMes:
+                                patrullajes = await _repo.ObtenerProgramasEnProgresoPorMesAsync(tipo, region, anio, mes);
+                                break;
+                            case PeriodoOpcion.Todos:
+                                patrullajes = await _repo.ObtenerProgramasEnProgresoAsync(tipo, region);
+                                break;
+                        }
+                        break;
+                    case FiltroProgramaOpcion.PatrullajesConcluidos:
+                        switch (periodo)
+                        {
+                            case PeriodoOpcion.UnDia:
+                                patrullajes = await _repo.ObtenerProgramasConcluidosPorDiaAsync(tipo, region, anio, mes, dia);
+                                break;
+                            case PeriodoOpcion.UnMes:
+                                patrullajes = await _repo.ObtenerProgramasConcluidosPorMesAsync(tipo, region, anio, mes);
+                                break;
+                            case PeriodoOpcion.Todos:
+                                patrullajes = await _repo.ObtenerProgramasConcluidosAsync(tipo, region);
+                                break;
+                        }
+                        break;
+                    case FiltroProgramaOpcion.PatrullajesCancelados:
+                        switch (periodo)
+                        {
+                            case PeriodoOpcion.UnDia:
+                                patrullajes = await _repo.ObtenerProgramasCanceladosPorDiaAsync(tipo, region, anio, mes, dia);
+                                break;
+                            case PeriodoOpcion.UnMes:
+                                patrullajes = await _repo.ObtenerProgramasCanceladosPorMesAsync(tipo, region, anio, mes);
+                                break;
+                            case PeriodoOpcion.Todos:
+                                patrullajes = await _repo.ObtenerProgramasCanceladosAsync(tipo, region);
+                                break;
+                        }
+                        break;
+                    case FiltroProgramaOpcion.PatrullajeTodos:
+                        switch (periodo)
+                        {
+                            case PeriodoOpcion.UnDia:
+                                patrullajes = await _repo.ObtenerProgramasPorDiaAsync(tipo, region, anio, mes, dia);
+                                break;
+                            case PeriodoOpcion.UnMes:
+                                patrullajes = await _repo.ObtenerProgramasPorMesAsync(tipo, region, anio, mes);
+                                break;
+                            case PeriodoOpcion.Todos:
+                                patrullajes = await _repo.ObtenerProgramasAsync(tipo, region);
+                                break;
+                        }
+                        break;
+                    case FiltroProgramaOpcion.PropuestaTodas:
+                        estadoPropuesta = "Rechazada";
+                        if (clase == "EXTRAORDINARIO")
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
+                        }
+                        else
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
+                        }
+                        break;
+                    case FiltroProgramaOpcion.PropuestasPendientes:
+                        if (clase == "EXTRAORDINARIO")
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroAsync(tipo, region, anio, mes, clase);
+                        }
+                        else
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasPendientesPorAutorizarPorFiltroAsync(tipo, region, anio, mes, clase);
+                        }
+                        break;
+                    case FiltroProgramaOpcion.PropuestasAutorizadas:
+                        estadoPropuesta = "Pendiente de autorizacion por la SSF";
+                        if (clase == "EXTRAORDINARIO")
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
+                        }
+                        else
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
+                        }
+                        break;
+                    case FiltroProgramaOpcion.PropuestasRechazadas:
+                        estadoPropuesta = "Autorizada";
+                        if (clase == "EXTRAORDINARIO")
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
+                        }
+                        else
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
+                        }
+                        break;
 
-                case FiltroProgramaOpcion.PropuestasEnviadas:
-                    estadoPropuesta = "Aprobada por comandancia regional";
-                    if (clase == "EXTRAORDINARIO")
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
-                    }
-                    else
-                    {
-                        patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
-                    }
-                    break;
+                    case FiltroProgramaOpcion.PropuestasEnviadas:
+                        estadoPropuesta = "Aprobada por comandancia regional";
+                        if (clase == "EXTRAORDINARIO")
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
+                        }
+                        else
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
+                        }
+                        break;
 
-                case FiltroProgramaOpcion.PatrullajesEnRutaFechaEspecifica:
-                    patrullajes = await _repo.ObtenerPatrullajesEnRutaAndFechaEspecificaAsync(region, anio, mes, dia);
-                    break;
-            }
+                    case FiltroProgramaOpcion.PatrullajesEnRutaFechaEspecifica:
+                        patrullajes = await _repo.ObtenerPatrullajesEnRutaAndFechaEspecificaAsync(region, anio, mes, dia);
+                        break;
+                }
 
-            foreach (PatrullajeVista p in patrullajes)
-            {
-                var pDto = ConviertePatrullajeDominioToPatrullajeDto(p);
-                patrullajesDto.Add(pDto);
+                foreach (PatrullajeVista p in patrullajes)
+                {
+                    var pDto = ConviertePatrullajeDominioToPatrullajeDto(p);
+                    patrullajesDto.Add(pDto);
+                }
             }
 
             return patrullajesDto;
@@ -165,7 +174,7 @@ namespace DomainServices.DomServ
 
         public async Task AgregaPrograma(string opcion, string clase, ProgramaDtoForCreateWithListas p) 
         {
-            var user = await _repo.ObtenerUsuarioConfiguradorAsync(p.strUsuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(p.strUsuario);
 
             if (EsUsuarioConfigurador(user))
             {
@@ -207,139 +216,167 @@ namespace DomainServices.DomServ
 
         public async Task AgregaPropuestasComoProgramas(List<ProgramaDtoForCreate> p, string usuario)
         {
-            var userId = await _repo.ObtenerIdUsuarioAsync(usuario);
+            var userId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
-            if (EsUsuarioRegistrado(userId))
+            if (userId != null)
             {
-                var programas = new List<ProgramaPatrullaje>();
-                foreach (ProgramaDtoForCreate prog in p)
+                if (EsUsuarioRegistrado(userId.Value))
                 {
-                    programas.Add(ConvierteProgramaDtoToProgramaDominio(prog));
-                }
+                    var programas = new List<ProgramaPatrullaje>();
+                    foreach (ProgramaDtoForCreate prog in p)
+                    {
+                        programas.Add(ConvierteProgramaDtoToProgramaDominio(prog));
+                    }
 
-                await _repo.AgregaPropuestasComoProgramasActualizaPropuestasAsync(programas, userId);
+                    await _repo.AgregaPropuestasComoProgramasActualizaPropuestasAsync(programas, userId.Value);
+                }
             }
         }
 
         public async Task ActualizaPropuestasOrProgramasPorOpcionAndAccion(List<PropuestaDtoForListaUpdate> p, string opcion, int accion, string usuario)
         {
-            var userId = await _repo.ObtenerIdUsuarioAsync(usuario);
+            var usuarioId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
-            if (EsUsuarioRegistrado(userId))
+            if (usuarioId != null)
             {
-                switch (opcion)
+                var userId = usuarioId.Value;
+
+                if (EsUsuarioRegistrado(userId))
                 {
-                    case "Programa":
-                        var lstProgramas = new List<ProgramaPatrullaje>();
+                    switch (opcion)
+                    {
+                        case "Programa":
+                            var lstProgramas = new List<ProgramaPatrullaje>();
 
-                        foreach (PropuestaDtoForListaUpdate prog in p)
-                        {
-                            var a = ConvierteProgramaDtoForUpdateToProgramaDominioForCreate(prog);
-                            lstProgramas.Add(a);
-                        }
-                        await _repo.ActualizaPropuestasAgregaProgramasAsync(lstProgramas);
+                            foreach (PropuestaDtoForListaUpdate prog in p)
+                            {
+                                var a = ConvierteProgramaDtoForUpdateToProgramaDominioForCreate(prog);
+                                lstProgramas.Add(a);
+                            }
+                            await _repo.ActualizaPropuestasAgregaProgramasAsync(lstProgramas);
 
-                        break;
+                            break;
 
-                    case "Propuesta":
+                        case "Propuesta":
 
-                        var lstIdsPropuestas = new List<int>();
+                            var lstIdsPropuestas = new List<int>();
 
-                        foreach (PropuestaDtoForListaUpdate prog in p)
-                        {
-                            lstIdsPropuestas.Add(prog.intidpropuestapatrullaje);
-                        }
+                            foreach (PropuestaDtoForListaUpdate prog in p)
+                            {
+                                lstIdsPropuestas.Add(prog.intidpropuestapatrullaje);
+                            }
 
-                        switch (accion)
-                        {
-                            case 2:
-                                await _repo.ActualizaPropuestasAutorizadaToRechazadaAsync(lstIdsPropuestas, userId);
-                                break;
-                            case 3:
-                                await _repo.ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(lstIdsPropuestas, userId);
-                                break;
-                            case 4:
-                                await _repo.ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(lstIdsPropuestas, userId);
-                                break;
-                        }
-                        break;
+                            switch (accion)
+                            {
+                                case 2:
+                                    await _repo.ActualizaPropuestasAutorizadaToRechazadaAsync(lstIdsPropuestas, userId);
+                                    break;
+                                case 3:
+                                    await _repo.ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(lstIdsPropuestas, userId);
+                                    break;
+                                case 4:
+                                    await _repo.ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(lstIdsPropuestas, userId);
+                                    break;
+                            }
+                            break;
+                    }
                 }
             }
+
         }
 
         public async Task ActualizaProgramasOrPropuestasPorOpcion(ProgramaDtoForUpdatePorOpcion p, string opcion, string usuario)
         {
-            var userId = await _repo.ObtenerIdUsuarioAsync(usuario);
+            var usuarioId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
-            if (EsUsuarioRegistrado(userId))
+            if (usuarioId != null)
             {
-                switch (opcion)
+                var userId = usuarioId.Value;
+
+                if (EsUsuarioRegistrado(userId))
                 {
-                    case "CambioRuta":
-                        await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.intIdPrograma, p.intIdRuta, userId);
-                        break;
+                    switch (opcion)
+                    {
+                        case "CambioRuta":
+                            await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.intIdPrograma, p.intIdRuta, userId);
+                            break;
 
-                    case "InicioPatrullaje":
-                        TimeSpan ini = TimeSpan.Parse(p.strInicio);
-                        await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.intIdPrograma, p.intIdRiesgoPatrullaje, userId, p.intIdEstadoPatrullaje, ini);
-                        break;
+                        case "InicioPatrullaje":
+                            TimeSpan ini = TimeSpan.Parse(p.strInicio);
+                            await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.intIdPrograma, p.intIdRiesgoPatrullaje, userId, p.intIdEstadoPatrullaje, ini);
+                            break;
 
-                    case "AutorizaPropuesta":
-                        await _repo.ActualizaPropuestaToAutorizadaAsync(p.intidpropuestapatrullaje);
-                        break;
+                        case "AutorizaPropuesta":
+                            await _repo.ActualizaPropuestaToAutorizadaAsync(p.intidpropuestapatrullaje);
+                            break;
 
-                    case "RegionalApruebaPropuesta":
-                        await _repo.ActualizaPropuestaToAprobadaComandanciaRegionalAsync(p.intidpropuestapatrullaje);
-                        break;
+                        case "RegionalApruebaPropuesta":
+                            await _repo.ActualizaPropuestaToAprobadaComandanciaRegionalAsync(p.intidpropuestapatrullaje);
+                            break;
 
-                    case "RegistrarSolicitudOficioComision":
-                        await _repo.ActualizaProgramaRegistraSolicitudOficioComisionAsync(p.intIdPrograma, p.strSolicitudOficio);
-                        break;
+                        case "RegistrarSolicitudOficioComision":
+                            await _repo.ActualizaProgramaRegistraSolicitudOficioComisionAsync(p.intIdPrograma, p.strSolicitudOficio);
+                            break;
 
-                    case "RegistrarSolicitudOficioAutorizacion":
-                        await _repo.ActualizaPropuestaRegistraSolicitudOficioAutorizacionAsync(p.intidpropuestapatrullaje, p.strSolicitudOficio);
-                        break;
+                        case "RegistrarSolicitudOficioAutorizacion":
+                            await _repo.ActualizaPropuestaRegistraSolicitudOficioAutorizacionAsync(p.intidpropuestapatrullaje, p.strSolicitudOficio);
+                            break;
 
-                    case "RegistrarOficioComision":
-                        await _repo.ActualizaProgramaRegistraOficioComisionAsync(p.intIdPrograma, p.strOficio);
-                        break;
+                        case "RegistrarOficioComision":
+                            await _repo.ActualizaProgramaRegistraOficioComisionAsync(p.intIdPrograma, p.strOficio);
+                            break;
 
-                    case "RegistrarOficioAutorizacion":
-                        await _repo.ActualizaPropuestaRegistraOficioAutorizacionAsync(p.intidpropuestapatrullaje, p.strOficio);
-                        break;
+                        case "RegistrarOficioAutorizacion":
+                            await _repo.ActualizaPropuestaRegistraOficioAutorizacionAsync(p.intidpropuestapatrullaje, p.strOficio);
+                            break;
+                    }
                 }
             }
+
         }
 
         public async Task ActualizaProgramaPorCambioDeRuta(ProgramaDtoForUpdateRuta p, string usuario)
         {
-            var user =await  _repo.ObtenerIdUsuarioAsync(usuario);
+            var usuarioId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
-            if (EsUsuarioRegistrado(user))
+            if (usuarioId != null)
             {
-                await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.IdPrograma, p.IdRuta, user);
-            }                
+                var userId = usuarioId.Value;
+                if (EsUsuarioRegistrado(userId))
+                {
+                    await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.IdPrograma, p.IdRuta, userId);
+                }
+            }
         }
 
         public async Task ActualizaProgramasPorInicioPatrullajeAsync(ProgramaDtoForUpdateInicio p, string usuario)
         {
-            var user = await _repo.ObtenerIdUsuarioAsync(usuario);
+            var usuarioId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
-            if (EsUsuarioRegistrado(user))
+            if (usuarioId != null)
             {
-                TimeSpan ini = TimeSpan.Parse(p.Inicio);
-                await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.IdPrograma, p.IdRiesgoPatrullaje, p.IdUsuario,p.IdEstadoPatrullaje, ini);
+                var userId = usuarioId.Value;
+                if (EsUsuarioRegistrado(userId))
+                {
+                    TimeSpan ini = TimeSpan.Parse(p.Inicio);
+                    await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.IdPrograma, p.IdRiesgoPatrullaje, p.IdUsuario, p.IdEstadoPatrullaje, ini);
+                }
             }
+
         }
 
         public async Task DeletePropuesta(int id, string usuario)
         {
-            var user = await _repo.ObtenerIdUsuarioAsync(usuario);
+            var usuarioId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
-            if (EsUsuarioRegistrado(user))
+            if (usuarioId != null)
             {
-                await _repo.DeletePropuestaAsync(id);
-            }                
+                var userId = usuarioId.Value;
+                if (EsUsuarioRegistrado(userId))
+                {
+                    await _repo.DeletePropuestaAsync(id);
+                }
+            }
         }
 
         private bool EsUsuarioConfigurador(Usuario? user) 

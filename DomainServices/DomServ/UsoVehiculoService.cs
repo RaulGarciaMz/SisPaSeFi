@@ -15,9 +15,9 @@ namespace DomainServices.DomServ
     public class UsoVehiculoService : IUsoVehiculoService
     {
         private readonly IUsoVehiculoRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public UsoVehiculoService(IUsoVehiculoRepo repo, IUsuariosConfiguradorQuery uc)
+        public UsoVehiculoService(IUsoVehiculoRepo repo, IUsuariosParaValidacionQuery uc)
         {
             _repo = repo;
             _user = uc;

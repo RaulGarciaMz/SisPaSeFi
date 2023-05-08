@@ -48,7 +48,7 @@ namespace WebApiSSF.Controllers
                 var laOpcion = (FiltroProgramaOpcion)opcion;
                 var elPeriodo = (PeriodoOpcion)periodo;
 
-                var programas = await _pp.ObtenerPorFiltro(tipo, region, clase, anio, mes, dia, laOpcion, elPeriodo);
+                var programas = await _pp.ObtenerPorFiltro(usuario, tipo, region, clase, anio, mes, dia, laOpcion, elPeriodo);
                 
                 if (programas == null)
                 {

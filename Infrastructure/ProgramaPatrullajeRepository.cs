@@ -1,18 +1,9 @@
 ﻿using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
-using Domain.Ports.Driving;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SqlServerAdapter
 {
@@ -1199,32 +1190,7 @@ namespace SqlServerAdapter
                 await _programaContext.SaveChangesAsync();
             }
         }
-
-        /// <summary>
-        /// Método <c>ObtenerIdUsuario</c> implementa la interface para obtener el ID del usuario por nombre.
-        /// </summary>
-        public async Task<int> ObtenerIdUsuarioAsync(string usuario)
-        {
-            var user = await _programaContext.Usuarios.Where(x => x.UsuarioNom == usuario).Select(x => x.IdUsuario).ToListAsync();
-
-            if (user.Count == 0)
-            {
-                return -1;
-            }
-            else
-            {
-                return user[0];
-            }
-        }
-
-        /// <summary>
-        /// Método <c>ObtenerUsuarioConfigurador</c> implementa la interface para obtener usuario configurador por nombre.
-        /// </summary>
-        public async Task<Usuario?> ObtenerUsuarioConfiguradorAsync(string usuario) 
-        {
-            return await _programaContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefaultAsync();
-        }
-
+ 
         public async Task<bool> SaveChangesAsync()
         {
             return (await _programaContext.SaveChangesAsync() >= 0);

@@ -85,7 +85,7 @@ builder.Services.AddScoped<IUsuariosRepo, UsuariosRepository>();
 builder.Services.AddScoped<IUsuariosService, UsuariosService>();
 builder.Services.AddScoped<IEstructurasRepo, EstructurasRepository>();
 builder.Services.AddScoped<IEstructurasService, EstructurasService>();
-builder.Services.AddScoped<IUsuariosConfiguradorQuery, UsuariosRepository>(); // para consultas de usuario configurador
+builder.Services.AddScoped<IUsuariosParaValidacionQuery, UsuariosRepository>(); // para consultas de usuario configurador
 builder.Services.AddScoped<IEvidenciasRepo, EvidenciasRepository>();
 builder.Services.AddScoped<IEvidenciasService, EvidenciasService>();
 builder.Services.AddScoped<IVehiculosPatrullajeRepo, VehiculoPatrullajeRepository>();

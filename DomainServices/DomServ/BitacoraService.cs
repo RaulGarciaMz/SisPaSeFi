@@ -9,9 +9,9 @@ namespace DomainServices.DomServ
     public class BitacoraService : IBitacoraService
     {
         private readonly IBitacoraRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public BitacoraService(IBitacoraRepo repo, IUsuariosConfiguradorQuery uc)
+        public BitacoraService(IBitacoraRepo repo, IUsuariosParaValidacionQuery uc)
         {
             _repo = repo;
             _user = uc;

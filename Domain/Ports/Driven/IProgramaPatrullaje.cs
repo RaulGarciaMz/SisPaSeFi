@@ -70,8 +70,5 @@ namespace Domain.Ports.Driven
         Task<List<PatrullajeVista>> ObtenerProgramasPorMesAsync(string tipo, int region, int anio, int mes);
         //Caso 4 Programas Periodo 3 - Todos
         Task<List<PatrullajeVista>> ObtenerProgramasAsync(string tipo, int region);
-
-        Task<Usuario?> ObtenerUsuarioConfiguradorAsync(string usuario);
-        Task<int> ObtenerIdUsuarioAsync(string usuario);
     }
 }

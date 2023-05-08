@@ -9,9 +9,9 @@ namespace DomainServices.DomServ
     public class RolesService : IRolesService
     {
         private readonly IRolesRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public RolesService(IRolesRepo repo, IUsuariosConfiguradorQuery uc)
+        public RolesService(IRolesRepo repo, IUsuariosParaValidacionQuery uc)
         {
             _repo = repo;
             _user = uc;

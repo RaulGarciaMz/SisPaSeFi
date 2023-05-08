@@ -17,9 +17,9 @@ namespace DomainServices.DomServ
     public class ProgramaMensualService : IProgramaMensualService
     {
         private readonly IProgramaMensualRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public ProgramaMensualService(IProgramaMensualRepo repo, IUsuariosConfiguradorQuery u)
+        public ProgramaMensualService(IProgramaMensualRepo repo, IUsuariosParaValidacionQuery u)
         {
             _repo = repo;
             _user = u;

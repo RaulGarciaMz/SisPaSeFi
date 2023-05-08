@@ -10,9 +10,9 @@ namespace DomainServices.DomServ
     public class EvidenciasService : IEvidenciasService
     {
         private readonly IEvidenciasRepo _repo;
-        private readonly IUsuariosConfiguradorQuery _user;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public EvidenciasService(IEvidenciasRepo repo, IUsuariosConfiguradorQuery u)
+        public EvidenciasService(IEvidenciasRepo repo, IUsuariosParaValidacionQuery u)
         {
             _repo = repo;
             _user = u;
