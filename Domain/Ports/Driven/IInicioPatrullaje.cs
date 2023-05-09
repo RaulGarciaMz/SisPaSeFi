@@ -1,21 +1,17 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.Entities.Vistas;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Ports.Driven
 {
     public interface IInicioPatrullajeCommand
     {
-        Task AgregaProgramaPatrullajeAsync(int idRuta, DateTime fechaPatrullaje, int idUsuario, int idPuntoResponsable, int idRutaOriginal);
-        Task ActualizaProgramaPatrullajeAsync(int idPrograma, TimeSpan inicio, int idUsuario, int riesgo);
-        Task AgregaTarjetaInformativaAsync(int idPrograma, int idUsuario, TimeSpan inicio, int comandantesInstalacionSsf, int sedenaOficial, DateTime fechaPatrullaje, int tropaSdn, int linieros, int comandantesTurnos, int oficialSsf, DateTime fechaTermino);
-        Task ActualizaTarjetaInformativaAsync(int idPrograma, int idUsuario, TimeSpan inicio, int comandantesInstalacionSsf, int sedenaOficial, DateTime fechaPatrullaje, int tropaSdn, int linieros, int comandantesTurnos, int oficialSsf, DateTime fechaTermino);
-        Task AgregaUsoVehiculoAsync(int idPrograma, int idVehiculo, int kminicio, int idUsuarioVehiculo, string estadoVehiculo);
-        Task ActualizaUsoVehiculoAsync(int idPrograma, int idVehiculo, int kminicio, int idUsuarioVehiculo, string estadoVehiculo);
+        void AgregaProgramaPatrullajeEnMemoria(int idRuta, DateTime fechaPatrullaje, int idUsuario, int idPuntoResponsable, int idRutaOriginal);
+        void ActualizaProgramaPatrullajeEnMemoria(int idPrograma, TimeSpan inicio, int idUsuario, int riesgo);
+        void AgregaTarjetaInformativaEnMemoria(int idPrograma, int idUsuario, TimeSpan inicio, int comandantesInstalacionSsf, int sedenaOficial, DateTime fechaPatrullaje, int tropaSdn, int linieros, int comandantesTurnos, int oficialSsf, DateTime fechaTermino);
+        Task ActualizaTarjetaInformativaEnMemoria(int idPrograma, int idUsuario, TimeSpan inicio, int comandantesInstalacionSsf, int sedenaOficial, DateTime fechaPatrullaje, int tropaSdn, int linieros, int comandantesTurnos, int oficialSsf, DateTime fechaTermino);
+        Task CreaOrActualizaUsosVehiculoEnMemoria(List<InicioPatrullajeVehiculoDto> usosVehiculo, int idPrograma, int idUsuario);
+        Task SaveTransactionAsync();
     }
 
     public interface IInicioPatrullajeQuery
