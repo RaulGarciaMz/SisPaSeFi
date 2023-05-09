@@ -49,6 +49,10 @@
         /// Tiempo de espera de la sesión del usuario
         /// </summary>
         public int intTiempoEspera { get; set; }
+        /// <summary>
+        /// Nombre real del usuario
+        /// </summary>
+        public string strClave { get; set; }
     }
 
     public class UsuarioDtoForUpdate

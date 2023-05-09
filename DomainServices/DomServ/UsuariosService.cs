@@ -1,8 +1,10 @@
-﻿using Domain.DTOs;
+﻿using Domain.Common;
+using Domain.DTOs;
 using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
+using System.Globalization;
 
 namespace DomainServices.DomServ
 {
@@ -28,39 +30,47 @@ namespace DomainServices.DomServ
                     idComandancia = Int32.Parse(datos[1]);
                 }
 
-                switch (opcion)
+                if (opcion == "CambiarClave")
                 {
-                    case "Desbloquear":
-                        await DesbloqueaListaDeUsuariosAsync(users);
-                        break;
-                    case "Bloquear":
-                        await BloqueaListaDeUsuariosAsync(users);
-                        break;
-                    case "ReiniciarClave":
-                        await ReiniciarClaveDeListaUsuariosAsync(users);
-                        break;
-                    case "Actualizar":
-                        await _repo.ActualizaListasDeUsuariosAsync(users);
-                        break;
-                    case "RegistrarComandancia":
-                        await RegistraListaDeUsuariosComandanciaAsync(users, idComandancia);
-                        break;
-                    case "QuitarComandancia":
-                        await BorraListaDeUsuariosComandanciaAsync(users, idComandancia);
-                        break;
-                    case "RegistrarRol":
-                        await RegistraListaDeUsuariosRolAsync(users, idComandancia);
-                        break;
-                    case "QuitarRol":
-                        await BorraListaDeUsuariosRolAsync(users, idComandancia);
-                        break;
-                    case "RegistrarGrupoCorreo":
-                        await RegistraListaDeUsuarioGrupoCorreoAsync(users, idComandancia);
-                        break;
-                    case "QuitarGrupoCorreo":
-                        await BorraListaDeUsuarioGrupoCorreoAsync(users, idComandancia);
-                        break;
+                    await CambiaClaveDeUsuario(users, usuario);
                 }
+                else 
+                {
+                    switch (opcion)
+                    {
+                        case "Desbloquear":
+                            await DesbloqueaListaDeUsuariosAsync(users);
+                            break;
+                        case "Bloquear":
+                            await BloqueaListaDeUsuariosAsync(users);
+                            break;
+                        case "ReiniciarClave":
+                            await ReiniciarClaveDeListaUsuariosAsync(users);
+                            break;
+                        case "Actualizar":
+                            await _repo.ActualizaListasDeUsuariosAsync(users);
+                            break;
+                        case "RegistrarComandancia":
+                            await RegistraListaDeUsuariosComandanciaAsync(users, idComandancia);
+                            break;
+                        case "QuitarComandancia":
+                            await BorraListaDeUsuariosComandanciaAsync(users, idComandancia);
+                            break;
+                        case "RegistrarRol":
+                            await RegistraListaDeUsuariosRolAsync(users, idComandancia);
+                            break;
+                        case "QuitarRol":
+                            await BorraListaDeUsuariosRolAsync(users, idComandancia);
+                            break;
+                        case "RegistrarGrupoCorreo":
+                            await RegistraListaDeUsuarioGrupoCorreoAsync(users, idComandancia);
+                            break;
+                        case "QuitarGrupoCorreo":
+                            await BorraListaDeUsuarioGrupoCorreoAsync(users, idComandancia);
+                            break;
+                    }
+                }
+
             }
         }
 
@@ -210,6 +220,36 @@ namespace DomainServices.DomServ
             var nvoCrit = "%" + criterio + "%";
             var users = await _repo.ObtenerUsuariosNoIncluidosEnDocumentoAsync(nvoCrit, idDocumento);
             return ConvierteListaUsuarioToDto(users);
+        }
+
+        private async Task CambiaClaveDeUsuario(List<UsuarioDto> users, string usuario)
+        { 
+            if(users.Count() > 1) 
+            {
+                var encr = new Encriptador();
+
+                var cveDesencriptada1 = encr.Desencriptar(users[0].strClave);
+                var cveDesencriptada2 = encr.Desencriptar(users[1].strClave);
+
+                var datosClave1 = cveDesencriptada1.Split("!#");
+                var datosClave2 = cveDesencriptada2.Split("!#");
+
+                if (datosClave1.Length > 0 && datosClave2.Length > 0)
+                {
+                    var cveAnterior = GeneraCadenaClave(datosClave1);
+                    var fecha1 = GeneraFecha(datosClave1);
+
+                    var cveNueva = GeneraCadenaClave(datosClave2);
+                    var fecha2 = GeneraFecha(datosClave2);
+
+                    var hace10Minutos = DateTime.Now.AddMinutes(-10);
+
+                    if (fecha1 > hace10Minutos && fecha2 > hace10Minutos)
+                    {
+                        await _repo.ActualizaClaveDeUsuario(usuario, cveNueva, cveAnterior);
+                    }
+                }
+            }
         }
 
         private async Task DesbloqueaListaDeUsuariosAsync(List<UsuarioDto> users)
@@ -400,5 +440,26 @@ namespace DomainServices.DomServ
             return usersDto;
         }
 
+        private string GeneraCadenaClave(string[] datosClave)
+        {
+            var cve = "";
+            for (var i = 0; i < datosClave.Length - 3; i++)
+            {
+                cve = cve + datosClave[i];
+            }
+
+            return cve;
+        }
+
+        private DateTime GeneraFecha(string[] datosClave)
+        {
+            var strFecha = datosClave[datosClave.Length - 2];
+            var strHora = datosClave[datosClave.Length - 1];
+
+            var fechaHora = strFecha + " " + strHora;
+
+            CultureInfo provider = CultureInfo.InvariantCulture;
+            return DateTime.ParseExact(fechaHora, "yy-MM-dd HH:mm:ss", provider);
+        }
     }
 }

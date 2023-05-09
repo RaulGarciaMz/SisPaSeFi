@@ -92,7 +92,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza una lista de usuarios con respecto a la opción indicada
         /// </summary>
-        /// <param name="opcion">Opción de actualización ("Desbloquear", "Bloquear", "ReiniciarClave", "Actualizar", "RegistrarComandancia", "QuitarComandancia", "RegistrarRol", "QuitarRol", "RegistrarGrupoCorreo", "QuitarGrupoCorreo")</param>
+        /// <param name="opcion">Opción de actualización ("CambiarClave", "Desbloquear", "Bloquear", "ReiniciarClave", "Actualizar", "RegistrarComandancia", "QuitarComandancia", "RegistrarRol", "QuitarRol", "RegistrarGrupoCorreo", "QuitarGrupoCorreo")</param>
         /// <param name="usuario">Usuario (alias - usuario_nom) que realiza la actualización</param>
         /// <returns></returns>
         [HttpPut]

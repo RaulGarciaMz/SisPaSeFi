@@ -157,6 +157,18 @@ namespace SqlServerAdapter
             }
         }
 
+        public async Task ActualizaClaveDeUsuario(string usuario, string cveNueva, string cveAnterior)
+        {
+            var md5PassNuevo = ComputeMD5(cveNueva);
+            var md5PassAnterior = ComputeMD5(cveAnterior);
+
+            var u = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Pass == md5PassAnterior).SingleAsync();
+
+            u.Pass = md5PassNuevo;
+            _userContext.Update(u);
+
+            await _userContext.SaveChangesAsync();
+        }
         public async Task<Usuario?> ObtenerUsuarioConfiguradorPorIdAsync(int idUsuario)
         {
             return await _userContext.Usuarios.Where(x => x.IdUsuario == idUsuario && x.Configurador == 1).FirstOrDefaultAsync();
