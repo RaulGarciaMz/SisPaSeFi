@@ -7,7 +7,6 @@ namespace Domain.Ports.Driving
     {
         Task AgregaPrograma(string opcion, string clase, ProgramaDtoForCreateWithListas p);
         Task AgregaPropuestasComoProgramas(List<ProgramaDtoForCreate> p, string usuario);
-
         Task ActualizaProgramasOrPropuestasPorOpcion(ProgramaDtoForUpdatePorOpcion p, string opcion, string usuario);
         Task ActualizaPropuestasOrProgramasPorOpcionAndAccion(List<PropuestaDtoForListaUpdate> p, string opcion, int accion, string usuario);
         Task ActualizaProgramaPorCambioDeRuta(ProgramaDtoForUpdateRuta p, string usuario);
