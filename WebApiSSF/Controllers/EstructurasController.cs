@@ -116,7 +116,6 @@ namespace WebApiSSF.Controllers
         /// <returns></returns>
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
-        [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

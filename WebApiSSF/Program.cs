@@ -116,6 +116,8 @@ builder.Services.AddScoped<IRolesRepo, RolesRepository>();
 builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<IMenuRepo, MenuRepository>();
 builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<IInicioPatrullajeRepo, InicioPatrullajeRepository>();
+builder.Services.AddScoped<IInicioPatrullajeService, InicioPatrullajeService>();
 
 builder.Services.AddDbContext<PatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<ProgramaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
@@ -139,6 +141,7 @@ builder.Services.AddDbContext<EstadisticasContext>(dbCtxtOptions => dbCtxtOption
 builder.Services.AddDbContext<BitacoraIncidenciaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<RolesContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<MenuContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
+builder.Services.AddDbContext<InicioPatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 
 /*builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
