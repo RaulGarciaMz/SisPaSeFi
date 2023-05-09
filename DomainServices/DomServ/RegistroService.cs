@@ -4,10 +4,8 @@ using Domain.Ports.Driven;
 using Domain.Ports.Driving;
 using Microsoft.IdentityModel.Tokens;
 using System.DirectoryServices;
-using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace DomainServices.DomServ
@@ -21,55 +19,53 @@ namespace DomainServices.DomServ
             _repo = repo;
         }
 
-        public async Task<UsuarioDtoRegistro> ObtenerUsuarioRegistradoAsync(UsuarioDtoForAutentication u, string pathLdap)
-        {
-            var user = new UsuarioDtoRegistro();
+        public async Task<UsuarioRegistradoDto> ObtenerUsuarioRegistradoAsync(UsuarioDtoForGet u, string pathLdap)
+        {    
             var enc = new Encriptador();
+            var user = new UsuarioRegistradoDto() 
+            { 
+                strNombreDeUsuario = u.strNombreDeUsuario,
+                strResultado = "Usuario no encontrado."
+            };
 
-            var cveDesencriptada = enc.Desencriptar(u.Clave);
+            var cveDesencriptada = enc.Desencriptar(u.strClaveEncriptada);
             var datosClave = cveDesencriptada.Split("!#");
-            string strClave = "";
 
-            var longitud = datosClave.Length;
-
-            if (longitud > 0) 
+            if (datosClave.Length > 0) 
             {
-                for (int j = 0; j <= longitud - 3; j++)
-                    strClave = strClave + datosClave[j];
-
-                var fechahora = datosClave[longitud - 2] + " " + datosClave[longitud - 1];
-                var fecha = DateTime.ParseExact(fechahora, "d", new CultureInfo("es-MX"));
+                var strClave = enc.GeneraCadenaClave(datosClave);
+                var fecha = enc.GeneraFecha(datosClave);
 
                 var ahora = DateTime.Now;
                 if (fecha > ahora.AddMinutes(-10))
                 {
-                    var esLocal = await EsUsuarioLocalValido(u.Nombre, strClave);
-                    var esDirectorioActivo = EsUsuarioEnDirectorioActivo(pathLdap,u.Nombre, strClave);
+                    var esUsuarioLocal = await EsUsuarioLocalValido(u.strNombreDeUsuario, strClave);
+                    var esUsuarioEnDirectorioActivo = EsUsuarioEnDirectorioActivo(pathLdap,u.strNombreDeUsuario, strClave);
 
-                    if (esLocal || esDirectorioActivo)
+                    if (esUsuarioLocal || esUsuarioEnDirectorioActivo)
                     {
-                        var userV = await _repo.ObtenerUsuarioParaRegistroAsync(u.Nombre);
+                        var userV = await _repo.ObtenerUsuarioRegistradoAsync(u.strNombreDeUsuario);
 
-                        if (userV != null && userV.bloqueado == 0)
+                        if (userV != null && userV.Bloqueado == 0)
                         {
-                            user.Nombre = userV.nombre;
-                            user.Apellido1 = userV.apellido1;
-                            user.Apellido2 = userV.apellido2;
-                            user.Cel = userV.cel;
-                            user.Configurador = userV.configurador;
-                            user.Bloqueado = userV.bloqueado;
-                            user.AceptacionAvisoLegal = userV.AceptacionAvisoLegal;
-                            user.Intentos = userV.intentos;
-                            user.NotificarAcceso = userV.NotificarAcceso;
-                            user.UltimoAcceso = userV.EstampaTiempoUltimoAcceso;
-                            user.CorreoElectronico = userV.correoelectronico;
-                            user.RegionSSF = userV.regionSSF;
-                            user.TiempoEspera = userV.tiempoEspera;
-                            user.DesbloquearRegistros = userV.desbloquearregistros;
-                            user.Resultado = "Usuario válido.";
-                            user.Token = GeneraToken(u.Nombre, strClave);
+                            user.strNombre = userV.Nombre;
+                            user.strApellido1 = userV.Apellido1;
+                            user.strApellido2 = userV.Apellido2;
+                            user.strCel = userV.Cel;
+                            user.intConfigurador = userV.Configurador;
+                            user.intBloqueado = userV.Bloqueado.Value;
+                            user.intAceptacionAvisoLegal = userV.AceptacionAvisoLegal.Value;
+                            user.intIntentos = userV.Intentos.Value;
+                            user.intNotificarAccesos = userV.NotificarAcceso.Value;
+                            user.strUltimoAcceso = userV.EstampaTiempoUltimoAcceso.ToString("yyyy-MM-dd HH:mm:ss");
+                            user.strCorreoElectronico = userV.CorreoElectronico;
+                            user.intRegionSSF = userV.RegionSsf;
+                            user.intTiempoEspera = userV.TiempoEspera;
+                            user.intDesbloquearRegistros = userV.DesbloquearRegistros;
+                            user.strResultado = "Usuario válido.";
+                            user.strToken = GeneraToken(u.strNombreDeUsuario, strClave);
                         } else {
-                            user.Resultado = "Usuario bloqueado.";
+                            user.strResultado = "Usuario bloqueado.";
                         }
                     }
                 }

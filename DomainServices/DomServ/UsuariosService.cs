@@ -236,11 +236,11 @@ namespace DomainServices.DomServ
 
                 if (datosClave1.Length > 0 && datosClave2.Length > 0)
                 {
-                    var cveAnterior = GeneraCadenaClave(datosClave1);
-                    var fecha1 = GeneraFecha(datosClave1);
+                    var cveAnterior = encr.GeneraCadenaClave(datosClave1);
+                    var fecha1 = encr.GeneraFecha(datosClave1);
 
-                    var cveNueva = GeneraCadenaClave(datosClave2);
-                    var fecha2 = GeneraFecha(datosClave2);
+                    var cveNueva = encr.GeneraCadenaClave(datosClave2);
+                    var fecha2 = encr.GeneraFecha(datosClave2);
 
                     var hace10Minutos = DateTime.Now.AddMinutes(-10);
 
@@ -438,28 +438,6 @@ namespace DomainServices.DomServ
             }
 
             return usersDto;
-        }
-
-        private string GeneraCadenaClave(string[] datosClave)
-        {
-            var cve = "";
-            for (var i = 0; i < datosClave.Length - 3; i++)
-            {
-                cve = cve + datosClave[i];
-            }
-
-            return cve;
-        }
-
-        private DateTime GeneraFecha(string[] datosClave)
-        {
-            var strFecha = datosClave[datosClave.Length - 2];
-            var strHora = datosClave[datosClave.Length - 1];
-
-            var fechaHora = strFecha + " " + strHora;
-
-            CultureInfo provider = CultureInfo.InvariantCulture;
-            return DateTime.ParseExact(fechaHora, "yy-MM-dd HH:mm:ss", provider);
         }
     }
 }

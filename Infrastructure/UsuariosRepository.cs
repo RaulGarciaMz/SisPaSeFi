@@ -298,34 +298,9 @@ namespace SqlServerAdapter
 
 
 
-        //Método para el controlador de registro
-        public async Task<UsuarioRegistroVista?> ObtenerUsuarioParaRegistroAsync(string usuario)
+        public async Task<Usuario?> ObtenerUsuarioRegistradoAsync(string usuario)
         {
-            UsuarioRegistroVista? ur = null;
-            var u = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleOrDefaultAsync();
-
-            if (u != null)
-            {
-                ur = new UsuarioRegistroVista() 
-                { 
-                    nombre = u.Nombre,
-                    apellido1 = u.Apellido1,
-                    apellido2 = u.Apellido2,
-                    cel = u.Cel,
-                    configurador = u.Configurador,
-                    bloqueado = u.Bloqueado,
-                    AceptacionAvisoLegal = u.AceptacionAvisoLegal,
-                    intentos = u.Intentos,
-                    NotificarAcceso = u.NotificarAcceso,                    
-                    EstampaTiempoUltimoAcceso = u.EstampaTiempoUltimoAcceso,
-                    correoelectronico = u.CorreoElectronico,
-                    regionSSF = u. RegionSsf,
-                    tiempoEspera = u.TiempoEspera,
-                    desbloquearregistros = u.DesbloquearRegistros
-                };
-            }
-
-            return ur;
+            return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleOrDefaultAsync();
         }
 
         public async Task<int> IdentificaUsuarioLocalAsync(string usuario, string clave)

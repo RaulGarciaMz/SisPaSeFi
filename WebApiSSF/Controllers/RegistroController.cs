@@ -1,8 +1,7 @@
 ﻿using Domain.DTOs;
-using Domain.Entities;
 using Domain.Ports.Driving;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+using System.ComponentModel.DataAnnotations;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -25,21 +24,19 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene los datos de un usuario registrado (Nombre, TOKEN y estado)
         /// </summary>
-        /// <param name="u"></param>
+        /// <param name="u">Usuario a confirmar registro</param>
+        /// <param name="pathLdap">Ruta del directorio activo</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<UsuarioDtoRegistro>> RegistraUsuario(UsuarioDtoForAutentication u)
+        public async Task<ActionResult<UsuarioRegistradoDto>> ObtenerUsuarioRegistrado(UsuarioDtoForGet u, [Required] string pathLdap)
         {
             try
             {
-
-                var use = await _pp.ObtenerUsuarioRegistradoAsync(u, "LDAP://jasl.com"); // ConfigurationManager.AppSettings(["LDAP_path"]);
-
-                return use;
+                return await _pp.ObtenerUsuarioRegistradoAsync(u, pathLdap);
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener incidencias para el usuario: {u.Nombre} ", ex);
+                _log.LogError($"error al obtener incidencias para el usuario: {u.strNombreDeUsuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Globalization;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Domain.Common
@@ -32,6 +33,28 @@ namespace Domain.Common
                 return BitConverter.ToString(md5.ComputeHash(Encoding.UTF8.GetBytes(s)))
                             .Replace("-", "");
             }
+        }
+
+        public string GeneraCadenaClave(string[] datosClave)
+        {
+            var cve = "";
+            for (var i = 0; i <= datosClave.Length - 3; i++)
+            {
+                cve = cve + datosClave[i];
+            }
+
+            return cve;
+        }
+
+        public DateTime GeneraFecha(string[] datosClave)
+        {
+            var strFecha = datosClave[datosClave.Length - 2];
+            var strHora = datosClave[datosClave.Length - 1];
+
+            var fechaHora = strFecha + " " + strHora;
+
+            CultureInfo provider = CultureInfo.InvariantCulture;
+            return DateTime.ParseExact(fechaHora, "yy-MM-dd HH:mm:ss", provider);
         }
     }
 }

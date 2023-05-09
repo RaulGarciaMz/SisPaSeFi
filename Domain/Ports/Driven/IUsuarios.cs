@@ -72,7 +72,7 @@ namespace Domain.Ports.Driven
 
     public interface IUsuariosRegistroQuery
     {
-        Task<UsuarioRegistroVista?> ObtenerUsuarioParaRegistroAsync(string usuario);
+        Task<Usuario> ObtenerUsuarioRegistradoAsync(string usuario);
         Task<int> IdentificaUsuarioLocalAsync(string usuario, string clave);
     }
 }
