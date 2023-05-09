@@ -120,7 +120,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza programas o propuestas de patrullaje acorde a la opción indicada en sus parámetros
         /// </summary>
-        /// <param name="opcion">Descripción de la opción para actualización ("CambioRuta", "InicioPatrullaje", "AutorizaPropuesta", "RegionalApruebaPropuesta", "RegistrarSolicitudOficioComision", "RegistrarSolicitudOficioAutorizacion", "RegistrarOficioComision", "RegistrarOficioAutorizacion")</param>
+        /// <param name="opcion">Descripción de la opción para actualización ("CambioRuta", "InicioPatrullaje", "AutorizaPropuesta", "RegionalApruebaPropuesta", "RegistrarSolicitudOficioComision", "RegistrarSolicitudOficioAutorizacion", "RegistrarOficioComision", "RegistrarOficioAutorizacion", "ModificarFechaPatrullaje")</param>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
         /// <param name="p">Programa o propuesta a actualizar acorde a la opción indicada</param>
         /// <returns></returns>
@@ -141,7 +141,6 @@ namespace WebApiSSF.Controllers
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.ToString());
             }
         }
-
   
         /// <summary>
         /// Actualiza el estado de una propuesta o programa de patrullaje
@@ -174,15 +173,16 @@ namespace WebApiSSF.Controllers
         /// </summary>
         /// <param name="id">Identificador de la propuesta a eliminar</param>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <param name="opcion">Opción de elemento a borrar ("Programa" ó "Propuesta")</param>
         /// <returns></returns>
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete([Required] int id, [Required] string usuario)
+        public async Task<ActionResult> Delete([Required] int id, [Required] string usuario, [Required] string opcion)
         {
             try
             {
-                await _pp.DeletePropuesta(id, usuario);
+                await _pp.DeletePorOpcion(opcion, id, usuario);
                 return Ok();
             }
             catch (Exception ex)
@@ -192,6 +192,7 @@ namespace WebApiSSF.Controllers
             }
         }
 
+/*
         /// <summary>
         /// Actualiza un programa de patrullaje mediante el cambio de ruta del programa
         /// </summary>
@@ -239,6 +240,6 @@ namespace WebApiSSF.Controllers
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.ToString());
             }
         }
-
+*/
     }
 }

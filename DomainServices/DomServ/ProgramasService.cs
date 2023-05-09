@@ -329,6 +329,10 @@ namespace DomainServices.DomServ
                         case "RegistrarOficioAutorizacion":
                             await _repo.ActualizaPropuestaRegistraOficioAutorizacionAsync(p.intidpropuestapatrullaje, p.strOficio);
                             break;
+                        case "ModificarFechaPatrullaje":
+                            var fechaPatrullaje = DateTime.Parse(p.strFechaPatrullaje);
+                            await _repo.ActualizaFechaPatrullajeEnProgramaAndTarjetaAsync(p.intIdPrograma, fechaPatrullaje);
+                            break;
                     }
                 }
             }
@@ -365,7 +369,7 @@ namespace DomainServices.DomServ
 
         }
 
-        public async Task DeletePropuesta(int id, string usuario)
+        public async Task DeletePorOpcion(string opcion, int id, string usuario)
         {
             var usuarioId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
@@ -374,7 +378,16 @@ namespace DomainServices.DomServ
                 var userId = usuarioId.Value;
                 if (EsUsuarioRegistrado(userId))
                 {
-                    await _repo.DeletePropuestaAsync(id);
+                    switch (opcion)
+                    {
+                        case "Programa":
+                            await _repo.DeleteProgramaAsync(id);
+                            break;
+                        case "Propuesta":
+                            await _repo.DeletePropuestaAsync(id);
+                            break;
+                    }
+                    
                 }
             }
         }

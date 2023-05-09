@@ -1083,6 +1083,35 @@ namespace SqlServerAdapter
             }
         }
 
+        public async Task ActualizaFechaPatrullajeEnProgramaAndTarjetaAsync(int idPrograma, DateTime fechaPatrullaje)
+        {
+            var programas = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).ToListAsync();
+            var tarjetas = await _programaContext.TarjetasInformativas.Where(x => x.IdPrograma == idPrograma).ToListAsync();
+
+            if (programas != null && programas.Count > 0)
+            {
+                foreach (var prog in programas)
+                { 
+                    prog.FechaPatrullaje = fechaPatrullaje;
+                    
+                }
+                _programaContext.ProgramasPatrullajes.UpdateRange(programas);
+            }
+
+            if (tarjetas != null && tarjetas.Count > 0)
+            {
+                foreach (var tarj in tarjetas)
+                {
+                    tarj.FechaPatrullaje = fechaPatrullaje;
+                }
+                _programaContext.TarjetasInformativas.UpdateRange(tarjetas);
+            }
+
+            await _programaContext.SaveChangesAsync();
+        }
+        
+
+
         /// <summary>
         /// Método <c>ActualizaPropuestasAutorizadaToRechazada</c> implementa la interface para actualizar el estado de propuestas autorizadas hacia propuestas rechazadas.
         /// </summary>
@@ -1190,7 +1219,15 @@ namespace SqlServerAdapter
                 await _programaContext.SaveChangesAsync();
             }
         }
- 
+
+        public async Task DeleteProgramaAsync(int id)
+        {
+            var aBorrar = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == id).SingleAsync();
+            
+            _programaContext.ProgramasPatrullajes.Remove(aBorrar);
+            await _programaContext.SaveChangesAsync();
+        }
+
         public async Task<bool> SaveChangesAsync()
         {
             return (await _programaContext.SaveChangesAsync() >= 0);

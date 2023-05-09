@@ -18,11 +18,12 @@ namespace Domain.Ports.Driven
         Task ActualizaPropuestaRegistraSolicitudOficioAutorizacionAsync(int idPropuesta, string oficio);
         Task ActualizaProgramaRegistraOficioComisionAsync(int idPrograma, string oficio);
         Task ActualizaPropuestaRegistraOficioAutorizacionAsync(int idPropuesta, string oficio);
-
+        Task ActualizaFechaPatrullajeEnProgramaAndTarjetaAsync(int idPrograma, DateTime fechaPatrullaje);
         Task ActualizaPropuestasAutorizadaToRechazadaAsync(List<int> propuestas, int usuarioId);
         Task ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(List<int> propuestas, int usuarioId);
         Task ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(List<int> propuestas, int usuarioId);        
         Task DeletePropuestaAsync(int id);
+        Task DeleteProgramaAsync(int id);
     }
 
     public interface IProgramaQuery

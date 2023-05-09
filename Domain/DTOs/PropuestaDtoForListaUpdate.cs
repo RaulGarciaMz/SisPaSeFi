@@ -177,6 +177,11 @@
         /// Descripción del oficio de comisión del programa de patrullaje
         /// </summary>
         public string strOficio { get; set; }
+        /// <summary>
+        /// Fecha del patrullaje
+        /// </summary>
+        public string strFechaPatrullaje { get; set; }
+
     }
 
     /// <summary>
