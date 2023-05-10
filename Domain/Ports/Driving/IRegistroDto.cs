@@ -6,4 +6,11 @@ namespace Domain.Ports.Driving
     {
         Task<UsuarioRegistradoDto> ObtenerUsuarioRegistradoAsync(UsuarioDtoForGet u, string pathLdap);
     }
+
+    public interface IRegistroDtoCommand
+    {
+        Task<string> ActualizaRegistroPorOpcion(string opcion, UsuarioForPostDto user);
+    }
+
+    
 }

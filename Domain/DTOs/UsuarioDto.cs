@@ -55,43 +55,11 @@
         public string strClave { get; set; }
     }
 
-/*    public class UsuarioDtoForUpdate
-    {
-        public string strNombreDeUsuario { get; set; }
-    }*/
-
-/*    public class UsuarioDtoForAutentication
-    {
-        public string Nombre { get; set; }
-        public string Clave { get; set; }
-    }*/
-
     public class UsuarioDtoForGet
     {
         public string strNombreDeUsuario { get; set; }
         public string strClaveEncriptada { get; set; }
     }
-
- /*   public class UsuarioDtoRegistro
-    {
-        public string Nombre { get; set; }
-        public string Apellido1 { get; set; }
-        public string Apellido2 { get; set; }
-        public string? Cel { get; set; }
-        public int? Configurador { get; set; }
-        public int? Bloqueado { get; set; }
-        public int? AceptacionAvisoLegal { get; set; }
-        public int? Intentos { get; set; }
-        public int? NotificarAcceso { get; set; }
-        public string? CorreoElectronico { get; set; }
-        public int RegionSSF { get; set; }
-        public int TiempoEspera { get; set; }
-        public int DesbloquearRegistros { get; set; }
-        public DateTime? UltimoAcceso { get; set; }
-        public string Resultado { get; set; }
-        public string Token { get; set; }
-    }
-*/
 
     public class UsuarioRegistradoDto
     {
@@ -172,6 +140,30 @@
         /// Token del usuaio
         /// </summary>
         public string strToken { get; set; }
+    }
+
+    public class UsuarioForPostDto
+    {
+        /// <summary>
+        /// Identificador del usuario
+        /// </summary>
+        public int intIdUsuario { get; set; }
+        /// <summary>
+        /// Nombre del usuario para la cuenta registrada
+        /// </summary>
+        public string strNombreDeUsuario { get; set; }
+        /// <summary>
+        /// Número de sesiones del usuario
+        /// </summary>
+        public int intNumeroSesionUsuario { get; set; }
+        /// <summary>
+        /// Número de intentos del usuario
+        /// </summary>
+        public int intIntentos { get; set; }
+        /// <summary>
+        /// Descripción del estado del usuario
+        /// </summary>
+        public string strResultado { get; set; }
     }
 }
 

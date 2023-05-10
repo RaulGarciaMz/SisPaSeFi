@@ -1,6 +1,7 @@
 ﻿using Domain.Common;
 using Domain.DTOs;
 using Domain.Ports.Driven;
+using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
 using Microsoft.IdentityModel.Tokens;
 using System.DirectoryServices;
@@ -12,11 +13,13 @@ namespace DomainServices.DomServ
 {
     public class RegistroService : IRegistroService
     {
-        private readonly IUsuariosRegistroQuery _repo;
+        private readonly IRegistroRepo _repo;
+        private readonly IUsuariosRegistro _user;
 
-        public RegistroService(IUsuariosRegistroQuery repo)
+        public RegistroService(IRegistroRepo repo, IUsuariosRegistro uc)
         {
             _repo = repo;
+            _user = uc;
         }
 
         public async Task<UsuarioRegistradoDto> ObtenerUsuarioRegistradoAsync(UsuarioDtoForGet u, string pathLdap)
@@ -44,7 +47,7 @@ namespace DomainServices.DomServ
 
                     if (esUsuarioLocal || esUsuarioEnDirectorioActivo)
                     {
-                        var userV = await _repo.ObtenerUsuarioRegistradoAsync(u.strNombreDeUsuario);
+                        var userV = await _user.ObtenerUsuarioRegistradoAsync(u.strNombreDeUsuario);
 
                         if (userV != null && userV.Bloqueado == 0)
                         {
@@ -62,6 +65,7 @@ namespace DomainServices.DomServ
                             user.intRegionSSF = userV.RegionSsf;
                             user.intTiempoEspera = userV.TiempoEspera;
                             user.intDesbloquearRegistros = userV.DesbloquearRegistros;
+                            user.intIdUsuario = userV.IdUsuario;
                             user.strResultado = "Usuario válido.";
                             user.strToken = GeneraToken(u.strNombreDeUsuario, strClave);
                         } else {
@@ -74,9 +78,132 @@ namespace DomainServices.DomServ
             return user;
         }
 
+        public async Task<string> ActualizaRegistroPorOpcion(string opcion, UsuarioForPostDto user)
+        {
+            string resultado = "";
+
+            switch(opcion) 
+            {
+                case "RegistrarIntentoFallido":
+                    resultado = await RegistraIntentoFallidoDeUsuarioAsync(user);
+                    break;
+                case "RegistrarAcceso":
+                    resultado = await RegistraAccesoDeUsuarioAsync(user);
+                    break;
+                case "RegistrarEvento":
+                    resultado = await RegistraEventoDeUsuarioAsync(user.intNumeroSesionUsuario, user.strResultado);
+                    break;
+                case "RegistrarFinSesion":
+                    resultado = await RegistraFinDeSesionAsync(user.intNumeroSesionUsuario);
+                    break;
+                case "RevisarAvisoLegal":
+                    resultado = await RevisarAvisoLegalAsync(user.strNombreDeUsuario);
+                    break;
+                case "VerificarCorreoElectronico":
+                    resultado = await VerificarCorreoElectronicoAsync(user.strNombreDeUsuario);
+                    break;
+            }
+
+            return resultado;
+        }
+
+        private async Task<string> RegistraIntentoFallidoDeUsuarioAsync(UsuarioForPostDto user) 
+        {
+            var resultado = "";
+
+            if (user.intIntentos == 1) 
+            {
+                await _repo.AumentaIntentosDeUsuarioEnMemoriaAsync(user.strNombreDeUsuario);
+            } 
+            else 
+            {
+                await _repo.ReseteaIntentosDeUsuarioEnMemoriaAsync(user.strNombreDeUsuario);
+            }
+
+            var bloqueado = await _repo.BloqueaUsuarioEnMemoriaAsync(user.strNombreDeUsuario);
+
+            
+            if (bloqueado) 
+            {
+                resultado = "BLOQUEADO";
+            }
+
+            await _repo.SaveChangesAsync();
+
+            return resultado;
+        }
+
+        private async Task<string> RegistraAccesoDeUsuarioAsync(UsuarioForPostDto user)
+        {
+            var contadorAccesos = 0;
+
+            var accesos = await _repo.ObtenerAccesosAsync();
+
+            if (accesos.Count > 0)
+            {
+                contadorAccesos = accesos[0].Totalaccesos.Value + 1;
+                await _repo.ActualizaTotalDeAccesosEnMemoriaAsync(contadorAccesos);              
+            }
+            else
+            {
+                _repo.AgregaAccesoEnMemoria();
+            }
+
+            await _repo.ActualizaUltimoAccesoDeUsuarioEnMemoriaAsync(user.strNombreDeUsuario);
+            await _repo.AgregaSesionDeUsuarioEnMemoriaAsync(user.strNombreDeUsuario);
+            await _repo.SaveChangesAsync();
+
+            var numeroSesion = await _repo.ObtenerUltimaSesionDeUsuarioAsync(user.intIdUsuario);
+            var paginaInicio =  _repo.ObtenerPaginaDeInicioDeUsuario(user.intIdUsuario);
+
+
+            return numeroSesion.ToString() + "¦" + contadorAccesos.ToString() + "¦" + paginaInicio;
+        }
+
+        private async Task<string> RegistraEventoDeUsuarioAsync(int numSesion, string cadenaResultado)
+        {       
+            await _repo.RegistraEventoDeUsuarioAsync(numSesion, cadenaResultado);
+               
+            return "Registro realizado";
+        }
+
+        private async Task<string> RegistraFinDeSesionAsync(int numSesion)
+        {
+            await _repo.RegistraFinDeSesionAsync(numSesion);
+
+            return "Registro realizado";
+        }
+
+        private async Task<string> RevisarAvisoLegalAsync(string usuario)
+        {
+            string resultado = "0";
+
+           var aviso = await _repo.ObtenerAvisoLegalDeUsuarioAsync(usuario);
+
+            if (aviso != null) 
+            {
+                resultado = aviso.ToString();
+            }
+            return resultado;
+        }
+
+        private async Task<string> VerificarCorreoElectronicoAsync(string usuario)
+        {
+            string resultado = "¦¦0¦";
+
+            var user = await _user.ObtenerUsuarioRegistradoAsync(usuario);
+
+            if (user != null)
+            {
+                resultado = "¦" + user.CorreoElectronico + "¦" + user.NotificarAcceso + "¦";
+            }
+
+            return resultado;
+        }
+
         private async Task<bool> EsUsuarioLocalValido(string usuario, string clave) 
         {
-            var cuantos = await _repo.IdentificaUsuarioLocalAsync(usuario, clave);
+            var cuantos = await _user.IdentificaUsuarioLocalAsync(usuario, clave);
             return cuantos == 1;
         }
 

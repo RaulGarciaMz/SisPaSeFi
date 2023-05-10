@@ -6,7 +6,6 @@ namespace Domain.Ports.Driven
 {
     public interface IUsuariosCommand
     {
-        
         Task AgregaUsuarioAsync(UsuarioDto user);
         Task AgregaUsuarioDeDocumentoAsync(int idDocumento, int idUsuario);
         Task BorraUsuarioDeDocumentoAsync(int idDocumento, int idUsuario);
@@ -70,7 +69,7 @@ namespace Domain.Ports.Driven
         Task<int?> ObtenerIdUsuarioPorUsuarioNomAsync(string usuario);
     }
 
-    public interface IUsuariosRegistroQuery
+    public interface IUsuariosRegistro
     {
         Task<Usuario> ObtenerUsuarioRegistradoAsync(string usuario);
         Task<int> IdentificaUsuarioLocalAsync(string usuario, string clave);

@@ -5,6 +5,9 @@ using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
+using System.Data;
+using System;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -102,8 +105,8 @@ namespace SqlServerAdapter
                     await _userContext.SaveChangesAsync();
                 }
             }
-        }
-       
+        }      
+
         public async Task AgregaUsuarioAsync(UsuarioDto user)
         {
             var u = new Usuario() 
@@ -297,7 +300,6 @@ namespace SqlServerAdapter
         }
 
 
-
         public async Task<Usuario?> ObtenerUsuarioRegistradoAsync(string usuario)
         {
             return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleOrDefaultAsync();
@@ -311,11 +313,6 @@ namespace SqlServerAdapter
             return u.Count;
         }
 
-        public async Task<bool> SaveChangesAsync()
-        {
-            return (await _userContext.SaveChangesAsync() >= 0);
-        }
-
         private string ComputeMD5(string s)
         {
             using (MD5 md5 = MD5.Create())
@@ -324,7 +321,6 @@ namespace SqlServerAdapter
                             .Replace("-", "");
             }
         }
-
 
     }
 }
