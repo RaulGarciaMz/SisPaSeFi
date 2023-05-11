@@ -40,7 +40,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pIdUsuario", idUsuario)
             };
 
-            return await _monitoreoContext.MonitoreosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _monitoreoContext.MonitoreosVista.FromSqlRaw(sqlQuery, parametros).AsNoTracking().ToListAsync();
         }
 
         public async Task<List<MonitoreoVista>> ObtenerProgramasConcluidosPorTipoAsync(string tipo, int idUsuario)
@@ -67,10 +67,10 @@ namespace SqlServerAdapter
                 new SqlParameter("@pIdUsuario", idUsuario)
             };
 
-            return await _monitoreoContext.MonitoreosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _monitoreoContext.MonitoreosVista.FromSqlRaw(sqlQuery, parametros).AsNoTracking().ToListAsync();
         }
 
-        public async Task<List<MonitoreoVista>> ObtenerProgramasEnEstadoPostConclucionPorTipoAsync(string tipo, int idUsuario)
+        public async Task<List<MonitoreoVista>> ObtenerProgramasEnEstadoPostConcluidoPorTipoAsync(string tipo, int idUsuario)
         {
 
             string sqlQuery = @"SELECT a.id_programa, a.id_ruta, a.fechapatrullaje, a.inicio, b.clave, b.regionmilitarsdn, 
@@ -94,7 +94,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pIdUsuario", idUsuario)
             };
 
-            return await _monitoreoContext.MonitoreosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _monitoreoContext.MonitoreosVista.FromSqlRaw(sqlQuery, parametros).AsNoTracking().ToListAsync();
         }
 
         public async Task<List<PuntoEnRutaVista>> ObtenerPuntosEnRutaAsync(int idRuta)
@@ -110,7 +110,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pIdRuta", idRuta)
             };
 
-            return await _monitoreoContext.PuntosEnRutaVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _monitoreoContext.PuntosEnRutaVista.FromSqlRaw(sqlQuery, parametros).AsNoTracking().ToListAsync();
 
         }
 
@@ -144,7 +144,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pIdTarjeta", idTarjeta)
             };
 
-            return await _monitoreoContext.IncidenciasTarjetasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _monitoreoContext.IncidenciasTarjetasVista.FromSqlRaw(sqlQuery, parametros).AsNoTracking().ToListAsync();
 
         }
 
@@ -171,7 +171,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pIdTarjeta", idTarjeta)
             };
 
-            return await _monitoreoContext.IncidenciasTarjetasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _monitoreoContext.IncidenciasTarjetasVista.FromSqlRaw(sqlQuery, parametros).AsNoTracking().ToListAsync();
         }
 
         public async Task<List<UsoVehiculoMonitoreoVista>> ObtenerUsoVehiculoPorProgramaAsync(int idPrograma)
@@ -187,7 +187,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pIdPrograma", idPrograma)
             };
 
-            return await _monitoreoContext.UsosVehiculosMonitoreoVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _monitoreoContext.UsosVehiculosMonitoreoVista.FromSqlRaw(sqlQuery, parametros).AsNoTracking().ToListAsync();
         }
 
     }

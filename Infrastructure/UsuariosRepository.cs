@@ -174,16 +174,16 @@ namespace SqlServerAdapter
         }
         public async Task<Usuario?> ObtenerUsuarioConfiguradorPorIdAsync(int idUsuario)
         {
-            return await _userContext.Usuarios.Where(x => x.IdUsuario == idUsuario && x.Configurador == 1).FirstOrDefaultAsync();
+            return await _userContext.Usuarios.Where(x => x.IdUsuario == idUsuario && x.Configurador == 1).AsNoTracking().FirstOrDefaultAsync();
         }
 
         public async Task<Usuario?> ObtenerUsuarioConfiguradorPorNombreAsync(string usuario)
         {
-            return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefaultAsync();
+            return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).AsNoTracking().FirstOrDefaultAsync();
         }
         public async Task<Usuario?> ObtenerUsuarioPorUsuarioNomAsync(string usuario)
         {
-            return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).FirstOrDefaultAsync();
+            return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).AsNoTracking().FirstOrDefaultAsync();
         }
 
         public async Task<int?> ObtenerIdUsuarioPorUsuarioNomAsync(string usuario)

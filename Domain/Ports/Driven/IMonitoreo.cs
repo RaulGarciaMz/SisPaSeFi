@@ -7,7 +7,7 @@ namespace Domain.Ports.Driven
     {
         Task<List<MonitoreoVista>> ObtenerProgramasEnEstadoPreConcluidoPorTipoAsync(string tipo, int idUsuario);
         Task<List<MonitoreoVista>> ObtenerProgramasConcluidosPorTipoAsync(string tipo, int idUsuario);
-        Task<List<MonitoreoVista>> ObtenerProgramasEnEstadoPostConclucionPorTipoAsync(string tipo, int idUsuario);
+        Task<List<MonitoreoVista>> ObtenerProgramasEnEstadoPostConcluidoPorTipoAsync(string tipo, int idUsuario);
         Task<List<PuntoEnRutaVista>> ObtenerPuntosEnRutaAsync(int idRuta);
         Task<List<TarjetaInformativa>> ObtenerTarjetasInformativasPorProgramaAsync(int idPrograma);
         Task<List<IncidenciaTarjetaVista>> ObtenerIncidenciasEnEstructuraPorTarjetaAsync(int idTarjeta);
