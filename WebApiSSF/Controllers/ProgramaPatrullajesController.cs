@@ -61,7 +61,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al obtener programas para el tipo: {tipo}, region: {region}, usuario: {usuario}, año: {anio}, mes {mes}, día: {dia}, clase: {clase}, opción: {opcion}, período: {periodo} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.ToString());
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.Message);
             }
         }
 
@@ -88,7 +88,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al registrar un programa para el usuario: {usuario}, clase: {clase}, opción: {opcion} ", ex.ToString());
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.ToString());
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.Message);
             }           
         }
 
@@ -113,7 +113,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al registrar una propuesta para el usuario: {usuario} -  ", ex.ToString());
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.ToString());
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.Message);
             }
         }
 
@@ -138,7 +138,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al actualizar un programa o propuesta por opción: {opcion}, usuario: {usuario} -  ", ex.ToString());
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.ToString());
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.Message);
             }
         }
   
@@ -164,7 +164,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al actualizar una propuesta como programa para el usuario: {usuario}, opcion: {opcion}, acción: {accion} -  ", ex.ToString());
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.ToString());
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.Message);
             }
         }
 
@@ -188,7 +188,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al eliminar la propuesta id: {id} para el usuario: {usuario} -  ", ex.ToString());
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.ToString());
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.Message);
             }
         }
 
@@ -213,7 +213,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al actualizar un programa por cambio de ruta para el usuario: {usuario} -  ", ex.ToString());
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.ToString());
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.Message);
             }
         }
 
@@ -237,7 +237,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al actualizar un programa por inicio de patrullaje para el usuario: {usuario} -  ", ex.ToString());
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.ToString());
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.Message);
             }
         }
 */

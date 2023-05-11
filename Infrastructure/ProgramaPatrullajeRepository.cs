@@ -4,6 +4,7 @@ using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SqlServerAdapter
 {
@@ -21,7 +22,7 @@ namespace SqlServerAdapter
         /// Método <c>ObtenerPropuestasExtraordinariasPorAnioMesDiaAsync</c> implementa la interface para obtener propuestas extraordinarias por fecha.
         /// Caso 0 Extraordinario  --Propuestas extraordinarias
         /// </summary>       
-        public async Task< List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorAnioMesDiaAsync(string tipo, int region, int anio, int mes, int dia)
+        public async Task<List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorAnioMesDiaAsync(string tipo, int region, int anio, int mes, int dia)
         {
             string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.id_puntoresponsable, 
                    a.ultimaactualizacion,a.id_usuario, b.clave, b.regionmilitarsdn,b.regionssf, b.observaciones observacionesruta, 
@@ -401,7 +402,7 @@ namespace SqlServerAdapter
         /// </summary>
         public async Task<List<PatrullajeVista>> ObtenerProgramasEnProgresoAsync(string tipo, int region)
         {
-                string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
+            string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,
                                        b.regionssf, b.observaciones observacionesruta, c.descripcionestadopatrullaje, a.observaciones, a.riesgopatrullaje,
                                        d.descripcionnivel, a.ultimaactualizacion, a.id_usuario, a.id_usuarioresponsablepatrullaje, -1 id_apoyopatrullaje,
                                        COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision,
@@ -419,13 +420,13 @@ namespace SqlServerAdapter
                                 AND a.id_estadopatrullaje = (SELECT id_estadopatrullaje FROM ssf.estadopatrullaje WHERE descripcionestadopatrullaje='En progreso') 
                                 ORDER BY a.fechapatrullaje,a.inicio";
 
-                object[] parametros = new object[]
-                {
+            object[] parametros = new object[]
+            {
                 new SqlParameter("@pTipo", tipo),
                 new SqlParameter("@pRegion", region),
-                 };
+             };
 
-                return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
@@ -763,7 +764,7 @@ namespace SqlServerAdapter
                     item.IdEstadoPropuesta = idEdoAutorizada[0];
                 }
 
-                if (aActualizar.Count > 0) 
+                if (aActualizar.Count > 0)
                 {
                     lstPropuestasActualizar.Add(aActualizar[0]);
                 }
@@ -777,11 +778,11 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>AgregaPropuestaExtraordinaria</c> implementa la interface para agregar propuestas extraordinaria.
         /// </summary>
-        public async Task AgregaPropuestaExtraordinariaAsync(PropuestaExtraordinariaAdd pp,  string clase,int usuarioId)
+        public async Task AgregaPropuestaExtraordinariaAsync(PropuestaExtraordinariaAdd pp, string clase, int usuarioId)
         {
-            var rutaNoExisteEnPropuesta = await _programaContext.PropuestasPatrullajes
-                .Where(x => x.IdRuta == pp.Propuesta.IdRuta && x.FechaPatrullaje == pp.Propuesta.FechaPatrullaje)
-                .CountAsync() == 0;
+            var rutaNoExisteEnPropuesta = await _programaContext.PropuestasPatrullajes.
+                                Where(x => x.IdRuta == pp.Propuesta.IdRuta && x.FechaPatrullaje == pp.Propuesta.FechaPatrullaje).
+                                CountAsync() == 0;
 
             string edoCreada = "Creada";
             var idEdoCreada = await _programaContext.EstadosPropuesta
@@ -794,35 +795,60 @@ namespace SqlServerAdapter
                     .Where(x => x.Descripcion == clase)
                     .Select(x => x.IdClasePatrullaje).ToListAsync();
 
-                var propuesta = await _programaContext.PropuestasPatrullajes
-                    .Where(x => x.IdRuta == pp.Propuesta.IdRuta && x.FechaPatrullaje == pp.Propuesta.FechaPatrullaje)
-                    .Select(x => x.IdPropuestaPatrullaje).ToListAsync();
-
                 pp.Propuesta.IdClasePatrullaje = idClase[0];
                 pp.Propuesta.IdEstadoPropuesta = idEdoCreada[0];
                 pp.Propuesta.IdUsuario = usuarioId;
+                pp.Propuesta.Observaciones = "";
 
-                var complemento = new PropuestaPatrullajeComplementossf() 
-                {
-                    IdPropuestaPatrullaje= propuesta[0],
-                    FechaTermino = pp.Propuesta.FechaPatrullaje
-                };
 
-                foreach (var v in pp.Vehiculos)
+                using (var transaction = _programaContext.Database.BeginTransaction())
                 {
-                    v.IdPropuestaPatrullaje = propuesta[0];
+                    try
+                    {
+                        _programaContext.PropuestasPatrullajes.Add(pp.Propuesta);
+                        var insertados = await _programaContext.SaveChangesAsync();
+
+                        if (insertados > 0)
+                        {
+                            var propuesta = pp.Propuesta.IdPropuestaPatrullaje;
+
+                            var complemento = new PropuestaPatrullajeComplementossf()
+                            {
+                                IdPropuestaPatrullaje = propuesta,
+                                FechaTermino = pp.Propuesta.FechaPatrullaje
+                            };
+
+                            _programaContext.PropuestasComplementosSsf.Add(complemento);
+                            var complementosInsertados = await _programaContext.SaveChangesAsync();
+
+                            if (complementosInsertados > 0)
+                            {
+                                foreach (var v in pp.Vehiculos)
+                                {
+                                    //v.IdPropuestaPatrullaje = propuesta;
+                                    _programaContext.Database.ExecuteSql($"INSERT INTO ssf.propuestaspatrullajesvehiculos (id_propuestapatrullaje,id_vehiculo) VALUES({propuesta},{v.IdVehiculo})");
+                                }
+
+                                foreach (var l in pp.Lineas)
+                                {
+                                    //l.IdPropuestaPatrullaje = propuesta;
+                                    _programaContext.Database.ExecuteSql($"INSERT INTO ssf.propuestaspatrullajeslineas (id_propuestapatrullaje,id_linea) VALUES({propuesta},{l.IdLinea})");
+                                }
+              /*                  _programaContext.PropuestasVehiculos.AddRange(pp.Vehiculos);
+                                _programaContext.PropuestasLineas.AddRange(pp.Lineas);*/               
+
+                                await _programaContext.SaveChangesAsync();
+                            }
+                        }
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
-
-                foreach (var l in pp.Lineas)
-                {
-                    l.IdPropuestaPatrullaje = propuesta[0];
-                }
-
-                _programaContext.PropuestasPatrullajes.Add(pp.Propuesta);
-                _programaContext.PropuestasComplementosSsf.Add(complemento);
-                _programaContext.PropuestasVehiculos.AddRange(pp.Vehiculos);
-                _programaContext.PropuestasLineas.AddRange(pp.Lineas);
-                await _programaContext.SaveChangesAsync();
             }
         }
 
@@ -836,7 +862,7 @@ namespace SqlServerAdapter
             var idClasePatrullaje = await _programaContext.ClasesPatrullaje.Where(x => x.Descripcion == clase).Select(x => x.IdClasePatrullaje).ToListAsync();
 
             var propuestas = new List<PropuestaPatrullaje>();
-            
+
             string observacion = "";
             if (pp.Observaciones != null) observacion = pp.Observaciones;
 
@@ -880,7 +906,7 @@ namespace SqlServerAdapter
             var lstPropuestas = new List<PropuestaPatrullaje>();
 
             string edoAutorizada = "Autorizada";
-            var idEdoAutorizada = await  _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToListAsync();
+            var idEdoAutorizada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToListAsync();
 
             var propuestas = await _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == pp.IdPropuestaPatrullaje).ToListAsync();
 
@@ -941,10 +967,10 @@ namespace SqlServerAdapter
             var idPropuestas = programas.Select(x => x.IdPropuestaPatrullaje).ToList();
 
             var aActualizar = await (from c in _programaContext.PropuestasPatrullajes
-                               where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
-                               select c).ToListAsync();
+                                     where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
+                                     select c).ToListAsync();
 
-             foreach (var item in aActualizar)
+            foreach (var item in aActualizar)
             {
                 item.IdEstadoPropuesta = idEdoAutorizada[0];
             }
@@ -960,17 +986,17 @@ namespace SqlServerAdapter
         public async Task ActualizaProgramasPorInicioPatrullajeAsync(int idPrograma, int idRiesgo, int idUsuario, int idEstadoPatrullaje, TimeSpan inicio)
         {
             var pa = await _programaContext.ProgramasPatrullajes.Where(x => x.IdRuta == idPrograma).SingleOrDefaultAsync();
-            if (pa != null) 
+            if (pa != null)
             {
                 pa.UltimaActualizacion = DateTime.UtcNow;
-                pa.Inicio =inicio;
+                pa.Inicio = inicio;
                 pa.IdEstadoPatrullaje = idEstadoPatrullaje;
                 pa.IdUsuario = idUsuario;
                 pa.RiesgoPatrullaje = idRiesgo;
 
                 _programaContext.ProgramasPatrullajes.Update(pa);
                 await _programaContext.SaveChangesAsync();
-            }                  
+            }
         }
 
         /// <summary>
@@ -1004,11 +1030,11 @@ namespace SqlServerAdapter
             {
                 var pa = await _programaContext.PropuestasPatrullajes.Where(x => x.IdPropuestaPatrullaje == idPropuesta && x.IdEstadoPropuesta < edo.IdEstadoPropuesta).SingleOrDefaultAsync();
 
-                if (pa != null )
+                if (pa != null)
                 {
 
                     pa.IdEstadoPropuesta = edo.IdEstadoPropuesta;
-              
+
                     _programaContext.PropuestasPatrullajes.Update(pa);
                     await _programaContext.SaveChangesAsync();
                 }
@@ -1022,14 +1048,14 @@ namespace SqlServerAdapter
         {
             var programa = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
 
-            if (programa != null) 
+            if (programa != null)
             {
                 programa.SolicitudOficioComision = oficio;
                 programa.UltimaActualizacion = DateTime.UtcNow;
 
                 _programaContext.ProgramasPatrullajes.Update(programa);
                 await _programaContext.SaveChangesAsync();
-            }            
+            }
         }
 
         /// <summary>
@@ -1091,9 +1117,9 @@ namespace SqlServerAdapter
             if (programas != null && programas.Count > 0)
             {
                 foreach (var prog in programas)
-                { 
+                {
                     prog.FechaPatrullaje = fechaPatrullaje;
-                    
+
                 }
                 _programaContext.ProgramasPatrullajes.UpdateRange(programas);
             }
@@ -1109,7 +1135,7 @@ namespace SqlServerAdapter
 
             await _programaContext.SaveChangesAsync();
         }
-        
+
 
 
         /// <summary>
@@ -1122,10 +1148,10 @@ namespace SqlServerAdapter
             string edoRechazada = "Rechazada";
             var idEdoRechazada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoRechazada).Select(x => x.IdEstadoPropuesta).ToListAsync();
 
-            var propuestasActualizar = await  (from c in _programaContext.PropuestasPatrullajes
-                               where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
-                               && c.IdEstadoPropuesta != idEdoAutorizada[0]
-                               select c).ToListAsync();
+            var propuestasActualizar = await (from c in _programaContext.PropuestasPatrullajes
+                                              where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
+                                              && c.IdEstadoPropuesta != idEdoAutorizada[0]
+                                              select c).ToListAsync();
 
             if (propuestasActualizar.Count > 0)
             {
@@ -1151,9 +1177,9 @@ namespace SqlServerAdapter
             var idEdoPendiente = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoPendiente).Select(x => x.IdEstadoPropuesta).ToListAsync();
 
             var propuestasActualizar = await (from c in _programaContext.PropuestasPatrullajes
-                                        where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
-                                        && c.IdEstadoPropuesta < idEdoAprobada[0]
-                                        select c).ToListAsync();
+                                              where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
+                                              && c.IdEstadoPropuesta < idEdoAprobada[0]
+                                              select c).ToListAsync();
 
             if (propuestasActualizar.Count > 0)
             {
@@ -1174,14 +1200,14 @@ namespace SqlServerAdapter
         public async Task ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(List<int> idPropuestas, int usuarioId)
         {
             string edoAutorizada = "Autorizada";
-            var idEdoAutorizada =await  _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToListAsync();
+            var idEdoAutorizada = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoAutorizada).Select(x => x.IdEstadoPropuesta).ToListAsync();
             string edoPendiente = "Pendiente de autorizacion por la SSF";
             var idEdoPendiente = await _programaContext.EstadosPropuesta.Where(x => x.DescripcionEstadoPropuesta == edoPendiente).Select(x => x.IdEstadoPropuesta).ToListAsync();
 
-            var propuestasActualizar =await  (from c in _programaContext.PropuestasPatrullajes
-                                        where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
-                                        && c.IdEstadoPropuesta < idEdoAutorizada[0]
-                                        select c).ToListAsync();
+            var propuestasActualizar = await (from c in _programaContext.PropuestasPatrullajes
+                                              where idPropuestas.Any(o => o == c.IdPropuestaPatrullaje) //IN
+                                              && c.IdEstadoPropuesta < idEdoAutorizada[0]
+                                              select c).ToListAsync();
 
             if (propuestasActualizar.Count > 0)
             {
@@ -1202,18 +1228,18 @@ namespace SqlServerAdapter
         public async Task DeletePropuestaAsync(int id)
         {
             string estado = "Autorizada";
-            var edos =  _programaContext.EstadosPropuesta.
+            var edos = _programaContext.EstadosPropuesta.
                 Where(x => x.DescripcionEstadoPropuesta == estado).
                 Select(x => x.IdEstadoPropuesta);
 
-            var pro =_programaContext.PropuestasPatrullajes.
+            var pro = _programaContext.PropuestasPatrullajes.
                 Where(x => x.IdPropuestaPatrullaje == id);
 
             var aBorrar = await (from c in pro
-                           where !edos.Any(o => o == c.IdEstadoPropuesta) //NOT IN
-                           select c).ToListAsync();
-         
-            if (aBorrar.Count > 0 )
+                                 where !edos.Any(o => o == c.IdEstadoPropuesta) //NOT IN
+                                 select c).ToListAsync();
+
+            if (aBorrar.Count > 0)
             {
                 _programaContext.PropuestasPatrullajes.Remove(aBorrar[0]);
                 await _programaContext.SaveChangesAsync();
@@ -1223,7 +1249,7 @@ namespace SqlServerAdapter
         public async Task DeleteProgramaAsync(int id)
         {
             var aBorrar = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == id).SingleAsync();
-            
+
             _programaContext.ProgramasPatrullajes.Remove(aBorrar);
             await _programaContext.SaveChangesAsync();
         }
