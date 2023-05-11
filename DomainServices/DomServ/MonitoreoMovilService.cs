@@ -3,10 +3,11 @@ using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
+using Domain.Ports.Driving;
 
 namespace DomainServices.DomServ
 {
-    public class MonitoreoMovilService
+    public class MonitoreoMovilService : IMonitoreoService
     {
         private readonly IMonitoreoMovilRepo _repo;
         private readonly IUsuariosParaValidacionQuery _user;

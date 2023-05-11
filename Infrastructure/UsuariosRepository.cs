@@ -6,8 +6,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
 using System.Data;
-using System;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 
