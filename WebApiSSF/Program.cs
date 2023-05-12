@@ -120,6 +120,8 @@ builder.Services.AddScoped<IInicioPatrullajeRepo, InicioPatrullajeRepository>();
 builder.Services.AddScoped<IInicioPatrullajeService, InicioPatrullajeService>();
 builder.Services.AddScoped<IMonitoreoMovilRepo, MonitoreoMovilRepository>();
 builder.Services.AddScoped<IMonitoreoService, MonitoreoMovilService>();
+builder.Services.AddScoped<ITerminacionPatrullajeRepo, TerminacionPatrullajeRepository>();
+builder.Services.AddScoped<ITerminacionPatrullajeService, TerminacionPatrullajeService>();
 
 builder.Services.AddDbContext<PatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<ProgramaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
@@ -145,6 +147,7 @@ builder.Services.AddDbContext<RolesContext>(dbCtxtOptions => dbCtxtOptions.UseSq
 builder.Services.AddDbContext<MenuContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<InicioPatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<MonitoreoContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
+builder.Services.AddDbContext<TerminacionPatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 
 /*builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
