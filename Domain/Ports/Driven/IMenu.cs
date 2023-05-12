@@ -12,6 +12,7 @@ namespace Domain.Ports.Driven
     public interface IMenuQuery
     {
         Task<List<MenuVista>> ObtenerMenuPorCriterioPadreAsync(int padre);
+        Task<List<MenuVista>> ObtenerMenuPorUsuarioAndCriterioPadreAsync(int idUsuario, int padre);
         Task<List<Menu>> ObtenerMenuPorDesplegadoAsync(string desplegado);
         Task<List<Menu>> ObtenerMenusConNombreIgualAlDelMenuIdAsync(string desplegado, int idMenu);
     }

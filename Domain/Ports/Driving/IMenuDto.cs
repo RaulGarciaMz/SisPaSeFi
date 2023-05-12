@@ -10,6 +10,6 @@ namespace Domain.Ports.Driving
 
     public interface IMenuDtoQuery
     {
-        Task<List<MenuDto>> ObtenerMenuPorOpcionAsync(string opcion, int padre, string usuario);
+        Task<List<MenuDto>> ObtenerMenuPorOpcionAsync(string opcion, string criterio, string usuario);
     }
 }

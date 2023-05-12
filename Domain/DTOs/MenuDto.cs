@@ -8,5 +8,6 @@
         public string? strLiga { get; set; }
         public int? intIdPadre { get; set; }
         public int? intPosicion { get; set; }
+        public int? intNavegar { get; set; }
     }
 }

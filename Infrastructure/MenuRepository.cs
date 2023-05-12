@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
 
@@ -18,15 +19,35 @@ namespace SqlServerAdapter
         public async Task<List<MenuVista>> ObtenerMenuPorCriterioPadreAsync(int padre)
         {
             return await _menuContext.Menus.Where(x => x.Padre == padre)
-                .Select(s => new MenuVista { 
-                    IdMenu = s.IdMenu,
-                    Padre = s.Padre,
-                    Descripcion = s.Descripcion,
-                    Desplegado = s.Desplegado,
-                    Liga = s.Liga,
-                    Posicion = s.Posicion
+                .Select(s => new MenuVista {
+                    idmenu = s.IdMenu,
+                    padre = s.Padre.Value,
+                    descripcion = s.Descripcion,
+                    desplegado = s.Desplegado,
+                    liga = s.Liga,
+                    posicion = s.Posicion.Value,
+                    navegar =0
                 })
-                .Distinct().OrderBy(x => x.Posicion).ToListAsync();
+                .Distinct().OrderBy(x => x.posicion).ToListAsync();
+        }
+
+        public async Task<List<MenuVista>> ObtenerMenuPorUsuarioAndCriterioPadreAsync(int idUsuario, int padre)
+        {
+            string sqlQuery = @"SELECT DISTINCT c.idmenu, c.desplegado, c.liga, c.descripcion, c.posicion, c.padre, b.navegar
+                                FROM ssf.usuariorol a
+                                JOIN ssf.rolmenu b ON a.id_rol=b.id_rol
+                                JOIN ssf.menus c ON b.idmenu=c.idmenu
+                                WHERE a.id_usuario= @pIdUsuario
+                                AND c.padre = @pCriterio
+                                ORDER BY c.posicion";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pIdUsuario", idUsuario),
+                new SqlParameter("@pCriterio", padre)
+             };
+
+            return await _menuContext.MenusVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         public async Task<List<Menu>> ObtenerMenuPorDesplegadoAsync(string desplegado)

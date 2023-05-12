@@ -25,24 +25,20 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de menus acorde a las opciones indicadas
         /// </summary>
-        /// <param name="opcion">Opción de obtención d menus ("Submenu")</param>
-        /// <param name="padre">Identificador del menú padre</param>
+        /// <param name="opcion">Opción de obtención de menus ("Submenu", "MenuUsuario")</param>
+        /// <param name="criterio">Identificador del menú padre</param>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
         /// <returns></returns>
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<MenuDto>>> ObtenerMenuPorOpcion([Required] string opcion, int padre, [Required] string usuario)
+        public async Task<ActionResult<IEnumerable<MenuDto>>> ObtenerMenuPorOpcion([Required] string opcion, string criterio, [Required] string usuario)
         {
             try
             {
-                if (opcion != "Submenu" )
-                    return BadRequest("opción no válida");
-
-                var coms = await _pp.ObtenerMenuPorOpcionAsync(opcion, padre, usuario);
+                var coms = await _pp.ObtenerMenuPorOpcionAsync(opcion, criterio, usuario);
 
                 if (coms.Count <= 0)
                 {
@@ -53,8 +49,8 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener las menus para la opción: {opcion}, padre: {padre}, usuario: {usuario} ", ex);
-                var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
+                _log.LogError($"error al obtener las menus para la opción: {opcion}, padre: {criterio}, usuario: {usuario} ", ex);
+                var m = "Ocurrió un problema mientras se procesaba la petición - " + ex.Message;
                 //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
                 return StatusCode(500, m);
             }
@@ -81,7 +77,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al agregar el menu para usuario: {usuario} ", ex);
-                var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
+                var m = "Ocurrió un problema mientras se procesaba la petición - " + ex.Message;
                 return StatusCode(500, m);
             }
         }
@@ -107,7 +103,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al actualizar menú: {menu.intIdMenu} para el usuario: {usuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message );
             }
         }
 

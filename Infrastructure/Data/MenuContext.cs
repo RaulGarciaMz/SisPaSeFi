@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Vistas;
 using Microsoft.EntityFrameworkCore;
 
 namespace SqlServerAdapter.Data
@@ -12,5 +13,7 @@ namespace SqlServerAdapter.Data
         }
 
         public DbSet<Menu> Menus { get; set; }
+        public DbSet<MenuVista> MenusVista { get; set; }
+        
     }
 }

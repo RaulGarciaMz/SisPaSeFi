@@ -17,7 +17,7 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task<List<MenuDto>> ObtenerMenuPorOpcionAsync(string opcion, int padre, string usuario)
+        public async Task<List<MenuDto>> ObtenerMenuPorOpcionAsync(string opcion, string criterio, string usuario)
         {
             var menus = new List<MenuDto>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
@@ -25,10 +25,15 @@ namespace DomainServices.DomServ
             if (user != null)
             {
                 var ms = new List<MenuVista>();
+                var padre = Int32.Parse(criterio);
+
                 switch (opcion)
                 {
                     case "Submenu":
                         ms = await _repo.ObtenerMenuPorCriterioPadreAsync(padre);
+                        break;
+                    case "MenuUsuario":
+                        ms = await _repo.ObtenerMenuPorUsuarioAndCriterioPadreAsync(user.IdUsuario, padre);
                         break;
                 }
 
@@ -75,12 +80,13 @@ namespace DomainServices.DomServ
         {
             return new MenuDto() 
             {
-                intIdMenu = m.IdMenu,
-                intIdPadre = m.Padre,
-                intPosicion = m.Posicion,
-                strDescripcion = m.Descripcion,
-                strDesplegado = m.Desplegado,
-                strLiga = m.Liga
+                intIdMenu = m.idmenu,
+                intIdPadre = m.padre,
+                intPosicion = m.posicion,
+                strDescripcion = m.descripcion,
+                strDesplegado = m.desplegado,
+                strLiga = m.liga,
+                intNavegar = m.navegar
             };
         }
 
