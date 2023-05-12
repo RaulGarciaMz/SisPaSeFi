@@ -167,6 +167,32 @@ namespace SqlServerAdapter
             return s.AceptacionAvisoLegal;
         }
 
+        public async Task ActualizaAvisoLegalDeUsuarioAsync(string usuario)
+        {
+            var s = await _registroContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleAsync();
+
+            s.AceptacionAvisoLegal = 1;
+            s.EstampaTiempoAceptacionUso = DateTime.UtcNow;
+
+            _registroContext.Usuarios.Update(s);
+
+            await _registroContext.SaveChangesAsync();
+        }
+
+        public async Task ActualizaCorreoElectronicoDeUsuarioAsync(string usuario, string correo, int notificar)
+        {
+            var s = await _registroContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleAsync();
+
+            s.CorreoElectronico = correo;
+            s.NotificarAcceso = notificar;
+
+            _registroContext.Usuarios.Update(s);
+
+            await _registroContext.SaveChangesAsync();
+        }
+
+        
+
         public async Task<List<Acceso>> ObtenerAccesosAsync()
         {
             return await _registroContext.Accesos.ToListAsync();

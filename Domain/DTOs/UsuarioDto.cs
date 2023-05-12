@@ -164,6 +164,14 @@
         /// Descripción del estado del usuario
         /// </summary>
         public string strResultado { get; set; }
+        /// <summary>
+        /// Correo electrónico del usuario
+        /// </summary>
+        public string strCorreoElectronico { get; set; }
+        /// <summary>
+        /// Indicador de notificación de acceso del usuario
+        /// </summary>
+        public int intNotificarAccesos { get; set; }
     }
 }
 

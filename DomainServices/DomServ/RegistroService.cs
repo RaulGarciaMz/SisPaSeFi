@@ -102,6 +102,12 @@ namespace DomainServices.DomServ
                 case "VerificarCorreoElectronico":
                     resultado = await VerificarCorreoElectronicoAsync(user.strNombreDeUsuario);
                     break;
+                case "AceptarAvisoLegal":
+                    resultado = await AceptarAvisoLegalAsync(user.strNombreDeUsuario);
+                    break;
+                case "RegistrarCorreoElectronico":
+                    resultado = await RegistrarCorreoElectronicoAsync(user.strNombreDeUsuario, user.strCorreoElectronico, user.intNotificarAccesos);
+                    break;
             }
 
             return resultado;
@@ -185,6 +191,20 @@ namespace DomainServices.DomServ
                 resultado = aviso.ToString();
             }
             return resultado;
+        }
+
+        private async Task<string> AceptarAvisoLegalAsync(string usuario)
+        {
+            await _repo.ActualizaAvisoLegalDeUsuarioAsync(usuario);
+
+            return "Registro realizado.";
+        }
+
+        private async Task<string> RegistrarCorreoElectronicoAsync(string usuario, string correo, int notificar)
+        {
+            await _repo.ActualizaCorreoElectronicoDeUsuarioAsync(usuario, correo, notificar);
+
+            return "Registro realizado.";
         }
 
         private async Task<string> VerificarCorreoElectronicoAsync(string usuario)

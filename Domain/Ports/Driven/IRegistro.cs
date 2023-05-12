@@ -13,6 +13,8 @@ namespace Domain.Ports.Driven
         void AgregaAccesoEnMemoria();
         Task ActualizaUltimoAccesoDeUsuarioEnMemoriaAsync(string usuario);
         Task AgregaSesionDeUsuarioEnMemoriaAsync(string usuario);
+        Task ActualizaAvisoLegalDeUsuarioAsync(string usuario);
+        Task ActualizaCorreoElectronicoDeUsuarioAsync(string usuario, string correo, int notificar);
         Task<bool> SaveChangesAsync();
     }
 

@@ -52,7 +52,7 @@ namespace WebApiSSF.Controllers
         /// Actualiza el registro de usuario y sus tablas asociadas acorde a la opción indicada
         /// </summary>
         /// <param name="u">Usuario a actualizar</param>
-        /// <param name="opcion">Opción de actualización ("RegistrarIntentoFallido", "RegistrarAcceso", "RegistrarEvento", "RegistrarFinSesion", "RevisarAvisoLegal", "VerificarCorreoElectronico")</param>
+        /// <param name="opcion">Opción de actualización ("RegistrarIntentoFallido", "RegistrarAcceso", "RegistrarEvento", "RegistrarFinSesion", "RevisarAvisoLegal", "VerificarCorreoElectronico", "AceptarAvisoLegal", "RegistrarCorreoElectronico")</param>
         /// <returns></returns>
         [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
