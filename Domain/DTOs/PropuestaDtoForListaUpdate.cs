@@ -239,7 +239,7 @@
         /// <summary>
         /// Hora de inicio del patrullaje
         /// </summary>
-        public string strInicio;
+        public string strInicio { get; set; }
         /// <summary>
         /// Identificador del punto de patrullaje responsable
         /// </summary>
