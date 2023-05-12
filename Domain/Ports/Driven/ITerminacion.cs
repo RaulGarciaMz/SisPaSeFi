@@ -5,7 +5,7 @@ namespace Domain.Ports.Driven
 {
     public interface ITerminacionCommand
     {
-        Task ActualizaProgramaAsync(int idPrograma, int idUsuario, TimeSpan termino);
+        Task ActualizaProgramaEnMemoriaAsync(int idPrograma, int idUsuario, TimeSpan termino);
         Task ActualizaTarjetaInformativaEnMemoriaAsync(int idPrograma, int idUsuario, TerminacionPatrullajeDto t);
         Task ActualizaOrAgregaUsosVehiculoEnMemoriaAsync(int idPrograma, int idUsuario, TerminacionPatrullajeDto t);
         Task SaveTransactionAsync();

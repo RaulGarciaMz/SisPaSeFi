@@ -48,7 +48,7 @@ namespace SqlServerAdapter
             return await _terminacionContext.UsosVehiculo.Where(x => x.IdPrograma == idPrograma && x.IdVehiculo == idVehiculo ).ToListAsync();
         }
 
-        public async Task ActualizaProgramaAsync(int idPrograma, int idUsuario, TimeSpan termino)
+        public async Task ActualizaProgramaEnMemoriaAsync(int idPrograma, int idUsuario, TimeSpan termino)
         {
             var prog = await _terminacionContext.ProgramasPatrullaje.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
 
@@ -59,8 +59,6 @@ namespace SqlServerAdapter
                 prog.Termino = termino;
 
                 _terminacionContext.ProgramasPatrullaje.Update(prog);
-
-                await _terminacionContext.SaveChangesAsync();
             }
         }
 
@@ -70,12 +68,16 @@ namespace SqlServerAdapter
             if (tarjeta != null) 
             {
                 tarjeta.IdUsuario = idUsuario;
-                tarjeta.Inicio = new TimeSpan(Int32.Parse(t.HoraInicio), 0, 0);
-                tarjeta.Termino = new TimeSpan(Int32.Parse(t.HoraTermino), 0, 0);
-                var tv = Int32.Parse(t.TiempoVuelo.Replace("N/A", "0"));
-                tarjeta.TiempoVuelo = new TimeSpan(tv, 0, 0);
-                var cc = Int32.Parse(t.CalzoCalzo.Replace("N/A", "0"));
-                tarjeta.CalzoAcalzo = new TimeSpan(cc, 0, 0);
+                var ini = TimeSpan.Parse(t.HoraInicio);
+                var fin = TimeSpan.Parse(t.HoraTermino);
+                tarjeta.Inicio = new TimeSpan(ini.Hours,ini.Minutes, 0);
+                tarjeta.Termino = new TimeSpan(fin.Hours,fin.Minutes, 0);
+                var tv = t.TiempoVuelo.Replace("N/A", "00:00");
+                var tvSpan = TimeSpan.Parse(tv);
+                tarjeta.TiempoVuelo = new TimeSpan(tvSpan.Hours, tvSpan.Minutes, 0);
+                var cc = t.CalzoCalzo.Replace("N/A", "00:00");
+                var ccSpan = TimeSpan.Parse(cc);
+                tarjeta.CalzoAcalzo = new TimeSpan(ccSpan.Hours, ccSpan.Minutes, 0);
                 tarjeta.Observaciones = t.ObservacionesPatrullaje;
                 tarjeta.ComandantesInstalacionSsf = t.ComandanteInstalacion;
                 tarjeta.PersonalMilitarSedenaoficial = t.OficialSDN;
