@@ -47,8 +47,8 @@ namespace SqlServerAdapter
                                  JOIN ssf.municipios b ON a.id_municipio=b.id_municipio
                                  JOIN ssf.estadospais c on b.id_estado=c.id_estado
                                   ,(
-                                  SELECT MAX(TRY_CAST(c.latitud as DECIMAL(10,5)))+0.05 maxLatitud, MIN(TRY_CAST(c.latitud as DECIMAL(10,5)))-0.05 minLatitud, 
-                                         MIN(TRY_CAST(c.longitud as DECIMAL(10,5)))-0.01 minLongitud, MAX(TRY_CAST(c.longitud as DECIMAL(10,5)))+0.01 maxLongitud 
+                                  SELECT MAX(TRY_CAST(c.latitud as DECIMAL(10,5)))+0.15 maxLatitud, MIN(TRY_CAST(c.latitud as DECIMAL(10,5)))-0.15 minLatitud, 
+                                         MIN(TRY_CAST(c.longitud as DECIMAL(10,5)))-0.11 minLongitud, MAX(TRY_CAST(c.longitud as DECIMAL(10,5)))+0.11 maxLongitud 
                                   FROM ssf.rutas a
                                   JOIN ssf.itinerario b ON a.id_ruta=b.id_ruta
                                   JOIN ssf.puntospatrullaje c ON b.id_punto=c.id_punto

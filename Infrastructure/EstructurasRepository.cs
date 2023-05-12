@@ -87,10 +87,10 @@ namespace SqlServerAdapter
                                 JOIN ssf.municipios c ON a.id_municipio = c.id_municipio
                                 JOIN ssf.estadospais d ON c.id_estado = d.id_estado,
                                 (
-                                    SELECT MAX(TRY_CAST(c.latitud as decimal(10,5))) + 0.05 maxLatitud, 
-                                           MIN(TRY_CAST(c.latitud as decimal(10,5))) - 0.05 minLatitud, 
-                                	       MAX(TRY_CAST(c.longitud as decimal(10,5))) - 0.01 minLongitud, 
-                                           MIN(TRY_CAST(c.longitud as decimal(10,5))) + 0.01 maxLongitud
+                                    SELECT MAX(TRY_CAST(c.latitud as decimal(10,5))) + 0.15 maxLatitud, 
+                                           MIN(TRY_CAST(c.latitud as decimal(10,5))) - 0.15 minLatitud, 
+                                	       MAX(TRY_CAST(c.longitud as decimal(10,5))) - 0.11 minLongitud, 
+                                           MIN(TRY_CAST(c.longitud as decimal(10,5))) + 0.11 maxLongitud
                                     FROM ssf.rutas a                                
                                     JOIN ssf.itinerario b ON a.id_ruta = b.id_ruta                                
                                     JOIN ssf.puntospatrullaje c ON b.id_punto = c.id_punto                                
@@ -122,7 +122,7 @@ namespace SqlServerAdapter
                                 JOIN ssf.municipios c ON a.id_municipio = c.id_municipio
                                 JOIN ssf.estadospais d ON c.id_estado = d.id_estado,
                                 (
-                                SELECT @pLatitud+0.05 maxLatitud, @pLongitud-0.05 minLatitud, @pLatitud-0.01 minLongitud, @pLatitud+0.01 maxLongitud 
+                                SELECT @pLatitud+0.15 maxLatitud, @pLongitud-0.15 minLatitud, @pLatitud-0.11 minLongitud, @pLatitud+0.11 maxLongitud 
                                 ) cuadrante
                                 WHERE TRY_CAST(a.latitud AS FLOAT) BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
                                 AND TRY_CAST(a.longitud AS FLOAT) BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud
