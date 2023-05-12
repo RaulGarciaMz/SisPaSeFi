@@ -1,15 +1,4 @@
-﻿using Domain.Entities;
-using Domain.Ports.Driving;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Runtime.Intrinsics.X86;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities.Vistas
 {
@@ -37,6 +26,14 @@ namespace Domain.Entities.Vistas
         public int id_usuarioresponsablepatrullaje{ get; set; }
         public DateTime fechatermino{ get; set; }
         public int? id_apoyopatrullaje { get; set; }
+    }
+
+    [Keyless]
+    public class ProgramaRegionVista
+    {
+        public int id_programa { get; set; }
+        public int riesgopatrullaje { get; set; }
+        public string regionSSF { get; set; }
     }
 }
 
