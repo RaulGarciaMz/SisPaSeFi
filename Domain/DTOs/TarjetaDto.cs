@@ -161,4 +161,5 @@ namespace Domain.DTOs
         public int intIdInstalacionResponsable { get; set; }
         
     }
+
 }

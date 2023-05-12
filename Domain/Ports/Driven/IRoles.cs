@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Domain.Ports.Driven.Repositories
+namespace Domain.Ports.Driven
 {
     public interface IRolesCommand
     {
