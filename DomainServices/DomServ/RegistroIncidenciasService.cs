@@ -1,21 +1,22 @@
 ﻿using Domain.DTOs;
 using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
+using Domain.Ports.Driving;
 
 namespace DomainServices.DomServ
 {
-    public class RegistroIncidenciasService
+    public class RegistroIncidenciasService : IRegistroIncidenciaService
     {
-        private readonly IRegistroIncidenteRepo _repo;
+        private readonly IRegistroIncidenciaRepo _repo;
         private readonly IUsuariosParaValidacionQuery _user;
 
-        public RegistroIncidenciasService(IRegistroIncidenteRepo repo, IUsuariosParaValidacionQuery u)
+        public RegistroIncidenciasService(IRegistroIncidenciaRepo repo, IUsuariosParaValidacionQuery u)
         {
             _repo = repo;
             _user = u;
         }
 
-        public async Task AgregaIncidencia(RegistrarIncidenciaDto i)
+        public async Task AgregaIncidenciaTransaccionalAsync(RegistrarIncidenciaDto i)
         {
             
             var user = await _user.ObtenerUsuarioPorUsuarioNomAsync(i.usuario);

@@ -8,7 +8,7 @@ using SqlServerAdapter.Data;
 
 namespace SqlServerAdapter
 {
-    public class RegistrarIncidenciaRepository : IRegistroIncidenteRepo
+    public class RegistrarIncidenciaRepository : IRegistroIncidenciaRepo
     {
         protected readonly RegistrarIncidenciaContext _regIncidenciaContext;
 
