@@ -24,10 +24,11 @@ namespace SqlServerAdapter
         public async Task<List<ComandanciaRegional>> ObtenerComandanciaPorIdUsuarioAsync(int idUsuario)
         {
             return await (from c in _catalogosConsultaContext.Comandancias
-                          join u in _catalogosConsultaContext.Usuarios on c.IdUsuario equals u.IdUsuario
+                          join u in _catalogosConsultaContext.UsuariosComandancia on c.IdComandancia equals u.IdComandancia
                           where u.IdUsuario == idUsuario && c.IdPunto > 0
                           select c).ToListAsync();
         }
+
 
         public async Task<List<ComandanciaRegional>> ObtenerComandanciasAsync()
         {
