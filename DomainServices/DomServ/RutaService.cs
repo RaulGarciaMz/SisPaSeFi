@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.DTOs;
+﻿using Domain.DTOs;
 using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Enums;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
 using Microsoft.VisualBasic;
-using static System.Net.Mime.MediaTypeNames;
 
 
 namespace DomainServices.DomServ
@@ -314,7 +308,7 @@ namespace DomainServices.DomServ
 
             return clave + 
                    "-" +
-                   ConvierteARomano(regionMilitar) +
+                   ConvierteCadenaNumericaARomano(regionMilitar) +
                    "-" + zonaMilitar +
                    "-" + totalRutas +
                    "/" + totalRutas;
@@ -327,7 +321,7 @@ namespace DomainServices.DomServ
         {
             var clave = await GeneraPrefijoClave(pp.intIdTipoPatrullaje, totalRutas);
 
-            var strClave = clave + "-" + ConvierteARomano(pp.intRegionMilitarSDN) + "-" + pp.intZonaMilitarSDN;
+            var strClave = clave + "-" + ConvierteCadenaNumericaARomano(pp.intRegionMilitarSDN) + "-" + pp.intZonaMilitarSDN;
             if ((Strings.Left(pp.strClave, strClave.Length) ?? "") == (strClave ?? ""))
             {
                 strClave = pp.strClave;
@@ -376,7 +370,7 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>ConvierteARomano</c> Convierte una cadena numérica a una cadena que representa un número romano
         /// </summary>
-        string ConvierteARomano(string num) {
+        string ConvierteCadenaNumericaARomano(string num) {
 
             var toRoman = new Dictionary<string, string>() {
                 { "1","I"},

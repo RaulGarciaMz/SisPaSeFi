@@ -20,7 +20,7 @@
 
     public class EvidenciaIncidenciaMovilDto
     {
-        public int strNombreArchivo { get; set; }
+        public string strNombreArchivo { get; set; }
         public string strDescripcion { get; set; }
     }
 
