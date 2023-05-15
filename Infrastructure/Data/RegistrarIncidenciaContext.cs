@@ -14,6 +14,7 @@ namespace SqlServerAdapter.Data
 
         public DbSet<AfectacionIncidencia> AfectacionesIncidencia { get; set; }
         public DbSet<EvidenciaIncidencia> EvidenciasIncidencia { get; set; }
+        public DbSet<EvidenciaIncidenciaPunto> EvidenciasIncidenciaInstalacion { get; set; }
 
         public DbSet<ReportePunto> ReportesInstalacion { get; set; }
         public DbSet<ReporteEstructura> ReportesEstructuras { get; set; }

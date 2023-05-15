@@ -17,7 +17,85 @@ namespace SqlServerAdapter
             _regIncidenciaContext = regIncidenciaContext ?? throw new ArgumentNullException(nameof(regIncidenciaContext));
         }
 
-        public async Task<ProgramaRegionVista> ObtenerProgramaAndRegionAsync(int idRuta, DateTime fecha)
+        public async Task AgregaIncidenciaTransaccionalAsync(RegistrarIncidenciaDto i, int idUsuario)
+        {
+            int idReporte = -1;
+            var fechaPatrullaje = DateTime.Parse(i.FechaPatrullaje);
+            var programa = await ObtenerProgramaAndRegionPorRutaAndFechaAsync(i.IdRuta, fechaPatrullaje);
+
+            if (programa != null)
+            {
+                var idTarjeta = await ObtenerIdTarjetaInformativaPorProgramaAsync(programa.id_programa);
+
+
+                using (var transaction = _regIncidenciaContext.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        switch (i.TipoIncidencia)
+                        {
+                            case "ESTRUCTURA":
+                                if (i.IdActivo == 999999)
+                                {
+                                    AgregaReporteEstructurasEnMemoria(idTarjeta, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
+                                }
+                                else
+                                {
+                                    var rptes = await ObtenerReporteEstructuraPorEstructuraAndClasificacionAsync(i.IdActivo, i.IdClasificacion);
+                                    if (rptes.Count > 0)
+                                    {
+                                        await ActualizaReporteEstructurasEnMemoriaAsync(i.IdActivo, i.IdClasificacion, i.IdPrioridad, i.DescripcionIncidencia);
+                                    }
+                                    else
+                                    {
+                                        AgregaReporteEstructurasEnMemoria(idTarjeta, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
+                                    }
+                                }
+
+                                await _regIncidenciaContext.SaveChangesAsync();
+
+                                var nvosRptesE = await ObtenerReporteEstructuraPorEstructuraAndClasificacionAsync(i.IdActivo, i.IdClasificacion);
+                                idReporte = nvosRptesE[0].IdReporte;
+
+                                break;
+
+                            default: // Reportar por instalación
+                                var ri = await ObtenerReporteInstalacionPorPuntoAndClasificacionAsync(i.IdActivo, i.IdClasificacion);
+                                if (ri != null && ri.Count > 0)
+                                {
+                                    await ActualizaReporteInstalacionEnMemoriaAsync(i.IdActivo, i.IdClasificacion, i.IdPrioridad, i.DescripcionIncidencia);
+                                }
+                                else
+                                {
+                                    AgregaReporteInstalacionEnMemoria(idTarjeta, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
+                                }
+
+                                await _regIncidenciaContext.SaveChangesAsync();
+
+                                var nvosRptesI = await ObtenerReporteInstalacionPorPuntoAndClasificacionAsync(i.IdActivo, i.IdClasificacion);
+                                idReporte = nvosRptesI[0].IdReportePunto;
+
+                                break;
+                        }
+
+                        if (idReporte > -1)
+                        {
+                            AgregaListaDeEvidenciasEnMemoriaConCopiaDeArchivoAsync(idReporte, programa.regionSSF, i.TipoIncidencia, i.listaEvidencia);
+                            AgregaListaDeAfectacionesIncidenciaEnMemoriaAsync(idReporte, i.TipoIncidencia, i.listaAfectaciones);
+                        }
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
+        private async Task<ProgramaRegionVista?> ObtenerProgramaAndRegionPorRutaAndFechaAsync(int idRuta, DateTime fecha)
         {
             string sqlQuery = @"SELECT a.id_programa, a.riesgopatrullaje, b.regionSSF
                                 FROM ssf.programapatrullajes a
@@ -32,39 +110,30 @@ namespace SqlServerAdapter
                 new SqlParameter("@pFecha", fecha)
              };
 
-            return await _regIncidenciaContext.ProgramasRegionesVista.FromSqlRaw(sqlQuery, parametros).FirstAsync();
+            return await _regIncidenciaContext.ProgramasRegionesVista.FromSqlRaw(sqlQuery, parametros).FirstOrDefaultAsync();
         }
 
-        public async Task<int> ObtenerIdTarjetaInformativaPorProgramaAsync(int idPrograma)
+        private async Task<int> ObtenerIdTarjetaInformativaPorProgramaAsync(int idPrograma)
         {
             var t = await _regIncidenciaContext.TarjetasInformativas.Where(x => x.IdPrograma == idPrograma).FirstAsync();
             return t.IdNota;
         }
 
-        public async Task<int> ObtenerNumeroDeReportesEstructurasConcluidosPorIdAndClasificacionAsync(int idEstructura, int idClasificacion)
-        {
-            string sqlQuery = @"SELECT * FROM reporteestructuras
-                                WHERE id_estructura = @pIdEstructura
-                                AND id_clasificacionincidencia = @pIdClasificacion
-                                AND estadoincidencia<(SELECT id_estadoincidencia FROM estadosincidencias WHERE descripcionestado = 'concluido')";
-
-            object[] parametros = new object[]
-            {
-                new SqlParameter("@pIdEstructura", idEstructura),
-                new SqlParameter("@pIdClasificacion", idClasificacion)
-             };
-
-            return await _regIncidenciaContext.ReportesEstructuras.FromSqlRaw(sqlQuery, parametros).CountAsync();
-        }
-
-        public async Task<ReportePunto> ObtenerReporteInstalacionPorPuntoAndClasificacionAsync(int idPunto, int idClasificacion)
+        private async Task<List<ReportePunto>> ObtenerReporteInstalacionPorPuntoAndClasificacionAsync(int idPunto, int idClasificacion)
         {
             var edo = await _regIncidenciaContext.EstadosIncidencia.Where(x => x.DescripcionEstado == "concluido").FirstAsync();
 
-            return await _regIncidenciaContext.ReportesInstalacion.Where(x => x.IdPunto == idPunto && x.IdClasificacionIncidencia == idClasificacion && x.EstadoIncidencia == edo.IdEstadoIncidencia).SingleAsync();
+            return await _regIncidenciaContext.ReportesInstalacion.Where(x => x.IdPunto == idPunto && x.IdClasificacionIncidencia == idClasificacion && x.EstadoIncidencia == edo.IdEstadoIncidencia).ToListAsync();
         }
 
-        public void AgregaReporteEstructurasEnMemoriaAsync(int idNota, int idEstructura, string descripcion, int prioridad, int idClasificacion)
+        private async Task<List<ReporteEstructura>> ObtenerReporteEstructuraPorEstructuraAndClasificacionAsync(int idEstructura, int idClasificacion)
+        {
+            var edo = await _regIncidenciaContext.EstadosIncidencia.Where(x => x.DescripcionEstado == "concluido").FirstAsync();
+
+            return await _regIncidenciaContext.ReportesEstructuras.Where(x => x.IdEstructura == idEstructura && x.IdClasificacionIncidencia == idClasificacion && x.EstadoIncidencia == edo.IdEstadoIncidencia).ToListAsync();
+        }
+
+        private void AgregaReporteEstructurasEnMemoria(int idNota, int idEstructura, string descripcion, int prioridad, int idClasificacion)
         {
             var r = new ReporteEstructura()
             {
@@ -80,7 +149,7 @@ namespace SqlServerAdapter
             _regIncidenciaContext.ReportesEstructuras.Add(r);
         }
 
-        public async void ActualizaReporteEstructurasEnMemoriaAsync(int idEstructura, int idClasificacion, int prioridad, string descripcion)
+        private async Task ActualizaReporteEstructurasEnMemoriaAsync(int idEstructura, int idClasificacion, int prioridad, string descripcion)
         {
             var edoIncidencia = await _regIncidenciaContext.EstadosIncidencia.Where(x => x.DescripcionEstado == "concluido").SingleAsync();
 
@@ -97,7 +166,7 @@ namespace SqlServerAdapter
             _regIncidenciaContext.ReportesEstructuras.Update(r);
         }
 
-        public async void ActualizaReporteInstalacionEnMemoriaAsync(int idActivo, int idClasificacion, int prioridad, string descripcion)
+        private async Task ActualizaReporteInstalacionEnMemoriaAsync(int idActivo, int idClasificacion, int prioridad, string descripcion)
         {
             var edoIncidencia = await _regIncidenciaContext.EstadosIncidencia.Where(x => x.DescripcionEstado == "concluido").SingleAsync();
 
@@ -114,7 +183,7 @@ namespace SqlServerAdapter
             _regIncidenciaContext.ReportesInstalacion.Update(r);
         }
 
-        public void AgregaReporteInstalacionEnMemoriaAsync(int idNota, int idActivo, string descripcion, int prioridad, int idClasificacion)
+        private void AgregaReporteInstalacionEnMemoria(int idNota, int idActivo, string descripcion, int prioridad, int idClasificacion)
         {
             var r = new ReportePunto()
             {
@@ -130,20 +199,7 @@ namespace SqlServerAdapter
             _regIncidenciaContext.ReportesInstalacion.Add(r);
         }
 
-        public void AgregaEvidenciaIncidenciaEnMemoriaAsync(int idReporte, string ruta, string nombreArchivo, string descripcion)
-        {
-            var r = new EvidenciaIncidencia()
-            {
-                IdReporte = idReporte,
-                RutaArchivo = ruta,
-                NombreArchivo = nombreArchivo,
-                Descripcion = descripcion
-            };
-
-            _regIncidenciaContext.EvidenciasIncidencia.Add(r);
-        }
-
-        public async void AgregaListaDeAfectacionesIncidenciaEnMemoriaAsync(int idReporte, string tipoIncidencia, List<AfectacionIncidenciaMovilDto> afectaciones)
+        private async void AgregaListaDeAfectacionesIncidenciaEnMemoriaAsync(int idReporte, string tipoIncidencia, List<AfectacionIncidenciaMovilDto> afectaciones)
         {
             var lstAfectaciones = new List<AfectacionIncidencia>();
 
@@ -166,9 +222,80 @@ namespace SqlServerAdapter
             _regIncidenciaContext.AfectacionesIncidencia.AddRange(lstAfectaciones);
         }
 
-        public async Task SaveTransactionAsync()
+        private void AgregaListaDeEvidenciasEnMemoriaConCopiaDeArchivoAsync(int idReporte,string region, string tipoIncidencia, List<EvidenciaIncidenciaMovilDto> evidencias)
         {
-            await _regIncidenciaContext.SaveChangesAsync();
+            var rom = ConvierteCadenaNumericaARomano(region);
+            var now = DateTime.Now;
+            var cadWebPath = rom + "/" + now.Year.ToString() + "/" + now.Month.ToString("D2") + "/" + now.Day.ToString("D2") + "/";
+            var cadPath = cadWebPath.Replace("/", "\\");
+            var wepageUbicacion = "~/Principal/ImagenesCargadas/Incidencias/" + cadWebPath;
+            var filesystemUbicacion = "C:\\inetpub\\wwwroot\\SSF\\Principal\\ImagenesCargadas\\Incidencias\\" + cadPath;
+
+            foreach (var item in evidencias)
+            {
+                var nombreArchivo = Path.GetFileName(item.strNombreArchivo);
+
+                switch (tipoIncidencia)
+                {
+                    case "ESTRUCTURA":
+                        var eie = new EvidenciaIncidencia()
+                        {
+                            IdReporte = idReporte,
+                            RutaArchivo = wepageUbicacion,
+                            NombreArchivo = nombreArchivo,
+                            Descripcion = item.strDescripcion,
+                        };
+                        _regIncidenciaContext.EvidenciasIncidencia.Add(eie);
+                        break;
+                    default:
+                        var eii = new EvidenciaIncidenciaPunto()
+                        {
+                            IdReportePunto = idReporte,
+                            RutaArchivo = wepageUbicacion,
+                            NombreArchivo = nombreArchivo,
+                            Descripcion = item.strDescripcion,
+                        };
+                        _regIncidenciaContext.EvidenciasIncidenciaInstalacion.Add(eii);
+                        break;
+                }
+
+                var pthOrigen = "c:\\inetpub\\ftproot\\Seguridad\\" + nombreArchivo;
+                var pthDestino = filesystemUbicacion + nombreArchivo;
+                if (!Directory.Exists(filesystemUbicacion))
+                {
+                    Directory.CreateDirectory(filesystemUbicacion);
+                }
+                File.Copy(pthOrigen, pthDestino);
+            }
+        }
+
+        private string ConvierteCadenaNumericaARomano(string num)
+        {
+
+            var toRoman = new Dictionary<string, string>() {
+                { "1","I"},
+                { "2","II"},
+                { "3","III"},
+                { "4","IV"},
+                { "5","V"},
+                { "6","VI"},
+                { "7","VII"},
+                { "8","VIII"},
+                { "9","IX"},
+                { "10","X"},
+                { "11","XI"},
+                { "12","XII"},
+                { "13","XIII"},
+                { "14","XIV"},
+                { "15","XV"},
+                { "16","XVI"},
+                { "17","XVII"},
+                { "18","XVIII"},
+                { "19","XIX"},
+                { "20","XX"},
+            };
+
+            return toRoman[num];
         }
     }
 }
