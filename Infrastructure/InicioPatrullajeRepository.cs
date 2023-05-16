@@ -108,7 +108,8 @@ namespace SqlServerAdapter
                 RiesgoPatrullaje = 1,
                 IdRutaOriginal = idRutaOriginal,
                 FechaPatrullaje = fechaPatrullaje,
-                UltimaActualizacion = DateTime.UtcNow
+                UltimaActualizacion = DateTime.UtcNow,
+                IdApoyoPatrullaje = 1
             };
 
             _inicioPatrullajeContext.ProgramasPatrullaje.Add(p);
