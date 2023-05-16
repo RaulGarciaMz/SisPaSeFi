@@ -18,6 +18,41 @@ namespace SqlServerAdapter
             _inicioPatrullajeContext = inicioContext ?? throw new ArgumentNullException(nameof(inicioContext));
         }
 
+        public async Task AgregaInicioPatrullajeTransaccionalAsync(InicioPatrullajeDto a, int idUsuario, List<InicioPatrullajeProgramaVista> programas)
+        {
+            using (var transaction = _inicioPatrullajeContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    switch (programas.Count)
+                    {
+                        case 0:
+                            await CreaProgramaPatrullajeEnMemoriaAsync(a, idUsuario);
+                            break;
+                        case > 0:
+                            await ActualizaProgramaPatrullajeConTarjetaInformativaEnMemoriaAsync(programas[0].id_programa, programas[0].riesgopatrullaje, idUsuario, a);
+                            break;
+                    }
+
+                    await _inicioPatrullajeContext.SaveChangesAsync();
+
+                    if (a.objInicioPatrullajeVehiculo != null && a.objInicioPatrullajeVehiculo.Count > 0)
+                    {
+                        programas = await ObtenerProgramaPorRutaAndFechaAsync(a.IdRuta, a.FechaPatrullaje);
+                        await CreaOrActualizaUsosVehiculoEnMemoria(a.objInicioPatrullajeVehiculo, programas[0].id_programa, idUsuario);
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+
+
         public async Task<List<InicioPatrullajeProgramaVista>> ObtenerProgramaPorRutaAndFechaAsync(int idRuta, string fecha)
         {
             string sqlQuery = @"SELECT a.id_programa, a.riesgopatrullaje, b.regionSSF 
@@ -36,7 +71,7 @@ namespace SqlServerAdapter
             return await _inicioPatrullajeContext.IniciosPatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
-        public async Task<List<InicioPatrullajePuntosVista>> ObtenerPuntosEnRutaDelItinerarioAsync(int idRuta)
+        private async Task<List<InicioPatrullajePuntosVista>> ObtenerPuntosEnRutaDelItinerarioAsync(int idRuta)
         {
             string sqlQuery = @"SELECT b.id_punto, b.ubicacion, b.coordenadas, b.id_municipio, b.id_nivelriesgo
                                 FROM ssf.itinerario a
@@ -52,17 +87,17 @@ namespace SqlServerAdapter
             return await _inicioPatrullajeContext.IniciosPatrullajePuntosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
-        public async Task<List<TarjetaInformativa>> ObtenerTarjetaInformativaPorProgramaAsync(int idPrograma)
+        private async Task<List<TarjetaInformativa>> ObtenerTarjetaInformativaPorProgramaAsync(int idPrograma)
         {
             return await _inicioPatrullajeContext.TarjetasInformativas.Where(x => x.IdPrograma == idPrograma).ToListAsync();
         }
 
-        public async Task<List<int>> ObtenerUsoVehiculoPorProgramaAndIdVehiculoAsync(int idPrograma, int idVehiculo)
+        private async Task<List<int>> ObtenerUsoVehiculoPorProgramaAndIdVehiculoAsync(int idPrograma, int idVehiculo)
         {
             return await _inicioPatrullajeContext.UsosVehiculos.Where(x => x.IdPrograma == idPrograma && x.IdVehiculo == idVehiculo).Select(x => x.IdUsoVehiculo).ToListAsync();
         }
 
-        public void AgregaProgramaPatrullajeEnMemoria(int idRuta, DateTime fechaPatrullaje, int idUsuario, int idPuntoResponsable, int idRutaOriginal)
+        private void AgregaProgramaPatrullajeEnMemoria(int idRuta, DateTime fechaPatrullaje, int idUsuario, int idPuntoResponsable, int idRutaOriginal)
         {
             var p = new ProgramaPatrullaje() 
             {
@@ -79,7 +114,7 @@ namespace SqlServerAdapter
             _inicioPatrullajeContext.ProgramasPatrullaje.Add(p);
         }
 
-        public void ActualizaProgramaPatrullajeEnMemoria(int idPrograma, TimeSpan inicio, int idUsuario, int riesgo)
+        private void ActualizaProgramaPatrullajeEnMemoria(int idPrograma, TimeSpan inicio, int idUsuario, int riesgo)
         {
             var p = _inicioPatrullajeContext.ProgramasPatrullaje.Where(x => x.IdPrograma == idPrograma).SingleOrDefault();
 
@@ -95,7 +130,7 @@ namespace SqlServerAdapter
             }
         }
 
-        public void AgregaTarjetaInformativaEnMemoria(int idPrograma, int idUsuario, TimeSpan inicio, int comandantesInstalacionSsf, int sedenaOficial, DateTime fechaPatrullaje, int tropaSdn, int linieros, int comandantesTurnos, int oficialSsf, DateTime fechaTermino)
+        private void AgregaTarjetaInformativaEnMemoria(int idPrograma, int idUsuario, TimeSpan inicio, int comandantesInstalacionSsf, int sedenaOficial, DateTime fechaPatrullaje, int tropaSdn, int linieros, int comandantesTurnos, int oficialSsf, DateTime fechaTermino)
         {
             var timeSpanDefault = new TimeSpan(0, 0, 0);
 
@@ -125,7 +160,7 @@ namespace SqlServerAdapter
             _inicioPatrullajeContext.TarjetasInformativas.Add(p);
         }
 
-        public async Task ActualizaTarjetaInformativaEnMemoria(int idPrograma, int idUsuario, TimeSpan inicio, int comandantesInstalacionSsf, int sedenaOficial, DateTime fechaPatrullaje, int tropaSdn, int linieros, int comandantesTurnos, int oficialSsf, DateTime fechaTermino)
+        private async Task ActualizaTarjetaInformativaEnMemoria(int idPrograma, int idUsuario, TimeSpan inicio, int comandantesInstalacionSsf, int sedenaOficial, DateTime fechaPatrullaje, int tropaSdn, int linieros, int comandantesTurnos, int oficialSsf, DateTime fechaTermino)
         {
             var p = await _inicioPatrullajeContext.TarjetasInformativas.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
 
@@ -145,7 +180,7 @@ namespace SqlServerAdapter
             }
         }
 
-        public async Task CreaOrActualizaUsosVehiculoEnMemoria(List<InicioPatrullajeVehiculoDto> usosVehiculo, int idPrograma, int idUsuario)
+        private async Task CreaOrActualizaUsosVehiculoEnMemoria(List<InicioPatrullajeVehiculoDto> usosVehiculo, int idPrograma, int idUsuario)
         {
             foreach (var v in usosVehiculo)
             {
@@ -189,132 +224,165 @@ namespace SqlServerAdapter
 
 
         }
-        public async Task SaveTransactionAsync()
+
+        private async Task CreaProgramaPatrullajeEnMemoriaAsync(InicioPatrullajeDto a, int idUsuario)
         {
-            await _inicioPatrullajeContext.SaveChangesAsync();
+            var p = await ObtenerPuntosEnRutaDelItinerarioAsync(a.IdRuta);
+
+            if (p != null && p.Count > 0)
+            {
+                var fecha = DateTime.Parse(a.FechaPatrullaje);
+                AgregaProgramaPatrullajeEnMemoria(a.IdRuta, fecha, idUsuario, p[0].id_punto, a.IdRuta);
+            }
         }
 
-
-    /*    public async Task ActualizaProgramaPatrullajeAsync(int idPrograma, TimeSpan inicio, int idUsuario, int riesgo)
+        private async Task ActualizaProgramaPatrullajeConTarjetaInformativaEnMemoriaAsync(int idPrograma, int riesgo, int idUsuario, InicioPatrullajeDto a)
         {
-            var p = await _inicioPatrullajeContext.ProgramasPatrullaje.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
+            var horaInicio = new TimeSpan(int.Parse(a.HoraInicio), 0, 0);
 
-            if (p != null)
+            ActualizaProgramaPatrullajeEnMemoria(idPrograma, horaInicio, idUsuario, riesgo);
+
+            var tarjeta = await ObtenerTarjetaInformativaPorProgramaAsync(idPrograma);
+
+            if (tarjeta != null)
             {
-                p.UltimaActualizacion = DateTime.UtcNow;
-                p.Inicio = inicio;
-                p.IdEstadoPatrullaje = 2;
-                p.IdUsuario = idUsuario;
-                p.RiesgoPatrullaje = riesgo;
+                var fecha = DateTime.Parse(a.FechaPatrullaje);
 
-                _inicioPatrullajeContext.ProgramasPatrullaje.Update(p);
+                switch (tarjeta.Count)
+                {
+                    case 0:
+                        var horaNvaTarjeta = TimeSpan.Parse(a.HoraInicio);
+                        AgregaTarjetaInformativaEnMemoria(idPrograma, idUsuario, horaNvaTarjeta, a.ComandanteInstalacion, a.OficialSDN, fecha, a.TropaSDN, a.Conductores, a.ComandanteTurno, a.OficialSSF, fecha);
+                        break;
+                    case > 0:
+                        var horaActInicio = new TimeSpan(int.Parse(a.HoraInicio), 0, 0);
+                        ActualizaTarjetaInformativaEnMemoria(idPrograma, idUsuario, horaActInicio, a.ComandanteInstalacion, a.OficialSDN, fecha, a.TropaSDN, a.Conductores, a.ComandanteTurno, a.OficialSSF, fecha);
+                        break;
+                }
+            }
+
+        }
+
+        /*    public async Task ActualizaProgramaPatrullajeAsync(int idPrograma, TimeSpan inicio, int idUsuario, int riesgo)
+            {
+                var p = await _inicioPatrullajeContext.ProgramasPatrullaje.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
+
+                if (p != null)
+                {
+                    p.UltimaActualizacion = DateTime.UtcNow;
+                    p.Inicio = inicio;
+                    p.IdEstadoPatrullaje = 2;
+                    p.IdUsuario = idUsuario;
+                    p.RiesgoPatrullaje = riesgo;
+
+                    _inicioPatrullajeContext.ProgramasPatrullaje.Update(p);
+                    await _inicioPatrullajeContext.SaveChangesAsync();
+                }
+            }
+
+            public async Task ActualizaProgramaPatrullajeEnMemoria(InicioPatrullajeDto ip, int idPrograma, int idUsuario, int riesgo)
+            {
+                var p = await _inicioPatrullajeContext.ProgramasPatrullaje.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
+
+                var inicio = new TimeSpan(int.Parse(ip.HoraInicio), 0, 0);
+
+                if (p != null)
+                {
+                    p.UltimaActualizacion = DateTime.UtcNow;
+                    p.Inicio = inicio;
+                    p.IdEstadoPatrullaje = 2;
+                    p.IdUsuario = idUsuario;
+                    p.RiesgoPatrullaje = riesgo;
+
+                    _inicioPatrullajeContext.ProgramasPatrullaje.Update(p);
+                }
+            }
+
+            public async Task AgregaTarjetaInformativaAsync(int idPrograma, int idUsuario, TimeSpan inicio, int comandantesInstalacionSsf, int sedenaOficial, DateTime fechaPatrullaje, int tropaSdn, int linieros, int comandantesTurnos, int oficialSsf, DateTime fechaTermino)
+            {
+                var timeSpanDefault = TimeSpan.Parse("00:00:00");
+
+                var p = new TarjetaInformativa()
+                {
+                    IdPrograma = idPrograma,
+                    IdUsuario = idUsuario,
+                    Inicio = inicio,
+                    Termino = timeSpanDefault,
+                    TiempoVuelo = timeSpanDefault,
+                    CalzoAcalzo = timeSpanDefault,
+                    UltimaActualizacion = DateTime.UtcNow,
+                    Observaciones = "",
+                    ComandantesInstalacionSsf = comandantesInstalacionSsf,
+                    PersonalMilitarSedenaoficial = sedenaOficial,
+                    KmRecorrido = 0,
+                    FechaPatrullaje = fechaPatrullaje,
+                    PersonalMilitarSedenatropa = tropaSdn,
+                    Linieros = linieros,
+                    ComandantesTurnoSsf = comandantesTurnos,
+                    OficialesSsf = oficialSsf,
+                    PersonalNavalSemaroficial = 0,
+                    PersonalNavalSemartropa = 0,
+                    FechaTermino = fechaTermino
+                };
+
+                _inicioPatrullajeContext.TarjetasInformativas.Add(p);
+
                 await _inicioPatrullajeContext.SaveChangesAsync();
             }
-        }
 
-        public async Task ActualizaProgramaPatrullajeEnMemoria(InicioPatrullajeDto ip, int idPrograma, int idUsuario, int riesgo)
-        {
-            var p = await _inicioPatrullajeContext.ProgramasPatrullaje.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
-
-            var inicio = new TimeSpan(int.Parse(ip.HoraInicio), 0, 0);
-
-            if (p != null)
+            public async Task ActualizaTarjetaInformativaAsync(int idPrograma, int idUsuario, TimeSpan inicio, int comandantesInstalacionSsf, int sedenaOficial, DateTime fechaPatrullaje, int tropaSdn, int linieros, int comandantesTurnos, int oficialSsf, DateTime fechaTermino)
             {
-                p.UltimaActualizacion = DateTime.UtcNow;
-                p.Inicio = inicio;
-                p.IdEstadoPatrullaje = 2;
-                p.IdUsuario = idUsuario;
-                p.RiesgoPatrullaje = riesgo;
+                var p = await _inicioPatrullajeContext.TarjetasInformativas.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
 
-                _inicioPatrullajeContext.ProgramasPatrullaje.Update(p);
+                if (p != null)
+                {
+                    p.UltimaActualizacion = DateTime.UtcNow;
+                    p.IdUsuario = idUsuario;
+                    p.ComandantesInstalacionSsf = comandantesInstalacionSsf;
+                    p.PersonalMilitarSedenaoficial = sedenaOficial;
+                    p.PersonalMilitarSedenatropa = tropaSdn;
+                    p.Linieros = linieros;
+                    p.ComandantesTurnoSsf = comandantesTurnos;
+                    p.OficialesSsf = oficialSsf;
+                    p.Inicio = inicio;
+
+                    _inicioPatrullajeContext.TarjetasInformativas.Update(p);
+                    await _inicioPatrullajeContext.SaveChangesAsync();
+                }
             }
-        }
 
-        public async Task AgregaTarjetaInformativaAsync(int idPrograma, int idUsuario, TimeSpan inicio, int comandantesInstalacionSsf, int sedenaOficial, DateTime fechaPatrullaje, int tropaSdn, int linieros, int comandantesTurnos, int oficialSsf, DateTime fechaTermino)
-        {
-            var timeSpanDefault = TimeSpan.Parse("00:00:00");
-
-            var p = new TarjetaInformativa()
+            public async Task AgregaUsoVehiculoAsync(int idPrograma, int idVehiculo, int kminicio, int idUsuarioVehiculo, string estadoVehiculo)
             {
-                IdPrograma = idPrograma,
-                IdUsuario = idUsuario,
-                Inicio = inicio,
-                Termino = timeSpanDefault,
-                TiempoVuelo = timeSpanDefault,
-                CalzoAcalzo = timeSpanDefault,
-                UltimaActualizacion = DateTime.UtcNow,
-                Observaciones = "",
-                ComandantesInstalacionSsf = comandantesInstalacionSsf,
-                PersonalMilitarSedenaoficial = sedenaOficial,
-                KmRecorrido = 0,
-                FechaPatrullaje = fechaPatrullaje,
-                PersonalMilitarSedenatropa = tropaSdn,
-                Linieros = linieros,
-                ComandantesTurnoSsf = comandantesTurnos,
-                OficialesSsf = oficialSsf,
-                PersonalNavalSemaroficial = 0,
-                PersonalNavalSemartropa = 0,
-                FechaTermino = fechaTermino
-            };
+                var p = new UsoVehiculo()
+                {
+                    IdPrograma = idPrograma,
+                    IdVehiculo = idVehiculo,
+                    KmInicio = kminicio,
+                    IdUsuarioVehiculo = idUsuarioVehiculo,
+                    EstadoVehiculo = estadoVehiculo
+                };
 
-            _inicioPatrullajeContext.TarjetasInformativas.Add(p);
+                _inicioPatrullajeContext.UsosVehiculos.Add(p);
 
-            await _inicioPatrullajeContext.SaveChangesAsync();
-        }
-
-        public async Task ActualizaTarjetaInformativaAsync(int idPrograma, int idUsuario, TimeSpan inicio, int comandantesInstalacionSsf, int sedenaOficial, DateTime fechaPatrullaje, int tropaSdn, int linieros, int comandantesTurnos, int oficialSsf, DateTime fechaTermino)
-        {
-            var p = await _inicioPatrullajeContext.TarjetasInformativas.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
-
-            if (p != null)
-            {
-                p.UltimaActualizacion = DateTime.UtcNow;
-                p.IdUsuario = idUsuario;
-                p.ComandantesInstalacionSsf = comandantesInstalacionSsf;
-                p.PersonalMilitarSedenaoficial = sedenaOficial;
-                p.PersonalMilitarSedenatropa = tropaSdn;
-                p.Linieros = linieros;
-                p.ComandantesTurnoSsf = comandantesTurnos;
-                p.OficialesSsf = oficialSsf;
-                p.Inicio = inicio;
-
-                _inicioPatrullajeContext.TarjetasInformativas.Update(p);
                 await _inicioPatrullajeContext.SaveChangesAsync();
             }
-        }
 
-        public async Task AgregaUsoVehiculoAsync(int idPrograma, int idVehiculo, int kminicio, int idUsuarioVehiculo, string estadoVehiculo)
-        {
-            var p = new UsoVehiculo()
+            public async Task ActualizaUsoVehiculoAsync(int idPrograma, int idVehiculo, int kminicio, int idUsuarioVehiculo, string estadoVehiculo)
             {
-                IdPrograma = idPrograma,
-                IdVehiculo = idVehiculo,
-                KmInicio = kminicio,
-                IdUsuarioVehiculo = idUsuarioVehiculo,
-                EstadoVehiculo = estadoVehiculo
-            };
+                var p = await _inicioPatrullajeContext.UsosVehiculos.Where(x => x.IdPrograma == idPrograma && x.IdVehiculo == idVehiculo).SingleOrDefaultAsync();
 
-            _inicioPatrullajeContext.UsosVehiculos.Add(p);
+                if (p != null)
+                {
+                    p.KmInicio = kminicio;
+                    p.IdUsuarioVehiculo = idUsuarioVehiculo;
+                    p.EstadoVehiculo = estadoVehiculo;
+                }
 
-            await _inicioPatrullajeContext.SaveChangesAsync();
-        }
+                _inicioPatrullajeContext.UsosVehiculos.Update(p);
 
-        public async Task ActualizaUsoVehiculoAsync(int idPrograma, int idVehiculo, int kminicio, int idUsuarioVehiculo, string estadoVehiculo)
-        {
-            var p = await _inicioPatrullajeContext.UsosVehiculos.Where(x => x.IdPrograma == idPrograma && x.IdVehiculo == idVehiculo).SingleOrDefaultAsync();
-
-            if (p != null)
-            {
-                p.KmInicio = kminicio;
-                p.IdUsuarioVehiculo = idUsuarioVehiculo;
-                p.EstadoVehiculo = estadoVehiculo;
+                await _inicioPatrullajeContext.SaveChangesAsync();
             }
-
-            _inicioPatrullajeContext.UsosVehiculos.Update(p);
-
-            await _inicioPatrullajeContext.SaveChangesAsync();
-        }
-*/
+    */
 
     }
 }
