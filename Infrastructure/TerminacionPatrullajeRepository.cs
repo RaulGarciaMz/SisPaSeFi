@@ -18,29 +18,29 @@ namespace SqlServerAdapter
 
         public async Task<int> ObtenerIdProgramaPorRutaAndFechaAsync(int idRuta, DateTime fecha)
         {
-            var res = -1;
-            string sqlQuery = @"SELECT a.id_programa, a.riesgopatrullaje, b.regionSSF 
+                var res = -1;
+                string sqlQuery = @"SELECT a.id_programa, a.riesgopatrullaje, b.regionSSF 
                                 FROM ssf.programapatrullajes a
                                 JOIN ssf.rutas b ON a.id_ruta=b.id_ruta
                                 WHERE a.id_ruta= @pIdRuta
                                 AND a.fechapatrullaje= @pFecha
                                 AND a.id_estadopatrullaje < (SELECT id_estadopatrullaje FROM ssf.estadopatrullaje WHERE descripcionestadopatrullaje='Concluido')";
 
-            object[] parametros = new object[]
-            {
+                object[] parametros = new object[]
+                {
                 new SqlParameter("@pIdRuta", idRuta),
                 new SqlParameter("@pFecha", fecha),
 
-             };
+                 };
 
-            var idsProgramas = await _terminacionContext.ProgramasPatrullaje.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+                var idsProgramas = await _terminacionContext.ProgramasRegionVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
 
-            if (idsProgramas != null && idsProgramas.Count > 0)
-            {
-                res = idsProgramas[0].IdPrograma;
-            }
+                if (idsProgramas != null && idsProgramas.Count > 0)
+                {
+                    res = idsProgramas[0].id_programa;
+                }
 
-            return res;
+                return res;
         }
 
         public async Task<IEnumerable<UsoVehiculo>> ObtenerUsoVehiculoPorProgramaAndIdVehiculoAsync(int idPrograma, int idVehiculo)

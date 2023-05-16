@@ -30,17 +30,17 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> TerminarPatrullaje([FromBody] TerminacionPatrullajeDto t)
+        public async Task<ActionResult> TerminarPatrullaje([FromBody] TerminacionPatrullajeDto objTerminacionPatrullaje)
         {
             try
             {
-                await _pp.RegistraTerminacionAsync(t);
+                await _pp.RegistraTerminacionAsync(objTerminacionPatrullaje);
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al intentar la terminación del patrullaje para la ruta: {t.IdRuta}, fecha de patrullaje: {t.FechaPatrullaje} - ", ex);
+                _log.LogError($"error al intentar la terminación del patrullaje para la ruta: {objTerminacionPatrullaje.IdRuta}, fecha de patrullaje: {objTerminacionPatrullaje.FechaPatrullaje} - ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
