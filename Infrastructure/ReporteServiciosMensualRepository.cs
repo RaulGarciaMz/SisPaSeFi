@@ -239,7 +239,7 @@ namespace SqlServerAdapter
 
         }
 
-        public async Task<DetalleReporteServicioMensualVista> ObtenerResumenReporteTerrestreRegionPorAnioAnMesAsync(int Anio, int Mes)
+        public async Task<DetalleReporteServicioMensualVista> ObtenerResumenParaReporteTerrestreRegionPorAnioAnMesAsync(int Anio, int Mes)
         {
             string sqlQuery = @"SELECT count(a.id_nota) total, 
                                        sum(a.kmRecorrido) dato1, sum(a.comandantesInstalacionSSF) dato2,sum(a.personalMilitarSEDENAOficial) dato3,

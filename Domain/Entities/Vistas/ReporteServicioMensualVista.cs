@@ -29,6 +29,12 @@ namespace Domain.Entities.Vistas
         public string regionSSF { get; set; }
         public int id_tipoPatrullaje { get; set; }
         public string descripcionEstadoPatrullaje { get; set; }
+        public string itinerariorutas { get; set; }
+        public string incidenciaenestructura { get; set; }
+        public string incidenciaeninstalacion { get; set; }
+        public string matriculas { get; set; }
+        public string odometros { get; set; }
+        public string kmrecorridos { get; set; }
     }
 
     [Keyless]
