@@ -6,7 +6,6 @@ using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
 using Microsoft.VisualBasic;
 
-
 namespace DomainServices.DomServ
 {
     public class RutaService : IRutaService

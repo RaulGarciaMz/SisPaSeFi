@@ -4,7 +4,6 @@ using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
-using System.Globalization;
 
 namespace DomainServices.DomServ
 {

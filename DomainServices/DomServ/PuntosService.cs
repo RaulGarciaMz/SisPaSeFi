@@ -3,14 +3,6 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SqlServerAdapter.Data;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DomainServices.DomServ
 {

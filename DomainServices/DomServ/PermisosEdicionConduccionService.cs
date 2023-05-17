@@ -1,12 +1,7 @@
-﻿using Domain.Ports.Driven.Repositories;
+﻿using Domain.Entities;
 using Domain.Ports.Driven;
+using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Entities;
 
 namespace DomainServices.DomServ
 {
