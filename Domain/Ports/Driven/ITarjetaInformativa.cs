@@ -5,8 +5,8 @@ namespace Domain.Ports.Driven
 {
     public interface ITarjetaInformativaCommand
     {
-        Task AgregaAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId);
-        Task UpdateTarjetaAndProgramaAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId, int idPuntoResponsable);
+        Task AgregaTransaccionalAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId);
+        Task UpdateTarjetaAndProgramaTransaccionalAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId, int idPuntoResponsable);
     }
 
     public interface ITarjetaInformativaQuery
@@ -14,9 +14,10 @@ namespace Domain.Ports.Driven
         Task<List<TarjetaInformativaVista>> ObtenerTarjetasPorRegionAsync(string tipo, string region, int anio, int mes);
         Task<List<TarjetaInformativaVista>> ObtenerParteNovedadesPorDiaAsync(string tipo, int anio, int mes, int dia);
         Task<List<TarjetaInformativaVista>> ObtenerMonitoreoAsync(string tipo, int idUsuario, int anio, int mes, int dia);
-        Task<TarjetaInformativaVista> ObtenerPorIdAsync(int id);
-        Task<int> ObtenerIdUsuarioRegistradoAsync(string usuario);
-        Task<int> ObtenerIdUsuarioConfiguradorAsync(string usuario);
+        Task<TarjetaInformativaVista> ObtenerTarjetaCompletaPorIdAsync(int idTarjeta);
+        Task<TarjetaInformativaVista> ObtenerTarjetaCompletaPorIdProgramaAsync(int idPrograma);
+/*        Task<int> ObtenerIdUsuarioRegistradoAsync(string usuario);
+        Task<int> ObtenerIdUsuarioConfiguradorAsync(string usuario);*/
         Task<TarjetaInformativa?> ObtenerTarjetaPorIdNotaAsync(int idNota);
         Task<int> NumeroDeTarjetasPorProgamaAsync(int idPrograma);
     }

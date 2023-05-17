@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.DTOs
+﻿namespace Domain.DTOs
 {
     /// <summary>
     /// Tarjeta informativa de patrullajes
@@ -159,7 +153,109 @@ namespace Domain.DTOs
         /// Identificador del punto responsable
         /// </summary>
         public int intIdInstalacionResponsable { get; set; }
-        
+        /// <summary>
+        /// Nombre de la instalación
+        /// </summary>
+        public string strInstalacion { get; set; }
+        /// <summary>
+        /// Nombre del municipio
+        /// </summary>
+        public string strMunicipio { get; set; }
+        /// <summary>
+        /// Nombre del estado al que pertenece el municipio
+        /// </summary>
+        public string strEstado { get; set; }
+        /// <summary>
+        /// Nombre del comandante regional
+        /// </summary>
+        public string strComandanteRegional { get; set; }
     }
 
+    public class TarjetaDtoForCreate
+    {
+        /// <summary>
+        /// Identificador del usuario que registra la tarjeta
+        /// </summary>
+        public string strIdUsuario { get; set; }
+        /// <summary>
+        /// Identificador del programa al que se refiere la tarjeta informativa
+        /// </summary>
+        public int intIdPrograma { get; set; }
+        /// <summary>
+        /// Hora de inicio del patrullaje
+        /// </summary>
+        public string strInicio { get; set; }
+        /// <summary>
+        /// Hora de término del patrullaje
+        /// </summary>
+        public string strTermino { get; set; }
+        /// <summary>
+        /// Tiempo de vuelo del patrullaje
+        /// </summary>
+        public string strTiempoVuelo { get; set; }
+        /// <summary>
+        /// CALZONAZO !!!
+        /// </summary>
+        public string strCalzoCalzo { get; set; }
+        /// <summary>
+        /// Observaciones del patrullaje
+        /// </summary>
+        public string strObservaciones { get; set; }
+        /// <summary>
+        /// Cantidad de comandantes de la instalación participante en el patrullaje
+        /// </summary>
+        public int intComandantesInstalacionSSF { get; set; }
+        /// <summary>
+        /// cantidad de personal militar oficial de SEDENA participante en el patrullaje
+        /// </summary>
+        public int intPersonalMilitarSEDENAOficial { get; set; }
+        /// <summary>
+        /// Kilómetros recorridos en el patrullaje
+        /// </summary>
+        public int intKmRecorrido { get; set; }
+        /// <summary>
+        /// Fecha del patrullaje
+        /// </summary>
+        public string strFechaPatrullaje { get; set; }
+        /// <summary>
+        /// cantidad de personal mimilat de tropa de la SEDENA participante en el patrullaje
+        /// </summary>
+        public int intPersonalMilitarSEDENATropa { get; set; }
+        /// <summary>
+        /// Cantidad de linieros participantes en el patrullaje
+        /// </summary>
+        public int intLinieros { get; set; }
+        /// <summary>
+        /// Cantidad de comandantes de turno de SSF participantes en el patrullaje
+        /// </summary>
+        public int intComandantesTurnoSSF { get; set; }
+        /// <summary>
+        /// Cantidad de oficiales de SSF participantes en el patrullaje
+        /// </summary>
+        public int intOficialesSSF { get; set; }
+        /// <summary>
+        /// Cantidad de personal naval oficial de la SEMAR participante en el patrullaje
+        /// </summary>
+        public int intPersonalNavalSEMAROficial { get; set; }
+        /// <summary>
+        /// Cantidad de personal naval de tropa de la SEMAR participante en el patrullaje
+        /// </summary>
+        public int intPersonalNavalSEMARTropa { get; set; }
+        /// <summary>
+        /// Fecha de término del patrullaje
+        /// </summary>
+        public string strFechaTermino { get; set; }
+        /// <summary>
+        /// Identificador del resultado del patrullaje realizado
+        /// </summary>
+        public int intIdResultadoPatrullaje { get; set; }
+        /// <summary>
+        /// Descripción de la línea de la estructura en la instalación
+        /// </summary>
+        public string strLineaEstructuraInstalacion { get; set; }
+        /// <summary>
+        /// Identificador del estado del patrullaje
+        /// </summary>
+        public int intIdEstadoPatrullaje { get; set; }
+    }
 }

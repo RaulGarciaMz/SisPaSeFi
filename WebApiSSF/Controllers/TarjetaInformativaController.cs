@@ -49,57 +49,57 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al obtener tarjetas informativas para la opción: {opcion}, tipo: {tipo}, usuario: {usuario}, año: {anio}, mes {mes}, día: {dia}, región: {region} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }            
         }
 
         /// <summary>
         /// Obtiene tqarjeta informativa acorde al identificador indicado
         /// </summary>
-        /// <param name="IdTarjeta">Identificador de la tarjeta informativa</param>
+        /// <param name="id">Identificador de la tarjeta informativa ó el programa de patrullaje, acorde a la opción indicada</param>
         /// <param name="usuario">Nombre del usuario</param>
+        /// <param name="opcion">Opción de filtrado ("TARJETA", "PROGRAMA")</param>
         /// <returns></returns>
         [HttpGet]
         [Route("id")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<TarjetaDto>> ObtenerPorId([Required] int IdTarjeta, [Required] string usuario)
+        public async Task<ActionResult<TarjetaDto>> ObtenerPorIdAndOpcion([Required] int id, [Required] string usuario, [Required] string opcion)
         {
             try
             {
-                var tarjetas = await _t.ObtenerPorId(IdTarjeta, usuario);
+                var tarjeta = await _t.ObtenerPorIdAndOpcionAsync(id, usuario, opcion);
 
-                return Ok(tarjetas);
+                return Ok(tarjeta);
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener tarjetas informativas para el id: {IdTarjeta}, usuario: {usuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                _log.LogError($"error al obtener tarjetas informativas para el id: {id}, opcion: {opcion},  - usuario: {usuario} ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
 
         /// <summary>
         /// Registra una tarjeta informativa
         /// </summary>
-        /// <param name="usuario">Nombre del usuario que registra la tarjeta</param>
         /// <param name="tarjeta">Tarjeta informativa a registrar</param>
         /// <returns></returns>
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]        
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Post([Required] string usuario, [FromBody] TarjetaDto tarjeta)
+        public async Task<ActionResult> Post([FromBody] TarjetaDtoForCreate tarjeta)
         {
             try
             {
-                await _t.Agrega(tarjeta, usuario);              
+                await _t.AgregaTarjetaTransaccionalAsync(tarjeta);              
                 return StatusCode(201, "Ok");
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al registrar tarjetas informativas para el usuario: {usuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                _log.LogError($"error al registrar tarjetas informativas para el usuario: {tarjeta.strIdUsuario} ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
 
@@ -123,7 +123,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al actualizar la tarjeta informativa con id de nota: {tarjeta.intIdNota}, para el usuario: {usuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
     }

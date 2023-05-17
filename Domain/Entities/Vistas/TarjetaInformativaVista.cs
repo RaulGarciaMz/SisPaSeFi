@@ -45,9 +45,11 @@ namespace Domain.Entities.Vistas
         public string responsablevuelo;
         public int fuerzareaccion;
         public int id_puntoresponsable;
+        public string instalacion;
+        public string municipio;
+        public string estado;
+        public string nombre;
+        public string apellido1;
+        public string apellido2;
     }
 }
-
-
-
-

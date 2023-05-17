@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Enums;
+using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
 
@@ -10,34 +11,36 @@ namespace DomainServices.DomServ
     public class TarjetasService : ITarjetaService
     {
         private readonly ITarjetaInformativaRepo _repo;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public TarjetasService(ITarjetaInformativaRepo repo)
+        public TarjetasService(ITarjetaInformativaRepo repo, IUsuariosParaValidacionQuery u)
         {
             _repo = repo;
+            _user = u;
         }
 
-        public async Task Agrega(TarjetaDto tarjeta, string usuario) {
+        public async Task AgregaTarjetaTransaccionalAsync(TarjetaDtoForCreate tarjeta) {
 
-            var userId = await _repo.ObtenerIdUsuarioConfiguradorAsync(usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(tarjeta.strIdUsuario);
 
-            if (EsUsuarioRegistrado(userId))
+            if (user != null)
             {
                 if (await ExisteTarjetaParaElPrograma(tarjeta.intIdPrograma)) 
                 {
                     return;
                 }
 
-                var t = ConvierteTarjetaDtoToDomain(tarjeta);
+                var t = ConvierteTarjetaDtoForCreateToDomain(tarjeta, user.IdUsuario);
 
-                await _repo.AgregaAsync(t, tarjeta.intIdEstadoPatrullaje, userId);
+                await _repo.AgregaTransaccionalAsync(t, tarjeta.intIdEstadoPatrullaje, user.IdUsuario);
             }
         }
 
         public async Task Update(TarjetaDto tarjeta, string usuario) 
         {
-            var userId = await _repo.ObtenerIdUsuarioConfiguradorAsync(usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
-            if (EsUsuarioRegistrado(userId))
+            if (user != null)
             {
                 var t = await _repo.ObtenerTarjetaPorIdNotaAsync(tarjeta.intIdNota);
 
@@ -64,17 +67,18 @@ namespace DomainServices.DomServ
                 t.PersonalNavalSemaroficial = tarjeta.intPersonalNavalSEMAROficial;
                 t.PersonalNavalSemartropa = tarjeta.intPersonalNavalSEMARTropa;
 
-                await _repo.UpdateTarjetaAndProgramaAsync(t, tarjeta.intIdEstadoPatrullaje, userId, tarjeta.intIdInstalacionResponsable);
+                await _repo.UpdateTarjetaAndProgramaTransaccionalAsync(t, tarjeta.intIdEstadoPatrullaje, user.IdUsuario, tarjeta.intIdInstalacionResponsable);
             }    
         }
 
         public async Task<List<TarjetaDto>> ObtenerPorOpcion(int opcion, string tipo, string region, int anio, int mes, int dia, string usuario)
         {
             var regreso = new List<TarjetaDto>();
-            var userId = await _repo.ObtenerIdUsuarioRegistradoAsync(usuario);
+            var user = await _user.ObtenerUsuarioPorUsuarioNomAsync(usuario);
+
             var laOpcion = (TarjetaInformativaOpcion)opcion;
 
-            if (EsUsuarioRegistrado(userId))
+            if (user != null)
             {
                 var tarjetas = new List<TarjetaInformativaVista>();
                 switch (laOpcion)
@@ -86,7 +90,7 @@ namespace DomainServices.DomServ
                         tarjetas = await _repo.ObtenerParteNovedadesPorDiaAsync(tipo, anio, mes, dia);
                         break;
                     case TarjetaInformativaOpcion.Monitoreo:
-                        tarjetas = await _repo.ObtenerMonitoreoAsync(tipo, userId, anio, mes, dia);
+                        tarjetas = await _repo.ObtenerMonitoreoAsync(tipo, user.IdUsuario, anio, mes, dia);
                         break;
                 }
 
@@ -100,24 +104,28 @@ namespace DomainServices.DomServ
             return regreso;
         }
 
-        public async Task<TarjetaDto> ObtenerPorId(int idTarjeta, string usuario)
+        public async Task<TarjetaDto> ObtenerPorIdAndOpcionAsync(int id, string usuario, string opcion)
         {
             var regreso = new TarjetaDto();
-            var userId = await _repo.ObtenerIdUsuarioRegistradoAsync(usuario);  
+            var ti = new TarjetaInformativaVista();
 
-            if (EsUsuarioRegistrado(userId))
+            var userId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
+            if (userId != null)
             {
-                var ti = await _repo.ObtenerPorIdAsync(idTarjeta);
+                switch (opcion) 
+                {
+                    case "TARJETA":
+                        ti = await _repo.ObtenerTarjetaCompletaPorIdAsync(id);
+                        break;
+                    case "PROGRAMA":
+                        ti = await _repo.ObtenerTarjetaCompletaPorIdProgramaAsync(id);
+                        break;
+                }
 
                 regreso = ConvierteTarjetaVistaDomainToDto(ti);
             }
 
             return regreso;
-        }
-
-        private bool EsUsuarioRegistrado(int user)
-        {
-            return user >= 0;
         }
 
         private async Task<bool> ExisteTarjetaParaElPrograma(int idPrograma)
@@ -170,45 +178,53 @@ namespace DomainServices.DomServ
                 strLineaEstructuraInstalacion = t.lineaestructurainstalacion,
                 strResponsableVuelo = t.responsablevuelo,
                 intFuerzaDeReaccion = t.fuerzareaccion,
-                intIdInstalacionResponsable = t.id_puntoresponsable
+                intIdInstalacionResponsable = t.id_puntoresponsable,
+                strInstalacion = t.instalacion,
+                strComandanteRegional = t.nombre + " " + t.apellido1 + " " + t.apellido2,
+                strEstado = t.estado,
+                strMunicipio = t.municipio
             };
 
             return r;
         }
 
-        private TarjetaInformativa ConvierteTarjetaDtoToDomain(TarjetaDto t)
+
+
+        private TarjetaInformativa ConvierteTarjetaDtoForCreateToDomain(TarjetaDtoForCreate t, int idUsuario)
         {
             var r = new TarjetaInformativa() 
             { 
                 IdPrograma= t.intIdPrograma,
+                IdUsuario = idUsuario,
                 UltimaActualizacion = DateTime.UtcNow,
-                Inicio = TimeSpan.Parse(t.strInicio), // ":00" al final  representa segundos al final ??
-                Termino = TimeSpan.Parse(t.strTermino), // ":00" al final
+                Inicio = ConvierteToTimeSpanSinSegundo(t.strInicio), 
+                Termino = ConvierteToTimeSpanSinSegundo(t.strTermino),
                 TiempoVuelo = TimeSpan.Parse(t.strTiempoVuelo),
                 CalzoAcalzo = TimeSpan.Parse(t.strCalzoCalzo),
                 Observaciones= t.strObservaciones,
                 ComandantesInstalacionSsf = t.intComandantesInstalacionSSF,
                 PersonalMilitarSedenaoficial = t.intPersonalMilitarSEDENAOficial,
                 KmRecorrido= t.intKmRecorrido,
-                //FechaPatrullaje = t.FechaPatrullaje, // En qué formato viene??
+                FechaPatrullaje = DateTime.Parse(t.strFechaPatrullaje),
                 PersonalMilitarSedenatropa = t.intPersonalMilitarSEDENATropa,
                 Linieros = t.intLinieros,
                 ComandantesTurnoSsf = t.intComandantesTurnoSSF,
                 OficialesSsf = t.intOficialesSSF,
                 PersonalNavalSemaroficial = t.intPersonalNavalSEMAROficial,
-                PersonalNavalSemartropa = t.intPersonalNavalSEMARTropa
-                //FechaTermino = t.FechaTermino
+                PersonalNavalSemartropa = t.intPersonalNavalSEMARTropa,
+                FechaTermino = DateTime.Parse(t.strFechaTermino),
+                Idresultadopatrullaje = t.intIdResultadoPatrullaje,
+                Lineaestructurainstalacion = t.strLineaEstructuraInstalacion
             };
-
-            DateTime dateValue;
-            if (DateTime.TryParse(t.strFechaPatrullaje, out dateValue))
-            {
-                r.FechaPatrullaje = dateValue;
-            }
 
             return r;
         }
 
+        private TimeSpan ConvierteToTimeSpanSinSegundo(string valor)
+        {
+            var t = TimeSpan.Parse(valor);
 
+            return new TimeSpan(t.Hours, t.Minutes, 0);
+        }
     }
 }
