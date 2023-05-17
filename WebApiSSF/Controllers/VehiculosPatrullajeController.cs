@@ -36,7 +36,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<VehiculoDto>>> ObtenerVehiculosPorOpcion([Required] string opcion, int regionSSF,  [Required] string usuario, string criterio = "")
+        public async Task<ActionResult<IEnumerable<VehiculoDto>>> ObtenerVehiculosPorOpcion([Required] string opcion, int regionSSF,  [Required] string usuario, string? criterio )
         {
             try
             {
