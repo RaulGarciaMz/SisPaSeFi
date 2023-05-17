@@ -17,8 +17,9 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task ObtenerReporteDeServicioMensualPorOpcionAsync(int anio, int mes, string tipo, string usuario)
+        public async Task<ReporteServicioMensualDto> ObtenerReporteDeServicioMensualPorOpcionAsync(int anio, int mes, string tipo, string usuario)
         {
+            var retorno = new ReporteServicioMensualDto();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
@@ -92,7 +93,11 @@ namespace DomainServices.DomServ
 
                     rpte.listaDetalles.Add(r);
                 }
+
+                retorno = rpte;
             }
+
+            return retorno;
         }
     }
 }

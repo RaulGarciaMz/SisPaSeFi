@@ -1,7 +1,9 @@
-﻿namespace Domain.Ports.Driving
+﻿using Domain.DTOs;
+
+namespace Domain.Ports.Driving
 {
     public interface IReporteServicioMensualDtoCommand
     {
-        Task ObtenerReporteDeServicioMensualPorOpcionAsync(int anio, int mes, string tipo, string usuario);
+        Task<ReporteServicioMensualDto> ObtenerReporteDeServicioMensualPorOpcionAsync(int anio, int mes, string tipo, string usuario);
     }
 }
