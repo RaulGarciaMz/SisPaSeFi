@@ -80,9 +80,8 @@ namespace DomainServices.DomServ
             }
             else
             {
-                criterio = "%" + criterio + "%";
+                if (criterio != "") criterio = "%" + criterio + "%";
             }
-            
 
             if (user != null)
             {
