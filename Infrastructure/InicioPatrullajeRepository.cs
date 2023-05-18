@@ -109,7 +109,10 @@ namespace SqlServerAdapter
                 IdRutaOriginal = idRutaOriginal,
                 FechaPatrullaje = fechaPatrullaje,
                 UltimaActualizacion = DateTime.UtcNow,
-                IdApoyoPatrullaje = 1
+                IdApoyoPatrullaje = 1,
+                Observaciones = "",
+                IdUsuarioResponsablePatrullaje =0,
+                IdEstadoPatrullaje=0
             };
 
             _inicioPatrullajeContext.ProgramasPatrullaje.Add(p);
@@ -155,7 +158,13 @@ namespace SqlServerAdapter
                 OficialesSsf = oficialSsf,
                 PersonalNavalSemaroficial = 0,
                 PersonalNavalSemartropa = 0,
-                FechaTermino = fechaTermino
+                FechaTermino = fechaTermino,
+                //Valores no nulos
+                Lineaestructurainstalacion = "",
+                Responsablevuelo = "",
+                Fuerzareaccion =0,
+                Idresultadopatrullaje = 0,
+                IdEstadoTarjetaInformativa = 1,
             };
 
             _inicioPatrullajeContext.TarjetasInformativas.Add(p);
@@ -198,7 +207,10 @@ namespace SqlServerAdapter
                                 IdUsuarioVehiculo = idUsuario,
                                 IdVehiculo = v.IdVehiculo,
                                 KmInicio = v.KmInicio,
-                                EstadoVehiculo = v.EstadoVehiculo
+                                EstadoVehiculo = v.EstadoVehiculo,
+                                //Valores por default
+                                ConsumoCombustible = 0,
+                                KmFin = 0
                             };
 
                             _inicioPatrullajeContext.UsosVehiculos.Add(uv);
@@ -239,7 +251,7 @@ namespace SqlServerAdapter
 
         private async Task ActualizaProgramaPatrullajeConTarjetaInformativaEnMemoriaAsync(int idPrograma, int riesgo, int idUsuario, InicioPatrullajeDto a)
         {
-            var horaInicio = new TimeSpan(int.Parse(a.HoraInicio), 0, 0);
+            var horaInicio = TimeSpan.Parse(a.HoraInicio);
 
             ActualizaProgramaPatrullajeEnMemoria(idPrograma, horaInicio, idUsuario, riesgo);
 
