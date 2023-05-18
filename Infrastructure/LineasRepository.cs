@@ -188,13 +188,16 @@ namespace SqlServerAdapter
 
         public async Task AgregarAsync(string clave, string descripcion, int idPuntoInicio, int idPuntoFin)
         {
-
             var l = new Linea() 
             {
                 Clave = clave,
                 Descripcion = descripcion,
                 IdPuntoInicio = idPuntoInicio,
-                IdPuntoFin = idPuntoFin
+                IdPuntoFin = idPuntoFin,
+                //Campos no nulos
+                Bloqueado = 0,
+                IdUsuario = 0,
+                UltimaActualizacion = DateTime.UtcNow
             };
 
             _lineaContext.Add(l);

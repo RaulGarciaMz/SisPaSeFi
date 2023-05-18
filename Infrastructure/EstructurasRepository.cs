@@ -48,7 +48,14 @@ namespace SqlServerAdapter
                 IdMunicipio= idMunicipio,
                 Latitud = lat,
                 Longitud = longi,
-                Coordenadas = longitud + "," + longi
+                Coordenadas = longitud + "," + longi,
+                //Campos no nulos
+                Bloqueado = 0,
+                UltimaActualizacion = DateTime.UtcNow,
+                Modif = "0",
+                IdProcesoResponsable = 0,
+                IdGerenciaDivision = 0
+
             };
 
             _estructuraContext.Estructuras.Add(estruct);

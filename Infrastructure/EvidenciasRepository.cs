@@ -24,7 +24,9 @@ namespace SqlServerAdapter
                 IdReporte = idReporte,
                 RutaArchivo = rutaArchivo,
                 NombreArchivo = nombreArchivo,
-                Descripcion = descripcion
+                Descripcion = descripcion,
+                //Campos no nulos
+                UltimaActualizacion = DateTime.UtcNow
             };
 
             _evidenciaContext.EvidenciasEstructura.Add(evidencia);
@@ -39,7 +41,9 @@ namespace SqlServerAdapter
                 IdReportePunto = idReporte,
                 RutaArchivo = rutaArchivo,
                 NombreArchivo = nombreArchivo,
-                Descripcion = descripcion
+                Descripcion = descripcion,
+                //Campo no nulos
+                UltimaActualizacion = DateTime.UtcNow
             };
 
             _evidenciaContext.EvidenciasInstalacion.Add(evidencia);
@@ -54,7 +58,9 @@ namespace SqlServerAdapter
                 IdBitacoraSeguimientoIncidencia = idReporte,
                 RutaArchivo = rutaArchivo,
                 NombreArchivo = nombreArchivo,
-                Descripcion = descripcion
+                Descripcion = descripcion,
+                //Campos no nuls
+                UltimaActualizacion= DateTime.UtcNow
             };
 
             _evidenciaContext.EvidenciasSeguimientoEstructura.Add(evidencia);
@@ -69,7 +75,9 @@ namespace SqlServerAdapter
                 IdBitacoraSeguimientoIncidenciaPunto = idReporte,
                 RutaArchivo = rutaArchivo,
                 NombreArchivo = nombreArchivo,
-                Descripcion = descripcion
+                Descripcion = descripcion,
+                //Campos no nulos
+                UltimaActualizacion = DateTime.UtcNow
             };
 
             _evidenciaContext.EvidenciasSeguimientoInstalacion.Add(evidencia);

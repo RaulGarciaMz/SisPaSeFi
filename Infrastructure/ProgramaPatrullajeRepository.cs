@@ -798,7 +798,10 @@ namespace SqlServerAdapter
                 pp.Propuesta.IdEstadoPropuesta = idEdoCreada[0];
                 pp.Propuesta.IdUsuario = usuarioId;
                 pp.Propuesta.Observaciones = "";
-
+                //Campos nulos
+                //pp.Propuesta.IdApoyoPatrullaje = 1;
+                pp.Propuesta.UltimaActualizacion = DateTime.UtcNow;
+                //pp.Propuesta.RiesgoPatrullaje = 0;
 
                 using (var transaction = _programaContext.Database.BeginTransaction())
                 {
@@ -926,7 +929,10 @@ namespace SqlServerAdapter
                     RiesgoPatrullaje = pp.RiesgoPatrullaje,
                     IdApoyoPatrullaje = pp.IdApoyoPatrullaje,
                     UltimaActualizacion = pp.UltimaActualizacion,
-                    FechaPatrullaje = pp.FechaPatrullaje
+                    FechaPatrullaje = pp.FechaPatrullaje,
+                    //Campos no nulos
+                    IdUsuarioResponsablePatrullaje = 0,
+                    IdEstadoPatrullaje = 0
                 };
 
                 lstProgramas.Add(programa);

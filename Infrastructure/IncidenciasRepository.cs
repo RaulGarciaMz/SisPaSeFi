@@ -403,7 +403,9 @@ namespace SqlServerAdapter
                 EstadoIncidencia = edoIncidencia,
                 PrioridadIncidencia= prioridad,
                 IdClasificacionIncidencia = clasificacion,
-                UltimaActualizacion= DateTime.UtcNow
+                UltimaActualizacion= DateTime.UtcNow,
+                //Campos no nulos
+                UltimoRegistroEnBitacora = DateTime.UtcNow
             };
 
             _incidenciaContext.ReportesInstalaciones.Add(reporte);
@@ -423,7 +425,9 @@ namespace SqlServerAdapter
                 EstadoIncidencia = edoIncidencia,
                 PrioridadIncidencia = prioridad,
                 IdClasificacionIncidencia = clasificacion,
-                UltimaActualizacion = DateTime.UtcNow
+                UltimaActualizacion = DateTime.UtcNow,
+                //Campos no nulos
+                UltimoRegistroEnBitacora = DateTime.UtcNow
             };
 
             _incidenciaContext.ReportesEstructuras.Add(reporte);

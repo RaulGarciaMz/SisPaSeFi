@@ -68,7 +68,9 @@ namespace SqlServerAdapter
                 Liga = liga,
                 Descripcion = descripcion,
                 Padre=idPadre,
-                Posicion=posicion
+                Posicion=posicion,
+                //Campos no nulos
+                IdGrupo = 1
             };
 
             _menuContext.Menus.Add(m);

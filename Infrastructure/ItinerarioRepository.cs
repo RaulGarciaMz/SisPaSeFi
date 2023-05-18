@@ -56,7 +56,9 @@ namespace SqlServerAdapter
             { 
                 IdRuta = idRuta,
                 IdPunto = idPunto,
-                Posicion = posicion
+                Posicion = posicion,
+                //Campos no nulos
+                UltimaActualizacion = DateTime.UtcNow
             };
 
             _itinerarioContext.Itinerarios.Add(itinerario);

@@ -298,10 +298,10 @@ namespace SqlServerAdapter
         }
 
 
-        public async Task<Usuario?> ObtenerUsuarioRegistradoAsync(string usuario)
+/*        public async Task<Usuario?> ObtenerUsuarioRegistradoAsync(string usuario)
         {
             return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleOrDefaultAsync();
-        }
+        }*/
 
         public async Task<int> IdentificaUsuarioLocalAsync(string usuario, string clave)
         {

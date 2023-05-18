@@ -264,11 +264,11 @@ namespace SqlServerAdapter
                 switch (tarjeta.Count)
                 {
                     case 0:
-                        var horaNvaTarjeta = TimeSpan.Parse(a.HoraInicio);
+                        var horaNvaTarjeta = horaInicio;
                         AgregaTarjetaInformativaEnMemoria(idPrograma, idUsuario, horaNvaTarjeta, a.ComandanteInstalacion, a.OficialSDN, fecha, a.TropaSDN, a.Conductores, a.ComandanteTurno, a.OficialSSF, fecha);
                         break;
                     case > 0:
-                        var horaActInicio = new TimeSpan(int.Parse(a.HoraInicio), 0, 0);
+                        var horaActInicio = horaInicio;
                         ActualizaTarjetaInformativaEnMemoria(idPrograma, idUsuario, horaActInicio, a.ComandanteInstalacion, a.OficialSDN, fecha, a.TropaSDN, a.Conductores, a.ComandanteTurno, a.OficialSSF, fecha);
                         break;
                 }
