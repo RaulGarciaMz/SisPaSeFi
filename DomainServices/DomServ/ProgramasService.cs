@@ -20,7 +20,7 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task<List<PatrullajeDto>> ObtenerPorFiltro(string usuario, string tipo, int region, string clase, int anio, int mes, int dia = 1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia)
+        public async Task<List<PatrullajeDto>> ObtenerPorFiltroAsync(string usuario, string tipo, int region, string clase, int anio, int mes, int dia = 1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia)
         {
             string estadoPropuesta;
 
@@ -160,6 +160,18 @@ namespace DomainServices.DomServ
                     case FiltroProgramaOpcion.PatrullajesEnRutaFechaEspecifica:
                         patrullajes = await _repo.ObtenerPatrullajesEnRutaAndFechaEspecificaAsync(region, anio, mes, dia);
                         break;
+
+                    case FiltroProgramaOpcion.PropuestasAnioMesZona:
+                        if (clase == "EXTRAORDINARIO")
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorAnioMesZonaAsync(tipo, region, anio, mes, clase, (int)periodo);
+                        }
+                        else
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasPorAnioMesZonaAsync(tipo, region, anio, mes, clase, (int)periodo);
+                        }
+
+                        break;
                 }
 
                 foreach (PatrullajeVista p in patrullajes)
@@ -172,7 +184,25 @@ namespace DomainServices.DomServ
             return patrullajesDto;
         }
 
-        public async Task AgregaPrograma(string opcion, string clase, ProgramaDtoForCreateWithListas p) 
+        public async Task<PatrullajeSoloDto> ObtenerProgramaPorIdAsync(int idPrograma, string usuario)
+        {
+            var user = await _user.ObtenerUsuarioPorUsuarioNomAsync(usuario);
+            var ret = new PatrullajeSoloDto();
+            if (user != null)
+            {
+                var prog = await _repo.ObtenerProgramaPorIdAsync(idPrograma);
+
+                if (prog != null && prog.Count > 0)
+                {
+                    ret = ConvierteProgramaSoloVistaToDto(prog[0]);
+                }
+            }
+
+            return ret;
+        }
+
+
+        public async Task AgregaProgramaAsync(string opcion, string clase, ProgramaDtoForCreateWithListas p) 
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(p.strUsuario);
 
@@ -214,7 +244,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task AgregaPropuestasComoProgramas(List<ProgramaDtoForCreate> p, string usuario)
+        public async Task AgregaPropuestasComoProgramasAsync(List<ProgramaDtoForCreate> p, string usuario)
         {
             var userId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
@@ -233,7 +263,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task ActualizaPropuestasOrProgramasPorOpcionAndAccion(List<PropuestaDtoForListaUpdate> p, string opcion, int accion, string usuario)
+        public async Task ActualizaPropuestasOrProgramasPorOpcionAndAccionAsync(List<PropuestaDtoForListaUpdate> p, string opcion, int accion, string usuario)
         {
             var usuarioId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
@@ -285,7 +315,7 @@ namespace DomainServices.DomServ
 
         }
 
-        public async Task ActualizaProgramasOrPropuestasPorOpcion(ProgramaDtoForUpdatePorOpcion p, string opcion, string usuario)
+        public async Task ActualizaProgramasOrPropuestasPorOpcionAsync(ProgramaDtoForUpdatePorOpcion p, string opcion, string usuario)
         {
             var usuarioId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
@@ -369,7 +399,7 @@ namespace DomainServices.DomServ
 
         }
 
-        public async Task DeletePorOpcion(string opcion, int id, string usuario)
+        public async Task DeletePorOpcionAsync(string opcion, int id, string usuario)
         {
             var usuarioId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
@@ -405,6 +435,7 @@ namespace DomainServices.DomServ
       
         private PatrullajeDto ConviertePatrullajeDominioToPatrullajeDto(PatrullajeVista p) 
         {
+       
             var pd = new PatrullajeDto(){
                 intIdPrograma = p.id,
                 intIdRuta = p.id_ruta,
@@ -413,7 +444,7 @@ namespace DomainServices.DomServ
                 strDescripcionNivelRiesgo = p.descripcionnivel,
                 strFechaPatrullaje = p.fechapatrullaje.ToString("yyyy-MM-dd"),
                 strFechaTermino = p.fechatermino.ToString("yyyy-MM-dd"),
-                intIdPuntoResponsable= p.id_puntoresponsable,
+                intIdPuntoResponsable = p.id_puntoresponsable,
                 intIdUsuario= p.id_usuario,
                 strItinerario=p.itinerario,
                 strObservacionesPrograma= p.observaciones,
@@ -430,6 +461,42 @@ namespace DomainServices.DomServ
 
             if (p.id_apoyopatrullaje.HasValue)
                 pd.intApoyoPatrullaje = p.id_apoyopatrullaje.Value;
+                    
+            return pd;
+        }
+
+        private PatrullajeSoloDto ConvierteProgramaSoloVistaToDto(ProgramaSoloVista p)
+        {
+
+            var pd = new PatrullajeSoloDto()
+            {
+                intIdPrograma = p.id,
+                intIdRuta = p.id_ruta,
+                strFechaPatrullaje = p.fechapatrullaje.ToString("yyyy-MM-dd"),
+                strInicio = p.inicio.ToString(),
+                intIdPuntoResponsable = p.id_puntoresponsable,
+                strClave = p.clave,
+                intRegionMilitarSDN = Int32.Parse(p.regionmilitarsdn),
+                intRegionSSF = Int32.Parse(p.regionssf),
+                strObservacionesRuta = p.observacionesruta,
+                strDescripcionEstadoPatrullaje = p.descripcionestadopatrullaje,
+                strObservacionesPrograma = p.observaciones,
+                intIdRiesgoPatrullaje = p.riesgopatrullaje,
+                strSolicitudOficio = p.solicitudoficiocomision,
+                strOficio = p.oficiocomision,
+                strDescripcionNivelRiesgo = p.descripcionnivel,
+                strItinerario = p.itinerario,
+                strUltimaActualizacion = p.ultimaactualizacion.ToString("yyyy-MM-dd"),
+                intIdUsuario = p.id_usuario,
+                intUsuarioResponsablePatrullaje = p.id_usuarioresponsablepatrullaje,
+                intApoyoPatrullaje = p.id_apoyopatrullaje.Value,
+                intidrutaoriginal = p.id_ruta_original,
+                strInstalacion = p.ubicacion,
+                strMunicipio = p.municipio,
+                strEstado = p.estado,
+                strComandanteRegional = p.nombre + " " + p.apellido1 + " " + p.apellido2
+
+            };
 
             return pd;
         }

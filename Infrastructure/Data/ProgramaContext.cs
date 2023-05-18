@@ -1,12 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Entities.Vistas;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlServerAdapter.Data
 {
@@ -29,5 +23,7 @@ namespace SqlServerAdapter.Data
         public DbSet<ProgramaPatrullaje> ProgramasPatrullajes { get; set; }     
         public DbSet<PatrullajeVista> PatrullajesVista { get; set; }
         public DbSet<TarjetaInformativa> TarjetasInformativas { get; set; }
+        public DbSet<ProgramaSoloVista> ProgramasSoloVista { get; set; }
+        
     }
 }

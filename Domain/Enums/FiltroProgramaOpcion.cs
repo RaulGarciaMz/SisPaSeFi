@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Enums
+﻿namespace Domain.Enums
 {
     public enum FiltroProgramaOpcion
     {
@@ -18,6 +12,7 @@ namespace Domain.Enums
         PropuestasAutorizadas,  //PROPUESTAS DE PATRULLAJE AUTORIZADAS POR LA SSF
         PropuestasRechazadas,   //PROPUESTAS DE PATRULLAJE RECHAZADAS POR LA SSF        
         PropuestasEnviadas,      //Propuestas enviadas a aprobación de la comandancia regional
-        PatrullajesEnRutaFechaEspecifica //PATRULLAJES DE UNA RUTA Y FECHA ESPECÍFICA
+        PatrullajesEnRutaFechaEspecifica,
+        PropuestasAnioMesZona //'Todas las propuestas de patrullaje del mes y año, así como zona indicado
     }
 }

@@ -40,6 +40,12 @@ namespace Domain.Ports.Driven
         Task<List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(string tipo, int region, int anio, int mes, string clase, string estadoPropuesta);
         //Caso 10 Patrullajes de una ruta y fecha específica
         Task<List<PatrullajeVista>> ObtenerPatrullajesEnRutaAndFechaEspecificaAsync(int ruta, int anio, int mes, int dia);
+
+        //Caso 11 Extraordinario - Propuestas de patrullaje del mes y año, así como zona indicado
+        Task<List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorAnioMesZonaAsync(string tipo, int region, int anio, int mes, string clase, int zona);
+        //Caso 11 Programado -  Propuestas de patrullaje del mes y año, así como zona indicado
+        Task<List<PatrullajeVista>> ObtenerPropuestasPorAnioMesZonaAsync(string tipo, int region, int anio, int mes, string clase, int zona);
+
         //Caso 1 Programas EN PROGRESO Periodo 1 - Un día
         Task<List<PatrullajeVista>> ObtenerProgramasEnProgresoPorDiaAsync(string tipo, int region, int anio, int mes, int dia);
         //Caso 1 Programas EN PROGRESO Periodo 2 - Un mes
@@ -64,5 +70,6 @@ namespace Domain.Ports.Driven
         Task<List<PatrullajeVista>> ObtenerProgramasPorMesAsync(string tipo, int region, int anio, int mes);
         //Caso 4 Programas Periodo 3 - Todos
         Task<List<PatrullajeVista>> ObtenerProgramasAsync(string tipo, int region);
+        Task<List<ProgramaSoloVista>> ObtenerProgramaPorIdAsync(int idPrograma);
     }
 }

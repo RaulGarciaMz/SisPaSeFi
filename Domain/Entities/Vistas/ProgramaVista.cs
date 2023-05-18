@@ -35,5 +35,37 @@ namespace Domain.Entities.Vistas
         public int riesgopatrullaje { get; set; }
         public string regionSSF { get; set; }
     }
+
+    [Keyless]
+    public class ProgramaSoloVista
+    {
+        public int id { get; set; }
+        public int id_ruta { get; set; }
+        public DateTime fechapatrullaje { get; set; }
+        public TimeSpan? inicio { get; set; }
+        public int id_puntoresponsable { get; set; }
+        public string clave { get; set; }
+        public string regionmilitarsdn { get; set; }
+        public string regionssf { get; set; }
+        public string observacionesruta { get; set; }
+        public string descripcionestadopatrullaje { get; set; }
+        public string observaciones { get; set; }
+        public int riesgopatrullaje { get; set; }
+        public string solicitudoficiocomision { get; set; }
+        public string oficiocomision { get; set; }
+        public string descripcionnivel { get; set; }
+        public string itinerario { get; set; }
+        public DateTime ultimaactualizacion { get; set; }
+        public int id_usuario { get; set; }
+        public int id_usuarioresponsablepatrullaje { get; set; }
+        public int? id_apoyopatrullaje { get; set; }
+        public int id_ruta_original { get; set; }
+        public string ubicacion { get; set; }
+        public string municipio { get; set; }
+        public string estado { get; set; }
+        public string nombre { get; set; }
+        public string apellido1 { get; set; }
+        public string apellido2 { get; set; }
+    }
 }
 

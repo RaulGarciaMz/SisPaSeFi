@@ -5,16 +5,17 @@ namespace Domain.Ports.Driving
 {
     public interface IProgramaDtoCommand
     {
-        Task AgregaPrograma(string opcion, string clase, ProgramaDtoForCreateWithListas p);
-        Task AgregaPropuestasComoProgramas(List<ProgramaDtoForCreate> p, string usuario);
-        Task ActualizaProgramasOrPropuestasPorOpcion(ProgramaDtoForUpdatePorOpcion p, string opcion, string usuario);
-        Task ActualizaPropuestasOrProgramasPorOpcionAndAccion(List<PropuestaDtoForListaUpdate> p, string opcion, int accion, string usuario);
+        Task AgregaProgramaAsync(string opcion, string clase, ProgramaDtoForCreateWithListas p);
+        Task AgregaPropuestasComoProgramasAsync(List<ProgramaDtoForCreate> p, string usuario);
+        Task ActualizaProgramasOrPropuestasPorOpcionAsync(ProgramaDtoForUpdatePorOpcion p, string opcion, string usuario);
+        Task ActualizaPropuestasOrProgramasPorOpcionAndAccionAsync(List<PropuestaDtoForListaUpdate> p, string opcion, int accion, string usuario);
         Task ActualizaProgramaPorCambioDeRuta(ProgramaDtoForUpdateRuta p, string usuario);
         Task ActualizaProgramasPorInicioPatrullajeAsync(ProgramaDtoForUpdateInicio p, string usuario);
-        Task DeletePorOpcion(string opcion, int id, string usuario);
+        Task DeletePorOpcionAsync(string opcion, int id, string usuario);
     }
     public interface IProgramaDtoQuery
     {
-        Task<List<PatrullajeDto>> ObtenerPorFiltro(string usuario, string tipo, int region, string clase,int anio, int mes, int dia=1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia);      
+        Task<List<PatrullajeDto>> ObtenerPorFiltroAsync(string usuario, string tipo, int region, string clase,int anio, int mes, int dia=1, FiltroProgramaOpcion opcion = FiltroProgramaOpcion.ExtraordinariosyProgramados, PeriodoOpcion periodo = PeriodoOpcion.UnDia);
+        Task<PatrullajeSoloDto> ObtenerProgramaPorIdAsync(int idPrograma, string usuario);
     }
 }

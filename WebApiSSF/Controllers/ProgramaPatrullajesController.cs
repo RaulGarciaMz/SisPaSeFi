@@ -28,13 +28,13 @@ namespace WebApiSSF.Controllers
         /// </summary>
         /// <param name="tipo">Descripción del tipo de patrullaje ("TERRESTRE" ó "AEREO")</param>
         /// <param name="region">Región SSF</param>
-        /// <param name="opcion">Indicador del tipo de programa o propuesta a obtener. (0 - Extraordinarios o programados, 1 - En progreso, 2 - Concluidos, 3 - Cancelados, 4 - Todos, 5 - Propuestas (todas), 6 - Propuestas pendientes, 7 - Propuestas autorizadas, 8 - Propuestas Rechazadas, 9 - Propuestas enviadas)</param>
+        /// <param name="opcion">Indicador del tipo de programa o propuesta a obtener. (0 - Extraordinarios o programados, 1 - En progreso, 2 - Concluidos, 3 - Cancelados, 4 - Todos, 5 - Propuestas (todas), 6 - Propuestas pendientes, 7 - Propuestas autorizadas, 8 - Propuestas Rechazadas, 9 - Propuestas enviadas, 10 - Patrullajes en fecha específica para una ruta, 11 - Propuestas por zona)</param>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
         /// <param name="clase">Descripción de la clase de patrullaje a incluir ("PROGRAMADO" ó "EXTRAORDINARIO")</param>
         /// <param name="anio">Año</param>
         /// <param name="mes">Mes</param>
         /// <param name="dia">Día</param>
-        /// <param name="periodo">Indicador del tipo de período que se requiere (0 - Un día, 1 - Un mes, 2 - Todos). Sólo se usa si la opciónes 1, 2, 3 ó 4</param>
+        /// <param name="periodo">Indicador del tipo de período que se requiere (0 - Un día, 1 - Un mes, 2 - Todos). Sólo se usa si las opciones son 1, 2, 3, 4 u 11. Si la opción es 11, elvalor representa el identificador de la zona militar</param>
         /// <returns></returns>
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
@@ -48,7 +48,7 @@ namespace WebApiSSF.Controllers
                 var laOpcion = (FiltroProgramaOpcion)opcion;
                 var elPeriodo = (PeriodoOpcion)periodo;
 
-                var programas = await _pp.ObtenerPorFiltro(usuario, tipo, region, clase, anio, mes, dia, laOpcion, elPeriodo);
+                var programas = await _pp.ObtenerPorFiltroAsync(usuario, tipo, region, clase, anio, mes, dia, laOpcion, elPeriodo);
                 
                 if (programas == null)
                 {
@@ -64,6 +64,39 @@ namespace WebApiSSF.Controllers
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.Message);
             }
         }
+
+        /// <summary>
+        /// Obtiene programas
+        /// </summary>
+        /// <param name="idPrograma">Identificador del programa</param>
+        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("id")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<PatrullajeDto>> ObtenerProgramaPorId([Required] int idPrograma ,  [Required] string usuario)
+        {
+            try
+            {
+                var programa = await _pp.ObtenerProgramaPorIdAsync(idPrograma,usuario);
+
+                if (programa == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(programa);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"error al obtener programas para el programa: {idPrograma},  usuario: {usuario} ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición -  " + ex.Message);
+            }
+        }
+
 
         /// <summary>
         /// Registra una propuesta o un programa de patrullaje
@@ -82,7 +115,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.AgregaPrograma(opcion, clase, p);
+                await _pp.AgregaProgramaAsync(opcion, clase, p);
                 return StatusCode(201, "Ok");
             }
             catch (Exception ex)
@@ -107,7 +140,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.AgregaPropuestasComoProgramas(p, usuario);
+                await _pp.AgregaPropuestasComoProgramasAsync(p, usuario);
                 return StatusCode(201, "Ok");
             }
             catch (Exception ex)
@@ -132,7 +165,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.ActualizaProgramasOrPropuestasPorOpcion(p, opcion, usuario);
+                await _pp.ActualizaProgramasOrPropuestasPorOpcionAsync(p, opcion, usuario);
                 return Ok();
             }
             catch (Exception ex)
@@ -158,7 +191,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.ActualizaPropuestasOrProgramasPorOpcionAndAccion(p, opcion, accion, usuario);
+                await _pp.ActualizaPropuestasOrProgramasPorOpcionAndAccionAsync(p, opcion, accion, usuario);
                 return Ok();
             }
             catch (Exception ex)
@@ -182,7 +215,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.DeletePorOpcion(opcion, id, usuario);
+                await _pp.DeletePorOpcionAsync(opcion, id, usuario);
                 return Ok();
             }
             catch (Exception ex)

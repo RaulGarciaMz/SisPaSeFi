@@ -1258,5 +1258,131 @@ namespace SqlServerAdapter
         {
             return (await _programaContext.SaveChangesAsync() >= 0);
         }
+
+        public async Task<List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorAnioMesZonaAsync(string tipo, int region, int anio, int mes, string clase, int zona)
+        {
+            string sqlQuery = @"SELECT a.id_propuestapatrullaje id,a.id_ruta ,a.fechapatrullaje,a.id_puntoresponsable,b.clave,b.regionmilitarsdn,
+                                       b.regionssf,b.observaciones observacionesruta,'' observaciones, 0 riesgopatrullaje, d.descripcionnivel, a.ultimaactualizacion,
+                                       a.id_usuario,e.fechatermino,0 id_usuarioresponsablepatrullaje, a.id_apoyopatrullaje
+                                       ,COALESCE((SELECT TOP 1 f.inicio 
+                                	           FROM ssf.programapatrullajes f 
+                                                  WHERE f.id_propuestapatrullaje=a.id_propuestapatrullaje
+                                                   AND YEAR(f.fechapatrullaje)=YEAR(GETDATE()) AND MONTH(f.fechapatrullaje)=MONTH(GETDATE()) AND DAY(f.fechapatrullaje)=DAY(GETDATE()))
+                                               ,'00:00:00') inicio
+                                        ,COALESCE((SELECT TOP 1 g.descripcionestadopatrullaje 
+                                	            FROM ssf.programapatrullajes f
+                                				JOIN ssf.estadopatrullaje g ON f.id_estadopatrullaje=g.id_estadopatrullaje
+                                                   WHERE f.id_propuestapatrullaje=a.id_propuestapatrullaje
+                                                   AND YEAR(f.fechapatrullaje)=YEAR(GETDATE()) AND MONTH(f.fechapatrullaje)=MONTH(GETDATE()) AND DAY(f.fechapatrullaje)=DAY(GETDATE()))
+                                               ,c.descripcionestadopropuesta) descripcionestadopatrullaje
+                                       ,COALESCE(a.solicitudoficioautorizacion,'') solicitudoficiocomision
+                                       ,COALESCE(a.oficioautorizacion,'') oficiocomision
+                                       ,COALESCE((SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC) 
+                                           FROM ssf.itinerario f
+                                		JOIN ssf.puntospatrullaje g ON f.id_punto=g.id_punto
+                                           WHERE f.id_ruta=a.id_ruta ),'') as itinerario
+                                FROM ssf.propuestaspatrullajes a
+                                JOIN ssf.rutas b ON a.id_ruta=b.id_ruta
+                                JOIN ssf.estadopropuesta c ON a.id_estadopropuesta=c.id_estadopropuesta
+                                JOIN ssf.niveles d ON a.riesgopatrullaje=d.id_nivel
+                                JOIN ssf.propuestaspatrullajescomplementossf e ON a.id_propuestapatrullaje=e.id_propuestapatrullaje
+                                JOIN ssf.tipopatrullaje k ON b.id_tipopatrullaje=k.id_tipopatrullaje
+                                JOIN ssf.clasepatrullaje m ON a.id_clasepatrullaje=m.id_clasepatrullaje
+                                WHERE YEAR(a.fechapatrullaje)= @pAnio AND MONTH(a.fechapatrullaje)= @pMes
+                                AND  k.descripcion= @pTipo AND b.regionssf= @pRegion
+                                AND m.descripcion= @pClase AND b.zonamilitarsdn= @pZona
+                                ORDER BY a.fechapatrullaje";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pAnio", anio),
+                new SqlParameter("@pMes", mes),
+                new SqlParameter("@pTipo", tipo),
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pClase", clase),
+                new SqlParameter("@pZona", zona)
+             };
+
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<List<PatrullajeVista>> ObtenerPropuestasPorAnioMesZonaAsync(string tipo, int region, int anio, int mes, string clase, int zona)
+        {
+            string sqlQuery = @"SELECT a.id_propuestapatrullaje id,a.id_ruta ,a.fechapatrullaje,a.id_puntoresponsable,b.clave,b.regionmilitarsdn,
+                                       b.regionssf,b.observaciones observacionesruta,'' observaciones, 0 riesgopatrullaje, d.descripcionnivel, a.ultimaactualizacion,
+                                       a.id_usuario, a.fechapatrullaje fechatermino, 0 id_usuarioresponsablepatrullaje, a.id_apoyopatrullaje
+                                       ,COALESCE((SELECT TOP 1 f.inicio 
+                                	           FROM ssf.programapatrullajes f 
+                                                  WHERE f.id_propuestapatrullaje=a.id_propuestapatrullaje
+                                                   AND YEAR(f.fechapatrullaje)=YEAR(GETDATE()) AND MONTH(f.fechapatrullaje)=MONTH(GETDATE()) AND DAY(f.fechapatrullaje)=DAY(GETDATE()))
+                                               ,'00:00:00') inicio
+                                        ,COALESCE((SELECT TOP 1 g.descripcionestadopatrullaje 
+                                	            FROM ssf.programapatrullajes f
+                                				JOIN ssf.estadopatrullaje g ON f.id_estadopatrullaje=g.id_estadopatrullaje
+                                                   WHERE f.id_propuestapatrullaje=a.id_propuestapatrullaje
+                                                   AND YEAR(f.fechapatrullaje)=YEAR(GETDATE()) AND MONTH(f.fechapatrullaje)=MONTH(GETDATE()) AND DAY(f.fechapatrullaje)=DAY(GETDATE()))
+                                               ,c.descripcionestadopropuesta) descripcionestadopatrullaje
+                                       ,COALESCE(a.solicitudoficioautorizacion,'') solicitudoficiocomision
+                                       ,COALESCE(a.oficioautorizacion,'') oficiocomision
+                                       ,COALESCE((SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC) 
+                                           FROM ssf.itinerario f
+                                		JOIN ssf.puntospatrullaje g ON f.id_punto=g.id_punto
+                                           WHERE f.id_ruta=a.id_ruta ),'') as itinerario
+                                FROM ssf.propuestaspatrullajes a
+                                JOIN ssf.rutas b ON a.id_ruta=b.id_ruta
+                                JOIN ssf.estadopropuesta c ON a.id_estadopropuesta=c.id_estadopropuesta
+                                JOIN ssf.niveles d ON a.riesgopatrullaje=d.id_nivel
+                                JOIN ssf.tipopatrullaje k ON b.id_tipopatrullaje=k.id_tipopatrullaje
+                                JOIN ssf.clasepatrullaje m ON a.id_clasepatrullaje=m.id_clasepatrullaje
+                                WHERE YEAR(a.fechapatrullaje)= @pAnio AND MONTH(a.fechapatrullaje)= @pMes
+                                AND  k.descripcion= @pTipo AND b.regionssf= @pRegion
+                                AND m.descripcion= @pClase AND b.zonamilitarsdn= @pZona
+                                ORDER BY a.fechapatrullaje";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pAnio", anio),
+                new SqlParameter("@pMes", mes),
+                new SqlParameter("@pTipo", tipo),
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pClase", clase),
+                new SqlParameter("@pZona", zona)
+             };
+
+            return await _programaContext.PatrullajesVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<List<ProgramaSoloVista>> ObtenerProgramaPorIdAsync(int idPrograma)
+        {
+            string sqlQuery = @"SELECT a.id_programa id,a.id_ruta,a.fechapatrullaje,a.inicio,a.id_puntoresponsable,b.clave
+                                      ,b.regionmilitarsdn,b.regionssf,b.observaciones observacionesruta,c.descripcionestadopatrullaje
+                                      ,a.observaciones,a.riesgopatrullaje,d.descripcionnivel,a.ultimaactualizacion
+                                      ,a.id_usuario,a.id_usuarioresponsablepatrullaje,a.id_apoyopatrullaje,a.id_ruta_original
+                                      ,i.ubicacion,j.nombre municipio,k.nombre estado,l.nombre,l.apellido1,l.apellido2
+                                      ,COALESCE(a.solicitudoficiocomision,'') solicitudoficiocomision
+                                      ,COALESCE(a.oficiocomision,'') oficiocomision
+                                      ,COALESCE((SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC) 
+                                          FROM ssf.itinerario f, ssf.puntospatrullaje g 
+                                          WHERE f.id_ruta=a.id_ruta AND f.id_punto=g.id_punto),'') as itinerario
+                                FROM ssf.programapatrullajes a
+                                JOIN ssf.rutas b ON a.id_ruta=b.id_ruta
+                                JOIN ssf.estadopatrullaje c ON a.id_estadopatrullaje=c.id_estadopatrullaje
+                                JOIN ssf.niveles d ON a.riesgopatrullaje=d.id_nivel
+                                JOIN ssf.tipopatrullaje e ON b.id_tipopatrullaje=e.id_tipopatrullaje
+                                JOIN ssf.comandanciasregionales h ON b.regionssf=h.id_comandancia
+                                JOIN ssf.puntospatrullaje i ON h.id_punto=i.id_punto
+                                JOIN ssf.municipios j ON i.id_municipio=j.id_municipio
+                                JOIN ssf.estadospais k ON j.id_estado=k.id_estado
+                                JOIN ssf.usuarios l ON h.id_usuario=l.id_usuario
+                                WHERE a.id_programa= @pIdPrograma 
+                                ORDER BY a.ultimaActualizacion DESC, a.fechapatrullaje, a.inicio";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pIdPrograma", idPrograma)
+             };
+                       
+            return await _programaContext.ProgramasSoloVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
     }
 }

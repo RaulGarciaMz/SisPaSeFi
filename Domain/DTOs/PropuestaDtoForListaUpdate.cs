@@ -306,4 +306,106 @@
         public int intApoyoPatrullaje { get; set; }
     }
 
+    public class PatrullajeSoloDto
+    {
+        /// <summary>
+        /// Identificador del programa de patrullaje
+        /// </summary>
+        public int intIdPrograma { get; set; }
+        /// <summary>
+        /// Identificador de la ruta del patrullaje
+        /// </summary>
+        public int intIdRuta { get; set; }
+        /// <summary>
+        /// Fecha del patrullaje
+        /// </summary>
+        public string strFechaPatrullaje { get; set; }
+        /// <summary>
+        /// Hora de inicio del patrullaje
+        /// </summary>
+        public string strInicio { get; set; }
+        /// <summary>
+        /// Identificador del punto de patrullaje responsable
+        /// </summary>
+        public int intIdPuntoResponsable { get; set; }
+        /// <summary>
+        /// Identificador de la clave del patrullaje
+        /// </summary>
+        public string strClave { get; set; }
+        /// <summary>
+        /// Identificador de la región militar SDN del patrullaje
+        /// </summary>
+        public int intRegionMilitarSDN { get; set; }
+        /// <summary>
+        /// Identificador de la región SSF del patrullaje
+        /// </summary>
+        public int intRegionSSF { get; set; }
+        /// <summary>
+        /// descripción de observaciones de las rutas del patrullaje
+        /// </summary>
+        public string strObservacionesRuta { get; set; }
+        /// <summary>
+        /// Descripción del estado del patrullaje
+        /// </summary>
+        public string strDescripcionEstadoPatrullaje { get; set; }
+        /// <summary>
+        /// Descripción de observaciones realizadas al patrullaje
+        /// </summary>
+        public string strObservacionesPrograma { get; set; }
+        /// <summary>
+        /// Identificador del riesgo del patrullaje
+        /// </summary>
+        public int intIdRiesgoPatrullaje { get; set; }
+        /// <summary>
+        /// Descripción de la solicitud del oficio de comisión del patrullaje
+        /// </summary>
+        public string strSolicitudOficio { get; set; }
+        /// <summary>
+        /// Descripción del oficip de comisión del patrullaje
+        /// </summary>
+        public string strOficio { get; set; }
+        /// <summary>
+        /// Desripción del nivel de riesgo del patrullaje
+        /// </summary>
+        public string strDescripcionNivelRiesgo { get; set; }
+        /// <summary>
+        /// Descripción el itinerario del patrullaje
+        /// </summary>
+        public string strItinerario { get; set; }
+        /// <summary>
+        /// Fecha de última actualización del registro del patrullaje
+        /// </summary>
+        public string strUltimaActualizacion { get; set; }
+        /// <summary>
+        /// Identificador del usuario que registra el patrullaje
+        /// </summary>
+        public int intIdUsuario { get; set; }
+        /// <summary>
+        /// Identificador del usuario responsable de llevar a cabo el patrullaje
+        /// </summary>
+        public int intUsuarioResponsablePatrullaje { get; set; }
+        /// <summary>
+        /// Identificador del apoyo de patrullaje
+        /// </summary>
+        public int intApoyoPatrullaje { get; set; }
+        /// <summary>
+        /// Identificador de la ruta original del patrullaje
+        public int intidrutaoriginal { get; set; }
+        /// <summary>
+        /// Nombre de la instalación
+        /// </summary>
+        public string strInstalacion { get; set; }
+        /// <summary>
+        /// Nombre del municipio
+        /// </summary>
+        public string strMunicipio { get; set; }
+        /// <summary>
+        /// Nombre del estado
+        /// </summary>
+        public string strEstado { get; set; }
+        /// <summary>
+        /// Nombre del comandante regional
+        /// </summary>
+        public string strComandanteRegional { get; set; }
+    }
 }
