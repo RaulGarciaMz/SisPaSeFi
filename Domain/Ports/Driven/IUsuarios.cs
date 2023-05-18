@@ -67,11 +67,12 @@ namespace Domain.Ports.Driven
         Task<Usuario?> ObtenerUsuarioConfiguradorPorNombreAsync(string usuario);
         Task<Usuario?> ObtenerUsuarioPorUsuarioNomAsync(string usuario);
         Task<int?> ObtenerIdUsuarioPorUsuarioNomAsync(string usuario);
-    }
-
-    public interface IUsuariosRegistro
-    {
-        Task<Usuario> ObtenerUsuarioRegistradoAsync(string usuario);
         Task<int> IdentificaUsuarioLocalAsync(string usuario, string clave);
     }
+
+/*    public interface IUsuariosRegistro
+    {
+        Task<Usuario> ObtenerUsuarioRegistradoAsync(string usuario);
+        
+    }*/
 }

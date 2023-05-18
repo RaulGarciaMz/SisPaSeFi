@@ -5,13 +5,13 @@ using SqlServerAdapter.Data;
 
 namespace SqlServerAdapter
 {
-    public class RegistroRepository : IRegistroRepo
+    public class RegistroEntradaUsuarioRepository : IRegistroEntradaUsuarioRepo
     {
-        protected readonly RegistroContext _registroContext;
+        protected readonly RegistroEntradaUsuarioContext _registroContext;
 
-        public RegistroRepository(RegistroContext rolesContext)
+        public RegistroEntradaUsuarioRepository(RegistroEntradaUsuarioContext registroContext)
         {
-            _registroContext = rolesContext ?? throw new ArgumentNullException(nameof(rolesContext));
+            _registroContext = registroContext ?? throw new ArgumentNullException(nameof(registroContext));
         }
 
         public async Task AumentaIntentosDeUsuarioEnMemoriaAsync(string usuario)
@@ -190,8 +190,6 @@ namespace SqlServerAdapter
 
             await _registroContext.SaveChangesAsync();
         }
-
-        
 
         public async Task<List<Acceso>> ObtenerAccesosAsync()
         {

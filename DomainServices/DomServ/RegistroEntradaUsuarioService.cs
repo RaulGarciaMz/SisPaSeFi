@@ -11,12 +11,12 @@ using System.Text;
 
 namespace DomainServices.DomServ
 {
-    public class RegistroService : IRegistroService
+    public class RegistroEntradaUsuarioService : IRegistroEntradaUsuarioService
     {
-        private readonly IRegistroRepo _repo;
-        private readonly IUsuariosRegistro _user;
+        private readonly IRegistroEntradaUsuarioRepo _repo;
+        private readonly IUsuariosParaValidacionQuery _user;
 
-        public RegistroService(IRegistroRepo repo, IUsuariosRegistro uc)
+        public RegistroEntradaUsuarioService(IRegistroEntradaUsuarioRepo repo, IUsuariosParaValidacionQuery uc)
         {
             _repo = repo;
             _user = uc;
@@ -47,7 +47,7 @@ namespace DomainServices.DomServ
 
                     if (esUsuarioLocal || esUsuarioEnDirectorioActivo)
                     {
-                        var userV = await _user.ObtenerUsuarioRegistradoAsync(u.strNombreDeUsuario);
+                        var userV = await _user.ObtenerUsuarioPorUsuarioNomAsync(u.strNombreDeUsuario);
 
                         if (userV != null && userV.Bloqueado == 0)
                         {
@@ -211,7 +211,7 @@ namespace DomainServices.DomServ
         {
             string resultado = "¦¦0¦";
 
-            var user = await _user.ObtenerUsuarioRegistradoAsync(usuario);
+            var user = await _user.ObtenerUsuarioPorUsuarioNomAsync(usuario);
 
             if (user != null)
             {

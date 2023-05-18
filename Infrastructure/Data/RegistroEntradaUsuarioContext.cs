@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SqlServerAdapter.Data
 {
-    public class RegistroContext : DbContext
+    public class RegistroEntradaUsuarioContext : DbContext
     {
-        public RegistroContext(DbContextOptions<RegistroContext> options)
+        public RegistroEntradaUsuarioContext(DbContextOptions<RegistroEntradaUsuarioContext> options)
         : base(options)
         {
         }

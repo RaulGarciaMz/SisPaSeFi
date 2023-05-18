@@ -54,7 +54,7 @@ namespace Domain.Common
             var fechaHora = strFecha + " " + strHora;
 
             CultureInfo provider = CultureInfo.InvariantCulture;
-            return DateTime.ParseExact(fechaHora, "yy-MM-dd HH:mm:ss", provider);
+            return DateTime.ParseExact(fechaHora, "yyyy-MM-dd HH:mm:ss", provider);
         }
     }
 }

@@ -14,10 +14,10 @@ namespace WebApiSSF.Controllers
     [ApiController]
     public class RegistroController : ControllerBase
     {
-        private readonly IRegistroService _pp;
+        private readonly IRegistroEntradaUsuarioService _pp;
         private readonly ILogger<RegistroController> _log;
 
-        public RegistroController(IRegistroService p, ILogger<RegistroController> log)
+        public RegistroController(IRegistroEntradaUsuarioService p, ILogger<RegistroController> log)
         {
             _pp = p ?? throw new ArgumentNullException(nameof(p));
             _log = log ?? throw new ArgumentNullException(nameof(log));
@@ -31,6 +31,7 @@ namespace WebApiSSF.Controllers
         /// <returns></returns>
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
+        [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<UsuarioRegistradoDto>> ObtenerUsuarioRegistrado(UsuarioDtoForGet u, [Required] string pathLdap)
