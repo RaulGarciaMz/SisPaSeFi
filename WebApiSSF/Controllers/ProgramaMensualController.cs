@@ -21,14 +21,15 @@ namespace WebApiSSF.Controllers
             _rp = r ?? throw new ArgumentNullException(nameof(r));
             _log = log;
         }
-                
+
         /// <summary>
         /// Obtiene el programa mensual de patrullaje acorde a los parámetros indicados
         /// </summary>
+        /// <param name="opcion">Opcion de tipo de datos mensuales ("PROGRAMA", "PROPUESTA")</param>
         /// <param name="anio">Año del programa mensual</param>
         /// <param name="mes">Mes del programa mensual</param>
         /// <param name="region">Identificador de la región para el reporte mensual</param>
-        /// <param name="tipo">Tipo de patrullaje ala que se refiere el programa mensual</param>
+        /// <param name="tipoPatrullaje">Tipo de patrullaje al que se refiere el programa mensual ("AEREO", "TERRESTRE")</param>
         /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [HttpGet]
@@ -36,11 +37,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<ProgramaPatrullajeMensualDto>>> ObtenerProgramaMensual([Required]int anio, [Required] int mes, [Required] string region, [Required] string tipo, [Required] string usuario)
+        public async Task<ActionResult<IEnumerable<ProgramaPatrullajeMensualDto>>> ObtenerProgramaMensual([Required] string opcion, [Required]int anio, [Required] int mes, [Required] string region, [Required] string tipoPatrullaje, [Required] string usuario)
         {
             try
             {
-                var programa = await _rp.ObtenerProgramaMensualAsync( anio,  mes,  region,  tipo,  usuario);
+                var programa = await _rp.ObtenerProgramaMensualAsync(opcion, anio,  mes,  region,  tipoPatrullaje,  usuario);
 
                 if (programa == null)
                 {
@@ -51,7 +52,7 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener programa mensual para el año: {anio}, mes: {mes}, región: {region}, tipo: {tipo}, usuario: {usuario}", ex);
+                _log.LogError($"error al obtener programa mensual para el año: {anio}, mes: {mes}, región: {region}, tipo: {tipoPatrullaje}, usuario: {usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }

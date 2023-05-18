@@ -4,7 +4,6 @@ using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SqlServerAdapter
 {
