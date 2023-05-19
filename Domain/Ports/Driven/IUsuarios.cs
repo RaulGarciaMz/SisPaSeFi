@@ -68,6 +68,7 @@ namespace Domain.Ports.Driven
         Task<Usuario?> ObtenerUsuarioPorUsuarioNomAsync(string usuario);
         Task<int?> ObtenerIdUsuarioPorUsuarioNomAsync(string usuario);
         Task<int> IdentificaUsuarioLocalAsync(string usuario, string clave);
+        Task<Usuario?> ObtenerUsuarioConfiguradorVerificaMd5Async(string usuario, string pass);
     }
 
 /*    public interface IUsuariosRegistro

@@ -182,6 +182,14 @@ namespace SqlServerAdapter
         {
             return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).AsNoTracking().FirstOrDefaultAsync();
         }
+
+        public async Task<Usuario?> ObtenerUsuarioConfiguradorVerificaMd5Async(string usuario, string pass)
+        {
+            var md5 = ComputeMD5(pass);
+
+            return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1 && (x.Pass == md5 || x.PassTemp == md5)).AsNoTracking().FirstOrDefaultAsync();
+        }
+
         public async Task<Usuario?> ObtenerUsuarioPorUsuarioNomAsync(string usuario)
         {
             return await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario).AsNoTracking().FirstOrDefaultAsync();
