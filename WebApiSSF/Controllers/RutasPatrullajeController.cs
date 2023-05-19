@@ -40,7 +40,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                var rutas = await _rp.ObtenerPorFiltro(usuario, opcion, tipo, criterio, actividad);
+                var rutas = await _rp.ObtenerPorFiltroAsync(usuario, opcion, tipo, criterio, actividad);
 
                 if (rutas != null && rutas.Count > 0) 
                 {
@@ -70,7 +70,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _rp.Agrega(r, usuario);
+                await _rp.AgregaAsync(r, usuario);
                 return StatusCode(201, "Ok");
             }
             catch (Exception ex)
@@ -94,7 +94,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _rp.Update(r, usuario);
+                await _rp.UpdateAsync(r, usuario);
                 return Ok();
             }
             catch (Exception ex)
@@ -117,7 +117,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _rp.Delete(id, usuario);
+                await _rp.DeleteAsync(id, usuario);
                 return Ok();
             }
             catch (Exception ex)

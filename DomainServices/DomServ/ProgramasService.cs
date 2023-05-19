@@ -201,7 +201,6 @@ namespace DomainServices.DomServ
             return ret;
         }
 
-
         public async Task AgregaProgramaAsync(string opcion, string clase, ProgramaDtoForCreateWithListas p) 
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(p.strUsuario);
@@ -369,7 +368,7 @@ namespace DomainServices.DomServ
 
         }
 
-        public async Task ActualizaProgramaPorCambioDeRuta(ProgramaDtoForUpdateRuta p, string usuario)
+        public async Task ActualizaProgramaPorCambioDeRutaAsync(ProgramaDtoForUpdateRuta p, string usuario)
         {
             var usuarioId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
@@ -431,7 +430,6 @@ namespace DomainServices.DomServ
         {
             return user >= 0;
         }
-
       
         private PatrullajeDto ConviertePatrullajeDominioToPatrullajeDto(PatrullajeVista p) 
         {
@@ -546,7 +544,6 @@ namespace DomainServices.DomServ
 
             return pp;
         }
-
 
         private ProgramaPatrullaje ConvierteProgramaDtoForUpdateToProgramaDominioForCreate(PropuestaDtoForListaUpdate p)
         {

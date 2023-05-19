@@ -18,7 +18,7 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task<MonitoreoMovilDto> ObtenerMonitoreoMovil(string usuario)
+        public async Task<MonitoreoMovilDto> ObtenerMonitoreoMovilAsync(string usuario)
         {
             var monitoreo = new MonitoreoMovilDto();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);

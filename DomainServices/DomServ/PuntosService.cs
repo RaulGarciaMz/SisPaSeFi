@@ -18,7 +18,7 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de agregar un punto de patrullaje
         /// </summary>
-        public async Task Agrega(PuntoDto pp, string usuario)
+        public async Task AgregaAsync(PuntoDto pp, string usuario)
         {
             if (await EsUsuarioConfigurador(usuario))
             {
@@ -30,7 +30,7 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>Delete</c> Implementa la interfaz para el caso de uso de eliminar un punto de patrullaje, mientras no esté en otros itinerarios
         /// </summary>
-        public async Task Delete(int id, string usuario)
+        public async Task DeleteAsync(int id, string usuario)
         {        
             if (await EsUsuarioConfigurador(usuario))
             {
@@ -46,7 +46,7 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de actualizar un punto de patrullaje
         /// </summary>
-        public async Task Update(PuntoDto pp, string usuario)
+        public async Task UpdateAsync(PuntoDto pp, string usuario)
         {
             if (await EsUsuarioConfigurador(usuario))
             {
@@ -119,7 +119,6 @@ namespace DomainServices.DomServ
             return r;
         }
 
-
         /// <summary>
         /// Método <c>ExisteEnItinerarios</c> verifica si el punto de patrullaje indicado existe en algún itinerario
         /// </summary>
@@ -170,7 +169,9 @@ namespace DomainServices.DomServ
                 Latitud =  lat,
                 Longitud = longi,
                 IdMunicipio = p.intIdMunicipio,
-                IdUsuario= p.intIdUsuario
+                IdUsuario= p.intIdUsuario,
+                //Campos no nulos
+                UltimaActualizacion = DateTime.UtcNow
             };
         }
 

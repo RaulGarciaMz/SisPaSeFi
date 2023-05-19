@@ -40,7 +40,7 @@ namespace DomainServices.DomServ
         }
 
 
-        public async Task Agregar(PersonalParticipanteDto u)
+        public async Task AgregarAsync(PersonalParticipanteDto u)
         {
             var l = new List<PersonalParticipanteVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(u.strNombreDeUsuario);
@@ -60,7 +60,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task Borrar(PersonalParticipanteDto u)
+        public async Task BorrarAsync(PersonalParticipanteDto u)
         {
             var l = new List<PersonalParticipanteVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(u.strNombreDeUsuario);

@@ -9,7 +9,7 @@ namespace Domain.Ports.Driving
         Task AgregaPropuestasComoProgramasAsync(List<ProgramaDtoForCreate> p, string usuario);
         Task ActualizaProgramasOrPropuestasPorOpcionAsync(ProgramaDtoForUpdatePorOpcion p, string opcion, string usuario);
         Task ActualizaPropuestasOrProgramasPorOpcionAndAccionAsync(List<PropuestaDtoForListaUpdate> p, string opcion, int accion, string usuario);
-        Task ActualizaProgramaPorCambioDeRuta(ProgramaDtoForUpdateRuta p, string usuario);
+        Task ActualizaProgramaPorCambioDeRutaAsync(ProgramaDtoForUpdateRuta p, string usuario);
         Task ActualizaProgramasPorInicioPatrullajeAsync(ProgramaDtoForUpdateInicio p, string usuario);
         Task DeletePorOpcionAsync(string opcion, int id, string usuario);
     }

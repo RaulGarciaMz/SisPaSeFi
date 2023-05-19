@@ -12,12 +12,12 @@ namespace Domain.Ports.Driving
 {
     public interface IEvidenciasDtoCommand
     {       
-        Task AgregarEvidenciaPorTipo(EvidenciaDto evidencia);
-        Task BorrarEvidenciaPorTipo(int idEvidencia, string tipo, string usuario);
+        Task AgregarEvidenciaPorTipoAsync(EvidenciaDto evidencia);
+        Task BorrarEvidenciaPorTipoAsync(int idEvidencia, string tipo, string usuario);
     }
 
     public interface IEvidenciasDtoQuery
     {
-        Task<List<EvidenciaVista>> ObtenerEvidenciasPorTipo(int idReporte, string tipo, string usuario);
+        Task<List<EvidenciaVista>> ObtenerEvidenciasPorTipoAsync(int idReporte, string tipo, string usuario);
     }
 }

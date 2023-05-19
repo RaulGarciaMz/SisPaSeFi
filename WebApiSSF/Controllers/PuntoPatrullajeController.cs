@@ -74,7 +74,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.Agrega(pto, usuario);
+                await _pp.AgregaAsync(pto, usuario);
                 return StatusCode(201, "Ok");
             }
             catch (Exception ex)
@@ -99,7 +99,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.Update(pto, usuario);
+                await _pp.UpdateAsync(pto, usuario);
                 return Ok();
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.Delete(id, usuario);
+                await _pp.DeleteAsync(id, usuario);
                 return Ok();
             }
             catch (Exception ex)

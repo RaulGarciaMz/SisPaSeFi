@@ -4,11 +4,6 @@ using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlServerAdapter
 {
@@ -49,6 +44,10 @@ namespace SqlServerAdapter
                 IdComandancia = comandancia,
                 IdTipoPatrullaje = tipoPatrullaje,
                 IdTipoVehiculo = tipoVehiculo,
+                //Campos no nulos
+                KmMantenimientoProgramado = 0,
+                UltimaActualizacion = DateTime.UtcNow,
+                Kilometraje = 0,
             };   
 
             _vehiculoPatContext.Vehiculos.Add(v);

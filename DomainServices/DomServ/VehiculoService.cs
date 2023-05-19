@@ -34,7 +34,7 @@ namespace DomainServices.DomServ
 
             if (user != null)
             {
-                var existe = await ExisteVehiculo(vehiculo);
+                var existe = await ExisteVehiculoAsync(vehiculo);
                 if (! existe )
                 {
                     await _repo.AgregaAsync(vehiculo.strMatricula, vehiculo.strNumeroEconomico, vehiculo.intHabilitado, vehiculo.intTipoPatrullaje, vehiculo.intTipoVehiculo, vehiculo.intRegionSSF);
@@ -157,7 +157,7 @@ namespace DomainServices.DomServ
             return ConvierteListaVehiculosToDto(l);
         }
 
-        private async Task<bool> ExisteVehiculo(VehiculoDtoForCreate vehiculo)
+        private async Task<bool> ExisteVehiculoAsync(VehiculoDtoForCreate vehiculo)
         {
             var vehis = await _repo.ObtenerNumeroDeVehiculosPorMatriculaAndComandanciaAsync(vehiculo.strMatricula, vehiculo.intRegionSSF);
 

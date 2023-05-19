@@ -9,7 +9,7 @@ namespace Domain.Ports.Driving
 
     public interface IRegistroDtoCommand
     {
-        Task<string> ActualizaRegistroPorOpcion(string opcion, UsuarioForPostDto user);
+        Task<string> ActualizaRegistroPorOpcionAsync(string opcion, UsuarioForPostDto user);
     }
 
     

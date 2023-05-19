@@ -10,9 +10,9 @@ namespace Domain.Ports.Driving
 {
     public interface IPuntosDtoCommand
     {
-        Task Agrega(PuntoDto pp, string usuario);
-        Task Update(PuntoDto pp, string usuario);
-        Task Delete(int id, string usuario);
+        Task AgregaAsync(PuntoDto pp, string usuario);
+        Task UpdateAsync(PuntoDto pp, string usuario);
+        Task DeleteAsync(int id, string usuario);
     }
 
     public interface IPuntosDtoQuery

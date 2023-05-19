@@ -10,8 +10,8 @@ namespace Domain.Ports.Driving
 {
     public interface IPersonalParticipanteDtoCommand
     {
-        Task Agregar(PersonalParticipanteDto usuario);
-        Task Borrar(PersonalParticipanteDto usuario);
+        Task AgregarAsync(PersonalParticipanteDto usuario);
+        Task BorrarAsync(PersonalParticipanteDto usuario);
     }
 
     public interface IPersonalParticipanteDtoQuery

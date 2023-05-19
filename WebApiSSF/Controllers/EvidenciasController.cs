@@ -53,7 +53,7 @@ namespace WebApiSSF.Controllers
                     return BadRequest("opción no válida");
                 }
 
-                var evidencias = await _pp.ObtenerEvidenciasPorTipo(idReporte, opcion, usuario);
+                var evidencias = await _pp.ObtenerEvidenciasPorTipoAsync(idReporte, opcion, usuario);
 
                 if (evidencias == null || evidencias.Count() == 0) 
                 {
@@ -81,7 +81,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.AgregarEvidenciaPorTipo(evidencia);
+                await _pp.AgregarEvidenciaPorTipoAsync(evidencia);
                 return StatusCode(201, "Ok");
             }
             catch (Exception ex)
@@ -105,7 +105,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.BorrarEvidenciaPorTipo(idEvidencia, tipoIncidencia, usuario);
+                await _pp.BorrarEvidenciaPorTipoAsync(idEvidencia, tipoIncidencia, usuario);
                 return Ok();
             }
             catch (Exception ex)

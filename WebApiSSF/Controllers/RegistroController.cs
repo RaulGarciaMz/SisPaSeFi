@@ -63,7 +63,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                var res = await _pp.ActualizaRegistroPorOpcion(opcion, u);
+                var res = await _pp.ActualizaRegistroPorOpcionAsync(opcion, u);
                 return Ok(res);
             }
             catch (Exception ex)

@@ -42,7 +42,7 @@ namespace DomainServices.DomServ
                 var ahora = DateTime.Now;
                 if (fecha > ahora.AddMinutes(-10))
                 {
-                    var esUsuarioLocal = await EsUsuarioLocalValido(u.strNombreDeUsuario, strClave);
+                    var esUsuarioLocal = await EsUsuarioLocalValidoAsync(u.strNombreDeUsuario, strClave);
                     var esUsuarioEnDirectorioActivo = EsUsuarioEnDirectorioActivo(pathLdap,u.strNombreDeUsuario, strClave);
 
                     if (esUsuarioLocal || esUsuarioEnDirectorioActivo)
@@ -78,7 +78,7 @@ namespace DomainServices.DomServ
             return user;
         }
 
-        public async Task<string> ActualizaRegistroPorOpcion(string opcion, UsuarioForPostDto user)
+        public async Task<string> ActualizaRegistroPorOpcionAsync(string opcion, UsuarioForPostDto user)
         {
             string resultado = "";
 
@@ -221,7 +221,7 @@ namespace DomainServices.DomServ
             return resultado;
         }
 
-        private async Task<bool> EsUsuarioLocalValido(string usuario, string clave) 
+        private async Task<bool> EsUsuarioLocalValidoAsync(string usuario, string clave) 
         {
             var cuantos = await _user.IdentificaUsuarioLocalAsync(usuario, clave);
             return cuantos == 1;

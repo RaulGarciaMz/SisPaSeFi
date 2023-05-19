@@ -17,7 +17,7 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task AgregarEvidenciaPorTipo(EvidenciaDto evidencia)
+        public async Task AgregarEvidenciaPorTipoAsync(EvidenciaDto evidencia)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(evidencia.strUsuario);
 
@@ -41,7 +41,7 @@ namespace DomainServices.DomServ
             }            
         }
 
-        public async Task BorrarEvidenciaPorTipo(int idEvidencia, string tipo, string usuario)
+        public async Task BorrarEvidenciaPorTipoAsync(int idEvidencia, string tipo, string usuario)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
@@ -64,7 +64,7 @@ namespace DomainServices.DomServ
                 }
             }
         }
-        public async Task<List<EvidenciaVista>> ObtenerEvidenciasPorTipo( int idReporte, string tipo, string usuario)
+        public async Task<List<EvidenciaVista>> ObtenerEvidenciasPorTipoAsync( int idReporte, string tipo, string usuario)
         {
             var l = new List<EvidenciaVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);

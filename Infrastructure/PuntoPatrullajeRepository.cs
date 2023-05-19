@@ -95,7 +95,7 @@ namespace SqlServerAdapter
         /// </summary>
         public async Task Agrega(PuntoPatrullaje pp)
         {
-            _patrullajeContext.Add(pp);
+            _patrullajeContext.puntospatrullaje.Add(pp);
             await _patrullajeContext.SaveChangesAsync();
         }
 
@@ -104,7 +104,7 @@ namespace SqlServerAdapter
         /// </summary>
         public async Task Update(PuntoPatrullaje pp)
         {
-            _patrullajeContext.Update(pp);
+            _patrullajeContext.puntospatrullaje.Update(pp);
             await _patrullajeContext.SaveChangesAsync();
         }
 

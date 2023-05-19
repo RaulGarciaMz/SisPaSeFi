@@ -36,7 +36,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                var monitoreo = await _pp.ObtenerMonitoreoMovil(usuario);
+                var monitoreo = await _pp.ObtenerMonitoreoMovilAsync(usuario);
 
                 return Ok(monitoreo);
             }

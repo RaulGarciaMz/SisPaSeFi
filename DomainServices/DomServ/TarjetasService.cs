@@ -25,7 +25,7 @@ namespace DomainServices.DomServ
 
             if (user != null)
             {
-                if (await ExisteTarjetaParaElPrograma(tarjeta.intIdPrograma)) 
+                if (await ExisteTarjetaParaElProgramaAsync(tarjeta.intIdPrograma)) 
                 {
                     return;
                 }
@@ -36,7 +36,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task Update(TarjetaDto tarjeta, string usuario) 
+        public async Task UpdateAsync(TarjetaDto tarjeta, string usuario) 
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
@@ -71,7 +71,7 @@ namespace DomainServices.DomServ
             }    
         }
 
-        public async Task<List<TarjetaDto>> ObtenerPorOpcion(int opcion, string tipo, string region, int anio, int mes, int dia, string usuario)
+        public async Task<List<TarjetaDto>> ObtenerPorOpcionAsync(int opcion, string tipo, string region, int anio, int mes, int dia, string usuario)
         {
             var regreso = new List<TarjetaDto>();
             var user = await _user.ObtenerUsuarioPorUsuarioNomAsync(usuario);
@@ -128,7 +128,7 @@ namespace DomainServices.DomServ
             return regreso;
         }
 
-        private async Task<bool> ExisteTarjetaParaElPrograma(int idPrograma)
+        private async Task<bool> ExisteTarjetaParaElProgramaAsync(int idPrograma)
         {
             if (await _repo.NumeroDeTarjetasPorProgamaAsync(idPrograma) > 0)
             {
@@ -188,8 +188,6 @@ namespace DomainServices.DomServ
             return r;
         }
 
-
-
         private TarjetaInformativa ConvierteTarjetaDtoForCreateToDomain(TarjetaDtoForCreate t, int idUsuario)
         {
             var r = new TarjetaInformativa() 
@@ -214,7 +212,12 @@ namespace DomainServices.DomServ
                 PersonalNavalSemartropa = t.intPersonalNavalSEMARTropa,
                 FechaTermino = DateTime.Parse(t.strFechaTermino),
                 Idresultadopatrullaje = t.intIdResultadoPatrullaje,
-                Lineaestructurainstalacion = t.strLineaEstructuraInstalacion
+                Lineaestructurainstalacion = t.strLineaEstructuraInstalacion,
+                //Campos no nulos
+                IdEstadoTarjetaInformativa = 1,
+                Responsablevuelo="",
+                Fuerzareaccion=0
+                
             };
 
             return r;

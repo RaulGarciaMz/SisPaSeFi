@@ -133,10 +133,10 @@ namespace DomainServices.DomServ
                 switch (i.strTipoIncidencia)
                 {
                     case "INSTALACION":
-                        idReporte = await AgregaIncidenciaDeInstalacion(i);
+                        idReporte = await AgregaIncidenciaDeInstalacionAsync(i);
                         break;
                     case "ESTRUCTURA":
-                        idReporte = await AgregaIncidenciaDeEstructura(i);
+                        idReporte = await AgregaIncidenciaDeEstructuraAsync(i);
                         break;
                 }
 
@@ -148,7 +148,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        private async Task<int> AgregaIncidenciaDeInstalacion(IncidenciasDtoForCreate i) 
+        private async Task<int> AgregaIncidenciaDeInstalacionAsync(IncidenciasDtoForCreate i) 
         {
             var abiertos = await _repo.ObtenerReportesAbiertosPorInstalacionAsync(i.intIdActivo, i.intIdClasificacionIncidencia);
             int idReporte = -1;
@@ -175,7 +175,7 @@ namespace DomainServices.DomServ
             return idReporte;
         }
 
-        private async Task<int> AgregaIncidenciaDeEstructura(IncidenciasDtoForCreate i)
+        private async Task<int> AgregaIncidenciaDeEstructuraAsync(IncidenciasDtoForCreate i)
         {
             var abiertos = await _repo.ObtenerReportesAbiertosPorEstructuraAsync(i.intIdActivo, i.intIdClasificacionIncidencia);
             int idReporte = -1;

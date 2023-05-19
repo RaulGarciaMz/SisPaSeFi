@@ -76,7 +76,7 @@ namespace WebApiSSF.Controllers
             try
             {
                 u.IdPrograma = idPrograma;
-                await _pp.Agregar(u);
+                await _pp.AgregarAsync(u);
                 return Ok();
             }
             catch (Exception ex)
@@ -100,7 +100,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.Borrar(u);
+                await _pp.BorrarAsync(u);
                 return Ok();
             }
             catch (Exception ex)

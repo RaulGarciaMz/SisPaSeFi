@@ -143,7 +143,9 @@ namespace SqlServerAdapter
             EstadoIncidencia= 5,
             PrioridadIncidencia = prioridad,
             UltimaActualizacion = DateTime.UtcNow,
-            IdClasificacionIncidencia = idClasificacion
+            IdClasificacionIncidencia = idClasificacion,
+            //Campos no nulos
+            UltimoRegistroEnBitacora = DateTime.UtcNow
             };
 
             _regIncidenciaContext.ReportesEstructuras.Add(r);
@@ -193,7 +195,9 @@ namespace SqlServerAdapter
                 EstadoIncidencia = 5,
                 PrioridadIncidencia = prioridad,
                 UltimaActualizacion = DateTime.UtcNow,
-                IdClasificacionIncidencia = idClasificacion
+                IdClasificacionIncidencia = idClasificacion,
+                //Campos no nulos
+                UltimoRegistroEnBitacora = DateTime.UtcNow
             };
 
             _regIncidenciaContext.ReportesInstalacion.Add(r);
@@ -244,6 +248,8 @@ namespace SqlServerAdapter
                             RutaArchivo = wepageUbicacion,
                             NombreArchivo = nombreArchivo,
                             Descripcion = item.strDescripcion,
+                            //Campos no nulos
+                            UltimaActualizacion = DateTime.UtcNow
                         };
                         _regIncidenciaContext.EvidenciasIncidencia.Add(eie);
                         break;
@@ -254,6 +260,8 @@ namespace SqlServerAdapter
                             RutaArchivo = wepageUbicacion,
                             NombreArchivo = nombreArchivo,
                             Descripcion = item.strDescripcion,
+                            //Campos no nulos
+                            UltimaActualizacion = DateTime.UtcNow
                         };
                         _regIncidenciaContext.EvidenciasIncidenciaInstalacion.Add(eii);
                         break;

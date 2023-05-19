@@ -4,6 +4,6 @@ namespace Domain.Ports.Driving
 {
     public interface IMonitoreoDtoQuery
     {
-        Task<MonitoreoMovilDto> ObtenerMonitoreoMovil(string usuario);
+        Task<MonitoreoMovilDto> ObtenerMonitoreoMovilAsync(string usuario);
     }
 }

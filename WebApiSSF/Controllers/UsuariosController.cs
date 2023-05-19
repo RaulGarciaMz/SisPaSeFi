@@ -55,16 +55,6 @@ namespace WebApiSSF.Controllers
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="opcion"></param>
-        /// <param name="dato"></param>
-        /// <param name="usuario"></param>
-
-        /// <returns></returns>
-        /// 
-
-        /// <summary>
         /// Agrega usuarios acorde a la opción indicada
         /// </summary>
         /// <param name="opcion">Opción de usuario a agregar ("AsignaUsuarioDeDocumento" ó "CrearUsuario")</param>

@@ -119,7 +119,10 @@ namespace SqlServerAdapter
                 RegionSsf = user.intRegionSSF,
                 Configurador    = user.intConfigurador,
                 DesbloquearRegistros = user.intDesbloquearRegistros,
-                TiempoEspera = user.intTiempoEspera
+                TiempoEspera = user.intTiempoEspera,
+                //Campos no nulos
+                EstampaTiempoAceptacionUso = DateTime.UtcNow,
+                EstampaTiempoUltimoAcceso = DateTime.UtcNow
             };
 
             _userContext.Usuarios.Add(u);

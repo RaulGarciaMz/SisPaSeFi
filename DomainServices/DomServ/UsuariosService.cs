@@ -31,7 +31,7 @@ namespace DomainServices.DomServ
 
                 if (opcion == "CambiarClave")
                 {
-                    await CambiaClaveDeUsuario(users, usuario);
+                    await CambiaClaveDeUsuarioAsync(users, usuario);
                 }
                 else 
                 {
@@ -221,7 +221,7 @@ namespace DomainServices.DomServ
             return ConvierteListaUsuarioToDto(users);
         }
 
-        private async Task CambiaClaveDeUsuario(List<UsuarioDto> users, string usuario)
+        private async Task CambiaClaveDeUsuarioAsync(List<UsuarioDto> users, string usuario)
         { 
             if(users.Count() > 1) 
             {

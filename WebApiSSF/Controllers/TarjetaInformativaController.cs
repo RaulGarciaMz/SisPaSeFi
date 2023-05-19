@@ -42,7 +42,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                var tarjetas = await _t.ObtenerPorOpcion(opcion, tipo, region, anio, mes, dia, usuario);
+                var tarjetas = await _t.ObtenerPorOpcionAsync(opcion, tipo, region, anio, mes, dia, usuario);
 
                 return Ok(tarjetas);
             }
@@ -117,7 +117,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _t.Update(tarjeta, usuario);
+                await _t.UpdateAsync(tarjeta, usuario);
                 return Ok();
             }
             catch (Exception ex)
