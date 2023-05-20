@@ -327,7 +327,7 @@ namespace SqlServerAdapter
             using (MD5 md5 = MD5.Create())
             {
                 return BitConverter.ToString(md5.ComputeHash(Encoding.UTF8.GetBytes(s)))
-                            .Replace("-", "");
+                            .Replace("-", "").ToLower();
             }
         }
 

@@ -67,15 +67,24 @@ namespace DomainServices.DomServ
                     var resultado = new List<string>() { };
                     resultado.Add(totalLineas.ToString());
 
-                    var linMenosHeader = resLineasPtos;
-                    linMenosHeader.RemoveAt(0);
-                    resultado.AddRange(linMenosHeader);
+                    if (resLineasPtos.Count >= 2) 
+                    {
+                        var linMenosHeader = resLineasPtos;
+                        linMenosHeader.RemoveAt(0);
+                        resultado.AddRange(linMenosHeader);
+                    }
+
 
                     resultado.Add(totalAutos.ToString());
-                    var autMenosHeader = resAutos;
-                    autMenosHeader.RemoveAt(0);
 
-                    resultado.AddRange(autMenosHeader );
+                    if (resAutos.Count >= 2)
+                    {
+                        var autMenosHeader = resAutos;
+                        autMenosHeader.RemoveAt(0);
+
+                        resultado.AddRange(autMenosHeader);
+                    }
+ 
                     resultado.Add(resFechas);
 
                     res = resultado;
