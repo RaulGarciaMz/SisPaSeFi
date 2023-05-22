@@ -15,7 +15,7 @@ namespace SqlServerAdapter
             _propuestaContext = propuestaContext ?? throw new ArgumentNullException(nameof(propuestaContext));
         }
 
-        public async Task<List<UbicacionPropuestaExtraVista>> ObtenerUbicacionesPorIdPropuestaAsync(int idPropuesta)
+        public async Task<List<UbicacionPropuestaExtraVista>> ObtenerUbicacionLineasPorIdPropuestaAsync(int idPropuesta)
         {
             string sqlQuery = @"SELECT DISTINCT c.clave, d.ubicacion inicio, e.ubicacion fin 
                                 FROM ssf.propuestasPatrullajes a
