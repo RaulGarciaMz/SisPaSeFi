@@ -16,7 +16,7 @@ namespace DomainServices.DomServ
             _userConf = uc;
         }
 
-        public async Task<DatosPropuestaExtraordinariaDto> ObtenerDatosPropuestaExtraordinaria(int idPropuesta, string usuario)
+        public async Task<DatosPropuestaExtraordinariaDto> ObtenerDatosPropuestaExtraordinariaAsync(int idPropuesta, string usuario)
         {
             var resul = new DatosPropuestaExtraordinariaDto();
 

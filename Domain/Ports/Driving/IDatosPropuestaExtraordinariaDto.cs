@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.DTOs;
 
 namespace Domain.Ports.Driving
 {
     public interface IDatosPropuestaExtraordinariaDtoQuery
     {
+        Task<DatosPropuestaExtraordinariaDto> ObtenerDatosPropuestaExtraordinariaAsync(int idPropuesta, string usuario);
     }
 }
