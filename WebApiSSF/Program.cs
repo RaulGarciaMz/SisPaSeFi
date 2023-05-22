@@ -130,6 +130,9 @@ builder.Services.AddScoped<IRegistroEntradaUsuarioRepo, RegistroEntradaUsuarioRe
 builder.Services.AddScoped<IRegistroEntradaUsuarioService, RegistroEntradaUsuarioService>();
 builder.Services.AddScoped<IOficioAutorizacionRepo,OficioAutorizacionRepository>();
 builder.Services.AddScoped<IOficioAutorizacionService, OficioAutorizacionService>();
+builder.Services.AddScoped<IUbicacionPatrullajeRepo, UbicacionPatrullajeRepository>();
+builder.Services.AddScoped<IUbicacionPatrullajeService, UbicacionPatrullajeService>();
+
 
 builder.Services.AddDbContext<PatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<ProgramaContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
@@ -160,6 +163,7 @@ builder.Services.AddDbContext<RegistrarIncidenciaContext>(dbCtxtOptions => dbCtx
 builder.Services.AddDbContext<RegistroEntradaUsuarioContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<ReporteServiciosMensualContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 builder.Services.AddDbContext<OficioAutorizacionContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
+builder.Services.AddDbContext<UbicacionPatrullajeContext>(dbCtxtOptions => dbCtxtOptions.UseSqlServer(builder.Configuration["ConnectionStrings:SsfInfoDB"]));
 
 /*builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
