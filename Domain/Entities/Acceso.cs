@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
@@ -8,6 +7,9 @@ namespace Domain.Entities;
 public partial class Acceso
 {
     [Key]
+    [Column("idaccesos")]
+    public int Id { get; set; }
+
     [Column("fecha", TypeName = "date")]
     public DateTime? Fecha { get; set; }
 
