@@ -51,9 +51,42 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener rutas para la opcion: {opcion}, tipo: {tipo}, criterio: {criterio}, usuario: {usuario}, actividad {actividad}", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                _log.LogError($"error al obtener rutas para la opcion: {opcion}, tipo: {tipo}, criterio: {criterio}, usuario: {usuario}, actividad {actividad} - ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - "+  ex.Message);
             }    
+        }
+
+        /// <summary>
+        /// Obtiene las rutas disponibles en una región para realizar cambio de ruta
+        /// </summary>
+        /// <param name="region">Identificador de la región</param>
+        /// <param name="fecha">Fecha del patrullaje</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("cambioruta")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<RutaDisponibleDto>>> ObtenerRutasDisponiblesParaCambioDeRutaGetValues([Required] string region, [Required] string fecha)
+        {
+            try
+            {
+                var f = DateTime.Parse(fecha);
+
+                var rutas = await _rp.ObtenerRutasDisponiblesParaCambioDeRutaAsync(region,f);
+
+                if (rutas != null && rutas.Count > 0)
+                {
+                    return Ok(rutas);
+                }
+
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"error al obtener rutas para la region: {region}, fecha: {fecha} - ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
+            }
         }
 
         /// <summary>

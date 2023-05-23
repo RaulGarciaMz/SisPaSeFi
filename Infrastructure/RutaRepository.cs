@@ -21,7 +21,7 @@ namespace SqlServerAdapter
 
         public RutaRepository(RutaContext rutaContext)
         {
-            _rutaContext = rutaContext ?? throw new ArgumentNullException(nameof(rutaContext)); 
+            _rutaContext = rutaContext ?? throw new ArgumentNullException(nameof(rutaContext));
         }
 
         /// <summary>
@@ -30,14 +30,14 @@ namespace SqlServerAdapter
         public async Task AgregaAsync(Ruta r, List<Itinerario> itin)
         {
             //TODO Tratar de implementar transacción
-           _rutaContext.Rutas.Add(r);
+            _rutaContext.Rutas.Add(r);
 
             foreach (var item in itin)
             {
                 item.IdRuta = r.IdRuta;
             }
 
-            _rutaContext.Itinerarios.AddRange(itin); 
+            _rutaContext.Itinerarios.AddRange(itin);
             await _rutaContext.SaveChangesAsync();
         }
 
@@ -171,9 +171,9 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ObtenerUsuarioConfiguradorAsync</c> implementa la interfaz para obtener al usuario indicado sólo si es configurador configurador, 
         /// </summary>
-        public async Task <Usuario?> ObtenerUsuarioConfiguradorAsync(string usuario) 
+        public async Task<Usuario?> ObtenerUsuarioConfiguradorAsync(string usuario)
         {
-           return await _rutaContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefaultAsync();
+            return await _rutaContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Configurador == 1).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace SqlServerAdapter
         /// </summary>
         public async Task<List<RutaVista>> ObtenerRutasPorRegionSsfAsync(string tipo, int regionSsf)
         {
-                string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
+            string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
                    a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
                    a.bloqueado,a.habilitado, a.id_tipopatrullaje,
                    COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
@@ -196,13 +196,13 @@ namespace SqlServerAdapter
             WHERE a.regionssf = @parRegionSsf AND t.descripcion = @parDescripcion 
             ORDER BY regionssf,regionmilitarsdn,zonamilitarsdn,consecutivoregionmilitarsdn";
 
-                object[] parametros = new object[]
-                {
+            object[] parametros = new object[]
+            {
                 new SqlParameter("@parRegionSsf", regionSsf),
                 new SqlParameter("@parDescripcion", tipo)
-                };
+            };
 
-                return await _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
 
         }
 
@@ -303,7 +303,7 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ObtenerPropuestasPorCombinacionFiltrosConRegionSsfAsync</c> implementa la interfaz para obtener propuestas de patrullaje (rutas) filtradas tipo, región SSF,  clave, observaciones e itinerario
         /// </summary>
-        public async Task <List<RutaVista>> ObtenerPropuestasPorCombinacionFiltrosConRegionSsfAsync(string tipo, string criterio, int regionSsf)
+        public async Task<List<RutaVista>> ObtenerPropuestasPorCombinacionFiltrosConRegionSsfAsync(string tipo, string criterio, int regionSsf)
         {
             criterio = "%" + criterio + "%";
 
@@ -333,7 +333,31 @@ namespace SqlServerAdapter
                 new SqlParameter("@parDescripcion", tipo)
             };
 
-            return await  _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        public async Task<List<RutaDisponibleVista>> ObtenerRutasDisponiblesParaCambioDeRutaAsync(string region, DateTime fecha)
+        {
+            string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionMilitarSDN, a.regionSSF, a.zonaMilitarSDN, a.Observaciones  
+                                      ,(SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC) as ruta 
+                                       FROM ssf.itinerario f
+                                       JOIN ssf.puntospatrullaje g ON f.id_punto=g.id_punto
+                                       WHERE f.id_ruta=a.id_ruta ) as itinerario
+                                FROM ssf.rutas a
+                                WHERE a.regionSSF = @pRegion
+                                AND a.id_ruta NOT IN(
+                                    SELECT b.id_ruta
+                                    FROM ssf.programapatrullajes b
+                                    WHERE b.fechaPatrullaje = @pFecha
+                                )";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pRegion", region),
+                new SqlParameter("@pFecha", fecha)
+            };
+
+            return await _rutaContext.RutasDisponibleVista.FromSqlRaw(sqlQuery, parametros).AsNoTracking().ToListAsync();
         }
 
         public async Task<bool> SaveChangesAsync()

@@ -211,6 +211,13 @@ namespace DomainServices.DomServ
             return retornadas;
         }
 
+        public async Task<List<RutaDisponibleDto>> ObtenerRutasDisponiblesParaCambioDeRutaAsync(string region, DateTime fecha)
+        {
+           var rutas =  await _repo.ObtenerRutasDisponiblesParaCambioDeRutaAsync(region, fecha);
+
+            return ConvierteListaDeRutasToDisponibleDto(rutas);
+        }
+
         /// <summary>
         /// Método <c>ExisteRutaConMismaClave</c> verifica si en el catálogo de rutas existe otra con la misma clave
         /// </summary>
@@ -437,6 +444,36 @@ namespace DomainServices.DomServ
                 ConsecutivoRegionMilitarSdn = 1,
                 TotalRutasRegionMilitarSdn = 1
             };
+        }
+
+        /// <summary>
+        /// Método <c>ConvierteRutaDto</c> Convierte un objeto ruta de visualización (DTO) a un objeto Ruta del domino
+        /// </summary>
+        private RutaDisponibleDto ConvierteRutaToDisponibleDto(RutaDisponibleVista r)
+        {          
+            return new RutaDisponibleDto()
+            {
+                intIdRuta = r.id_ruta,
+                intRegionMilitarSDN = r.regionMilitarSDN,
+                intRegionSSF = r.regionSSF,
+                intZonaMilitarSDN = r.zonaMilitarSDN,
+                strClave = r.clave,
+                strItinerario = r.itinerario,
+                strObservaciones = r.observaciones
+            };
+        }
+
+        private List<RutaDisponibleDto> ConvierteListaDeRutasToDisponibleDto(List<RutaDisponibleVista> rutas)
+        {
+            var l = new List<RutaDisponibleDto>();
+
+            foreach (var item in rutas)
+            {
+                var a = ConvierteRutaToDisponibleDto(item);
+                l.Add(a);
+            }
+
+            return l;
         }
     }
 }

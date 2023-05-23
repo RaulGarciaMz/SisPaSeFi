@@ -13,6 +13,9 @@ namespace SqlServerAdapter.Data
 
         public DbSet<Ruta> Rutas { get; set; }
         public DbSet<RutaVista> RutasVista { get; set; }
+
+        public DbSet<RutaDisponibleVista> RutasDisponibleVista { get; set; }
+        
         public DbSet<TipoPatrullaje> TiposPatrullaje { get; set; }
 
         public DbSet<PuntoPatrullaje> PuntosPatrullaje { get; set; }

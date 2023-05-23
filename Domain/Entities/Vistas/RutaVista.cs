@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -25,5 +26,17 @@ namespace Domain.Entities.Vistas
         public string itinerariorutapatrullaje { get; set; }
         public int id_tipopatrullaje { get; set; }
         
+    }
+
+    [Keyless]
+    public class RutaDisponibleVista
+    {
+        public int id_ruta { get; set; }
+        public string clave { get; set; }
+        public string regionMilitarSDN { get; set; }
+        public string regionSSF { get; set; }
+        public int zonaMilitarSDN { get; set; }
+        public string observaciones { get; set; }
+        public string itinerario { get; set; }
     }
 }

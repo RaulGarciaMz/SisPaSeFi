@@ -89,4 +89,36 @@
         /// </summary>
         public string strCoordenadas { get; set; }
     }
+
+    public class RutaDisponibleDto
+    {
+        /// <summary>
+        /// Identificador de la ruta de patrullaje
+        /// </summary>
+        public int intIdRuta { get; set; }
+        /// <summary>
+        /// Clave de la ruta de patrullaje
+        /// </summary>
+        public string strClave { get; set; }
+        /// <summary>
+        /// Descripción del itinerario de la ruta de patrullaje
+        /// </summary>
+        public string strItinerario { get; set; }
+        /// <summary>
+        /// Región militar de SDN de la ruta de patrullaje
+        /// </summary>
+        public string intRegionMilitarSDN { get; set; }
+        /// <summary>
+        /// Región SSF de la ruta de patrullaje
+        /// </summary>
+        public string intRegionSSF { get; set; }
+        /// <summary>
+        /// Indicador de la zona miklitar de la ruta de patrullaje
+        /// </summary>
+        public int intZonaMilitarSDN { get; set; }
+        /// <summary>
+        /// Observaciones de la ruta de patrullaje
+        /// </summary>
+        public string strObservaciones { get; set; }
+    }
 }
