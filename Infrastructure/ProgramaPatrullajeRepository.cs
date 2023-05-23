@@ -946,18 +946,23 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ActualizaProgramaPorCambioDeRuta</c> implementa la interface para actualizar programas debido a cambio de ruta.
         /// </summary>
-        public async Task ActualizaProgramaPorCambioDeRutaAsync(int idPrograma, int idRuta, int usuarioId)
+        public async Task ActualizaProgramaPorCambioDeRutaAsync(int idPrograma, int idRuta, DateTime fecha, int usuarioId)
         {
-            var programa = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).ToListAsync();
+            var existeEnOtro = await _programaContext.ProgramasPatrullajes.Where(x => x.IdRuta == idRuta && x.FechaPatrullaje == fecha).AnyAsync();
 
-            if (programa.Count() == 1)
+            if (! existeEnOtro ) 
             {
-                var progamaActualizar = programa[0];
-                progamaActualizar.IdRuta = idRuta;
-                progamaActualizar.IdUsuario = usuarioId;
+                var programa = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).ToListAsync();
 
-                _programaContext.ProgramasPatrullajes.Update(progamaActualizar);
-                await _programaContext.SaveChangesAsync();
+                if (programa.Count() == 1)
+                {
+                    var progamaActualizar = programa[0];
+                    progamaActualizar.IdRuta = idRuta;
+                    progamaActualizar.IdUsuario = usuarioId;
+
+                    _programaContext.ProgramasPatrullajes.Update(progamaActualizar);
+                    await _programaContext.SaveChangesAsync();
+                }
             }
         }
 

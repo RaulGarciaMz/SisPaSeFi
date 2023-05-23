@@ -9,7 +9,7 @@ namespace Domain.Ports.Driven
         Task AgregaPropuestaExtraordinariaAsync(PropuestaExtraordinariaAdd pp, string clase, int usuarioId);
         Task AgregaPropuestasFechasMultiplesAsync(PropuestaPatrullaje pp, List<DateTime> fechas, string clase, int usuarioId);
         Task AgregaProgramaFechasMultiplesAsync(ProgramaPatrullaje pp, List<DateTime> fechas, int usuarioId);
-        Task ActualizaProgramaPorCambioDeRutaAsync(int idPrograma, int idRuta, int usuarioId);
+        Task ActualizaProgramaPorCambioDeRutaAsync(int idPrograma, int idRuta,DateTime fecha, int usuarioId);
         Task ActualizaPropuestasAgregaProgramasAsync(List<ProgramaPatrullaje> programas);
         Task ActualizaProgramasPorInicioPatrullajeAsync(int idPrograma, int idRiesgo, int idUsuario, int idEstadoPatrullaje, TimeSpan inicio);
         Task ActualizaPropuestaToAutorizadaAsync(int idPropuesta);

@@ -327,7 +327,7 @@ namespace DomainServices.DomServ
                     switch (opcion)
                     {
                         case "CambioRuta":
-                            await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.intIdPrograma, p.intIdRuta, userId);
+                            await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.intIdPrograma, p.intIdRuta, DateTime.Parse(p.strFechaPatrullaje), userId);
                             break;
 
                         case "InicioPatrullaje":
