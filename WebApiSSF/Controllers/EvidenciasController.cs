@@ -57,7 +57,7 @@ namespace WebApiSSF.Controllers
 
                 if (evidencias == null || evidencias.Count() == 0) 
                 {
-                    return NotFound();
+                    return NotFound(new List<EvidenciaVista>());
                 }
 
                 return Ok(evidencias);

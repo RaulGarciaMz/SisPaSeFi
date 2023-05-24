@@ -47,7 +47,7 @@ namespace WebApiSSF.Controllers
                     return Ok(rutas);
                 }
                 
-                return NotFound();
+                return NotFound(new List<RutaDto>());
             }
             catch (Exception ex)
             {
@@ -80,7 +80,7 @@ namespace WebApiSSF.Controllers
                     return Ok(rutas);
                 }
 
-                return NotFound();
+                return NotFound(new List<RutaDisponibleDto>());
             }
             catch (Exception ex)
             {

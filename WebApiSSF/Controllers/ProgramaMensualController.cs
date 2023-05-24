@@ -45,7 +45,7 @@ namespace WebApiSSF.Controllers
 
                 if (programa == null)
                 {
-                    return NotFound();
+                    return NotFound(new List<ProgramaPatrullajeMensualDto>());
                 }
 
                 return Ok(programa);

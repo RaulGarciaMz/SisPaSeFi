@@ -42,7 +42,7 @@ namespace WebApiSSF.Controllers
 
                 if (usos == null || usos.Count() == 0)
                 {
-                    return NotFound();
+                    return NotFound(new List<UsoVehiculoDtoGet>());
                 }
 
                 var lsta = ConvierteListaUsoVehiculaVistaToListaDto(usos);

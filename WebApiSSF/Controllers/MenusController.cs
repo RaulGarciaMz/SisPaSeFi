@@ -42,7 +42,7 @@ namespace WebApiSSF.Controllers
 
                 if (coms.Count <= 0)
                 {
-                    return NotFound();
+                    return NotFound(new List<MenuDto>());
                 }
 
                 return Ok(coms);

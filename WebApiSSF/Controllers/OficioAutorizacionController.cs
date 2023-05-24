@@ -37,6 +37,16 @@ namespace WebApiSSF.Controllers
             {
                 var info = await _pp.ObtenerInformacionParaOficioAutorizacion(o.usuario, o.pass, o.idPropuesta);
 
+                if (info == null) 
+                {
+                    return NotFound(new List<string>());
+                }
+
+                if (info.Count <= 0)
+                {
+                    return NotFound(new List<string>());
+                }
+
                 return Ok(info);
             }
             catch (Exception ex)

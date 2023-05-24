@@ -41,7 +41,7 @@ namespace WebApiSSF.Controllers
 
                 if (coms.Count <= 0)
                 {
-                    return NotFound();
+                    return NotFound(new List<PermisoEdicionProcesoConduccion>());
                 }
 
                 return Ok(coms);
@@ -76,7 +76,7 @@ namespace WebApiSSF.Controllers
 
                 if (coms == null)
                 {
-                    return NotFound();
+                    return NotFound(new List<PermisoEdicionProcesoConduccion>());
                 }
 
                 return Ok(coms);

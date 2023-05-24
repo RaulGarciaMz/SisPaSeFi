@@ -1,4 +1,5 @@
-﻿using Domain.DTOs.catalogos;
+﻿using Domain.DTOs;
+using Domain.DTOs.catalogos;
 using Domain.Ports.Driving;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -48,7 +49,7 @@ namespace WebApiSSF.Controllers
 
                 if (coms.Count <= 0)
                 {
-                    return NotFound();
+                    return NotFound(new List<CatalogoGenerico>());
                 }
 
                 return Ok(coms);

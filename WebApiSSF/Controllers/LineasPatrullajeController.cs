@@ -57,12 +57,12 @@ namespace WebApiSSF.Controllers
 
                 if (lineas == null) 
                 {
-                    return NotFound();
+                    return NotFound(new List<LineaVista>());
                 }
 
                 if (lineas.Count == 0)
-                { 
-                    return NotFound();
+                {
+                    return NotFound(new List<LineaVista>());
                 }
 
                 return Ok(lineas);

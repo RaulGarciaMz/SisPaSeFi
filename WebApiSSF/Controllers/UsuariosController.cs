@@ -42,7 +42,7 @@ namespace WebApiSSF.Controllers
 
                 if (user == null)
                 {
-                    return NotFound();
+                    return NotFound(new List<UsuarioDto>());
                 }
 
                 return Ok(user);

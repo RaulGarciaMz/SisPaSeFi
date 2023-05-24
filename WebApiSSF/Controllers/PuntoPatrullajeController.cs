@@ -46,7 +46,7 @@ namespace WebApiSSF.Controllers
 
                 if (puntos == null)
                 {
-                    return NotFound();
+                    return NotFound(new List<PuntoDto>());
                 }
 
                 return Ok(puntos);

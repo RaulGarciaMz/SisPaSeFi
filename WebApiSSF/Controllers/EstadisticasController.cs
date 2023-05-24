@@ -39,7 +39,7 @@ namespace WebApiSSF.Controllers
 
                 if (stats == null || stats.Count == 0)
                 {
-                    return NotFound();
+                    return NotFound(new List<EstadisticaSistemaVista>());
                 }
 
                 return Ok(stats);

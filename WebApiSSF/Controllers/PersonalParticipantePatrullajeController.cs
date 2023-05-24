@@ -44,12 +44,12 @@ namespace WebApiSSF.Controllers
 
                 if (user == null)
                 {
-                    return NotFound();
+                    return NotFound(new List<PersonalParticipanteVista>());
                 }
 
                 if (user.Count == 0) 
-                { 
-                    return NotFound(); 
+                {
+                    return NotFound(new List<PersonalParticipanteVista>());
                 }
 
                 return Ok(user);

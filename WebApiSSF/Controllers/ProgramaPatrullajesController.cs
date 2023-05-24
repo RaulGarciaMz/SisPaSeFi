@@ -52,7 +52,7 @@ namespace WebApiSSF.Controllers
                 
                 if (programas == null)
                 {
-                    return NotFound();
+                    return NotFound(new List<PatrullajeDto>());
                 }
 
 
@@ -85,7 +85,7 @@ namespace WebApiSSF.Controllers
 
                 if (programa == null)
                 {
-                    return NotFound();
+                    return NotFound(new List<PatrullajeDto>());
                 }
 
                 return Ok(programa);

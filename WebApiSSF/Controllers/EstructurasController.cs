@@ -68,7 +68,7 @@ namespace WebApiSSF.Controllers
 
                 if (coms.Count <= 0)
                 {
-                    return NotFound();
+                    return NotFound(new List<EstructuraDto>());
                 }
 
                 return Ok(coms);
@@ -107,7 +107,6 @@ namespace WebApiSSF.Controllers
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
-         
 
         /// <summary>
         /// Agrega una estructura

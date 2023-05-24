@@ -45,7 +45,7 @@ namespace WebApiSSF.Controllers
                     return Ok(roles);
                 }
 
-                return NotFound();
+                return NotFound(new List<RolDto>());
             }
             catch (Exception ex)
             {

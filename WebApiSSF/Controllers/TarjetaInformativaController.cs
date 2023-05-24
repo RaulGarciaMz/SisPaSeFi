@@ -47,7 +47,7 @@ namespace WebApiSSF.Controllers
 
                 if (tarjetas == null || tarjetas.Count <= 0)
                 {
-                    return NotFound();
+                    return NotFound(new List<TarjetaDto>());
                 }
 
                 return Ok(tarjetas);
@@ -80,7 +80,7 @@ namespace WebApiSSF.Controllers
 
                 if (tarjeta == null)
                 {
-                    return NotFound();
+                    return NotFound(new List<TarjetaDto>());
                 }
 
                 return Ok(tarjeta);

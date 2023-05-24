@@ -43,12 +43,12 @@ namespace WebApiSSF.Controllers
 
                 if (v == null)
                 {
-                    return NotFound();
+                    return NotFound(new List<VehiculoDto>());
                 }
 
                 if (v.Count == 0)
                 {
-                    return NotFound();
+                    return NotFound(new List<VehiculoDto>());
                 }
 
                 return Ok(v);

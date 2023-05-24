@@ -47,7 +47,7 @@ namespace WebApiSSF.Controllers
 
                 if (coms.Count <= 0)
                 {
-                    return NotFound();
+                    return NotFound(new List<AfectacionIncidenciaVista>());
                 }
 
                 return Ok(coms);

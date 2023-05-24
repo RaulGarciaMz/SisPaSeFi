@@ -45,7 +45,7 @@ namespace WebApiSSF.Controllers
                     return Ok(bitacora);
                 }
 
-                return NotFound();
+                return NotFound(new List<BitacoraDto>());
             }
             catch (Exception ex)
             {

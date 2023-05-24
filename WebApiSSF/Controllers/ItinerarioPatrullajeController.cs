@@ -42,12 +42,12 @@ namespace WebApiSSF.Controllers
 
                 if (l == null)
                 {
-                    return NotFound();
+                    return NotFound(new List<ItinerarioVista>());
                 }
 
                 if (l.Count == 0)
                 {
-                    return NotFound();
+                    return NotFound(new List<ItinerarioVista>());
                 }
 
                 return Ok(l);

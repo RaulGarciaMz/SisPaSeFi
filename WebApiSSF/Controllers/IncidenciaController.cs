@@ -48,7 +48,7 @@ namespace WebApiSSF.Controllers
 
                 if (l.Count == 0)
                 {
-                    return NotFound();
+                    return NotFound(new List<IncidenciaGeneralDto>());
                 }
 
                 return Ok(l);
