@@ -104,9 +104,9 @@ namespace DomainServices.DomServ
             return regreso;
         }
 
-        public async Task<TarjetaDto> ObtenerPorIdAndOpcionAsync(int id, string usuario, string opcion)
+        public async Task<TarjetaDto?> ObtenerPorIdAndOpcionAsync(int id, string usuario, string opcion)
         {
-            var regreso = new TarjetaDto();
+            TarjetaDto? regreso = null ;
             var ti = new TarjetaInformativaIdVista();
 
             var userId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);

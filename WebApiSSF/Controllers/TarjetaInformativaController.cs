@@ -36,6 +36,7 @@ namespace WebApiSSF.Controllers
         /// <returns>ActionResult con lista de tarjetas informativas</returns>
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TarjetaDto>>> ObtenerPorOpcion([Required] int opcion, [Required] string tipo, [Required] int anio, [Required] int mes, int dia, [Required] string usuario, string region)
@@ -43,6 +44,11 @@ namespace WebApiSSF.Controllers
             try
             {
                 var tarjetas = await _t.ObtenerPorOpcionAsync(opcion, tipo, region, anio, mes, dia, usuario);
+
+                if (tarjetas == null || tarjetas.Count <= 0)
+                {
+                    return NotFound();
+                }
 
                 return Ok(tarjetas);
             }
