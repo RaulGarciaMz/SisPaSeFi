@@ -107,7 +107,7 @@ namespace DomainServices.DomServ
         public async Task<TarjetaDto> ObtenerPorIdAndOpcionAsync(int id, string usuario, string opcion)
         {
             var regreso = new TarjetaDto();
-            var ti = new TarjetaInformativaVista();
+            var ti = new TarjetaInformativaIdVista();
 
             var userId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
             if (userId != null)
@@ -122,7 +122,10 @@ namespace DomainServices.DomServ
                         break;
                 }
 
-                regreso = ConvierteTarjetaVistaDomainToDto(ti);
+                if (ti != null)
+                {
+                    regreso = ConvierteTarjetaIdVistaDomainToDto(ti);
+                }
             }
 
             return regreso;
@@ -138,13 +141,13 @@ namespace DomainServices.DomServ
             return false;
         }
 
-        private TarjetaDto ConvierteTarjetaVistaDomainToDto(TarjetaInformativaVista t) 
+        private TarjetaDto ConvierteTarjetaIdVistaDomainToDto(TarjetaInformativaIdVista t) 
         { 
             var r = new TarjetaDto() 
             { 
                 intIdNota= t.id_nota,
                 intIdPrograma= t.id_programa,
-                strFechaPatrullaje = t.fechapatrullaje.Value.ToString("yyyy-MM-dd"), 
+                strFechaPatrullaje = t.fechapatrullaje.Value.ToString("yyyy-MM-dd"),
                 intIdRuta = t.id_ruta,
                 intRegion = Int32.Parse(t.regionssf),
                 intIdTipoPatullaje = t.id_tipopatrullaje,
@@ -157,7 +160,7 @@ namespace DomainServices.DomServ
                 strObservaciones= t.observaciones,
                 intComandantesInstalacionSSF = t.comandantesinstalacionssf,
                 intPersonalMilitarSEDENAOficial = t.personalmilitarsedenaoficial,
-                intKmRecorrido = t.kmrecorridos,
+                intKmRecorrido = t.kmrecorrido,
                 intIdEstadoTarjetaInformativa = t.id_estadotarjetainformativa,
                 intPersonalMilitarSEDENATropa = t.personalmilitarsedenatropa,
                 intLinieros= t.linieros,
@@ -167,11 +170,11 @@ namespace DomainServices.DomServ
                 intPersonalNavalSEMARTropa = t.personalnavalsemartropa,
                 intIdEstadoPatrullaje = t.id_estadopatrullaje,
                 strDescripcionEstadoPatrullaje = t.descripcionestadopatrullaje,
-                strMatriculas = t.matriculas,
                 strItinerarios = t.itinerario,
                 strReportes = t.incidenciaenestructura + t.incidenciaeninstalacion,
+                strMatriculas = t.matriculas,
                 strOdometros = t.odometros,
-                strKmVehiculos = t.KmVehiculos,
+                strKmVehiculos = t.kmrecorridos,
                 strFechaTermino = t.fechaTermino.ToString("yyyy-MM-dd"),
                 intIdResultadoPatrullaje = t.idresultadopatrullaje,
                 strResultadoPatrullaje = t.resultadopatrullaje,
@@ -183,6 +186,52 @@ namespace DomainServices.DomServ
                 strComandanteRegional = t.nombre + " " + t.apellido1 + " " + t.apellido2,
                 strEstado = t.estado,
                 strMunicipio = t.municipio
+            };
+
+            return r;
+        }
+
+        private TarjetaDto ConvierteTarjetaVistaDomainToDto(TarjetaInformativaVista t)
+        {
+            var r = new TarjetaDto()
+            {
+                intIdNota = t.id_nota,
+                intIdPrograma = t.id_programa,
+                strFechaPatrullaje = t.fechapatrullaje.Value.ToString("yyyy-MM-dd"),
+                intIdRuta = t.id_ruta,
+                intRegion = Int32.Parse(t.regionssf),
+                intIdTipoPatullaje = t.id_tipopatrullaje,
+                strUltimaActualizacion = t.ultimaactualizacion.ToString("yyyy-MM-dd HH:mm:ss"),
+                strIdUsuario = t.id_usuario.ToString(),
+                strInicio = t.inicio.ToString(),
+                strTermino = t.termino.ToString(),
+                strTiempoVuelo = t.tiempovuelo.ToString(),
+                strCalzoCalzo = t.calzoacalzo.ToString(),
+                strObservaciones = t.observaciones,
+                intComandantesInstalacionSSF = t.comandantesinstalacionssf,
+                intPersonalMilitarSEDENAOficial = t.personalmilitarsedenaoficial,
+                intKmRecorrido = t.kmrecorrido,
+                intIdEstadoTarjetaInformativa = t.id_estadotarjetainformativa,
+                intPersonalMilitarSEDENATropa = t.personalmilitarsedenatropa,
+                intLinieros = t.linieros,
+                intComandantesTurnoSSF = t.comandantesturnossf,
+                intOficialesSSF = t.oficialesssf,
+                intPersonalNavalSEMAROficial = t.personalnavalsemaroficial,
+                intPersonalNavalSEMARTropa = t.personalnavalsemartropa,
+                intIdEstadoPatrullaje = t.id_estadopatrullaje,
+                strDescripcionEstadoPatrullaje = t.descripcionestadopatrullaje,
+                strItinerarios = t.itinerario,
+                strReportes = t.incidenciaenestructura + t.incidenciaeninstalacion,
+                strMatriculas = t.matriculas,
+                strOdometros = t.odometros,
+                strKmVehiculos = t.kmrecorridos,
+                strFechaTermino = t.fechaTermino.ToString("yyyy-MM-dd"),
+                intIdResultadoPatrullaje = t.idresultadopatrullaje,
+                strResultadoPatrullaje = t.resultadopatrullaje,
+                strLineaEstructuraInstalacion = t.lineaestructurainstalacion,
+                strResponsableVuelo = t.responsablevuelo,
+                intFuerzaDeReaccion = t.fuerzareaccion,
+                intIdInstalacionResponsable = t.id_puntoresponsable
             };
 
             return r;

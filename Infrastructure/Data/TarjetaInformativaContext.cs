@@ -13,9 +13,9 @@ namespace SqlServerAdapter.Data
         }
 
         public DbSet<TarjetaInformativaVista> TarjetasInformativasVista { get; set; }
+        public DbSet<TarjetaInformativaIdVista> TarjetaInformativaIdVista { get; set; }
         public DbSet<TarjetaInformativa> TarjetasInformativas { get; set; }
         public DbSet<ProgramaPatrullaje> Programas { get; set; }
-
         public DbSet<Usuario> Usuarios { get; set; }
     }
 }

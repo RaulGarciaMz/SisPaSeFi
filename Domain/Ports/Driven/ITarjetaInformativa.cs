@@ -14,8 +14,8 @@ namespace Domain.Ports.Driven
         Task<List<TarjetaInformativaVista>> ObtenerTarjetasPorRegionAsync(string tipo, string region, int anio, int mes);
         Task<List<TarjetaInformativaVista>> ObtenerParteNovedadesPorDiaAsync(string tipo, int anio, int mes, int dia);
         Task<List<TarjetaInformativaVista>> ObtenerMonitoreoAsync(string tipo, int idUsuario, int anio, int mes, int dia);
-        Task<TarjetaInformativaVista> ObtenerTarjetaCompletaPorIdAsync(int idTarjeta);
-        Task<TarjetaInformativaVista> ObtenerTarjetaCompletaPorIdProgramaAsync(int idPrograma);
+        Task<TarjetaInformativaIdVista?> ObtenerTarjetaCompletaPorIdAsync(int idTarjeta);
+        Task<TarjetaInformativaIdVista?> ObtenerTarjetaCompletaPorIdProgramaAsync(int idPrograma);
 /*        Task<int> ObtenerIdUsuarioRegistradoAsync(string usuario);
         Task<int> ObtenerIdUsuarioConfiguradorAsync(string usuario);*/
         Task<TarjetaInformativa?> ObtenerTarjetaPorIdNotaAsync(int idNota);

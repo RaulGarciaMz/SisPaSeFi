@@ -87,9 +87,11 @@ namespace SqlServerAdapter
             }
         }
 
-        public async Task< List<TarjetaInformativaVista>> ObtenerTarjetasPorRegionAsync(string tipo, string region, int anio, int mes) 
+        public async Task<List<TarjetaInformativaVista>> ObtenerTarjetasPorRegionAsync(string tipo, string region, int anio, int mes) 
         {
-            string sqlQuery = @"SELECT a.id_nota, a.id_programa, b.fechapatrullaje, b.id_ruta, c.regionssf, c.id_tipopatrullaje, a.ultimaactualizacion,
+            try
+            {
+                string sqlQuery = @"SELECT a.id_nota, a.id_programa, b.fechapatrullaje, b.id_ruta, c.regionssf, c.id_tipopatrullaje, a.ultimaactualizacion,
                                        a.id_usuario, a.inicio, a.termino, a.tiempovuelo, a.calzoacalzo, a.observaciones, d.id_estadopatrullaje,
                                        d.descripcionestadopatrullaje, a.kmrecorrido, a.comandantesinstalacionssf, a.personalmilitarsedenaoficial,
                                        a.id_estadotarjetainformativa, a.personalmilitarsedenatropa, a.linieros, a.comandantesturnossf, a.oficialesssf,
@@ -113,11 +115,11 @@ namespace SqlServerAdapter
                                                 FROM ssf.usovehiculo f
                                                JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                                 WHERE f.id_programa=a.id_programa),'') as matriculas,
-                                       COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.kminicio,', ',f.kmfin,'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
+                                       COALESCE((SELECT STRING_AGG(CAST(CONCAT(CAST(f.kminicio AS VARCHAR(10)),', ',CAST(f.kmFin AS VARCHAR(10)),'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
                                                 FROM ssf.usovehiculo f
                                                JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                                 WHERE f.id_programa=a.id_programa),'') as odometros,
-                                       COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.kmfin-f.kminicio,'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
+                                       COALESCE((SELECT STRING_AGG(CAST(CONCAT(CAST(f.kmfin-f.kminicio AS VARCHAR(10)),'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
                                                 FROM ssf.usovehiculo f
                                                JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                                 WHERE f.id_programa=a.id_programa),'') as kmrecorridos
@@ -131,15 +133,23 @@ namespace SqlServerAdapter
                                 AND MONTH(b.fechapatrullaje)=@pMes AND YEAR(b.fechapatrullaje)=@pAnio 
                                 ORDER BY b.fechapatrullaje, c.regionssf, a.inicio";
 
-            object[] parametros = new object[]
-            {
+                object[] parametros = new object[]
+                {
                 new SqlParameter("@pTipo", tipo),
                 new SqlParameter("@pRegion", region),
                 new SqlParameter("@pAnio", anio),
                 new SqlParameter("@pMes", mes)
-             };
+                 };
 
-            return await _tarjetaContext.TarjetasInformativasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+
+                return await _tarjetaContext.TarjetasInformativasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                var m = ex.Message;
+                throw;
+            }
+
         }
 
         public async Task<List<TarjetaInformativaVista>> ObtenerParteNovedadesPorDiaAsync(string tipo, int anio, int mes, int dia)
@@ -168,11 +178,11 @@ namespace SqlServerAdapter
                                                 FROM ssf.usovehiculo f
                                                JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                                 WHERE f.id_programa=a.id_programa),'') as matriculas,
-                                       COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.kminicio,', ',f.kmfin,'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
+                                       COALESCE((SELECT STRING_AGG(CAST(CONCAT(CAST(f.kminicio AS VARCHAR(10)),', ',CAST(f.kmFin AS VARCHAR(10)),'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
                                                 FROM ssf.usovehiculo f
                                                JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                                 WHERE f.id_programa=a.id_programa),'') as odometros,
-                                       COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.kmfin-f.kminicio,'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
+                                       COALESCE((SELECT STRING_AGG(CAST(CONCAT(CAST(f.kmfin-f.kminicio AS VARCHAR(10)),'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
                                                 FROM ssf.usovehiculo f
                                                JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                                 WHERE f.id_programa=a.id_programa),'') as kmrecorridos
@@ -223,11 +233,11 @@ namespace SqlServerAdapter
                                                 FROM ssf.usovehiculo f
                                                JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                                 WHERE f.id_programa=a.id_programa),'') as matriculas,
-                                       COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.kminicio,', ',f.kmfin,'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
+                                       COALESCE((SELECT STRING_AGG(CAST(CONCAT(CAST(f.kminicio AS VARCHAR(10)),', ',CAST(f.kmFin AS VARCHAR(10)),'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
                                                 FROM ssf.usovehiculo f
                                                JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                                 WHERE f.id_programa=a.id_programa),'') as odometros,
-                                       COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.kmfin-f.kminicio,'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
+                                       COALESCE((SELECT STRING_AGG(CAST(CONCAT(CAST(f.kmfin-f.kminicio AS VARCHAR(10)),'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
                                                 FROM ssf.usovehiculo f
                                                JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                                 WHERE f.id_programa=a.id_programa),'') as kmrecorridos
@@ -254,45 +264,44 @@ namespace SqlServerAdapter
             return await _tarjetaContext.TarjetasInformativasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
-        public async Task<TarjetaInformativaVista> ObtenerTarjetaCompletaPorIdAsync(int idTarjeta)
+        public async Task<TarjetaInformativaIdVista?> ObtenerTarjetaCompletaPorIdAsync(int idTarjeta)
         {
-            string sqlQuery = @"SELECT a.id_nota,a.id_programa,b.fechapatrullaje,b.id_ruta,c.regionssf,c.id_tipopatrullaje,a.ultimaactualizacion
-                                      ,a.id_usuario,a.inicio,a.termino,a.tiempovuelo,a.calzoacalzo,a.observaciones,d.id_estadopatrullaje
-                                      ,d.descripcionestadopatrullaje,a.kmrecorrido,a.comandantesinstalacionssf,a.personalmilitarsedenaoficial
+                string sqlQuery = @"SELECT a.id_nota,a.id_programa,b.fechapatrullaje,a.ultimaactualizacion
+                                      ,a.id_usuario,a.inicio,a.termino,a.tiempovuelo,a.calzoacalzo,a.observaciones
+                                      ,a.kmrecorrido,a.comandantesinstalacionssf,a.personalmilitarsedenaoficial
                                       ,a.id_estadotarjetainformativa,a.personalmilitarsedenatropa,a.linieros,a.comandantesturnossf,a.oficialesssf
                                       ,a.personalnavalsemaroficial,a.personalnavalsemartropa,a.fechaTermino,a.idresultadopatrullaje
-                                      ,rp.descripcion,a.lineaestructurainstalacion,a.responsablevuelo,a.fuerzareaccion,b.id_puntoresponsable
-                                      ,i.ubicacion instalacion,j.nombre municipio,k.nombre estado,l.nombre,l.apellido1,l.apellido2
-                                      ,COALESCE((SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC)
-                                          FROM ssf.itinerario f
-                                      	JOIN ssf.puntospatrullaje g ON f.id_punto=g.id_punto
-                                          WHERE f.id_ruta=b.id_ruta ),'') as itinerarioruta
-                                      ,COALESCE((SELECT STRING_AGG(CAST(CONCAT('Linea',h.clave,'Estructura',g.nombre,'Incidencia',f.incidencia,'SSFPATRULLAJECR') as nvarchar(MAX)),':') 
-                                                       WITHIN GROUP (ORDER BY h.clave, g.nombre ASC)
-                                          FROM ssf.reporteestructuras f
-                                      	JOIN ssf.estructura g ON f.id_estructura=g.id_estructura
-                                      	JOIN ssf.linea h ON g.id_linea=h.id_linea
-                                          WHERE f.id_nota=a.id_nota),'') as incidenciaenestructura
-                                      ,COALESCE((SELECT STRING_AGG(CAST(CONCAT('Instalacion',f.ubicacion,'Incidencia',g.incidencia,'SSFPATRULLAJECR') as nvarchar(MAX)),':')
-                                                      WITHIN GROUP (ORDER BY f.ubicacion ASC)
-                                          FROM ssf.puntospatrullaje f
-                                      	JOIN ssf.reportepunto g ON f.id_punto = g.id_punto
-                                          WHERE g.id_nota=a.id_nota),'') as incidenciaeninstalacion
-                                      ,COALESCE((SELECT STRING_AGG(CAST(CONCAT(g.matricula,'SSFPATRULLAJECR') as nvarchar(MAX)),' ')
-                                                      WITHIN GROUP (ORDER BY g.matricula ASC)
-                                          FROM ssf.usovehiculo f
-                                      	JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
-                                          WHERE f.id_programa=a.id_programa),'') as matriculas
-                                      ,COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.kminicio,', ',f.kmfin,'SSFPATRULLAJECR') as nvarchar(MAX)),' ')
-                                                      WITHIN GROUP (ORDER BY g.matricula ASC)
-                                          FROM ssf.usovehiculo f
-                                      	JOIN ssf.vehiculos g ON  f.id_vehiculo=g.id_vehiculo
-                                          WHERE f.id_programa=a.id_programa),'') as odometros
-                                      ,COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.kmfin-f.kminicio,'SSFPATRULLAJECR') as nvarchar(MAX)),' ')
-                                                      WITHIN GROUP (ORDER BY g.matricula ASC)
-                                          FROM ssf.usovehiculo f
-                                      	JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
-                                          WHERE f.id_programa=a.id_programa ),'') as kmrecorridos
+                                      ,a.lineaestructurainstalacion,a.responsablevuelo,a.fuerzareaccion
+                                      ,b.id_ruta,b.id_puntoresponsable,c.regionssf,c.id_tipopatrullaje
+                                      ,d.id_estadopatrullaje,d.descripcionestadopatrullaje
+                                      ,rp.descripcion resultadopatrullaje
+									  ,i.ubicacion instalacion,j.nombre municipio,k.nombre estado,l.nombre,l.apellido1,l.apellido2
+                                      ,COALESCE((SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC) 
+                                                FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto=g.id_punto
+                                                WHERE f.id_ruta=b.id_ruta),'') as itinerario
+                                       ,COALESCE((SELECT STRING_AGG(CAST(CONCAT('Linea',h.clave,'Estructura',g.nombre,'Incidencia',f.incidencia,'SSFPATRULLAJECR') as nvarchar(MAX)),':') 
+                                                        WITHIN GROUP (ORDER BY h.clave, g.nombre ASC) 
+                                                FROM ssf.reporteestructuras f
+                                               JOIN ssf.estructura g ON f.id_estructura=g.id_estructura
+                                               JOIN ssf.linea h ON g.id_linea=h.id_linea
+                                                WHERE f.id_nota=a.id_nota),'') as incidenciaenestructura
+                                        ,COALESCE((SELECT STRING_AGG(CAST(CONCAT('Instalacion',f.ubicacion,'Incidencia',g.incidencia,'SSFPATRULLAJECR') as nvarchar(MAX)),':') 
+                                                         WITHIN GROUP (ORDER BY f.ubicacion ASC) 
+                                                 FROM ssf.puntospatrullaje f
+                                                JOIN ssf.reportepunto g ON f.id_punto = g.id_punto
+                                                 WHERE g.id_nota=a.id_nota),'') as incidenciaeninstalacion
+                                         ,COALESCE((SELECT STRING_AGG(CAST(CONCAT(g.matricula,'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
+                                                  FROM ssf.usovehiculo f
+                                                 JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
+                                                  WHERE f.id_programa=a.id_programa),'') as matriculas
+                                         ,COALESCE((SELECT STRING_AGG(CAST(CONCAT(CAST(f.kminicio as VARCHAR(10)),', ',CAST(f.kmfin AS VARCHAR(10)),'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
+                                                   FROM ssf.usovehiculo f
+                                                  JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
+                                                   WHERE f.id_programa=a.id_programa),'') as odometros
+                                         ,COALESCE((SELECT STRING_AGG(CAST(CONCAT(CAST((f.kmfin-f.kminicio) as VARCHAR(10)),'SSFPATRULLAJECR') as nvarchar(MAX)),' ') WITHIN GROUP (ORDER BY g.matricula ASC) 
+                                                  FROM ssf.usovehiculo f
+                                                 JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
+                                                  WHERE f.id_programa=a.id_programa),'') as kmrecorridos
                                 FROM ssf.tarjetainformativa a
                                 JOIN ssf.programapatrullajes b ON a.id_programa=b.id_programa
                                 JOIN ssf.rutas c ON b.id_ruta=c.id_ruta
@@ -306,27 +315,29 @@ namespace SqlServerAdapter
                                 JOIN ssf.usuarios l ON h.id_usuario=l.id_usuario
                                 WHERE a.id_nota= @pIdTarjeta";
 
-            object[] parametros = new object[]
-            {
+     
+                object[] parametros = new object[]
+                {
                 new SqlParameter("@pIdTarjeta", idTarjeta)
-             };
+                 };
 
-            return await _tarjetaContext.TarjetasInformativasVista.FromSqlRaw(sqlQuery, parametros).FirstAsync();
+                return await _tarjetaContext.TarjetaInformativaIdVista.FromSqlRaw(sqlQuery, parametros).FirstOrDefaultAsync();
+ 
         }
 
-        public async Task<TarjetaInformativaVista> ObtenerTarjetaCompletaPorIdProgramaAsync(int idPrograma)
+        public async Task<TarjetaInformativaIdVista?> ObtenerTarjetaCompletaPorIdProgramaAsync(int idPrograma)
         {
             string sqlQuery = @"SELECT a.id_nota,a.id_programa,b.fechapatrullaje,b.id_ruta,c.regionssf,c.id_tipopatrullaje,a.ultimaactualizacion
                                       ,a.id_usuario,a.inicio,a.termino,a.tiempovuelo,a.calzoacalzo,a.observaciones,d.id_estadopatrullaje
                                       ,d.descripcionestadopatrullaje,a.kmrecorrido,a.comandantesinstalacionssf,a.personalmilitarsedenaoficial
                                       ,a.id_estadotarjetainformativa,a.personalmilitarsedenatropa,a.linieros,a.comandantesturnossf,a.oficialesssf
                                       ,a.personalnavalsemaroficial,a.personalnavalsemartropa,a.fechaTermino,a.idresultadopatrullaje
-                                      ,rp.descripcion,a.lineaestructurainstalacion,a.responsablevuelo,a.fuerzareaccion,b.id_puntoresponsable
+                                      ,rp.descripcion resultadopatrullaje,a.lineaestructurainstalacion,a.responsablevuelo,a.fuerzareaccion,b.id_puntoresponsable
                                       ,i.ubicacion instalacion,j.nombre municipio,k.nombre estado,l.nombre,l.apellido1,l.apellido2
                                       ,COALESCE((SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)),'-') WITHIN GROUP (ORDER BY f.posicion ASC)
                                           FROM ssf.itinerario f
                                       	JOIN ssf.puntospatrullaje g ON f.id_punto=g.id_punto
-                                          WHERE f.id_ruta=b.id_ruta ),'') as itinerarioruta
+                                          WHERE f.id_ruta=b.id_ruta ),'') as itinerario
                                       ,COALESCE((SELECT STRING_AGG(CAST(CONCAT('Linea',h.clave,'Estructura',g.nombre,'Incidencia',f.incidencia,'SSFPATRULLAJECR') as nvarchar(MAX)),':') 
                                                        WITHIN GROUP (ORDER BY h.clave, g.nombre ASC)
                                           FROM ssf.reporteestructuras f
@@ -343,12 +354,12 @@ namespace SqlServerAdapter
                                           FROM ssf.usovehiculo f
                                       	JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                           WHERE f.id_programa=a.id_programa),'') as matriculas
-                                      ,COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.kminicio,', ',f.kmfin,'SSFPATRULLAJECR') as nvarchar(MAX)),' ')
+                                      ,COALESCE((SELECT STRING_AGG(CAST(CONCAT(CAST(f.kminicio AS VARCHAR(10)),', ',CAST(f.kmFin AS VARCHAR(10)),'SSFPATRULLAJECR') as nvarchar(MAX)),' ')
                                                       WITHIN GROUP (ORDER BY g.matricula ASC)
                                           FROM ssf.usovehiculo f
                                       	JOIN ssf.vehiculos g ON  f.id_vehiculo=g.id_vehiculo
                                           WHERE f.id_programa=a.id_programa),'') as odometros
-                                      ,COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.kmfin-f.kminicio,'SSFPATRULLAJECR') as nvarchar(MAX)),' ')
+                                      ,COALESCE((SELECT STRING_AGG(CAST(CONCAT(CAST((f.kmfin-f.kminicio) AS VARCHAR(10)),'SSFPATRULLAJECR') as nvarchar(MAX)),' ')
                                                       WITHIN GROUP (ORDER BY g.matricula ASC)
                                           FROM ssf.usovehiculo f
                                       	JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
@@ -371,7 +382,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pIdTarjeta", idPrograma)
              };
 
-            return await _tarjetaContext.TarjetasInformativasVista.FromSqlRaw(sqlQuery, parametros).FirstAsync();
+            return await _tarjetaContext.TarjetaInformativaIdVista.FromSqlRaw(sqlQuery, parametros).FirstOrDefaultAsync();
         }
 
         public async Task<TarjetaInformativa?> ObtenerTarjetaPorIdNotaAsync(int idNota) 

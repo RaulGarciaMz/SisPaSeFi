@@ -63,6 +63,7 @@ namespace WebApiSSF.Controllers
         [HttpGet]
         [Route("id")]
         [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<TarjetaDto>> ObtenerPorIdAndOpcion([Required] int id, [Required] string usuario, [Required] string opcion)
@@ -70,6 +71,11 @@ namespace WebApiSSF.Controllers
             try
             {
                 var tarjeta = await _t.ObtenerPorIdAndOpcionAsync(id, usuario, opcion);
+
+                if (tarjeta == null)
+                {
+                    return NotFound();
+                }
 
                 return Ok(tarjeta);
             }

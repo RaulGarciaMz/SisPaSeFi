@@ -42,12 +42,12 @@ namespace SqlServerAdapter
                                         FROM ssf.usovehiculo f
                                         JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                         WHERE f.id_programa=a.id_programa ) as matriculas, 
-                                       (SELECT STRING_AGG(CAST(CONCAT(f.kmInicio, ', ',f.kmFin,'SSFPATRULLAJESCR')  as nvarchar(MAX)),' ') 
+                                       (SELECT STRING_AGG(CAST(CONCAT(CAST(f.kminicio AS VARCHAR(10)), ', ',CAST(f.kmFin AS VARCHAR(10)),'SSFPATRULLAJESCR')  as nvarchar(MAX)),' ') 
                                                     WITHIN GROUP (ORDER BY g.matricula ASC) as odometro 
                                         FROM ssf.usovehiculo f
                                         JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                         WHERE f.id_programa=a.id_programa ) as odometros, 
-                                       (SELECT STRING_AGG(CAST(CONCAT(f.kmFin-f.kmInicio, 'SSFPATRULLAJESCR')  as nvarchar(MAX)),' ') 
+                                       (SELECT STRING_AGG(CAST(CONCAT(CAST(f.kmfin-f.kminicio AS VARCHAR(10)), 'SSFPATRULLAJESCR')  as nvarchar(MAX)),' ') 
                                                     WITHIN GROUP (ORDER BY g.matricula ASC)   as kmTotal 
                                         FROM ssf.usovehiculo f
                                         JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
@@ -127,12 +127,12 @@ namespace SqlServerAdapter
                                           FROM ssf.usovehiculo f
                                       	JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                           WHERE f.id_programa=a.id_programa) as matriculas 
-                                      ,(SELECT STRING_AGG(CAST(CONCAT(f.kmInicio, ', ',f.kmFin,'SSFPATRULLAJESCR') as nvarchar(MAX)),' ') 
+                                      ,(SELECT STRING_AGG(CAST(CONCAT(CAST(f.kminicio AS VARCHAR(10)), ', ',CAST(f.kmFin AS VARCHAR(10)),'SSFPATRULLAJESCR') as nvarchar(MAX)),' ') 
                                                           WITHIN GROUP (ORDER BY g.matricula ASC) as odometro 
                                           FROM ssf.usovehiculo f
                                       	JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                           WHERE f.id_programa=a.id_programa) as odometros 
-                                      ,(SELECT STRING_AGG(CAST(CONCAT(f.kmFin-f.kmInicio, 'SSFPATRULLAJESCR') as nvarchar(MAX)),' ') 
+                                      ,(SELECT STRING_AGG(CAST(CONCAT(CAST(f.kmfin-f.kminicio AS VARCHAR(10)), 'SSFPATRULLAJESCR') as nvarchar(MAX)),' ') 
                                                           WITHIN GROUP (ORDER BY g.matricula ASC) as kmTotal 
                                           FROM ssf.usovehiculo f
                                       	JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
@@ -208,12 +208,12 @@ namespace SqlServerAdapter
                                           FROM ssf.usovehiculo f
                                       	JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                           WHERE f.id_programa=a.id_programa) as matriculas 
-                                      ,(SELECT STRING_AGG(CAST(CONCAT(f.kmInicio, ', ',f.kmFin,'SSFPATRULLAJESCR') as nvarchar(MAX)),' ') 
+                                      ,(SELECT STRING_AGG(CAST(CONCAT(CAST(f.kminicio AS VARCHAR(10)), ', ',CAST(f.kmFin AS VARCHAR(10)),'SSFPATRULLAJESCR') as nvarchar(MAX)),' ') 
                                                           WITHIN GROUP (ORDER BY g.matricula ASC) as odometro 
                                           FROM ssf.usovehiculo f
                                       	JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
                                           WHERE f.id_programa=a.id_programa) as odometros 
-                                      ,(SELECT STRING_AGG(CAST(CONCAT(f.kmFin-f.kmInicio, 'SSFPATRULLAJESCR') as nvarchar(MAX)),' ') 
+                                      ,(SELECT STRING_AGG(CAST(CONCAT(CAST(f.kmfin-f.kminicio AS VARCHAR(10)), 'SSFPATRULLAJESCR') as nvarchar(MAX)),' ') 
                                                           WITHIN GROUP (ORDER BY g.matricula ASC) as kmTotal 
                                           FROM ssf.usovehiculo f
                                       	JOIN ssf.vehiculos g ON f.id_vehiculo=g.id_vehiculo
