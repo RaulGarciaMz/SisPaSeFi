@@ -126,7 +126,7 @@ namespace SqlServerAdapter
             {
                 p.UltimaActualizacion = DateTime.UtcNow;
                 p.Inicio = inicio;
-                p.IdEstadoPatrullaje = 2;
+                p.IdEstadoPatrullaje = 1;
                 p.IdUsuario = idUsuario;
                 p.RiesgoPatrullaje = riesgo;
 
