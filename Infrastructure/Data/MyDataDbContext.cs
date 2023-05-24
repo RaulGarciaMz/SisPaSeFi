@@ -178,6 +178,12 @@ public partial class MyDataDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
+        
+        modelBuilder.Entity<Acceso>(entity =>
+        {
+            entity.HasKey(e => e.Idaccesos).HasName("PK_accesos_idaccesos");
+        });
+
 
         modelBuilder.Entity<AfectacionIncidencia>(entity =>
         {
