@@ -33,7 +33,7 @@ namespace SqlServerAdapter
         {
             return await _patrullajeContext.puntospatrullaje
                 .Include(m => m.IdMunicipioNavigation.IdEstadoNavigation)
-                .Where(e => e.Ubicacion == ubicacion)
+                .Where(e => e.Ubicacion.Contains(ubicacion))
                 .ToListAsync();
         }
 

@@ -18,6 +18,8 @@ namespace SqlServerAdapter
 
         public async Task<List<LineaVista>> ObtenerLineaPorClaveAsync(string clave)
         {
+            var nclave = "%" + clave + "%";
+
             string sqlQuery = @"SELECT a.id_linea, a.clave, a.descripcion, a.id_punto_inicio, b.ubicacion ubicacion_punto_inicio,
                                        d.nombre municipio_punto_inicio, f.nombre estado_punto_inicio, a.id_punto_fin,c.ubicacion ubicacion_punto_fin,
 	                                   e.nombre municipio_punto_fin,g.nombre estado_punto_fin
