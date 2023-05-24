@@ -70,7 +70,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PostValue([Required] string usuario,[FromBody] PuntoDto pto)
+        public async Task<ActionResult> PostValue([Required] string usuario,[FromBody] PuntoDtoForCreate pto)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PutValue(int id, [Required] string usuario, [FromBody] PuntoDto pto)
+        public async Task<ActionResult> PutValue(int id, [Required] string usuario, [FromBody] PuntoDtoForUpdate pto)
         {
             try
             {

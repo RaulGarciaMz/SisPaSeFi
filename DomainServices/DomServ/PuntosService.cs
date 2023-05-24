@@ -18,11 +18,11 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de agregar un punto de patrullaje
         /// </summary>
-        public async Task AgregaAsync(PuntoDto pp, string usuario)
+        public async Task AgregaAsync(PuntoDtoForCreate pp, string usuario)
         {
             if (await EsUsuarioConfigurador(usuario))
             {
-                var p = ConvierteDtoToDominio(pp);
+                var p = ConvierteDtoForCreateToDominio(pp);
                 await _repo.Agrega(p);
             }
         }
@@ -46,12 +46,11 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de actualizar un punto de patrullaje
         /// </summary>
-        public async Task UpdateAsync(PuntoDto pp, string usuario)
+        public async Task UpdateAsync(PuntoDtoForUpdate pp, string usuario)
         {
             if (await EsUsuarioConfigurador(usuario))
             {
-                var p = ConvierteDtoToDominio(pp);
-                await _repo.Update(p);
+                await _repo.Update(pp);
             }
         }
 
@@ -145,10 +144,8 @@ namespace DomainServices.DomServ
             return false;
         }
 
-        /// <summary>
-        /// Método <c>ConvierteDtoToDominio</c> convierte objetos de transferencia de datos (DTO) a objetos del dominio
-        /// </summary>
-        private PuntoPatrullaje ConvierteDtoToDominio(PuntoDto p)
+
+        private PuntoPatrullaje ConvierteDtoForCreateToDominio(PuntoDtoForCreate p)
         {
             var coor = p.strCoordenadas.Trim();
             var coorXY = p.strCoordenadas.Split(",");
@@ -157,7 +154,6 @@ namespace DomainServices.DomServ
 
             return new PuntoPatrullaje
             {
-                IdPunto = p.intIdPunto,
                 Ubicacion = p.strUbicacion,
                 Coordenadas = coor,
                 EsInstalacion = p.intEsInstalacion,
@@ -165,11 +161,12 @@ namespace DomainServices.DomServ
                 IdComandancia = p.intIdComandancia,
                 IdProcesoResponsable = p.intIdProcesoResponsable,
                 IdGerenciaDivision = p.intIdGerenciaDivision,
-                Bloqueado = p.intBloqueado,
-                Latitud =  lat,
-                Longitud = longi,
+                IdUsuario = p.intIdUsuario,
                 IdMunicipio = p.intIdMunicipio,
-                IdUsuario= p.intIdUsuario,
+                Bloqueado = p.intBloqueado,
+                Latitud = lat,
+                Longitud = longi,
+                
                 //Campos no nulos
                 UltimaActualizacion = DateTime.UtcNow
             };

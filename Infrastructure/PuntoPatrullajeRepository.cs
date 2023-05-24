@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -102,10 +103,33 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>Update</c> implementa la interface para actualizar puntos de patrullaje.
         /// </summary>
-        public async Task Update(PuntoPatrullaje pp)
+        public async Task Update(PuntoDtoForUpdate pp)
         {
-            _patrullajeContext.puntospatrullaje.Update(pp);
-            await _patrullajeContext.SaveChangesAsync();
+
+            var up = await  _patrullajeContext.puntospatrullaje.Where(x => x.IdPunto == pp.intIdPunto).SingleOrDefaultAsync();
+            if (up != null)
+            {
+                var coorXY = pp.strCoordenadas.Trim().Split(",");
+                var lat = coorXY[0].Trim();
+                var longi = coorXY[1].Trim();
+
+                up.Ubicacion = pp.strUbicacion;
+                up.Coordenadas = pp.strCoordenadas;
+                up.IdMunicipio = pp.intIdMunicipio;
+                up.IdProcesoResponsable = pp.intIdProcesoResponsable;
+                up.IdGerenciaDivision = pp.intIdGerenciaDivision;
+                up.EsInstalacion = pp.intEsInstalacion;
+                up.IdNivelRiesgo = pp.intIdNivelRiesgo;
+                up.IdComandancia = pp.intIdComandancia;
+                up.IdUsuario = pp.intIdUsuario;
+                up.Bloqueado = pp.intBloqueado;
+                up.Latitud = lat;
+                up.Longitud = longi;
+
+                _patrullajeContext.puntospatrullaje.Update(up);
+                await _patrullajeContext.SaveChangesAsync();
+            }
+
         }
 
         /// <summary>

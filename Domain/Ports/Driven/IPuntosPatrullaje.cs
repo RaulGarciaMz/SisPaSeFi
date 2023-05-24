@@ -1,11 +1,12 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 
 namespace Domain.Ports.Driven
 {
     public interface IPuntosPatrullaje
     {
         Task Agrega(PuntoPatrullaje pp);
-        Task Update(PuntoPatrullaje pp);
+        Task Update(PuntoDtoForUpdate pp);
         Task Delete(int id);
 
         Task<List<PuntoPatrullaje>> ObtenerPorEstadoAsync(int id_estado);
