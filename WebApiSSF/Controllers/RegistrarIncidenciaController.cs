@@ -36,14 +36,14 @@ namespace WebApiSSF.Controllers
             {
                 await _pp.AgregaIncidenciaTransaccionalAsync(incidencia);
 
-                return Ok();
+                return Ok("OK");
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al registrar incidencia para usuario: {incidencia.usuario}, ruta: {incidencia.IdRuta}, Fecha de patrullaje: {incidencia.FechaPatrullaje} ", ex);
+                _log.LogError($"error al registrar incidencia para usuario: {incidencia.usuario}, ruta: {incidencia.IdRuta}, Fecha de patrullaje: {incidencia.FechaPatrullaje} - ", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición - " + ex.Message;
                 //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
-                return StatusCode(500, m);
+                return StatusCode(500, ex.Message);
             }
         }
     }

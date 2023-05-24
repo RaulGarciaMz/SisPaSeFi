@@ -267,13 +267,22 @@ namespace SqlServerAdapter
                         break;
                 }
 
-                var pthOrigen = "c:\\inetpub\\ftproot\\Seguridad\\" + nombreArchivo;
+                var pthOrigen = "c:\\repoIncidencias\\" + nombreArchivo;
                 var pthDestino = filesystemUbicacion + nombreArchivo;
                 if (!Directory.Exists(filesystemUbicacion))
                 {
                     Directory.CreateDirectory(filesystemUbicacion);
                 }
-                File.Copy(pthOrigen, pthDestino);
+
+                if (File.Exists(pthOrigen))
+                {
+                    File.Copy(pthOrigen, pthDestino);
+                }
+                else 
+                {
+
+                    throw new FileNotFoundException("Archivo no encontrado: " + pthOrigen);
+                }
             }
         }
 
