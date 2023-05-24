@@ -1,5 +1,5 @@
-﻿using Domain.Entities;
-using Domain.Entities.Vistas;
+﻿//using Domain.DTOs.catalogos;
+using Domain.Entities;
 
 namespace Domain.Ports.Driven
 {
@@ -57,7 +57,7 @@ namespace Domain.Ports.Driven
 
     public interface IGerenciaDivisionQuery
     {
-        Task<List<CatalogoVista>> ObtenerCatalogoPorNombreTablaAync(string nombre);
+        Task<List<Domain.Entities.Vistas.CatalogoVista>> ObtenerCatalogoPorNombreTablaAync(string nombre);
     }
 
     public interface IResultadoPatrullajeQuery
@@ -68,6 +68,7 @@ namespace Domain.Ports.Driven
     public interface IEstadoPatrullajeQuery
     {
         Task<List<EstadoPatrullaje>> ObtenerEstadosPatrullajeAsync();
+        Task<List<EstadoPatrullaje>> ObtenerTodosEstadosPatrullajeAsync();
     }
 
     public interface IApoyoPatrullajeQuery

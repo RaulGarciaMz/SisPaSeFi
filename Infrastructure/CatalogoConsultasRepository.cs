@@ -112,6 +112,12 @@ namespace SqlServerAdapter
             return await _catalogosConsultaContext.EstadosPatrullaje.Where(x => x.IdEstadoPatrullaje > 4).ToListAsync();
         }
 
+        public async Task<List<EstadoPatrullaje>> ObtenerTodosEstadosPatrullajeAsync()
+        {
+            return await _catalogosConsultaContext.EstadosPatrullaje.ToListAsync();
+        }
+
+
         public async Task<List<ApoyoPatrullaje>> ObtenerApoyosPatrullajeAsync()
         {
             return await _catalogosConsultaContext.ApoyosPatrullaje.ToListAsync();

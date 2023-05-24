@@ -76,6 +76,9 @@ namespace DomainServices.DomServ
                 case "EstadosPatrullaje":
                     cat = await ObtenerEstadosPatrullajeAsync(usuario);
                     break;
+                case "TodoEstadosPatrullaje":
+                    cat = await ObtenerTodosEstadosPatrullajeAsync(usuario);
+                    break;
                 case "ApoyoPatrullaje":
                     cat = await ObtenerApoyosPatrullajeAsync(usuario);
                     break;
@@ -465,6 +468,30 @@ namespace DomainServices.DomServ
             if (user != null)
             {
                 var clas = await _repo.ObtenerEstadosPatrullajeAsync();
+
+                foreach (var c in clas)
+                {
+                    var row = new CatalogoGenerico()
+                    {
+                        Id = Convert.ToInt32(c.IdEstadoPatrullaje),
+                        Descripcion = c.DescripcionEstadoPatrullaje
+                    };
+
+                    cat.Add(row);
+                }
+            }
+
+            return cat;
+        }
+
+        public async Task<List<CatalogoGenerico>> ObtenerTodosEstadosPatrullajeAsync(string usuario)
+        {
+            var cat = new List<CatalogoGenerico>();
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                var clas = await _repo.ObtenerTodosEstadosPatrullajeAsync();
 
                 foreach (var c in clas)
                 {

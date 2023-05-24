@@ -26,7 +26,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene la lista de registros de un catálogo correspondiente a la opción indicada 
         /// </summary>
-        /// <param name="opcion">Nombre de la opción para catálogo ("RSF", "TipoPatrullaje", "TipoVehiculo", "ClasificacionIncidencia", "Niveles", "ConceptosAfectacion", "RegionesSDN", "ResultadoPatrullaje", "EstadosDelPais", "MunicipiosEstado-XX", "ProcesosResponsables", "GerenciaDivision-XX", "TipoDocumento", "EstadosPatrullaje", "ApoyoPatrullaje", "InstalacionesDeComandancia-XX", "NivelRiesgo", "Hallazgo", "LocalidadMunicipio-XX", "EstadosIncidencia", "ComandanciasDeUnUsuario-XX", "GrupoCorreoDeUnUsuario-XX", "RolesDeUnUsuario-XX", "GruposCorreo", "MenusDeRol-XX"  ). XX es información adicional</param>
+        /// <param name="opcion">Nombre de la opción para catálogo ("RSF", "TipoPatrullaje", "TipoVehiculo", "ClasificacionIncidencia", "Niveles", "ConceptosAfectacion", "RegionesSDN", "ResultadoPatrullaje", "EstadosDelPais", "MunicipiosEstado-XX", "ProcesosResponsables", "GerenciaDivision-XX", "TipoDocumento", "EstadosPatrullaje", "TodoEstadosPatrullaje", "ApoyoPatrullaje", "InstalacionesDeComandancia-XX", "NivelRiesgo", "Hallazgo", "LocalidadMunicipio-XX", "EstadosIncidencia", "ComandanciasDeUnUsuario-XX", "GrupoCorreoDeUnUsuario-XX", "RolesDeUnUsuario-XX", "GruposCorreo", "MenusDeRol-XX"  ). XX es información adicional</param>
         /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [HttpGet]
