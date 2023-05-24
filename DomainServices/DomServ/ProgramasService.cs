@@ -377,7 +377,7 @@ namespace DomainServices.DomServ
                 var userId = usuarioId.Value;
                 if (EsUsuarioRegistrado(userId))
                 {
-                    await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.IdPrograma, p.IdRuta, userId);
+                    await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.IdPrograma, p.IdRuta,p.Fecha, userId);
                 }
             }
         }

@@ -131,7 +131,11 @@
         /// <summary>
         /// Identificador de la ruta del programa de patrullaje
         /// </summary>
-        public int IdRuta { get; set; }     
+        public int IdRuta { get; set; }
+        /// <summary>
+        /// Fecha de Patrullaje
+        /// </summary>
+        public DateTime Fecha { get; set; }
     }
 
     /// <summary>
