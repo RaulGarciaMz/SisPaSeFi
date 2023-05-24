@@ -168,5 +168,6 @@ namespace Domain.DTOs
         /// Identificador del usuario que registra el punto de patrullaje
         /// </summary>
         public int intIdUsuario { get; set; }
+        public string usuario { get; set; }
     }
 }

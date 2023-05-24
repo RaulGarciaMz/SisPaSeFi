@@ -46,9 +46,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de actualizar un punto de patrullaje
         /// </summary>
-        public async Task UpdateAsync(PuntoDtoForUpdate pp, string usuario)
+        public async Task UpdateAsync(PuntoDtoForUpdate pp)
         {
-            if (await EsUsuarioConfigurador(usuario))
+            if (await EsUsuarioConfigurador(pp.usuario))
             {
                 await _repo.Update(pp);
             }

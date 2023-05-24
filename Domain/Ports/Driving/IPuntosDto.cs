@@ -6,7 +6,7 @@ namespace Domain.Ports.Driving
     public interface IPuntosDtoCommand
     {
         Task AgregaAsync(PuntoDtoForCreate pp, string usuario);
-        Task UpdateAsync(PuntoDtoForUpdate pp, string usuario);
+        Task UpdateAsync(PuntoDtoForUpdate pp);
         Task DeleteAsync(int id, string usuario);
     }
 

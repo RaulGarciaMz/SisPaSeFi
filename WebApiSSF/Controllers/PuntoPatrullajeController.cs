@@ -87,24 +87,22 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza un punto de patrullaje
         /// </summary>
-        /// <param name="id">Identificador del punto de patrullaje a actualizar</param>
-        /// <param name="usuario">Nombre del usuario que relaiza la actualización</param>
         /// <param name="pto">Punto de patrullaje con datos a actualizar</param>
         /// <returns></returns>
         [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PutValue(int id, [Required] string usuario, [FromBody] PuntoDtoForUpdate pto)
+        public async Task<ActionResult> PutValue([FromBody] PuntoDtoForUpdate pto)
         {
             try
             {
-                await _pp.UpdateAsync(pto, usuario);
+                await _pp.UpdateAsync(pto);
                 return Ok();
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al actualizar el punto de patrullaje para el usuario: {usuario}", ex);
+                _log.LogError($"error al actualizar el punto de patrullaje para el usuario: {pto.usuario}", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
             }
         }
