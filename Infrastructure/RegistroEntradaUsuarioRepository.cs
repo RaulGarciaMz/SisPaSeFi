@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Ports.Driven.Repositories;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
 
@@ -139,8 +140,8 @@ namespace SqlServerAdapter
 
             if (user != null)
             {
-                var sesion = await _registroContext.Sesiones.Where(x => x.IdUsuario == idUsuario && x.EstampaTiempoInicio == user.EstampaTiempoUltimoAcceso).SingleAsync();
-                numSesion = sesion.IdSesion;
+                var sesion = await _registroContext.Sesiones.Where(x => x.IdUsuario == idUsuario && x.EstampaTiempoInicio == user.EstampaTiempoUltimoAcceso).ToListAsync();
+                numSesion = sesion[0].IdSesion;
             }
 
             return numSesion;
@@ -148,16 +149,25 @@ namespace SqlServerAdapter
 
         public string ObtenerPaginaDeInicioDeUsuario(int idUsuario)
         {
-            var q = (from ur in _registroContext.UsuariosRol
-                     join ro in _registroContext.Roles on ur.IdRol equals ro.IdRol
-                     join me in _registroContext.Menues on ro.IdMenu equals me.IdMenu
-                     where ur.IdUsuario == idUsuario
-                     select new
-                     {
-                         me.Liga
-                     }).Single().ToString();
+            string sqlQuery = @"SELECT c.* 
+                                FROM ssf.usuariorol a
+                                JOIN ssf.roles b ON a.id_rol = b.id_rol
+                                JOIN ssf.menus c ON b.idmenu = c.idmenu
+                                WHERE a.id_usuario = @pIdUsuario";
 
-            return q ?? "";
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pIdUsuario", idUsuario)
+            };
+
+            var pagInicio = _registroContext.Menues.FromSqlRaw(sqlQuery, parametros).ToList();
+
+            if (pagInicio != null && pagInicio.Count > 0)
+            {
+                return pagInicio[0].Liga;
+            }
+
+            return string.Empty;
         }
 
         public async Task<int?> ObtenerAvisoLegalDeUsuarioAsync(string usuario)
