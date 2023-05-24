@@ -89,13 +89,10 @@ namespace SqlServerAdapter
         {
             var cat = "ssf." + nombre;
 
-            string sqlQuery = @"SELECT id, CONCAT(nombre, ' - ' , clave) nombre
-                                FROM @pTabla
-                                ORDER BY id";
+            string sqlQuery = @"SELECT id, CONCAT(nombre, ' - ' , clave) nombre FROM " + cat + " ORDER BY id";
 
             object[] parametros = new object[]
             {
-                new SqlParameter("@pTabla", cat),
             };
 
             return await _catalogosConsultaContext.CatalogosVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
