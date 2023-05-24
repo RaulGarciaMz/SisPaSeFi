@@ -8,7 +8,7 @@ public partial class Acceso
 {
     [Key]
     [Column("idaccesos")]
-    public int Id { get; set; }
+    public int Idaccesos { get; set; }
 
     [Column("fecha", TypeName = "date")]
     public DateTime? Fecha { get; set; }
