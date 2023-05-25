@@ -1258,10 +1258,14 @@ namespace SqlServerAdapter
 
         public async Task DeleteProgramaAsync(int id)
         {
-            var aBorrar = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == id).SingleAsync();
+            var aBorrar = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == id).SingleOrDefaultAsync();
 
-            _programaContext.ProgramasPatrullajes.Remove(aBorrar);
-            await _programaContext.SaveChangesAsync();
+            if (aBorrar != null)
+            {
+                _programaContext.ProgramasPatrullajes.Remove(aBorrar);
+                await _programaContext.SaveChangesAsync();
+            }
+      
         }
 
         public async Task<bool> SaveChangesAsync()

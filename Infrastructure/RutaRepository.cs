@@ -55,12 +55,15 @@ namespace SqlServerAdapter
         /// </summary>
         public async Task DeleteAsync(int id)
         {
-            var r = await _rutaContext.Rutas.Where(x => x.IdRuta == id).FirstAsync();
+            var r = await _rutaContext.Rutas.Where(x => x.IdRuta == id).FirstOrDefaultAsync();
 
-            if (r.Bloqueado == 0)
+            if (r != null)
             {
-                _rutaContext.Rutas.Remove(r);
-                await _rutaContext.SaveChangesAsync();
+                if (r.Bloqueado == 0)
+                {
+                    _rutaContext.Rutas.Remove(r);
+                    await _rutaContext.SaveChangesAsync();
+                }
             }
         }
 

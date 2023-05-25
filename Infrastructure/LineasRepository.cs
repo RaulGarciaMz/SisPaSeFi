@@ -226,9 +226,12 @@ namespace SqlServerAdapter
 
             var l = await _lineaContext.Lineas.Where(x => x.IdLinea == idLinea).SingleOrDefaultAsync();
 
-            _lineaContext.Remove(l);
+            if (l != null ) 
+            {
+                _lineaContext.Lineas.Remove(l);
 
-            await _lineaContext.SaveChangesAsync();
+                await _lineaContext.SaveChangesAsync();
+            }
         }
     }
 }
