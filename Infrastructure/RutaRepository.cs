@@ -188,12 +188,12 @@ namespace SqlServerAdapter
             string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
                    a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
                    a.bloqueado,a.habilitado, a.id_tipopatrullaje,
-                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
+                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), ' - ') WITHIN GROUP(ORDER BY f.posicion ASC)
                              FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
                              WHERE f.id_ruta = a.id_ruta),'') as itinerarioruta,
                    COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.posicion,'[!:!]',g.ubicacion,'[!:!]',g.coordenadas,'[!:!]', f.id_itinerario,'[!:!]',g.id_punto) as nvarchar(MAX)), '¦') 
                                WITHIN GROUP(ORDER BY f.posicion ASC)
-                             FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
+                             FROM ssf.itinerario f JOIN ssf.puntospatrullaje g on f.id_punto = g.id_punto
                              WHERE f.id_ruta = a.id_ruta),'') as itinerariorutapatrullaje
             FROM ssf.rutas a
             join ssf.tipopatrullaje t on a.id_tipoPatrullaje = t.id_tipoPatrullaje
@@ -218,7 +218,7 @@ namespace SqlServerAdapter
             string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
                    a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
                    a.bloqueado,a.habilitado, a.id_tipopatrullaje,
-                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
+                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), ' - ') WITHIN GROUP(ORDER BY f.posicion ASC)
                              FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
                              WHERE f.id_ruta = a.id_ruta),'') as itinerarioruta,
                    COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.posicion,'[!:!]',g.ubicacion,'[!:!]',g.coordenadas,'[!:!]', f.id_itinerario,'[!:!]',g.id_punto) as nvarchar(MAX)), '¦') 
@@ -249,7 +249,7 @@ namespace SqlServerAdapter
             string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
                    a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
                    a.bloqueado,a.habilitado, a.id_tipopatrullaje,
-                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
+                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), ' - ') WITHIN GROUP(ORDER BY f.posicion ASC)
                              FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
                              WHERE f.id_ruta = a.id_ruta),'') as itinerarioruta,
                    COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.posicion,'[!:!]',g.ubicacion,'[!:!]',g.coordenadas,'[!:!]', f.id_itinerario,'[!:!]',g.id_punto) as nvarchar(MAX)), '¦') 
@@ -275,6 +275,71 @@ namespace SqlServerAdapter
         }
 
         /// <summary>
+        /// Método <c>ObtenerRutasTodasPorTipoAndCriterioAsync</c> implementa la interfaz para obtener rutas filtradas tipo, clave, observaciones e itinerario
+        /// </summary>
+        public async Task<List<RutaVista>> ObtenerRutasTodasPorTipoAndCriterioAsync(string tipo, string criterio)
+        {
+            criterio = "%" + criterio + "%";
+
+            string sqlQuery = @"SELECT a.id_ruta ,a.clave, a.regionmilitarsdn, a.regionssf
+                                       ,a.zonamilitarsdn,a.observaciones,a.consecutivoregionmilitarsdn,a.totalrutasregionmilitarsdn
+                                       ,a.bloqueado,a.habilitado,a.id_tipopatrullaje
+                                       ,COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), ' - ') WITHIN GROUP(ORDER BY f.posicion ASC)
+                                                FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
+                                                WHERE f.id_ruta = a.id_ruta),'') as itinerarioruta
+                                       ,COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.posicion,'[!:!]',g.ubicacion,'[!:!]',g.coordenadas,'[!:!]', f.id_itinerario,'[!:!]',g.id_punto) as nvarchar(MAX)), '¦') 
+                                                    WITHIN GROUP(ORDER BY f.posicion ASC)
+                                                  FROM ssf.itinerario f JOIN ssf.puntospatrullaje g on f.id_punto = g.id_punto
+                                                  WHERE f.id_ruta = a.id_ruta),'') as itinerariorutapatrullaje
+                                FROM ssf.rutas a 
+                                JOIN ssf.tipopatrullaje t on a.id_tipoPatrullaje = t.id_tipoPatrullaje
+                                WHERE t.descripcion = @parDescripcion
+                                AND (a.clave like @parCriterio OR observaciones like @parCriterio
+                                    OR COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC) as recorrido 
+                                               FROM ssf.itinerario f JOIN ssf.puntospatrullaje g ON f.id_punto=g.id_punto
+                                               WHERE f.id_ruta=a.id_ruta  ),'') like @parCriterio )
+                                ORDER BY a.regionssf, a.regionmilitarsdn, a.zonamilitarsdn, a.consecutivoregionmilitarsdn";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@parCriterio", criterio),
+                new SqlParameter("@parDescripcion", tipo)
+            };
+
+            return await _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        /// <summary>
+        /// Método <c>ObtenerRutasTodasPorTipoAndCriterioAsync</c> implementa la interfaz para obtener rutas filtradas tipo, clave, observaciones e itinerario
+        /// </summary>
+        public async Task<List<RutaVista>> ObtenerRutasTodasPorRegionMilitarAsync(string tipo, string regionMilitar)
+        {
+            string sqlQuery = @"SELECT a.id_ruta ,a.clave, a.regionmilitarsdn, a.regionssf
+                                       ,a.zonamilitarsdn,a.observaciones,a.consecutivoregionmilitarsdn,a.totalrutasregionmilitarsdn
+                                       ,a.bloqueado,a.habilitado,a.id_tipopatrullaje
+                                       ,COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), ' - ') WITHIN GROUP(ORDER BY f.posicion ASC)
+                                                FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
+                                                WHERE f.id_ruta = a.id_ruta),'') as itinerarioruta
+                                       ,COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.posicion,'[!:!]',g.ubicacion,'[!:!]',g.coordenadas,'[!:!]', f.id_itinerario,'[!:!]',g.id_punto) as nvarchar(MAX)), '¦') 
+                                                    WITHIN GROUP(ORDER BY f.posicion ASC)
+                                                  FROM ssf.itinerario f JOIN ssf.puntospatrullaje g on f.id_punto = g.id_punto
+                                                  WHERE f.id_ruta = a.id_ruta),'') as itinerariorutapatrullaje
+                                FROM ssf.rutas a 
+                                JOIN ssf.tipopatrullaje t on a.id_tipoPatrullaje = t.id_tipoPatrullaje
+                                WHERE t.descripcion = @parDescripcion
+                                AND a.regionmilitarsdn = @parRegionMilitar
+                                ORDER BY a.regionmilitarsdn, a.zonamilitarsdn, a.consecutivoregionmilitarsdn, a.regionssf";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@parRegionMilitar", regionMilitar),
+                new SqlParameter("@parDescripcion", tipo)
+            };
+
+            return await _rutaContext.RutasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+        }
+
+        /// <summary>
         /// Método <c>ObtenerPropuestasPorRegionMilitarAndRegionSsfAsync</c> implementa la interfaz para obtener propuestas de patrullaje (rutas) filtradas tipo, región militar y región SSF
         /// </summary>
         public async Task<List<RutaVista>> ObtenerPropuestasPorRegionMilitarAndRegionSsfAsync(string tipo, string regionMilitar, int regionSsf)
@@ -282,7 +347,7 @@ namespace SqlServerAdapter
             string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
                    a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
                    a.bloqueado,a.habilitado, a.id_tipopatrullaje,
-                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
+                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), ' - ') WITHIN GROUP(ORDER BY f.posicion ASC)
                              FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
                              WHERE f.id_ruta = a.id_ruta),'') as itinerarioruta,
                    COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.posicion,'[!:!]',g.ubicacion,'[!:!]',g.coordenadas,'[!:!]', f.id_itinerario,'[!:!]',g.id_punto) as nvarchar(MAX)), '¦') 
@@ -314,7 +379,7 @@ namespace SqlServerAdapter
             string sqlQuery = @"SELECT a.id_ruta, a.clave, a.regionmilitarsdn, a.regionssf,
                    a.zonamilitarsdn,a.observaciones, a.consecutivoregionmilitarsdn, a.totalrutasregionmilitarsdn,
                    a.bloqueado,a.habilitado, a.id_tipopatrullaje,
-                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
+                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), ' - ') WITHIN GROUP(ORDER BY f.posicion ASC)
                              FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
                              WHERE f.id_ruta = a.id_ruta),'') as itinerarioruta,
                    COALESCE((SELECT STRING_AGG(CAST(CONCAT(f.posicion,'[!:!]',g.ubicacion,'[!:!]',g.coordenadas,'[!:!]', f.id_itinerario,'[!:!]',g.id_punto) as nvarchar(MAX)), '¦') 

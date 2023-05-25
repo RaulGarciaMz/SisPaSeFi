@@ -122,6 +122,10 @@ namespace DomainServices.DomServ
                         case "Programa":
                             encontradas = await _repo.ObtenerRutasPorCombinacionFiltrosAsync(tipo, criterio);
                             break;
+
+                        case "Rutas":
+                            encontradas = await _repo.ObtenerRutasTodasPorTipoAndCriterioAsync(tipo, criterio);
+                            break;
                     }
                     break;
 
@@ -145,6 +149,10 @@ namespace DomainServices.DomServ
                         case "Programa":
                             encontradas = await _repo.ObtenerRutasPorRegionMilitarAsync(tipo, criterio);
                             break;
+
+                        case "Rutas":
+                            encontradas = await _repo.ObtenerRutasTodasPorRegionMilitarAsync(tipo, criterio);
+                            break;
                     }
                     break;
 
@@ -159,8 +167,6 @@ namespace DomainServices.DomServ
 
             if (encontradas.Count > 0)
             {
-                
-
                 foreach (var item in encontradas)
                 {
                     var itinPat = new List<RecorridoDto>();

@@ -30,6 +30,8 @@ namespace Domain.Ports.Driven
         Task<List<RutaVista>> ObtenerRutasPorRegionSsfAsync(string tipo, int regionSsf);
         Task<List<RutaVista>> ObtenerRutasPorRegionMilitarAsync(string tipo, string regionMilitar);
         Task<List<RutaVista>> ObtenerRutasPorCombinacionFiltrosAsync(string tipo, string criterio);
+        Task<List<RutaVista>> ObtenerRutasTodasPorTipoAndCriterioAsync(string tipo, string criterio);
+        Task<List<RutaVista>> ObtenerRutasTodasPorRegionMilitarAsync(string tipo, string regionMilitar);
         Task<List<RutaVista>> ObtenerPropuestasPorRegionMilitarAndRegionSsfAsync(string tipo, string regionMilitar, int regionSsf);
         Task<List<RutaVista>> ObtenerPropuestasPorCombinacionFiltrosConRegionSsfAsync(string tipo, string criterio, int regionSsf);
         Task<List<RutaDisponibleVista>> ObtenerRutasDisponiblesParaCambioDeRutaAsync(string region, DateTime fecha);

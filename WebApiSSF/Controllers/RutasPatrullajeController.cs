@@ -30,7 +30,7 @@ namespace WebApiSSF.Controllers
         /// <param name="opcion">Indicador del filtro que se incluirá (0 - por observaciones , 1 - Por región militar, 2 - Por región SSF)</param>
         /// <param name="tipo">Tipo de patrullaje (TERRESTRE o AEREO)</param>
         /// <param name="criterio">Descripción del criterio de búsqueda en una ruta. Si el parámetro opción es 2, entonces lleva el valor del identificador de la región SSF </param>
-        /// <param name="actividad">Descripción del tipo de actividad a la que pertenece la ruta ("Propuestas", "Programas") </param>
+        /// <param name="actividad">Descripción del tipo de actividad a la que pertenece la ruta ("Propuestas", "Programas", "Rutas") </param>
         /// <returns></returns>
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
