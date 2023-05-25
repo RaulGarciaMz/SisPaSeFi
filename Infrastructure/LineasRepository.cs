@@ -30,11 +30,11 @@ namespace SqlServerAdapter
                                 JOIN ssf.municipios e ON c.id_municipio=e.id_municipio
                                 JOIN ssf.estadospais f ON d.id_estado=f.id_estado
                                 JOIN ssf.estadospais g ON e.id_estado=g.id_estado
-                                WHERE a.clave like @pCriterio ";
+                                WHERE a.clave like @pCriterio";
 
             object[] parametros = new object[]
             {
-                new SqlParameter("@pCriterio", clave)
+                new SqlParameter("@pCriterio", nclave)
             };
 
             return await _lineaContext.LineasVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
