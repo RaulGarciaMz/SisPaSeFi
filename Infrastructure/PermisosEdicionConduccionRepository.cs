@@ -1,15 +1,7 @@
 ﻿using Domain.Entities;
-using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlServerAdapter
 {
