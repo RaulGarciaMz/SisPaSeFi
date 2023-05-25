@@ -72,8 +72,9 @@ namespace SqlServerAdapter
         /// </summary>
         public async Task<string> ObtenerDescripcionTipoPatrullajeAsync(int tipoPatrullaje)
         {
-            var t = await _rutaContext.TiposPatrullaje.Where(x => x.IdTipoPatrullaje == tipoPatrullaje).FirstAsync();
+            var t = await _rutaContext.TiposPatrullaje.Where(x => x.IdTipoPatrullaje == tipoPatrullaje).FirstOrDefaultAsync();
 
+            if (t == null) throw new Exception("No se encontró tipo de patrullaje para el identificador indicado");
             return t.Descripcion;
         }
 

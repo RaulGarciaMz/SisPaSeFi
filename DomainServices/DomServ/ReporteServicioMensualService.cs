@@ -43,58 +43,62 @@ namespace DomainServices.DomServ
                         break;
                 }
 
-                var rpte = new ReporteServicioMensualDto() 
+                if (resumen != null)
                 {
-                    intTotalPatrullajes = resumen.total,
-                    strTiempoVueloKmRecorrido = resumen.dato1.ToString(),
-                    intComandantesInstalacion = resumen.dato2,
-                    intPersonalMilitarSEDENAoficial = resumen.dato3,
-                    intPersonalMilitarSEDENAtropa = resumen.dato4,
-                    intConductores = resumen.dato5,
-                    intComandantesTurnoSSF = resumen.dato6,
-                    intOficialesSSF = resumen.dato7
-                };
-
-                foreach (var rep in reporte) 
-                {
-                    var r = new DetalleReporteServicioMensualDto() 
+                    var rpte = new ReporteServicioMensualDto()
                     {
-                        intIdTarjeta = rep.id_nota,
-                        intIdPrograma = rep.id_programa,
-                        strFechaPatrullaje = rep.fechaPatrullaje.Value.ToString("yyyy-MM-dd"),
-                        intIdRuta = rep.id_ruta,
-                        intRegionSSF = Int32.Parse(rep.regionSSF),
-                        intIdTipoPatrullaje = rep.id_tipoPatrullaje,
-                        strUltimaActualizacion = rep.ultimaActualizacion.ToString("yyyy-MM-dd HH:mm:ss"),
-                        intIdUsuario = rep.id_usuario,
-                        strInicio = rep.inicio.ToString(),
-                        strTermino = rep.termino.ToString(),
-                        strTiempoVuelo = rep.tiempoVuelo.ToString(),
-                        strCalzoCalzo = rep.calzoAcalzo.ToString(),
-                        strObservaciones = rep.observaciones,
-                        strDescripcionEstadoPatrullaje = rep.descripcionEstadoPatrullaje,
-                        strKmRecorridos = rep.kmRecorrido.ToString(),
-                        intComandantesInstalacionSSF = rep.comandantesInstalacionSSF,
-                        intPersonalMilitarSEDENAoficial = rep.personalMilitarSEDENAOficial,
-                        intIdEstadoTarjetaInformativa = rep.id_estadoTarjetaInformativa,
-                        intPersonalMilitarSEDENAtropa = rep.personalMilitarSEDENATropa,
-                        intConductores = rep.linieros,
-                        intComandantesTurnoSSF = rep.comandantesTurnoSSF,
-                        intOficialesSSF = rep.oficialesSSF,
-                        intPersonalNavalSEMARoficial = rep.personalNavalSEMAROficial,
-                        intPersonalNavalSEMARtropa = rep.personalNavalSEMARTropa,
-                        strItinerarioRuta = rep.itinerariorutas,
-                        strIncidenciaEnEstructura = rep.incidenciaenestructura,
-                        strIncidenciaEnInstalacion = rep.incidenciaeninstalacion,
-                        strMatriculas = rep.matriculas,
-                        strOdometros = rep.odometros,
-                        strKmRecorridosVehiculos = rep.kmrecorridos
+                        intTotalPatrullajes = resumen.total,
+                        strTiempoVueloKmRecorrido = resumen.dato1.ToString(),
+                        intComandantesInstalacion = resumen.dato2,
+                        intPersonalMilitarSEDENAoficial = resumen.dato3,
+                        intPersonalMilitarSEDENAtropa = resumen.dato4,
+                        intConductores = resumen.dato5,
+                        intComandantesTurnoSSF = resumen.dato6,
+                        intOficialesSSF = resumen.dato7
                     };
 
-                    rpte.listaDetalles.Add(r);
+                    foreach (var rep in reporte)
+                    {
+                        var r = new DetalleReporteServicioMensualDto()
+                        {
+                            intIdTarjeta = rep.id_nota,
+                            intIdPrograma = rep.id_programa,
+                            strFechaPatrullaje = rep.fechaPatrullaje.Value.ToString("yyyy-MM-dd"),
+                            intIdRuta = rep.id_ruta,
+                            intRegionSSF = Int32.Parse(rep.regionSSF),
+                            intIdTipoPatrullaje = rep.id_tipoPatrullaje,
+                            strUltimaActualizacion = rep.ultimaActualizacion.ToString("yyyy-MM-dd HH:mm:ss"),
+                            intIdUsuario = rep.id_usuario,
+                            strInicio = rep.inicio.ToString(),
+                            strTermino = rep.termino.ToString(),
+                            strTiempoVuelo = rep.tiempoVuelo.ToString(),
+                            strCalzoCalzo = rep.calzoAcalzo.ToString(),
+                            strObservaciones = rep.observaciones,
+                            strDescripcionEstadoPatrullaje = rep.descripcionEstadoPatrullaje,
+                            strKmRecorridos = rep.kmRecorrido.ToString(),
+                            intComandantesInstalacionSSF = rep.comandantesInstalacionSSF,
+                            intPersonalMilitarSEDENAoficial = rep.personalMilitarSEDENAOficial,
+                            intIdEstadoTarjetaInformativa = rep.id_estadoTarjetaInformativa,
+                            intPersonalMilitarSEDENAtropa = rep.personalMilitarSEDENATropa,
+                            intConductores = rep.linieros,
+                            intComandantesTurnoSSF = rep.comandantesTurnoSSF,
+                            intOficialesSSF = rep.oficialesSSF,
+                            intPersonalNavalSEMARoficial = rep.personalNavalSEMAROficial,
+                            intPersonalNavalSEMARtropa = rep.personalNavalSEMARTropa,
+                            strItinerarioRuta = rep.itinerariorutas,
+                            strIncidenciaEnEstructura = rep.incidenciaenestructura,
+                            strIncidenciaEnInstalacion = rep.incidenciaeninstalacion,
+                            strMatriculas = rep.matriculas,
+                            strOdometros = rep.odometros,
+                            strKmRecorridosVehiculos = rep.kmrecorridos
+                        };
+
+                        rpte.listaDetalles.Add(r);
+                    }
+
+                    retorno = rpte;
                 }
 
-                retorno = rpte;
             }
 
             return retorno;

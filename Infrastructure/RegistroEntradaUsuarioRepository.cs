@@ -63,11 +63,14 @@ namespace SqlServerAdapter
             var hoy = DateTime.UtcNow;
             var anio = hoy.Year;
             var mes = hoy.Month;
-            var elacceso = await _registroContext.Accesos.Where(x => x.Fecha.Value.Year == anio && x.Fecha.Value.Month == mes).SingleAsync();
+            var elacceso = await _registroContext.Accesos.Where(x => x.Fecha.Value.Year == anio && x.Fecha.Value.Month == mes).SingleOrDefaultAsync();
 
-            elacceso.Totalaccesos = accesos;
+            if (elacceso != null) 
+            {
+                elacceso.Totalaccesos = accesos;
 
-            _registroContext.Accesos.Update(elacceso);
+                _registroContext.Accesos.Update(elacceso);
+            }
         }
 
         public void AgregaAccesoEnMemoria()
@@ -83,25 +86,31 @@ namespace SqlServerAdapter
 
         public async Task ActualizaUltimoAccesoDeUsuarioEnMemoriaAsync(string usuario)
         {
-            var user = await _registroContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleAsync();
+            var user = await _registroContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleOrDefaultAsync();
 
-            user.EstampaTiempoAceptacionUso = DateTime.UtcNow;
+            if (user != null) 
+            {
+                user.EstampaTiempoAceptacionUso = DateTime.UtcNow;
 
-            _registroContext.Usuarios.Update(user);
+                _registroContext.Usuarios.Update(user);
+            }
         }
 
         public async Task AgregaSesionDeUsuarioEnMemoriaAsync(string usuario)
         {
-            var user = await _registroContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleAsync();
+            var user = await _registroContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleOrDefaultAsync();
 
-            var sesion = new Sesion()
+            if (user != null)
             {
-                IdUsuario = user.IdUsuario,
-                EstampaTiempoInicio = user.EstampaTiempoUltimoAcceso,
-                EstampaTiempoTerminacion = DateTime.UtcNow
-            };
+                var sesion = new Sesion()
+                {
+                    IdUsuario = user.IdUsuario,
+                    EstampaTiempoInicio = user.EstampaTiempoUltimoAcceso,
+                    EstampaTiempoTerminacion = DateTime.UtcNow
+                };
 
-            _registroContext.Sesiones.Add(sesion);
+                _registroContext.Sesiones.Add(sesion);
+            }
         }
 
         public async Task RegistraEventoDeUsuarioAsync(int numSesion, string resultado)
@@ -120,12 +129,15 @@ namespace SqlServerAdapter
 
         public async Task RegistraFinDeSesionAsync(int numSesion)
         {
-            var s = await _registroContext.Sesiones.Where(x => x.IdSesion == numSesion).SingleAsync();
+            var s = await _registroContext.Sesiones.Where(x => x.IdSesion == numSesion).SingleOrDefaultAsync();
 
-            s.EstampaTiempoTerminacion = DateTime.UtcNow;
-            _registroContext.Sesiones.Update(s);
+            if (s != null) 
+            {
+                s.EstampaTiempoTerminacion = DateTime.UtcNow;
+                _registroContext.Sesiones.Update(s);
 
-            await _registroContext.SaveChangesAsync();
+                await _registroContext.SaveChangesAsync();
+            }
         }
 
         public async Task<bool> SaveChangesAsync()
@@ -136,7 +148,7 @@ namespace SqlServerAdapter
         public async Task<int> ObtenerUltimaSesionDeUsuarioAsync(int idUsuario)
         {
             int numSesion = 0;
-            var user = await _registroContext.Usuarios.Where(x => x.IdUsuario == idUsuario).SingleAsync();
+            var user = await _registroContext.Usuarios.Where(x => x.IdUsuario == idUsuario).SingleOrDefaultAsync();
 
             if (user != null)
             {
@@ -179,26 +191,32 @@ namespace SqlServerAdapter
 
         public async Task ActualizaAvisoLegalDeUsuarioAsync(string usuario)
         {
-            var s = await _registroContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleAsync();
+            var s = await _registroContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleOrDefaultAsync();
 
-            s.AceptacionAvisoLegal = 1;
-            s.EstampaTiempoAceptacionUso = DateTime.UtcNow;
+            if (s != null)
+            {
+                s.AceptacionAvisoLegal = 1;
+                s.EstampaTiempoAceptacionUso = DateTime.UtcNow;
 
-            _registroContext.Usuarios.Update(s);
+                _registroContext.Usuarios.Update(s);
 
-            await _registroContext.SaveChangesAsync();
+                await _registroContext.SaveChangesAsync();
+            }
         }
 
         public async Task ActualizaCorreoElectronicoDeUsuarioAsync(string usuario, string correo, int notificar)
         {
-            var s = await _registroContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleAsync();
+            var s = await _registroContext.Usuarios.Where(x => x.UsuarioNom == usuario).SingleOrDefaultAsync();
 
-            s.CorreoElectronico = correo;
-            s.NotificarAcceso = notificar;
+            if (s != null)
+            {
+                s.CorreoElectronico = correo;
+                s.NotificarAcceso = notificar;
 
-            _registroContext.Usuarios.Update(s);
+                _registroContext.Usuarios.Update(s);
 
-            await _registroContext.SaveChangesAsync();
+                await _registroContext.SaveChangesAsync();
+            }
         }
 
         public async Task<List<Acceso>> ObtenerAccesosAsync()

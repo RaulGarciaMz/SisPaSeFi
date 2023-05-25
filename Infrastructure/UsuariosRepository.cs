@@ -166,13 +166,17 @@ namespace SqlServerAdapter
             var md5PassNuevo = ComputeMD5(cveNueva);
             var md5PassAnterior = ComputeMD5(cveAnterior);
 
-            var u = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Pass == md5PassAnterior).SingleAsync();
+            var u = await _userContext.Usuarios.Where(x => x.UsuarioNom == usuario && x.Pass == md5PassAnterior).SingleOrDefaultAsync();
 
-            u.Pass = md5PassNuevo;
-            _userContext.Update(u);
+            if (u != null)
+            {
+                u.Pass = md5PassNuevo;
+                _userContext.Update(u);
 
-            await _userContext.SaveChangesAsync();
+                await _userContext.SaveChangesAsync();
+            }
         }
+
         public async Task<Usuario?> ObtenerUsuarioConfiguradorPorIdAsync(int idUsuario)
         {
             return await _userContext.Usuarios.Where(x => x.IdUsuario == idUsuario && x.Configurador == 1).AsNoTracking().FirstOrDefaultAsync();
@@ -207,6 +211,8 @@ namespace SqlServerAdapter
 
         public async Task<List<UsuarioVista>> ObtenerUsuariosPorCriterioAsync(string criterio)
         {
+            criterio = "%" + criterio + "%";
+
             string sqlQuery = @"SELECT id_usuario, usuario_nom, nombre, apellido1, apellido2, correoelectronico, cel, 
                                        configurador, regionSSF, desbloquearregistros, tiempoespera
                                 FROM ssf.usuarios 

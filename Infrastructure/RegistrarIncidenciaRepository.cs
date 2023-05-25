@@ -115,20 +115,27 @@ namespace SqlServerAdapter
 
         private async Task<int> ObtenerIdTarjetaInformativaPorProgramaAsync(int idPrograma)
         {
-            var t = await _regIncidenciaContext.TarjetasInformativas.Where(x => x.IdPrograma == idPrograma).FirstAsync();
+            var t = await _regIncidenciaContext.TarjetasInformativas.Where(x => x.IdPrograma == idPrograma).FirstOrDefaultAsync();
+
+            if (t == null) throw new Exception("no se encontró tarjeta informativa para el programa indicado");
+
             return t.IdNota;
         }
 
         private async Task<List<ReportePunto>> ObtenerReporteInstalacionPorPuntoAndClasificacionAsync(int idPunto, int idClasificacion)
         {
-            var edo = await _regIncidenciaContext.EstadosIncidencia.Where(x => x.DescripcionEstado == "concluido").FirstAsync();
+            var edo = await _regIncidenciaContext.EstadosIncidencia.Where(x => x.DescripcionEstado == "concluido").FirstOrDefaultAsync();
+
+            if (edo == null) throw new Exception("no se encontró el estado concluido en los estados de la incidencia");
 
             return await _regIncidenciaContext.ReportesInstalacion.Where(x => x.IdPunto == idPunto && x.IdClasificacionIncidencia == idClasificacion && x.EstadoIncidencia == edo.IdEstadoIncidencia).ToListAsync();
         }
 
         private async Task<List<ReporteEstructura>> ObtenerReporteEstructuraPorEstructuraAndClasificacionAsync(int idEstructura, int idClasificacion)
         {
-            var edo = await _regIncidenciaContext.EstadosIncidencia.Where(x => x.DescripcionEstado == "concluido").FirstAsync();
+            var edo = await _regIncidenciaContext.EstadosIncidencia.Where(x => x.DescripcionEstado == "concluido").FirstOrDefaultAsync();
+
+            if (edo == null) throw new Exception("no se encontró el estado concluido en los estados de la incidencia");
 
             return await _regIncidenciaContext.ReportesEstructuras.Where(x => x.IdEstructura == idEstructura && x.IdClasificacionIncidencia == idClasificacion && x.EstadoIncidencia == edo.IdEstadoIncidencia).ToListAsync();
         }
@@ -158,14 +165,16 @@ namespace SqlServerAdapter
             var r = await _regIncidenciaContext.ReportesEstructuras.
                 Where(x => x.IdEstructura == idEstructura &&
                            x.IdClasificacionIncidencia == idClasificacion &&
-                           x.EstadoIncidencia < edoIncidencia.IdEstadoIncidencia).SingleAsync();
+                           x.EstadoIncidencia < edoIncidencia.IdEstadoIncidencia).SingleOrDefaultAsync();
 
-            var txIncidencia = 
-            r.UltimaActualizacion = DateTime.UtcNow;
-            r.PrioridadIncidencia = prioridad;
-            r.Incidencia = r.Incidencia + " / " + descripcion;
+            if (r != null) 
+            {
+                r.UltimaActualizacion = DateTime.UtcNow;
+                r.PrioridadIncidencia = prioridad;
+                r.Incidencia = r.Incidencia + " / " + descripcion;
 
-            _regIncidenciaContext.ReportesEstructuras.Update(r);
+                _regIncidenciaContext.ReportesEstructuras.Update(r);
+            }
         }
 
         private async Task ActualizaReporteInstalacionEnMemoriaAsync(int idActivo, int idClasificacion, int prioridad, string descripcion)
@@ -175,14 +184,16 @@ namespace SqlServerAdapter
             var r = await _regIncidenciaContext.ReportesInstalacion.
                 Where(x => x.IdPunto == idActivo &&
                            x.IdClasificacionIncidencia == idClasificacion &&
-                           x.EstadoIncidencia < edoIncidencia.IdEstadoIncidencia).SingleAsync();
+                           x.EstadoIncidencia < edoIncidencia.IdEstadoIncidencia).SingleOrDefaultAsync();
 
-            var txIncidencia =
-            r.UltimaActualizacion = DateTime.UtcNow;
-            r.PrioridadIncidencia = prioridad;
-            r.Incidencia = r.Incidencia + " / " + descripcion;
+            if (r != null) 
+            {
+                r.UltimaActualizacion = DateTime.UtcNow;
+                r.PrioridadIncidencia = prioridad;
+                r.Incidencia = r.Incidencia + " / " + descripcion;
 
-            _regIncidenciaContext.ReportesInstalacion.Update(r);
+                _regIncidenciaContext.ReportesInstalacion.Update(r);
+            }
         }
 
         private void AgregaReporteInstalacionEnMemoria(int idNota, int idActivo, string descripcion, int prioridad, int idClasificacion)
@@ -207,7 +218,9 @@ namespace SqlServerAdapter
         {
             var lstAfectaciones = new List<AfectacionIncidencia>();
 
-            var tipo = await _regIncidenciaContext.TiposReporte.Where(x => x.Descripcion == tipoIncidencia).SingleAsync();
+            var tipo = await _regIncidenciaContext.TiposReporte.Where(x => x.Descripcion == tipoIncidencia).SingleOrDefaultAsync();
+
+            if (tipo == null) throw new Exception("no se encontró el tipo de incidencia");
 
             foreach (var item in afectaciones)
             {

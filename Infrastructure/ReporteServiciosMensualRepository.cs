@@ -72,7 +72,7 @@ namespace SqlServerAdapter
             return await _rpteMensualContext.ReporteServiciosMensual.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
-        public async Task<DetalleReporteServicioMensualVista> ObtenerResumenParaReporteAereoPorOpcionAsync(int Anio, int Mes, string tipo)
+        public async Task<DetalleReporteServicioMensualVista?> ObtenerResumenParaReporteAereoPorOpcionAsync(int Anio, int Mes, string tipo)
         {
             string sqlQuery = @"SELECT count(a.id_nota) total,
                                        concat('', cast(sum(DATEDIFF(second,0,cast(a.tiempoVuelo as datetime))) / 3600 AS varchar) + ':' +
@@ -97,7 +97,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pTipo", tipo)
             };
 
-            return await _rpteMensualContext.DetallesReporteServicioMensualVista.FromSqlRaw(sqlQuery, parametros).SingleAsync();
+            return await _rpteMensualContext.DetallesReporteServicioMensualVista.FromSqlRaw(sqlQuery, parametros).SingleOrDefaultAsync();
         }
 
         public async Task<List<ReporteServicioMensualVista>> ObtenerReporteTerrestreSedenaPorAnioAnMesAsync(int Anio, int Mes)
@@ -157,7 +157,7 @@ namespace SqlServerAdapter
 
         }
 
-        public async Task<DetalleReporteServicioMensualVista> ObtenerResumenParaReporteTerrestreSedenaPorAnioAnMesAsync(int Anio, int Mes)
+        public async Task<DetalleReporteServicioMensualVista?> ObtenerResumenParaReporteTerrestreSedenaPorAnioAnMesAsync(int Anio, int Mes)
         {
             string sqlQuery = @"SELECT count(a.id_nota) total, 
                                        sum(a.kmRecorrido) dato1,sum(a.comandantesInstalacionSSF) dato2, sum(a.personalMilitarSEDENAOficial) dato3,
@@ -178,7 +178,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pMes", Mes)
             };
 
-            return await _rpteMensualContext.DetallesReporteServicioMensualVista.FromSqlRaw(sqlQuery, parametros).SingleAsync();
+            return await _rpteMensualContext.DetallesReporteServicioMensualVista.FromSqlRaw(sqlQuery, parametros).SingleOrDefaultAsync();
         }
 
         public async Task<List<ReporteServicioMensualVista>> ObtenerReporteTerrestreRegionPorAnioAnMesAsync(int Anio, int Mes)
@@ -239,7 +239,7 @@ namespace SqlServerAdapter
 
         }
 
-        public async Task<DetalleReporteServicioMensualVista> ObtenerResumenParaReporteTerrestreRegionPorAnioAnMesAsync(int Anio, int Mes)
+        public async Task<DetalleReporteServicioMensualVista?> ObtenerResumenParaReporteTerrestreRegionPorAnioAnMesAsync(int Anio, int Mes)
         {
             string sqlQuery = @"SELECT count(a.id_nota) total, 
                                        sum(a.kmRecorrido) dato1, sum(a.comandantesInstalacionSSF) dato2,sum(a.personalMilitarSEDENAOficial) dato3,
@@ -261,7 +261,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pMes", Mes)
             };
 
-            return await _rpteMensualContext.DetallesReporteServicioMensualVista.FromSqlRaw(sqlQuery, parametros).SingleAsync();
+            return await _rpteMensualContext.DetallesReporteServicioMensualVista.FromSqlRaw(sqlQuery, parametros).SingleOrDefaultAsync();
         }
     }
 }

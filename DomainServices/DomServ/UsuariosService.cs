@@ -203,8 +203,7 @@ namespace DomainServices.DomServ
 
         private async Task<List<UsuarioDto>> ObtenerUsuariosPorCriterioAsync(string criterio)
         {
-            var nvoCrit = "%" + criterio + "%";
-            var users = await _repo.ObtenerUsuariosPorCriterioAsync(nvoCrit);
+            var users = await _repo.ObtenerUsuariosPorCriterioAsync(criterio);
             return ConvierteListaUsuarioToDto(users);
         }
 
