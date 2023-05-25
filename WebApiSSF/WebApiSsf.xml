@@ -1,0 +1,700 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebApiSSF</name>
+    </assembly>
+    <members>
+        <member name="M:WebApiSSF.Controllers.AfectacionIncidenciasController.ObtenerAfectacionIncidenciaPorOpcion(System.Int32,System.String,System.String)">
+            <summary>
+            Obtiene la lista de afectaciones de incidencias acorde a los parámetros indicados
+            </summary>
+            <param name="idReporte">Identificador de la incidencia</param>
+            <param name="opcion">Tipo de incidencia ("INSTALACION" o "ESTRUCTURA")</param>
+            <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.AfectacionIncidenciasController.Agrega(Domain.DTOs.AfectacionDtoForCreate)">
+            <summary>
+            Agrega una incidencia
+            </summary>
+            <param name="a">Incidencia a agregar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.AfectacionIncidenciasController.Actualiza(Domain.DTOs.AfectacionDtoForUpdate)">
+            <summary>
+            Actualiza una incidencia
+            </summary>
+            <param name="a">Incidencia a actualizar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.BitacoraIncidenciaController.ObtenerPorOpcion(System.String,System.Int32,System.String)">
+            <summary>
+            Obtiene la lista de bitacoras de seguimiento de incidencias
+            </summary>
+            <param name="opcion">Indicador de el tipo de bitácora ("INSTALACION" ó "ESTRUCTURA") </param>
+            <param name="idReporte">Identificador del reporte</param>
+            <param name="usuario">Nombre del usuario</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.BitacoraIncidenciaController.AgregarPorOpcion(Domain.DTOs.BitacoraDtoForCreate)">
+            <summary>
+            Agrega un registro de bitácora de seguimiento de incidencias
+            </summary>
+            <param name="r">Bitácora de incidencias a agregar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.CatalogosParaSeleccionController.ObtenerCatalogoPorOpcion(System.String,System.String)">
+            <summary>
+            Obtiene la lista de registros de un catálogo correspondiente a la opción indicada 
+            </summary>
+            <param name="opcion">Nombre de la opción para catálogo ("RSF", "TipoPatrullaje", "TipoVehiculo", "ClasificacionIncidencia", "Niveles", "ConceptosAfectacion", "RegionesSDN", "ResultadoPatrullaje", "EstadosDelPais", "MunicipiosEstado-XX", "ProcesosResponsables", "GerenciaDivision-XX", "TipoDocumento", "EstadosPatrullaje", "TodoEstadosPatrullaje", "ApoyoPatrullaje", "InstalacionesDeComandancia-XX", "NivelRiesgo", "Hallazgo", "LocalidadMunicipio-XX", "EstadosIncidencia", "ComandanciasDeUnUsuario-XX", "GrupoCorreoDeUnUsuario-XX", "RolesDeUnUsuario-XX", "GruposCorreo", "MenusDeRol-XX"  ). XX es información adicional</param>
+            <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.DatosPropuestaPatrullajeExtraordinarioController.ObtenerDatosDePropuestasExtraordinarias(System.Int32,System.String)">
+            <summary>
+            Obtiene los datosde propuestas extraordinarias
+            </summary>
+            <param name="idPropuesta">Identificador de la propuesta</param>
+            <param name="usuario">Usuario que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.DocumentosController.Get(System.String,System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Obtiene la lista de documentos de patrullaje del mes, año y comandancia indicados
+            </summary>
+            <param name="opcion">Indicador del tipo de documento ("DocumentosPatrullaje", "DocumentosDeUnUsuario", "DocumentosParaUnUsuario" )</param>
+            <param name="criterio">Indicador de la cantidad de documentos a regresar ("TODO", "MES")</param>
+            <param name="anio">Año</param>
+            <param name="mes">Mes</param>
+            <param name="usuario">Nombre del usuario (usuario_nom)</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.DocumentosController.Agregar(Domain.DTOs.DocumentoDtoForCreate)">
+            <summary>
+            Agrega un documento de patrullaje
+            </summary>
+            <param name="d">Documento a agregar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.EstadisticasController.ObtenerEstadisticasDeSistema(System.String)">
+            <summary>
+            Obtiene las estadísticas de sistema
+            </summary>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.EstructurasController.ObtenerEstructuraPorOpcion(System.Int32,System.String,System.Int32,System.String)">
+            <summary>
+            Obtiene la lista de estructuras para una línea indicada
+            </summary>
+            <param name="idLinea">Identificador de la línea</param>
+            <param name="usuario">Usuario (alias - usuario_nom) que realiza la consulta</param>
+            <param name="opcion">Identificador de la opción a ejecutar (1 - Estructuras de una línea, 2 - Estructuras de una linea en una ruta, 3 - Estructuras alrededor de unas coordenadas)</param>
+            <param name="criterio">Identificador de la ruta (para el caso de la opción 2)</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.EstructurasController.ObtenerEstructuraPorId(System.Int32,System.String)">
+            <summary>
+            Obtiene la estructura correspondiente al identificador indicado
+            </summary>
+            <param name="idEstructura">Identificador de la estructura</param>
+            <param name="usuario">Usuario (alias - usuario_nom) que realiza la consulta</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.EstructurasController.Post(Domain.DTOs.EstructuraDtoForCreate)">
+            <summary>
+            Agrega una estructura
+            </summary>
+            <param name="estructura">Datos de la estructura a agregar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.EstructurasController.Put(System.Int32,Domain.DTOs.EstructuraDtoForUbicacionUpdate)">
+            <summary>
+            Actualiza la ubicación de una estructura
+            </summary>
+            <param name="id">Identificador de la estructura</param>
+            <param name="estructura">Valores a modificar de la estructura</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.EvidenciasController.Get(System.Int32,System.String,System.String)">
+            <summary>
+            Obtiene las evidencias de acuerdo a los parámetros indicados
+            </summary>
+            <param name="idReporte">Identificador del reporte</param>
+            <param name="opcion">Tipo de incidencia ("EvidenciaIncidenciaEnINSTALACION", "EvidenciaIncidenciaEnESTRUCTURA", "EvidenciaSeguimientoIncidenciaEnINSTALACION", "EvidenciaSeguimientoIncidenciaEnESTRUCTURA")</param>
+            <param name="usuario">Usuario (alias o usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.EvidenciasController.PostEvidencia(Domain.DTOs.EvidenciaDto)">
+            <summary>
+            Agrega una evidencia de incidencia acorde al tipo indicado en la estructura
+            </summary>
+            <param name="evidencia">Evidencia a dar de alta</param>
+        </member>
+        <member name="M:WebApiSSF.Controllers.EvidenciasController.Delete(System.Int32,System.String,System.String)">
+            <summary>
+            Elimina evidencias acorde a los parámetros indicados
+            </summary>
+            <param name="idEvidencia">Identificador de la evidencia</param>
+            <param name="tipoIncidencia">Tipo de la evidencia ("INSTALACION", "ESTRUCTURA", "SeguimientoINSTALACION", "SeguimientoESTRUCTURA")</param>
+            <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.IncidenciaController.ObtenerIncidenciasPorOpcion(System.String,System.String,System.Int32,System.String)">
+            <summary>
+            Obtiene la lista de incidencias acorde a los valores de los parámetros
+            </summary>
+            <param name="opcion">Tipo de incidencias. Puede llevar información adicional del estado de la incidencia separada por un guión p. ej. "IncidenciaAbiertaEnINSTALACION-1" lo que sólo se requiere si la opción es: "EnUnEstadoEspecificoPorBusquedaINSTALACION" ó "EnUnEstadoEspecificoPorBusquedaESTRUCTURA". La opción puede tener los siguientes valores: "IncidenciaAbiertaEnINSTALACION",  "IncidenciaAbiertaEnESTRUCTURA" , "IncidenciaSinAtenderPorVariosDiasEnESTRUCTURAS", "IncidenciaReportadaEnProgramaINSTALACION", "IncidenciaReportadaEnProgramaESTRUCTURA", "TodosPorBusquedaINSTALACION", "TodosPorBusquedaESTRUCTURA", "NoConcluidosPorBusquedaINSTALACION", "NoConcluidosPorBusquedaESTRUCTURA", "EnUnEstadoEspecificoPorBusquedaINSTALACION", "EnUnEstadoEspecificoPorBusquedaESTRUCTURA"</param>
+            <param name="idActivo">Identificador del activo (id de la estructura o id del punto en caso de instalación) </param>
+            <param name="criterio">Criterio de filtrado acorde a la opción indicada. Sólo se usa si las opciones es alguna de las siguientes: "TodosPorBusquedaINSTALACION", "TodosPorBusquedaESTRUCTURA" , "NoConcluidosPorBusquedaINSTALACION", "NoConcluidosPorBusquedaESTRUCTURA", "EnUnEstadoEspecificoPorBusquedaINSTALACION", "EnUnEstadoEspecificoPorBusquedaESTRUCTURA"   </param>
+            <param name="usuario">Nombre del usuario (alias o usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.IncidenciaController.AgregaIncidencia(Domain.DTOs.IncidenciasDtoForCreate)">
+            <summary>
+            Agrega una incidencia en el reporte
+            </summary>
+            <param name="v">Incidencia a agregar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.IncidenciaController.Put(Domain.DTOs.IncidenciasDtoForCreate)">
+            <summary>
+            Actualiza una incidencia
+            </summary>
+            <param name="v">Incidencia a actualizar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.InicioPatrullajeController.AgregaInicioPatrullaje(Domain.DTOs.InicioPatrullajeDto)">
+            <summary>
+            Agrega un inicio de patrullaje, actualizando o creando sus elementos relacionados
+            </summary>
+            <param name="inicioPatrullaje">Inicio del patrullaje a agregar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.ItinerarioPatrullajeController.ObtenerItinerariosporRuta(System.Int32,System.String)">
+            <summary>
+            Obtiene la lista de itinerarios para una ruta indicada
+            </summary>
+            <param name="idRuta">Identificador de la ruta</param>
+            <param name="usuario">Nombre del usuario (alias o usuaio_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.ItinerarioPatrullajeController.AgregaItinerario(Domain.DTOs.ItinerarioDtoForCreate)">
+            <summary>
+            Agrega un itinerario
+            </summary>
+            <param name="v">Itinerario a agregar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.ItinerarioPatrullajeController.Put(Domain.DTOs.ItinerarioDtoForUpdate)">
+            <summary>
+            Actualiza itinerarios
+            </summary>
+            <param name="v">Itinerario a actualizar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.ItinerarioPatrullajeController.Delete(System.Int32,System.String)">
+            <summary>
+            Borra itinerarios
+            </summary>
+            <param name="id">Identificador del itinerario</param>
+            <param name="usuario">Nombre del usuario (alisa o user_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.LineasPatrullajeController.ObtenerLineas(System.Int32,System.String,System.String)">
+            <summary>
+            Obtiene las líneas de patrullaje acorde a las opciones indicadas
+            </summary>
+            <param name="opcion">Indicador del tipo de filtro para aplicar en la obtención de líneas (0 - Por clave de línea, 1 - Por ubicación del punto de inicio de la línea, 2 - Por ubicación del punto de final de la línea, 3 - Por un cuadrado definido alrededor de la ruta indicada, 4 - Por un radio de 5 Km alrededor del punto indicado, 5 - Por un radio de 5 Km alrededor de las coordenadas indicadas)</param>
+            <param name="criterio">Criterio de búsqueda acorde a la opción indicada. Si la opción es: 0 - criterio es la clave de la línea (texto), 1 - criterio es la ubicación (o parte del texto) del punto de inicio de la línea (texto), 2 - criterio es la ubicación (o parte del texto) del punto de final de la línea (texto), 3 - criterio es el identificador de la ruta (entero), 4 - criterio es el identificador del punto de patrullaje (entero), 5 - criterio es el valor de las coordenadas x,y (texto)</param>
+            <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.LineasPatrullajeController.Agregar(Domain.DTOs.LineaDtoForCreate)">
+            <summary>
+            Agrega una línea de patrullaje
+            </summary>
+            <param name="l">Línea de patrullaje a agregar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.LineasPatrullajeController.Actualizar(Domain.DTOs.LineaDtoForUpdate)">
+            <summary>
+            Actualiza líneas de patrullaje
+            </summary>
+            <param name="l">Datos de la línea a actualizar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.LineasPatrullajeController.Delete(System.Int32,System.String)">
+            <summary>
+            Elimina líneas de patrullaje
+            </summary>
+            <param name="id">Identificador de la línea a eliminar</param>
+            <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.MenusController.ObtenerMenuPorOpcion(System.String,System.String,System.String)">
+            <summary>
+            Obtiene la lista de menus acorde a las opciones indicadas
+            </summary>
+            <param name="opcion">Opción de obtención de menus ("Submenu", "MenuUsuario")</param>
+            <param name="criterio">Identificador del menú padre</param>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.MenusController.AgregarMenu(Domain.DTOs.MenuDto,System.String)">
+            <summary>
+            Agrega un menu
+            </summary>
+            <param name="menu">Menu a agregar</param>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.MenusController.Actualiza(Domain.DTOs.MenuDto,System.String)">
+            <summary>
+            Actualiza un menu
+            </summary>
+            <param name="menu">Menú a actualizar</param>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.MonitoreoMovilController.ObtenerMonitoreo(System.String)">
+            <summary>
+            Obtiene el reporte de monitoreo
+            </summary>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.OficioAutorizacionController.ObtenerInformacionOficioAutorizacion(Domain.DTOs.OficioAutorizacionDto)">
+            <summary>
+            Obtiene la información para el reporte de propuestas con oficio de autorización
+            </summary>
+            <param name="o">Datos de usuario y propuesta</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.PermisoEdicionProcesoConduccionController.ObtenerPermisos(System.String)">
+            <summary>
+            Obtiene la lista de todos los permisos de edición
+            </summary>
+            <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.PermisoEdicionProcesoConduccionController.ObtenerPermisosPorOpcion(System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            Obtiene el permiso de edición correspondiente con las opciones indicadas
+            </summary>
+            <param name="rsf">Identificador de la región SSF</param>
+            <param name="anio">Año dl permiso</param>
+            <param name="mes">Mes del permiso</param>
+            <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.PermisoEdicionProcesoConduccionController.Agregar(Domain.DTOs.PermisoEdicionConduccionDto,System.String)">
+            <summary>
+            Agrega un permiso de edición
+            </summary>
+            <param name="p">Permiso de edición a agregar</param>
+            <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.PermisoEdicionProcesoConduccionController.Delete(System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            Borra un permiso de edición
+            </summary>
+            <param name="rsf">Identificador de la región ssf</param>
+            <param name="anio">Año del permiso</param>
+            <param name="mes">Mes del permiso</param>
+            <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.PersonalParticipantePatrullajeController.ObtenerPersonalParticipantePorOpcion(System.String,System.Int32,System.String,System.Int32)">
+            <summary>
+            Obtiene el personal participante en un patrullaje, acorde a los parámetros indicados
+            </summary>
+            <param name="opcion">Tipo de personal participante en el patrullaje ("PersonalAsignado" o "PersonalNoAsignado")</param>
+            <param name="idPrograma">Identificador del programa de patrullaje</param>
+            <param name="usuario">Nombre del usuario (usuario_nom) que realiza la consulta</param>
+            <param name="regionSSF">Identificador de la región SSF a la que pertenece el patrullaje</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.PersonalParticipantePatrullajeController.Agregar(System.Int32,Domain.DTOs.PersonalParticipanteDto)">
+            <summary>
+            Agrega un usuario participante en un patrullaje
+            </summary>
+            <param name="idPrograma">Identificador del programa de patrullaje</param>
+            <param name="u">Personal a agregar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.PersonalParticipantePatrullajeController.Delete(System.Int32,Domain.DTOs.PersonalParticipanteDto)">
+            <summary>
+            Borra personal participante de un programa indicado
+            </summary>
+            <param name="id">Identificador del programa</param>
+            <param name="u">Usuario a eliminar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.ProgramaMensualController.ObtenerProgramaMensual(System.String,System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            Obtiene el programa mensual de patrullaje acorde a los parámetros indicados
+            </summary>
+            <param name="opcion">Opcion de tipo de datos mensuales ("PROGRAMA", "PROPUESTA")</param>
+            <param name="anio">Año del programa mensual</param>
+            <param name="mes">Mes del programa mensual</param>
+            <param name="region">Identificador de la región para el reporte mensual</param>
+            <param name="tipoPatrullaje">Tipo de patrullaje al que se refiere el programa mensual ("AEREO", "TERRESTRE")</param>
+            <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.ProgramaPatrullajesController.GetValues(System.String,System.Int32,System.Int32,System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Obtiene los programas de patrullaje acorde a las opciones indicadas
+            </summary>
+            <param name="tipo">Descripción del tipo de patrullaje ("TERRESTRE" ó "AEREO")</param>
+            <param name="region">Región SSF</param>
+            <param name="opcion">Indicador del tipo de programa o propuesta a obtener. (0 - Extraordinarios o programados, 1 - En progreso, 2 - Concluidos, 3 - Cancelados, 4 - Todos, 5 - Propuestas (todas), 6 - Propuestas pendientes, 7 - Propuestas autorizadas, 8 - Propuestas Rechazadas, 9 - Propuestas enviadas, 10 - Patrullajes en fecha específica para una ruta, 11 - Propuestas por zona)</param>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <param name="clase">Descripción de la clase de patrullaje a incluir ("PROGRAMADO" ó "EXTRAORDINARIO")</param>
+            <param name="anio">Año</param>
+            <param name="mes">Mes</param>
+            <param name="dia">Día</param>
+            <param name="periodo">Indicador del tipo de período que se requiere (0 - Un día, 1 - Un mes, 2 - Todos). Sólo se usa si las opciones son 1, 2, 3, 4 u 11. Si la opción es 11, elvalor representa el identificador de la zona militar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.ProgramaPatrullajesController.ObtenerProgramaPorId(System.Int32,System.String)">
+            <summary>
+            Obtiene programas
+            </summary>
+            <param name="idPrograma">Identificador del programa</param>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.ProgramaPatrullajesController.PostProgramaOrPropuesta(System.String,System.String,System.String,Domain.DTOs.ProgramaDtoForCreateWithListas)">
+            <summary>
+            Registra una propuesta o un programa de patrullaje
+            </summary>
+            <param name="opcion">Tipo de elemento a registrar ("Propuesta" o "Programa") </param>
+            <param name="clase">Clase de patrullaje a registrar ("EXTRAORDINARIO" o "PROGRAMADO") </param>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <param name="p">Programa de patrullaje a registrar</param>
+            <returns></returns>   
+        </member>
+        <member name="M:WebApiSSF.Controllers.ProgramaPatrullajesController.PostPropuestas(System.String,System.Collections.Generic.List{Domain.DTOs.ProgramaDtoForCreate})">
+            <summary>
+            Registra una propuesta de patrullaje como programa de patrullaje
+            </summary>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <param name="p">Propuesta de patrullaje a registrar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.ProgramaPatrullajesController.PutPorOpcion(System.String,System.String,Domain.DTOs.ProgramaDtoForUpdatePorOpcion)">
+            <summary>
+            Actualiza programas o propuestas de patrullaje acorde a la opción indicada en sus parámetros
+            </summary>
+            <param name="opcion">Descripción de la opción para actualización ("CambioRuta", "InicioPatrullaje", "AutorizaPropuesta", "RegionalApruebaPropuesta", "RegistrarSolicitudOficioComision", "RegistrarSolicitudOficioAutorizacion", "RegistrarOficioComision", "RegistrarOficioAutorizacion", "ModificarFechaPatrullaje")</param>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <param name="p">Programa o propuesta a actualizar acorde a la opción indicada</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.ProgramaPatrullajesController.PutPropuestasToProgramas(System.String,System.Int32,System.String,System.Collections.Generic.List{Domain.DTOs.PropuestaDtoForListaUpdate})">
+            <summary>
+            Actualiza el estado de una propuesta o programa de patrullaje
+            </summary>
+            <param name="opcion">Tipo de elemento a actualizar ("Propuesta" o "Programa")</param>
+            <param name="accion">Tipo de acción a realizar 2 - Rechazar propuestas autorizadas, 3 - Cambiar propuestas aprobadas por comandancia a Pendiente de aprobación , 4 - Cambiar de propuesta autorizada a pendiente de autorización por SSF</param>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <param name="p">Propuesta de patrullaje</param>
+            <returns></returns>        
+        </member>
+        <member name="M:WebApiSSF.Controllers.ProgramaPatrullajesController.Delete(System.Int32,System.String,System.String)">
+            <summary>
+            Elimina una propuesta de patrullaje
+            </summary>
+            <param name="id">Identificador de la propuesta a eliminar</param>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <param name="opcion">Opción de elemento a borrar ("Programa" ó "Propuesta")</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.PuntoPatrullajeController.GetValues(System.Int32,System.String,System.String)">
+            <summary>
+            Obtiene los puntos de patrullaje acorde a los parámetros indicados, siempre y cuando el usuario sea configurador
+            </summary>
+            <param name="opcion">Indicador del tipo de filtro a realizar (0 - Por ubicación del punto, 1 - Por estado de la república, 2 - Por ruta, 3 - Por región) </param>
+            <param name="criterio">Descripción de la ubicación del punto o del estado de la república. Debe ser acorde al parámetro opción</param>
+            <param name="usuario">Nombre del usuario con privilegios de configurador</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.PuntoPatrullajeController.PostValue(System.String,Domain.DTOs.PuntoDtoForCreate)">
+            <summary>
+            Registra un punto de patrullaje
+            </summary>
+            <param name="usuario">Nombre del usuario que registra el punto de patrullaje</param>
+            <param name="pto">Punto de patrullaje a registrar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.PuntoPatrullajeController.PutValue(Domain.DTOs.PuntoDtoForUpdate)">
+            <summary>
+            Actualiza un punto de patrullaje
+            </summary>
+            <param name="pto">Punto de patrullaje con datos a actualizar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.PuntoPatrullajeController.DeleteValue(System.Int32,System.String)">
+            <summary>
+            Elimina un punto de patrullaje
+            </summary>
+            <param name="id">Identificador del punto de patrullaje a eliminar</param>
+            <param name="usuario">Nombre del usuario que elimina el punto de patrullaje</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.RegistrarIncidenciaController.AgregaIncidencia(Domain.DTOs.RegistrarIncidenciaDto)">
+            <summary>
+            Agrega de manera transaccional el registro de incidencias
+            </summary>
+            <param name="incidencia">Incidencia con sus evidencias a agregar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.RegistroController.ObtenerUsuarioRegistrado(Domain.DTOs.UsuarioDtoForGet,System.String)">
+            <summary>
+            Obtiene los datos de un usuario registrado
+            </summary>
+            <param name="u">Usuario a confirmar registro</param>
+            <param name="pathLdap">Ruta del directorio activo</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.RegistroController.ActualizaPorOpcion(Domain.DTOs.UsuarioForPostDto,System.String)">
+            <summary>
+            Actualiza el registro de usuario y sus tablas asociadas acorde a la opción indicada
+            </summary>
+            <param name="u">Usuario a actualizar</param>
+            <param name="opcion">Opción de actualización ("RegistrarIntentoFallido", "RegistrarAcceso", "RegistrarEvento", "RegistrarFinSesion", "RevisarAvisoLegal", "VerificarCorreoElectronico", "AceptarAvisoLegal", "RegistrarCorreoElectronico")</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.ReporteServiciosMensualController.ObtenerReporteServicioMensual(System.Int32,System.Int32,System.String,System.String)">
+            <summary>
+            Obtiene el reporte de servicio mensual
+            </summary>
+            <param name="anio">Año de la información a reportar</param>
+            <param name="mes">Mes de la información a reportar</param>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <param name="tipoPatrullaje">tipo de reporte de servicio mensual ("AEREO", "TERRESTRESDN", "TERRESTRESSF")  </param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.RolesController.ObtenerRoles(System.String)">
+            <summary>
+            Obtiene la lista de roles
+            </summary>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.RolesController.AgregaRol(System.String,Domain.DTOs.RolDtoForCreate)">
+            <summary>
+            Agrega un rol
+            </summary>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <param name="rol">Rol a agregar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.RolesController.ActualizaRol(Domain.DTOs.RolDto,System.String)">
+            <summary>
+            Actualiza un rol
+            </summary>
+            <param name="rol">Rol a actualizar</param>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.RutasPatrullajeController.GetValues(System.String,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            Obtiene las rutas de patrullaje acorde a los parámetros indicados
+            </summary>
+            <param name="usuario">Nombre del usuario</param>
+            <param name="opcion">Indicador del filtro que se incluirá (0 - por observaciones , 1 - Por región militar, 2 - Por región SSF)</param>
+            <param name="tipo">Tipo de patrullaje (TERRESTRE o AEREO)</param>
+            <param name="criterio">Descripción del criterio de búsqueda en una ruta. Si el parámetro opción es 2, entonces lleva el valor del identificador de la región SSF </param>
+            <param name="actividad">Descripción del tipo de actividad a la que pertenece la ruta ("Propuestas", "Programas") </param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.RutasPatrullajeController.ObtenerRutasDisponiblesParaCambioDeRutaGetValues(System.String,System.String)">
+            <summary>
+            Obtiene las rutas disponibles en una región para realizar cambio de ruta
+            </summary>
+            <param name="region">Identificador de la región</param>
+            <param name="fecha">Fecha del patrullaje</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.RutasPatrullajeController.PostValue(System.String,Domain.DTOs.RutaDto)">
+            <summary>
+            Registra una ruta de patrullaje
+            </summary>
+            <param name="usuario">Nombre del usuario que registra la ruta de patrullaje</param>
+            <param name="r">Ruta de patrullaje</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.RutasPatrullajeController.PutValue(System.String,Domain.DTOs.RutaDto)">
+            <summary>
+            Actualiza una ruta de patrullaje
+            </summary>
+            <param name="usuario">Nombre del usuario que realiza la actualización de la ruta de patrullaje</param>
+            <param name="r">Ruta de patrullaje con los datos a actualizar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.RutasPatrullajeController.DeleteValue(System.Int32,System.String)">
+            <summary>
+            Elimina una ruta de patrullaje, siempre y cuando no esté bloqueado el registro
+            </summary>
+            <param name="id">Identificador de la ruta de patrullaje</param>
+            <param name="usuario">Nombre del usuario que elimina la ruta de patrullaje</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.TarjetaInformativaController.ObtenerPorOpcion(System.Int32,System.String,System.Int32,System.Int32,System.Int32,System.String,System.String)">
+            <summary>
+            Obtiene la lista de tarjetas informativas acorde a los parámetros indicados
+            </summary>
+            <param name="opcion">Indicador del tipo de tarjeta iformativa a obtener (1 - Tarjetas informativas por región indicada,  2 - Parte de novedades para un día específico, 3 - Monitoreo de un día en específico)</param>
+            <param name="tipo">Tipo de patrullaje (TERRESTRE o AEREO)</param>
+            <param name="anio">Año</param>
+            <param name="mes">Mes</param>
+            <param name="dia">Día (utilizado para las opciones 2 y 3)</param>
+            <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
+            <param name="region">Región de SSF (utilizado sólo para la opción 1)</param>
+            <returns>ActionResult con lista de tarjetas informativas</returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.TarjetaInformativaController.ObtenerPorIdAndOpcion(System.Int32,System.String,System.String)">
+            <summary>
+            Obtiene tqarjeta informativa acorde al identificador indicado
+            </summary>
+            <param name="id">Identificador de la tarjeta informativa ó el programa de patrullaje, acorde a la opción indicada</param>
+            <param name="usuario">Nombre del usuario</param>
+            <param name="opcion">Opción de filtrado ("TARJETA", "PROGRAMA")</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.TarjetaInformativaController.Post(Domain.DTOs.TarjetaDtoForCreate)">
+            <summary>
+            Registra una tarjeta informativa
+            </summary>
+            <param name="tarjeta">Tarjeta informativa a registrar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.TarjetaInformativaController.Put(System.String,Domain.DTOs.TarjetaDto)">
+            <summary>
+            Actualiza una tarjeta informativa indicada
+            </summary>
+            <param name="usuario">Nombre del usuario que realiza la actualización</param>
+            <param name="tarjeta">Tarjeta informativa con datos a actualizar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.TerminacionPatrullajeController.TerminarPatrullaje(Domain.DTOs.TerminacionPatrullajeDto)">
+            <summary>
+            Realiza la terminación del patrullaje
+            </summary>
+            <param name="t">Estructura del patrullaje a terminar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.UbicacionPatrullajeController.ActualizaUbicacion(Domain.DTOs.UbicacionForUpdateDto)">
+            <summary>
+            Actualiza la ubicación de un programa de patrullaje
+            </summary>
+            <param name="u">Programa y ubicación a actualizar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.UsoVehiculoController.ObtenerUsoVehiculosPorPrograma(System.Int32,System.String)">
+            <summary>
+            Obtiene 
+            </summary>
+            <param name="idPrograma">Identificador del programa de patrullaje</param>
+            <param name="usuario">Nombre del usuario (alias o usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.UsoVehiculoController.Agrega(Domain.DTOs.UsoVehiculoDtoForCreateOrUpdate)">
+            <summary>
+            Agrega un uso de vehiculo a un programa de patrullaje
+            </summary>
+            <param name="uso">Uso de vehículo a agregar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.UsoVehiculoController.Actualiza(Domain.DTOs.UsoVehiculoDtoForCreateOrUpdate)">
+            <summary>
+            Actualiza el uso de un vehículo para un programa de patrullaje
+            </summary>
+            <param name="uso">Uso de vehículo a actualizar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.UsoVehiculoController.Delete(System.Int32,System.Int32,System.String)">
+            <summary>
+            Borra un uso de vehículo para un progrma de patrullaje
+            </summary>
+            <param name="idPrograma">Identificador del programa de patrullaje</param>
+            <param name="idVehiculo">Identificador del vehículo a borrar</param>
+            <param name="usuario">Nombre del usuario (alias o usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.UsuariosController.ObtenerUsuarioPorOpcion(System.String,System.String,System.String)">
+            <summary>
+            Obtiene la lista de usuarios correspondiente a los valores indicados en sus parámetros
+            </summary>
+            <param name="opcion">Descripción de tipo de busqueda de usuarios ("BuscarUsuarios", "UsuariosDeDocumento", "UsuariosNoIncluidosEnDocumento"). Los casos "UsuariosDeDocumento" y "UsuariosNoIncluidosEnDocumento" pueden contener información adicional que corresponde al identificador del documento, por ejemplo: "UsuariosDeDocumento-23"  </param>
+            <param name="criterio">Cadena de texto a buscar en nombre, y apellidos. Requerido para las opciones "BuscarUsuarios" y "UsuariosNoIncluidosEnDocumento"</param>
+            <param name="usuario">Nombre del usuario que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.UsuariosController.AgregaPorOpcion(System.String,System.String,System.String,Domain.DTOs.UsuarioDto)">
+            <summary>
+            Agrega usuarios acorde a la opción indicada
+            </summary>
+            <param name="opcion">Opción de usuario a agregar ("AsignaUsuarioDeDocumento" ó "CrearUsuario")</param>
+            <param name="dato">Cadena de caracteres indicando el identificador del documento y el identificador de usuario a agregar, por ejemplo: "23-78"</param>
+            <param name="usuario">Usuario (alias - usuario_nom) que realiza la operación</param>
+            <param name="userDto">Usuario a agregar. Sólo si la opción es "CrearUsuario"</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.UsuariosController.ActualizaUsuariosPorOpcion(System.String,System.String,System.Collections.Generic.List{Domain.DTOs.UsuarioDto})">
+            <summary>
+            Actualiza una lista de usuarios con respecto a la opción indicada
+            </summary>
+            <param name="opcion">Opción de actualización ("CambiarClave", "Desbloquear", "Bloquear", "ReiniciarClave", "Actualizar", "RegistrarComandancia", "QuitarComandancia", "RegistrarRol", "QuitarRol", "RegistrarGrupoCorreo", "QuitarGrupoCorreo")</param>
+            <param name="usuario">Usuario (alias - usuario_nom) que realiza la actualización</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.UsuariosController.BorraPorOpcion(System.String,System.String,System.String)">
+            <summary>
+            Elimina usuarios acorde a la opción indicada
+            </summary>
+            <param name="opcion">Opción de usuario a eliminar ("EliminaUsuarioDeDocumento" ó "EliminaUsuarioDePatrullaje")</param>
+            <param name="dato">Cadena de caracteres indicando el identificador del documento ó programa y el identificador de usuario a agregar, por ejemplo: "23-78"</param>
+            <param name="usuario">Usuario (alias - usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.VehiculosPatrullajeController.ObtenerVehiculosPorOpcion(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Obtiene la lista de vehiculos para patrullaje acorde a los parámetros indicados
+            </summary>
+            <param name="opcion">Descripción del tipo de patrullaje al que se asigna al vehículo ("TODOS", "AEREO", "TERRESTRE", "VEHICULOSPATRULLAJEEXTRAORDINARIO-XX", "AEREOHABILITADOS", "TERRESTREHABILITADOS"). Cuando la opción es VEHICULOSPATRULLAJEEXTRAORDINARIO-XX, XX debe contener la descripción del tipo de patrullaje</param>
+            <param name="regionSSF">Identificador de la comandancia (región) a la que está asignado el vehículo. Este parámetro es obligatorio para las opciones: "TODOS", "AEREO" y "TERRESTRE"</param>
+            <param name="criterio">Patrón de texto para buscar en matrícula o en número económico excepto si la opción es VEHICULOSPATRULLAJEEXTRAORDINARIO, en cuyo caso criterio es el identificador de la propuesta</param>
+            <param name="usuario">Nombre del usuario (alias o usuario_nom) que realiza la consulta</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.VehiculosPatrullajeController.Agrega(Domain.DTOs.VehiculoDtoForCreate)">
+            <summary>
+            Agrega un vehículo para patrullaje
+            </summary>
+            <param name="vehiculo">Vehículo a dar de alta</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.VehiculosPatrullajeController.Actualiza(Domain.DTOs.VehiculoDtoForUpdate)">
+            <summary>
+            Actualiza un vehículo
+            </summary>
+            <param name="vehiculo">Vehículo a actualizar</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiSSF.Controllers.VehiculosPatrullajeController.BorraPorOpcion(System.String,System.String,System.String)">
+            <summary>
+            Borra un uso de vehículo acorde a las opciones indicadas
+            </summary>
+            <param name="opcion">Descripción de la opción de borrado ("EliminarVehiculoDePrograma")</param>
+            <param name="dato">Cadena de texto que indica separado por "-" el identificador del program y el identificador del vehículo. por ejemplo: "324-89"</param>
+            <param name="usuario">Nombre del usuario (alias o usuario_nom) que realiza la operación</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

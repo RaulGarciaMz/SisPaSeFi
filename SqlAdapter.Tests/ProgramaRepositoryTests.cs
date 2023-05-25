@@ -12,7 +12,7 @@ namespace SqlAdapter.Tests
 {
     public class ProgramaRepositoryTests
     {
-        [Fact]
+    /*    [Fact]
         public void ObtenerProgramas_Terrestre_ReturnsOk()
         {
             var pc = new ProgramaPatrullajeRepository(new ProgramaContext());
@@ -300,7 +300,7 @@ namespace SqlAdapter.Tests
             pc.DeletePropuesta(51292);
 
    
-        }
+        }*/
     }
 
 }

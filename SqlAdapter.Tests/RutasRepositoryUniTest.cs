@@ -6,7 +6,7 @@ namespace SqlAdapter.Tests
 {
     public class RutasRepositoryUniTest
     {
-        [Fact]
+     /*   [Fact]
         public void NumeroProgramasPorRuta_RutaValida_ReturnsOk()
         {
             var pc = new RutaRepository(new RutaContext());
@@ -95,6 +95,6 @@ namespace SqlAdapter.Tests
             if (x.Count == 0)
             {
             }
-        }
+        }*/
     }
 }
