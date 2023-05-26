@@ -17,6 +17,6 @@ namespace Domain.Ports.Driving
 
     public interface IItinerarioDtoQuery
     {
-        Task<List<ItinerarioVista>> ObtenerItinerariosporRutaAsync(int idRuta, string usuario);
+        Task<List<ItinerarioDto>> ObtenerItinerariosporRutaAsync(int idRuta, string usuario);
     }
 }

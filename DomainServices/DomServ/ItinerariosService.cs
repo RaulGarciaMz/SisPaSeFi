@@ -18,17 +18,20 @@ namespace DomainServices.DomServ
             _user = uc;
         }
 
-        public async Task<List<ItinerarioVista>> ObtenerItinerariosporRutaAsync(int idRuta, string usuario)
+        public async Task<List<ItinerarioDto>> ObtenerItinerariosporRutaAsync(int idRuta, string usuario)
         {
             var itinerarios = new List<ItinerarioVista>();
+            var itiDto = new List<ItinerarioDto>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
             {
                 itinerarios = await _repo.ObtenerItinerariosporRutaAsync(idRuta);
-            }
 
-            return itinerarios;
+                itiDto = ConvierteListaItinerariosToDto(itinerarios);
+            }
+           
+            return itiDto;
         }
 
         public async Task AgregaItinerarioAsync(ItinerarioDtoForCreate it)
@@ -101,6 +104,22 @@ namespace DomainServices.DomServ
             {
                 return false;
             }
+        }
+
+        private List<ItinerarioDto> ConvierteListaItinerariosToDto(List<ItinerarioVista> itins)
+        { 
+            var l = new List<ItinerarioDto>();
+
+            foreach (var item in itins)
+            {
+                var ni = new ItinerarioDto()
+                {
+                };
+
+                l.Add(ni);
+            }
+
+            return l;
         }
     }
 }
