@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Vistas;
 using Microsoft.EntityFrameworkCore;
 
 namespace SqlServerAdapter.Data
@@ -11,5 +12,8 @@ namespace SqlServerAdapter.Data
         }
 
         public DbSet<ProgramaPatrullaje> Programas { get; set; }
+        public DbSet<ProgramaRegionVista> ProgramasRegionVista { get; set; }
+
+        
     }
 }

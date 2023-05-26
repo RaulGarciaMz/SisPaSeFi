@@ -2,7 +2,7 @@
 {
     public interface IUbicacionQuey
     {
-        Task<int?> ObtenerIdProgramaPorRutaAndFechaAsync(int idRuta, DateTime fecha);
+       Task<int?> ObtenerIdProgramaPorRutaAndFechaAsync(int idRuta, DateTime fecha);
     }
 
     public interface IUbicacionPost

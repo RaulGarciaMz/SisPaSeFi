@@ -1,4 +1,5 @@
 ﻿using Domain.Ports.Driven.Repositories;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
 
@@ -16,7 +17,26 @@ namespace SqlServerAdapter
 
         public async Task<int?> ObtenerIdProgramaPorRutaAndFechaAsync(int idRuta, DateTime fecha)
         {
-            return await _ubicacionContext.Programas.Where(x => x.IdRuta == idRuta && x.FechaPatrullaje == fecha).Select(x => x.IdPrograma).SingleOrDefaultAsync();
+            string sqlQuery = @"SELECT a.id_programa, a.riesgopatrullaje, b.regionSSF 
+                                FROM ssf.programapatrullajes a
+								JOIN ssf.rutas b ON a.id_ruta=b.id_ruta
+                                WHERE a.id_ruta= @pIdRuta
+                                AND a.fechapatrullaje= @pFecha
+                                AND a.id_estadopatrullaje < (SELECT id_estadopatrullaje FROM SSF.estadopatrullaje WHERE descripcionestadopatrullaje='Concluido')";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pIdRuta", idRuta),
+                new SqlParameter("@pFecha", fecha)
+            };
+
+            var prog = await _ubicacionContext.ProgramasRegionVista.FromSqlRaw(sqlQuery, parametros).FirstOrDefaultAsync();
+            if (prog == null) 
+            {
+                return null;
+            }
+
+            return prog.id_programa;
         }
 
 

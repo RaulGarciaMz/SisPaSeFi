@@ -26,7 +26,7 @@ namespace WebApiSSF.Controllers
         /// </summary>
         /// <param name="u">Programa y ubicación a actualizar</param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
