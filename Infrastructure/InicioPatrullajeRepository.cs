@@ -24,16 +24,24 @@ namespace SqlServerAdapter
             {
                 try
                 {
+                    int elProg = -1;
+
                     switch (programas.Count)
                     {
                         case 0:
                             await CreaProgramaPatrullajeEnMemoriaAsync(a, idUsuario);
+                            await _inicioPatrullajeContext.SaveChangesAsync();
+                            var prgCreado = await ObtenerProgramaPorRutaAndFechaAsync(a.IdRuta, a.FechaPatrullaje);
+                            elProg = prgCreado[0].id_programa;
                             break;
                         case > 0:
-                            await ActualizaProgramaPatrullajeConTarjetaInformativaEnMemoriaAsync(programas[0].id_programa, programas[0].riesgopatrullaje, idUsuario, a);
+                            elProg = programas[0].id_programa;
+                            await ActualizaProgramaPatrullajeEnMemoriaAsync(elProg, programas[0].riesgopatrullaje, idUsuario, a);
+                            await _inicioPatrullajeContext.SaveChangesAsync();
                             break;
                     }
 
+                    await CreaOrActualizaTarjetaInformativa(elProg, idUsuario, a);
                     await _inicioPatrullajeContext.SaveChangesAsync();
 
                     if (a.objInicioPatrullajeVehiculo != null && a.objInicioPatrullajeVehiculo.Count > 0)
@@ -41,6 +49,8 @@ namespace SqlServerAdapter
                         programas = await ObtenerProgramaPorRutaAndFechaAsync(a.IdRuta, a.FechaPatrullaje);
                         await CreaOrActualizaUsosVehiculoEnMemoria(a.objInicioPatrullajeVehiculo, programas[0].id_programa, idUsuario);
                     }
+                    
+                    await _inicioPatrullajeContext.SaveChangesAsync();
 
                     transaction.Commit();
                 }
@@ -97,7 +107,7 @@ namespace SqlServerAdapter
             return await _inicioPatrullajeContext.UsosVehiculos.Where(x => x.IdPrograma == idPrograma && x.IdVehiculo == idVehiculo).Select(x => x.IdUsoVehiculo).ToListAsync();
         }
 
-        private void AgregaProgramaPatrullajeEnMemoria(int idRuta, DateTime fechaPatrullaje, int idUsuario, int idPuntoResponsable, int idRutaOriginal)
+        private void AgregaProgramaPatrullajeEnMemoria(int idRuta, DateTime fechaPatrullaje, int idUsuario, int idPuntoResponsable, int idRutaOriginal, TimeSpan inicio)
         {
             var p = new ProgramaPatrullaje() 
             {
@@ -108,16 +118,17 @@ namespace SqlServerAdapter
                 RiesgoPatrullaje = 1,
                 IdRutaOriginal = idRutaOriginal,
                 FechaPatrullaje = fechaPatrullaje,
+                Inicio = inicio,
                 UltimaActualizacion = DateTime.UtcNow,
                 IdApoyoPatrullaje = 1,
                 Observaciones = "",
                 IdUsuarioResponsablePatrullaje =0,
-                IdEstadoPatrullaje=0
+                IdEstadoPatrullaje=1
             };
 
             _inicioPatrullajeContext.ProgramasPatrullaje.Add(p);
         }
-
+        
         private void ActualizaProgramaPatrullajeEnMemoria(int idPrograma, TimeSpan inicio, int idUsuario, int riesgo)
         {
             var p = _inicioPatrullajeContext.ProgramasPatrullaje.Where(x => x.IdPrograma == idPrograma).SingleOrDefault();
@@ -245,16 +256,43 @@ namespace SqlServerAdapter
             if (p != null && p.Count > 0)
             {
                 var fecha = DateTime.Parse(a.FechaPatrullaje);
-                AgregaProgramaPatrullajeEnMemoria(a.IdRuta, fecha, idUsuario, p[0].id_punto, a.IdRuta);
+                var inicio = TimeSpan.Parse(a.HoraInicio);
+                var nvoInicio = new TimeSpan(inicio.Hours, inicio.Minutes, 0);
+                AgregaProgramaPatrullajeEnMemoria(a.IdRuta, fecha, idUsuario, p[0].id_punto, a.IdRuta, nvoInicio);                
             }
         }
 
-        private async Task ActualizaProgramaPatrullajeConTarjetaInformativaEnMemoriaAsync(int idPrograma, int riesgo, int idUsuario, InicioPatrullajeDto a)
+        private async Task ActualizaProgramaPatrullajeEnMemoriaAsync(int idPrograma, int riesgo, int idUsuario, InicioPatrullajeDto a)
         {
             var horaInicio = TimeSpan.Parse(a.HoraInicio);
 
             ActualizaProgramaPatrullajeEnMemoria(idPrograma, horaInicio, idUsuario, riesgo);
+            
 
+/*            var tarjeta = await ObtenerTarjetaInformativaPorProgramaAsync(idPrograma);
+
+            if (tarjeta != null)
+            {
+                var fecha = DateTime.Parse(a.FechaPatrullaje);
+
+                switch (tarjeta.Count)
+                {
+                    case 0:
+                        var horaNvaTarjeta = horaInicio;
+                        AgregaTarjetaInformativaEnMemoria(idPrograma, idUsuario, horaNvaTarjeta, a.ComandanteInstalacion, a.OficialSDN, fecha, a.TropaSDN, a.Conductores, a.ComandanteTurno, a.OficialSSF, fecha);
+                        break;
+                    case > 0:
+                        var horaActInicio = horaInicio;
+                        await ActualizaTarjetaInformativaEnMemoria(idPrograma, idUsuario, horaActInicio, a.ComandanteInstalacion, a.OficialSDN, fecha, a.TropaSDN, a.Conductores, a.ComandanteTurno, a.OficialSSF, fecha);
+                        break;
+                }
+            }*/
+
+        }
+
+        private async Task CreaOrActualizaTarjetaInformativa(int idPrograma, int idUsuario, InicioPatrullajeDto a)
+        {
+            var horaInicio = TimeSpan.Parse(a.HoraInicio);
             var tarjeta = await ObtenerTarjetaInformativaPorProgramaAsync(idPrograma);
 
             if (tarjeta != null)
@@ -273,7 +311,6 @@ namespace SqlServerAdapter
                         break;
                 }
             }
-
         }
 
         /*    public async Task ActualizaProgramaPatrullajeAsync(int idPrograma, TimeSpan inicio, int idUsuario, int riesgo)
