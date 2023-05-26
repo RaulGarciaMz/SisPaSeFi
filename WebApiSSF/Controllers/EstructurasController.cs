@@ -36,7 +36,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<EstructuraDto>>> ObtenerEstructuraPorOpcion([Required] int idLinea, [Required] string usuario, int opcion = 0, string criterio ="")
+        public async Task<ActionResult<IEnumerable<EstructuraDto>>> ObtenerEstructuraPorOpcion([Required] int idLinea, [Required] string usuario, int opcion = 0, string? criterio ="")
         {
             try
             {
