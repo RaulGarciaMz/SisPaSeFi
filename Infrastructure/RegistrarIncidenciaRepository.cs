@@ -27,7 +27,6 @@ namespace SqlServerAdapter
             {
                 var idTarjeta = await ObtenerIdTarjetaInformativaPorProgramaAsync(programa.id_programa);
 
-
                 using (var transaction = _regIncidenciaContext.Database.BeginTransaction())
                 {
                     try
@@ -37,7 +36,7 @@ namespace SqlServerAdapter
                             case "ESTRUCTURA":
                                 if (i.IdActivo == 999999)
                                 {
-                                    AgregaReporteEstructurasEnMemoria(idTarjeta, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
+                                    AgregaReporteEstructurasEnMemoria(idTarjeta.Value, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
                                 }
                                 else
                                 {
@@ -48,7 +47,7 @@ namespace SqlServerAdapter
                                     }
                                     else
                                     {
-                                        AgregaReporteEstructurasEnMemoria(idTarjeta, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
+                                        AgregaReporteEstructurasEnMemoria(idTarjeta.Value, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
                                     }
                                 }
 
@@ -67,7 +66,7 @@ namespace SqlServerAdapter
                                 }
                                 else
                                 {
-                                    AgregaReporteInstalacionEnMemoria(idTarjeta, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
+                                    AgregaReporteInstalacionEnMemoria(idTarjeta.Value, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
                                 }
 
                                 await _regIncidenciaContext.SaveChangesAsync();
@@ -113,11 +112,11 @@ namespace SqlServerAdapter
             return await _regIncidenciaContext.ProgramasRegionesVista.FromSqlRaw(sqlQuery, parametros).FirstOrDefaultAsync();
         }
 
-        private async Task<int> ObtenerIdTarjetaInformativaPorProgramaAsync(int idPrograma)
+        private async Task<int?> ObtenerIdTarjetaInformativaPorProgramaAsync(int idPrograma)
         {
             var t = await _regIncidenciaContext.TarjetasInformativas.Where(x => x.IdPrograma == idPrograma).FirstOrDefaultAsync();
 
-            if (t == null) throw new Exception("no se encontró tarjeta informativa para el programa indicado");
+            if (t == null) return null;
 
             return t.IdNota;
         }
