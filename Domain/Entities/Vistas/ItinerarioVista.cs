@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities.Vistas
 {
@@ -18,5 +13,11 @@ namespace Domain.Entities.Vistas
         public string coordenadas { get; set; }
         public int id_procesoresponsable { get; set; }
         public int id_gerenciadivision { get; set; }
+    }
+
+    [Keyless]
+    public class ItinerarioRutaVista
+    {
+        public string itinerarioruta { get; set; }
     }
 }

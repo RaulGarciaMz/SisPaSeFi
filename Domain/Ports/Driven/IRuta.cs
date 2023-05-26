@@ -1,25 +1,19 @@
 ﻿using Domain.DTOs;
 using Domain.Entities;
 using Domain.Entities.Vistas;
-using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Ports.Driven
 {
     public interface IRutaCommand
     {
         Task AgregaAsync(Ruta r, List<Itinerario> itin);
-        Task UpdateAsync(Ruta pp);
+        Task UpdateAsync(RutaDto r);
         Task DeleteAsync(int id);
     }
 
     public interface IRutaQueries
     {
-        Task<int> ObtenerNumeroRutasPorFiltroAsync(string clave, int idRuta);
+        Task<int> ObtenerNumeroRutasConMismaClaveAsync(string clave, int idRuta);
         Task<int> ObtenerNumeroItinerariosConfiguradosPorZonasRutaAsync(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, string ruta);
         Task<int> ObtenerNumeroItinerariosConfiguradosEnOtraRutaAsync(int tipoPatrullaje, string regionSsf, string regionMilitar, int zonaMilitar, int ruta, string rutaItinerario);
         Task<int> ObtenerNumeroRutasPorTipoAndRegionMilitarAsync(int tipoPatrullaje, string regionMilitar);

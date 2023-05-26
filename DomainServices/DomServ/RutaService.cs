@@ -24,13 +24,16 @@ namespace DomainServices.DomServ
         {
             if (await EsUsuarioConfiguradorAsync(usuario))
             {
-                if (await ExisteItinerarioConfiguradoEnRegionesZonaAsync(pp.intIdTipoPatrullaje, pp.intRegionSSF, pp.intRegionMilitarSDN, pp.intZonaMilitarSDN, pp.strItinerario))
+                var regionssf = pp.intRegionSSF.ToString();
+                var regionsMilsdn = pp.intRegionMilitarSDN.ToString();
+
+                if (await ExisteItinerarioConfiguradoEnRegionesZonaAsync(pp.intIdTipoPatrullaje, regionssf, regionsMilsdn, pp.intZonaMilitarSDN, pp.strItinerario))
                 {
-                    return;
+                    throw new Exception("itinerario existente en la region y zona");
                 }
 
-                int totalRutas = await CalculaTotalRutasAsync(pp.intIdTipoPatrullaje, pp.intRegionMilitarSDN);
-                pp.strClave = await GeneraClaveRutaAsync(pp.intIdTipoPatrullaje, pp.intRegionMilitarSDN, pp.intZonaMilitarSDN, totalRutas);
+                int totalRutas = await CalculaTotalRutasAsync(pp.intIdTipoPatrullaje, regionsMilsdn);
+                pp.strClave = await GeneraClaveRutaAsync(pp.intIdTipoPatrullaje, regionsMilsdn, pp.intZonaMilitarSDN, totalRutas);
                 pp.intTotalRutasRegionMilitarSDN = totalRutas;
 
                 var rp = ConvierteRutaDto(pp);
@@ -49,22 +52,23 @@ namespace DomainServices.DomServ
             {
                 if (await ExisteRutaConMismaClaveAsync(pp.intIdRuta, pp.strClave))
                 {
-                    return;
+                    throw new Exception("ruta existente con la misma clave");
                 }
 
-                if (await ExisteItinerarioConfiguradoEnOtraRutaAsync(pp.intIdTipoPatrullaje, pp.intRegionSSF, pp.intRegionMilitarSDN, pp.intZonaMilitarSDN, pp.intIdRuta, pp.strItinerario))
+                var regionssf = pp.intRegionSSF.ToString();
+                var regionsMilsdn = pp.intRegionMilitarSDN.ToString();
+
+                if (await ExisteItinerarioConfiguradoEnOtraRutaAsync(pp.intIdTipoPatrullaje, regionssf, regionsMilsdn, pp.intZonaMilitarSDN, pp.intIdRuta, pp.strItinerario))
                 {
-                    return;
+                    throw new Exception("itinerario existente en otra ruta");
                 }
 
-                int totalRutas = await CalculaTotalRutasAsync(pp.intIdTipoPatrullaje, pp.intRegionMilitarSDN);
+                int totalRutas = await CalculaTotalRutasAsync(pp.intIdTipoPatrullaje, regionsMilsdn);
                 var strClave = await AsignaClaveRutaAsync(pp, totalRutas);
 
                 pp.strClave = strClave;
 
-                var rp = ConvierteRutaDto(pp);
-
-                await _repo.UpdateAsync(rp);
+                await _repo.UpdateAsync(pp);
             }
         }
 
@@ -175,8 +179,8 @@ namespace DomainServices.DomServ
                     {
                        intIdRuta = item.id_ruta,
                        strClave = item.clave,  
-                       intRegionMilitarSDN = item.regionMilitarSDN,
-                       intRegionSSF= item.regionSSF,   
+                       intRegionMilitarSDN = Int32.Parse(item.regionMilitarSDN),
+                       intRegionSSF = Int32.Parse(item.regionSSF),   
                        intZonaMilitarSDN= item.zonaMilitarSDN,
                        strObservaciones = item.observaciones,  
                        intConsecutivoRegionMilitarSDN= item.consecutivoRegionMilitarSDN,
@@ -229,7 +233,7 @@ namespace DomainServices.DomServ
         /// </summary>
         private async Task<bool> ExisteRutaConMismaClaveAsync(int idRuta, string clave)
         {
-            int numRutas = await _repo.ObtenerNumeroRutasPorFiltroAsync(clave, idRuta);
+            int numRutas = await _repo.ObtenerNumeroRutasConMismaClaveAsync(clave, idRuta);
             
             if (numRutas > 0)
             {
@@ -331,7 +335,7 @@ namespace DomainServices.DomServ
         {
             var clave = await GeneraPrefijoClaveAsync(pp.intIdTipoPatrullaje, totalRutas);
 
-            var strClave = clave + "-" + ConvierteCadenaNumericaARomano(pp.intRegionMilitarSDN) + "-" + pp.intZonaMilitarSDN;
+            var strClave = clave + "-" + ConvierteCadenaNumericaARomano(pp.intRegionMilitarSDN.ToString()) + "-" + pp.intZonaMilitarSDN;
             if ((Strings.Left(pp.strClave, strClave.Length) ?? "") == (strClave ?? ""))
             {
                 strClave = pp.strClave;
@@ -438,8 +442,8 @@ namespace DomainServices.DomServ
             return new Ruta()
             {
                 Clave = r.strClave,
-                RegionMilitarSdn = r.intRegionMilitarSDN,
-                RegionSsf = r.intRegionSSF,
+                RegionMilitarSdn = r.intRegionMilitarSDN.ToString(),
+                RegionSsf = r.intRegionSSF.ToString(),
                 IdTipoPatrullaje = r.intIdTipoPatrullaje,
                 Bloqueado = r.intBloqueado,
                 ZonaMilitarSdn = r.intZonaMilitarSDN,
@@ -449,6 +453,27 @@ namespace DomainServices.DomServ
                 UltimaActualizacion = DateTime.UtcNow,
                 ConsecutivoRegionMilitarSdn = 1,
                 TotalRutasRegionMilitarSdn = 1
+            };
+        }
+
+
+        /// <summary>
+        /// Método <c>ConvierteRutaDto</c> Convierte un objeto ruta de visualización (DTO) a un objeto Ruta del domino
+        /// </summary>
+        private Ruta ConvierteRutaDtoForUpdate(RutaDto r)
+        {
+            return new Ruta()
+            {
+                IdRuta = r.intIdRuta,
+                Clave = r.strClave,
+                RegionMilitarSdn = r.intRegionMilitarSDN.ToString(),
+                RegionSsf = r.intRegionSSF.ToString(),
+                Bloqueado = r.intBloqueado,
+                ZonaMilitarSdn = r.intZonaMilitarSDN,
+                Observaciones = r.strObservaciones,
+                Habilitado = r.intHabilitado,
+                //Campos no nulos
+                UltimaActualizacion = DateTime.UtcNow,
             };
         }
 

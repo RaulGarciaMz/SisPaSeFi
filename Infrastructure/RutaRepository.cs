@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using Domain.DTOs.catalogos;
 using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
@@ -29,7 +30,6 @@ namespace SqlServerAdapter
         /// </summary>
         public async Task AgregaAsync(Ruta r, List<Itinerario> itin)
         {
-            //TODO Tratar de implementar transacción
             _rutaContext.Rutas.Add(r);
 
             foreach (var item in itin)
@@ -44,10 +44,66 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>UpdateAsync</c> Implementa la interfaz para actualizar una ruta junto con sus itinerarios
         /// </summary>
-        public async Task UpdateAsync(Ruta pp)
+        public async Task UpdateAsync(RutaDto r)
         {
-            _rutaContext.Rutas.Remove(pp);
-            await _rutaContext.SaveChangesAsync();
+            var ruta = await _rutaContext.Rutas.Where(x => x.IdRuta == r.intIdRuta).SingleOrDefaultAsync();
+
+            if (ruta != null)
+            {
+                ruta.Clave = r.strClave;
+                ruta.RegionMilitarSdn = r.intRegionMilitarSDN.ToString();
+                ruta.RegionSsf = r.intRegionSSF.ToString();
+                ruta.ZonaMilitarSdn = r.intZonaMilitarSDN;
+                ruta.Observaciones = r.strObservaciones;
+                ruta.Bloqueado = r.intBloqueado;
+                ruta.Habilitado = r.intHabilitado;
+                ruta.UltimaActualizacion = DateTime.UtcNow;
+
+                _rutaContext.Rutas.Update(ruta);
+
+                var itinerario = await ObtenerItinerariosPorRutaAsync(r.intIdRuta);
+
+                if (itinerario != null && itinerario.itinerarioruta != r.strItinerario)
+                {
+                    var i = await _rutaContext.Itinerarios.Where(x => x.IdRuta == r.intIdRuta).ToListAsync();
+                    if (i.Count > 0) 
+                    {
+                        _rutaContext.Itinerarios.RemoveRange(i);
+
+                        foreach (var item in r.objRecorridoRuta)
+                        {
+                            var nIti = new Itinerario()
+                            { 
+                                IdRuta = r.intIdRuta,
+                                IdPunto = item.intIdPunto,
+                                Posicion = item.intPosicion,
+                                UltimaActualizacion = DateTime.UtcNow
+                            };
+
+                            _rutaContext.Itinerarios.Add(nIti);
+                        }
+                    }
+                }
+
+                await _rutaContext.SaveChangesAsync();
+            }
+        }
+
+        private async Task<ItinerarioRutaVista?> ObtenerItinerariosPorRutaAsync(int idRuta)
+        {
+            string sqlQuery = @"SELECT COALESCE((SELECT STRING_AGG(CAST(g.ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC) 
+                                                 FROM ssf.itinerario f
+                                				 JOIN ssf.puntospatrullaje g ON f.id_punto=g.id_punto
+                                                 WHERE f.id_ruta=a.id_ruta),'') as itinerarioruta
+                                FROM ssf.rutas a
+                                WHERE a.id_ruta= @pIdRuta";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pIdRuta", idRuta)
+            };
+
+            return await _rutaContext.ItinerariosRutasVista.FromSqlRaw(sqlQuery, parametros).FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -143,9 +199,9 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ObtenerNumeroRutasPorFiltroAsync</c> implementa la interfaz para obtener el número de rutas por clave y ruta
         /// </summary>
-        public async Task<int> ObtenerNumeroRutasPorFiltroAsync(string clave, int idRuta)
+        public async Task<int> ObtenerNumeroRutasConMismaClaveAsync(string clave, int idRuta)
         {
-            return await _rutaContext.Rutas.Where(x => x.Clave == clave && x.IdRuta == idRuta).CountAsync();
+            return await _rutaContext.Rutas.Where(x => x.Clave == clave && x.IdRuta != idRuta).CountAsync();
         }
 
         /// <summary>

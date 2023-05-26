@@ -20,9 +20,10 @@ namespace SqlServerAdapter.Data
 
         public DbSet<PuntoPatrullaje> PuntosPatrullaje { get; set; }
         public DbSet<Itinerario> Itinerarios { get; set; }
-
+        public DbSet<ItinerarioRutaVista> ItinerariosRutasVista { get; set; }
         public DbSet<ProgramaPatrullaje> Programas { get; set; }
         public DbSet<PropuestaPatrullaje> Propuestas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        
     }
 }

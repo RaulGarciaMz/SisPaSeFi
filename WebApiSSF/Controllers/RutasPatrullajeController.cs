@@ -93,23 +93,23 @@ namespace WebApiSSF.Controllers
         /// Registra una ruta de patrullaje
         /// </summary>
         /// <param name="usuario">Nombre del usuario que registra la ruta de patrullaje</param>
-        /// <param name="r">Ruta de patrullaje</param>
+        /// <param name="objRutaPatrullaje">Ruta de patrullaje</param>
         /// <returns></returns>
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PostValue([Required] string usuario,[FromBody] RutaDto r)
+        public async Task<ActionResult> PostValue([Required] string usuario,[FromBody] RutaDto objRutaPatrullaje)
         {
             try
             {
-                await _rp.AgregaAsync(r, usuario);
+                await _rp.AgregaAsync(objRutaPatrullaje, usuario);
                 return StatusCode(201, "Ok");
             }
             catch (Exception ex)
             {
                 _log.LogError($"error al agregar rutas para el usuario: {usuario}", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
 
@@ -117,25 +117,27 @@ namespace WebApiSSF.Controllers
         /// Actualiza una ruta de patrullaje
         /// </summary>
         /// <param name="usuario">Nombre del usuario que realiza la actualización de la ruta de patrullaje</param>
-        /// <param name="r">Ruta de patrullaje con los datos a actualizar</param>
+        /// <param name="strDatos">Ruta de patrullaje con los datos a actualizar</param>
         /// <returns></returns>
         [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> PutValue([Required] string usuario, [FromBody] RutaDto r)
+        public async Task<ActionResult> PutValue([Required] string usuario, [FromBody] RutaDto strDatos)
         {
             try
             {
-                await _rp.UpdateAsync(r, usuario);
+                await _rp.UpdateAsync(strDatos, usuario);
                 return Ok();
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al actualizar la ruta con id: {r.intIdRuta} para el usuario: {usuario}", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                _log.LogError($"error al actualizar la ruta con id: {strDatos.intIdRuta} para el usuario: {usuario} - ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }            
         }
+
+        //TODO Falta implementar un PUT
 
         /// <summary>
         /// Elimina una ruta de patrullaje, siempre y cuando no esté bloqueado el registro
@@ -156,7 +158,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al eliminar la ruta con id: {id} para el usuario: {usuario}", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
     }

@@ -16,11 +16,11 @@
         /// <summary>
         /// Región militar de SDN de la ruta de patrullaje
         /// </summary>
-        public string intRegionMilitarSDN { get; set; }
+        public int intRegionMilitarSDN { get; set; }
         /// <summary>
         /// Región SSF de la ruta de patrullaje
         /// </summary>
-        public string intRegionSSF { get; set; }
+        public int intRegionSSF { get; set; }
         /// <summary>
         /// Identificador del tipo de patrullaje
         /// </summary>
@@ -48,7 +48,7 @@
         /// <summary>
         /// Fecha de la última actualización del registro de la ruta de patrullaje
         /// </summary>
-        public string strUltimaActualizacion { get; set; }
+        public string? strUltimaActualizacion { get; set; }
         /// <summary>
         /// Indicador del estado (habilitado o deshabilitado) del registro de la ruta de patrullaje
         /// </summary>
@@ -63,6 +63,65 @@
         public List<RecorridoDto> objRecorridoRuta { get; set; }
     }
 
+    public class RutaDtoForUpdate
+    {
+        /// <summary>
+        /// Identificador de la ruta de patrullaje
+        /// </summary>
+        public int intIdRuta { get; set; }
+        /// <summary>
+        /// Clave de la ruta de patrullaje
+        /// </summary>
+        public string strClave { get; set; }
+        /// <summary>
+        /// Región militar de SDN de la ruta de patrullaje
+        /// </summary>
+        public int intRegionMilitarSDN { get; set; }
+        /// <summary>
+        /// Región SSF de la ruta de patrullaje
+        /// </summary>
+        public int intRegionSSF { get; set; }
+        /// <summary>
+        /// Identificador del tipo de patrullaje
+        /// </summary>
+        public int intIdTipoPatrullaje { get; set; }
+        /// <summary>
+        /// Indicador del estado (bloqueado o desbloqueado) del registro de la ruta
+        /// </summary>
+        public int intBloqueado { get; set; }
+        /// <summary>
+        /// Indicador de la zona miklitar de la ruta de patrullaje
+        /// </summary>
+        public int intZonaMilitarSDN { get; set; }
+        /// <summary>
+        /// Observaciones de la ruta de patrullaje
+        /// </summary>
+        public string strObservaciones { get; set; }
+        /// <summary>
+        /// Consecutivo de la región militar SDN de la ruta de patrullaje
+        /// </summary>
+        public int intConsecutivoRegionMilitarSDN { get; set; }
+        /// <summary>
+        /// Cantidad de rutas en la región militar SDN de la ruta de patrullaje
+        /// </summary>
+        public int intTotalRutasRegionMilitarSDN { get; set; }
+        /// <summary>
+        /// Fecha de la última actualización del registro de la ruta de patrullaje
+        /// </summary>
+        public string? strUltimaActualizacion { get; set; }
+        /// <summary>
+        /// Indicador del estado (habilitado o deshabilitado) del registro de la ruta de patrullaje
+        /// </summary>
+        public int intHabilitado { get; set; }
+        /// <summary>
+        /// Descripción del itinerario de la ruta de patrullaje
+        /// </summary>
+        public string strItinerario { get; set; }
+        /// <summary>
+        /// Lista de recorridos de la ruta de patrullaje
+        /// </summary>
+        public List<RecorridoDto> objRecorridoRuta { get; set; }
+    }
     /// <summary>
     /// Recorrido de patrullaje
     /// </summary>
