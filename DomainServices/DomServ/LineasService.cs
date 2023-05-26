@@ -47,8 +47,9 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task<List<LineaVista>> ObtenerLineasAsync(int opcion, string criterio, string usuario)
+        public async Task<List<LineaDto>> ObtenerLineasAsync(int opcion, string criterio, string usuario)
         {
+            var linRet = new List<LineaDto>();
             var lineas = new List<LineaVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
             var laOpcion = (LineasOpcion)opcion;
@@ -80,7 +81,39 @@ namespace DomainServices.DomServ
                 }
             }
 
-            return lineas;
+            if (lineas != null)
+            {
+                linRet = ConvierteListaLineaVistaToDto(lineas);
+            }
+
+            return linRet;
+        }
+
+        private List<LineaDto> ConvierteListaLineaVistaToDto(List<LineaVista> lineas)
+        { 
+            var l = new List<LineaDto>();
+
+            foreach (var lv in lineas)
+            { 
+                var v = new LineaDto()
+                { 
+                    intIdLinea = lv.id_linea,
+                    strClave = lv.clave,
+                    strDescripcion = lv.descripcion,
+                    intIdPuntoInicio = lv.id_punto_fin,
+                    strUbicacionPuntoInicio = lv.ubicacion_punto_inicio,
+                    strEstadoPuntoInicio = lv.estado_punto_inicio,
+                    intIdPuntoFin = lv.id_punto_fin,
+                    strUbicacionPuntoFin = lv.ubicacion_punto_fin,
+                    strEstadoPuntoFin = lv.estado_punto_fin,
+                    strMunicipioPuntoInicio = lv.municipio_punto_inicio,
+                    strMunicipioPuntoFin = lv.municipio_punto_fin,
+                };
+
+                l.Add(v);
+            }
+
+            return l;
         }
     }
 }

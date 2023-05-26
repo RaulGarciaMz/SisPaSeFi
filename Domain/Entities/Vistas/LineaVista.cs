@@ -13,7 +13,9 @@ namespace Domain.Entities.Vistas
         public string estado_punto_inicio { get; set; }
         public int id_punto_fin { get; set; }
         public string ubicacion_punto_fin { get; set; }
-        public string municipio_punto_fin { get; set; }
         public string estado_punto_fin { get; set; }
+        public string municipio_punto_inicio { get; set; }
+        public string municipio_punto_fin { get; set; }
+        
     }
 }                                             

@@ -36,7 +36,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<LineaVista>>> ObtenerLineas([Required]int opcion, [Required] string criterio, [Required] string usuario)
+        public async Task<ActionResult<IEnumerable<LineaDto>>> ObtenerLineas([Required]int opcion, [Required] string criterio, [Required] string usuario)
         {
             try
             {
@@ -57,12 +57,12 @@ namespace WebApiSSF.Controllers
 
                 if (lineas == null) 
                 {
-                    return NotFound(new List<LineaVista>());
+                    return NotFound(new List<LineaDto>());
                 }
 
                 if (lineas.Count == 0)
                 {
-                    return NotFound(new List<LineaVista>());
+                    return NotFound(new List<LineaDto>());
                 }
 
                 return Ok(lineas);
