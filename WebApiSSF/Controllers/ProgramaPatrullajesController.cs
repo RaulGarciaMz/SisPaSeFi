@@ -41,7 +41,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<PatrullajeDto>>> GetValues([Required] string tipo, [Required] int region, [Required] int opcion, [Required] string usuario, string clase, int anio, int mes, int dia,  int periodo=1)
+        public async Task<ActionResult<IEnumerable<PatrullajeDto>>> GetValues([Required] string tipo, [Required] int region,  [Required] string usuario, string clase, int anio, int mes, int dia, int opcion = 0, int periodo=1)
         {
             try
             {

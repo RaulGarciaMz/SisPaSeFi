@@ -45,7 +45,7 @@
         /// <summary>
         /// Fecha del patrullaje
         /// </summary>
-        public string strFechaPatrullaje { get; set; }
+        public string? strFechaPatrullaje { get; set; }
         /// <summary>
         /// Identificador de la ruta del programa de patrullaje
         /// </summary>
@@ -73,19 +73,19 @@
         /// <summary>
         /// FEcha de término del program de patrullaje
         /// </summary>
-        public string strFechaTermino { get; set; }
+        public string? strFechaTermino { get; set; }
         /// <summary>
         /// Lista de las propuestas de fechas patrullaje para el programa
         /// </summary>
-        public List<string> lstPropuestasPatrullajesFechas { get; set; }
+        public List<string>? lstPropuestasPatrullajesFechas { get; set; }
         /// <summary>
         /// Lista de identificadores de las propuestas de vehículos para el programa de patrullaje
         /// </summary>
-        public List<int> lstPropuestasPatrullajesVehiculos { get; set; }
+        public List<int>? lstPropuestasPatrullajesVehiculos { get; set; }
         /// <summary>
         /// Lista de identificadores de las propuestas de líneas para el programa de patrullaje
         /// </summary>
-        public List<int> lstPropuestasPatrullajesLineas { get; set; }
+        public List<int>? lstPropuestasPatrullajesLineas { get; set; }
     }
 
     /// <summary>

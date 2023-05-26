@@ -68,10 +68,10 @@ namespace SqlServerAdapter
         }
 
         /// <summary>
-        /// Método <c>ObtenerPropuestasPendientesPorAutorizarPorFiltro</c> implementa la interface para obtener propuestas pendientes por autorizar, acorde al filtro de los parámetros indicados.
-        /// Caso 5 Ordinario  - Propuestas pendientes de autorizar
+        /// Método <c>ObtenerPropuestasPorFiltroAsync</c> implementa la interface para obtener propuestas, acorde al filtro de los parámetros indicados.
+        /// Caso 5 Ordinario  - Todas las propuestas del mes y año indicado
         /// </summary>
-        public async Task<List<PatrullajeVista>> ObtenerPropuestasPendientesPorAutorizarPorFiltroAsync(string tipo, int region, int anio, int mes, string clase)
+        public async Task<List<PatrullajeVista>> ObtenerPropuestasPorFiltroAsync(string tipo, int region, int anio, int mes, string clase)
         {
             string sqlQuery = @"SELECT a.id_propuestapatrullaje id, a.id_ruta,a.fechapatrullaje, a.fechapatrullaje fechatermino, a.id_puntoresponsable, b.clave,
                    b.regionmilitarsdn,b.regionssf,b.observaciones observacionesruta, a.ultimaactualizacion,a.id_usuario,d.descripcionnivel,0 id_usuarioresponsablepatrullaje,
@@ -538,7 +538,6 @@ namespace SqlServerAdapter
         /// Método <c>ObtenerProgramasCanceladosPorDia</c> implementa la interface para obtener programas cancelados por fecha (día).
         /// Caso 3 Programas CANCELADOS Periodo 1 - Un día
         /// </summary>
-        //
         public async Task<List<PatrullajeVista>> ObtenerProgramasCanceladosPorDiaAsync(string tipo, int region, int anio, int mes, int dia)
         {
             string sqlQuery = @"SELECT a.id_programa id, a.id_ruta, a.fechapatrullaje, a.fechapatrullaje fechatermino, a.inicio, a.id_puntoresponsable, b.clave, b.regionmilitarsdn,

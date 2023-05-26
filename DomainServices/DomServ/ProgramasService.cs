@@ -102,27 +102,16 @@ namespace DomainServices.DomServ
                         }
                         break;
                     case FiltroProgramaOpcion.PropuestaTodas:
-                        estadoPropuesta = "Rechazada";
-                        if (clase == "EXTRAORDINARIO")
-                        {
-                            patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
-                        }
-                        else
-                        {
-                            patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
-                        }
-                        break;
-                    case FiltroProgramaOpcion.PropuestasPendientes:
                         if (clase == "EXTRAORDINARIO")
                         {
                             patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroAsync(tipo, region, anio, mes, clase);
                         }
                         else
                         {
-                            patrullajes = await _repo.ObtenerPropuestasPendientesPorAutorizarPorFiltroAsync(tipo, region, anio, mes, clase);
+                            patrullajes = await _repo.ObtenerPropuestasPorFiltroAsync(tipo, region, anio, mes, clase);
                         }
                         break;
-                    case FiltroProgramaOpcion.PropuestasAutorizadas:
+                    case FiltroProgramaOpcion.PropuestasPendientes:
                         estadoPropuesta = "Pendiente de autorizacion por la SSF";
                         if (clase == "EXTRAORDINARIO")
                         {
@@ -133,7 +122,8 @@ namespace DomainServices.DomServ
                             patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
                         }
                         break;
-                    case FiltroProgramaOpcion.PropuestasRechazadas:
+
+                    case FiltroProgramaOpcion.PropuestasAutorizadas:
                         estadoPropuesta = "Autorizada";
                         if (clase == "EXTRAORDINARIO")
                         {
@@ -144,7 +134,17 @@ namespace DomainServices.DomServ
                             patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
                         }
                         break;
-
+                    case FiltroProgramaOpcion.PropuestasRechazadas:
+                        estadoPropuesta = "Rechazada";
+                        if (clase == "EXTRAORDINARIO")
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasExtraordinariasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
+                        }
+                        else
+                        {
+                            patrullajes = await _repo.ObtenerPropuestasPorFiltroEstadoAsync(tipo, region, anio, mes, clase, estadoPropuesta);
+                        }
+                        break;
                     case FiltroProgramaOpcion.PropuestasEnviadas:
                         estadoPropuesta = "Aprobada por comandancia regional";
                         if (clase == "EXTRAORDINARIO")
@@ -226,9 +226,10 @@ namespace DomainServices.DomServ
 
                             default:
 
-                                await _repo.AgregaPropuestasFechasMultiplesAsync(ConvierteProgramaDtoToPropuestaDominio(p),
-                                                                      ConvierteStringFechaToDateTime(p.lstPropuestasPatrullajesFechas),
-                                                                      clase, user.IdUsuario);
+                                var pta = ConvierteProgramaDtoToPropuestaDominio(p);
+                                var lasFechas = ConvierteStringFechaToDateTime(p.lstPropuestasPatrullajesFechas);
+
+                                await _repo.AgregaPropuestasFechasMultiplesAsync(pta, lasFechas, clase, user.IdUsuario);
                                 break;
                         }
                         break;

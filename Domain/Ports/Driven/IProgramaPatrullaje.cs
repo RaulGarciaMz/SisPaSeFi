@@ -31,7 +31,7 @@ namespace Domain.Ports.Driven
         //Caso 0 Extraordinario  --Propuestas extraordinarias
         Task<List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorAnioMesDiaAsync(string tipo, int region, int anio, int mes, int dia);
         //Caso 5 Ordinario  - Propuestas pendientes de autorizar
-        Task<List<PatrullajeVista>> ObtenerPropuestasPendientesPorAutorizarPorFiltroAsync(string tipo, int region, int anio, int mes, string clase);
+        Task<List<PatrullajeVista>> ObtenerPropuestasPorFiltroAsync(string tipo, int region, int anio, int mes, string clase);
         //Caso 5 ExtraordinarioOrdinario  - 
         Task<List<PatrullajeVista>> ObtenerPropuestasExtraordinariasPorFiltroAsync(string tipo, int region, int anio, int mes, string clase);
         //Dan servicio a las opciones 6,7,8,9  Ordinario  -- Propuestas
