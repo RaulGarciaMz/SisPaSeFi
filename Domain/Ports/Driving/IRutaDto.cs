@@ -6,6 +6,7 @@ namespace Domain.Ports.Driving
     {
         Task AgregaAsync(RutaDto pp, string usuario);
         Task UpdateAsync(RutaDto pp, string usuario);
+        Task ReiniciaRegionMilitarAsync(string opcion, string regionMilitar, string tipoPatrullaje, string usuario);
         Task DeleteAsync(int id, string usuario);
     }
 

@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using Domain.DTOs.catalogos;
 using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Enums;
@@ -69,6 +70,20 @@ namespace DomainServices.DomServ
                 pp.strClave = strClave;
 
                 await _repo.UpdateAsync(pp);
+            }
+        }
+
+        /// <summary>
+        /// Método <c>ReiniciaRegionMilitarAsync</c> Implementa la interfaz para el caso de uso de reiniciar regiones militares
+        /// </summary>
+        public async Task ReiniciaRegionMilitarAsync(string opcion, string regionMilitar, string tipoPatrullaje, string usuario)
+        {
+            if (await EsUsuarioConfiguradorAsync(usuario))
+            {
+                if (opcion == "ReiniciarClavesRegionMilitar")
+                {
+                    await _repo.ReiniciaRegionMilitarAsync(regionMilitar, tipoPatrullaje);
+                }
             }
         }
 

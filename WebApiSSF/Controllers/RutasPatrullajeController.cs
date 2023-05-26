@@ -137,7 +137,32 @@ namespace WebApiSSF.Controllers
             }            
         }
 
-        //TODO Falta implementar un PUT
+        /// <summary>
+        /// Reinicia las regiones militares
+        /// </summary>
+        /// <param name="opcion">descripción de la opción de cambio ("ReiniciarClavesRegionMilitar")</param>
+        /// <param name="regionMilitar">Identificador de la región militar</param>
+        /// <param name="tipoPatrullaje">Descripción del tipo de patrullaje</param>
+        /// <param name="usuario">Nombre del usuario que realiza la operación</param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("reiniciaregion")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> ReiniciaRegionMilitar([Required] string opcion, [Required] string regionMilitar, [Required] string tipoPatrullaje, [Required] string usuario)
+        {
+            try
+            {
+                await _rp.ReiniciaRegionMilitarAsync(opcion, regionMilitar, tipoPatrullaje, usuario);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"error al reiniciar las regiones militares para region Militar: {regionMilitar}, tipo de patrullaje: {tipoPatrullaje} para el usuario: {usuario} - ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
+            }
+        }
 
         /// <summary>
         /// Elimina una ruta de patrullaje, siempre y cuando no esté bloqueado el registro

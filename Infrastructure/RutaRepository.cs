@@ -6,6 +6,7 @@ using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SqlServerAdapter.Data;
 using System;
 using System.Collections.Generic;
@@ -84,6 +85,39 @@ namespace SqlServerAdapter
                         }
                     }
                 }
+
+                await _rutaContext.SaveChangesAsync();
+            }
+        }
+
+        /// <summary>
+        /// Método <c>UpdateAsync</c> Implementa la interfaz para actualizar una ruta junto con sus itinerarios
+        /// </summary>
+        public async Task ReiniciaRegionMilitarAsync(string regionMilitar, string tipoPatrullaje)
+        {
+            string sqlQuery = @"SELECT a.*
+											FROM ssf.rutas a
+                                            JOIN ssf.tipopatrullaje b ON a.id_tipoPatrullaje = b.id_tipoPatrullaje
+                                            WHERE a.regionMilitarSDN = @pRegion
+                                            AND b.descripcion = @pTipo
+                                            CHARINDEX(a.clave,'_') = 0";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pRegion", regionMilitar),
+                new SqlParameter("@pTipo", tipoPatrullaje),
+            };
+
+            var toUpdate =  await _rutaContext.Rutas.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+
+            if (toUpdate.Count > 0) 
+            {
+                foreach (var item in toUpdate) 
+                {
+                    item.Clave = item.Clave + "_" + DateTime.UtcNow.Year.ToString();
+                }
+
+                _rutaContext.Rutas.UpdateRange(toUpdate);
 
                 await _rutaContext.SaveChangesAsync();
             }
