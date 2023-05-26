@@ -49,7 +49,7 @@ namespace DomainServices.DomServ
             return l;
         }
 
-        public async Task<PermisoEdicionProcesoConduccion?> ObtenerPermisosPorOpcionAsync(int region, int anio, int mes, string usuario)
+/*        public async Task<PermisoEdicionProcesoConduccion?> ObtenerPermisosPorOpcionAsync(int region, int anio, int mes, string usuario)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
@@ -59,6 +59,18 @@ namespace DomainServices.DomServ
             }
 
             return null;
+        }*/
+
+        public async Task<int> ObtenerNumeroDePermisosEspecificoPorOpcionAsync(int region, int anio, int mes, string usuario)
+        {
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+
+            if (user != null)
+            {
+                return await _repo.ObtenerNumeroPermisosPorOpcionAsync(region, anio, mes);
+            }
+
+            return 0;
         }
     }
 }

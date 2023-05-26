@@ -1,9 +1,4 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Ports.Driving
 {
@@ -16,6 +11,6 @@ namespace Domain.Ports.Driving
     public interface IPermisoEdicionConduccionDtoQuery
     {
         Task<List<PermisoEdicionProcesoConduccion>> ObtenerPermisosAsync(string usuario);
-        Task<PermisoEdicionProcesoConduccion?> ObtenerPermisosPorOpcionAsync(int region, int anio, int mes, string usuario);
+        Task<int> ObtenerNumeroDePermisosEspecificoPorOpcionAsync(int region, int anio, int mes, string usuario);
     }
 }

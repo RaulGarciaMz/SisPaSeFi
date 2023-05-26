@@ -1,9 +1,4 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Ports.Driven
 {
@@ -17,5 +12,6 @@ namespace Domain.Ports.Driven
     {
         Task<List<PermisoEdicionProcesoConduccion>> ObtenerPermisosAsync();
         Task<PermisoEdicionProcesoConduccion?> ObtenerPermisosPorOpcionAsync(int region, int anio, int mes);
+        Task<int> ObtenerNumeroPermisosPorOpcionAsync(int region, int anio, int mes);
     }
 }

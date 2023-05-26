@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Ports.Driving;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.Net.Mime;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -68,16 +69,11 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PermisoEdicionProcesoConduccion>> ObtenerPermisosPorOpcion([Required] int rsf, [Required] int anio, [Required] int mes, [Required] string usuario)
+        public async Task<ActionResult<int>> ObtenerPermisosPorOpcion([Required] int rsf, [Required] int anio, [Required] int mes, [Required] string usuario)
         {
             try
             {
-                var coms = await _pp.ObtenerPermisosPorOpcionAsync(rsf, anio, mes, usuario);
-
-                if (coms == null)
-                {
-                    return NotFound(new List<PermisoEdicionProcesoConduccion>());
-                }
+                var coms = await _pp.ObtenerNumeroDePermisosEspecificoPorOpcionAsync(rsf, anio, mes, usuario);
 
                 return Ok(coms);
             }

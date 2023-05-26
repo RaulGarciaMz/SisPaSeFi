@@ -20,7 +20,14 @@ namespace SqlServerAdapter
 
         public async Task<PermisoEdicionProcesoConduccion?> ObtenerPermisosPorOpcionAsync(int region, int anio, int mes)
         {
-            return await _permisosContext.PermisosEdicionConduccion.Where(x => x.Regionssf == region && x.Anio == anio && x.Mes == mes ).SingleOrDefaultAsync();
+            return await _permisosContext.PermisosEdicionConduccion.Where(x => x.Regionssf == region && x.Anio == anio && x.Mes == mes).SingleOrDefaultAsync();
+        }
+
+        public async Task<int> ObtenerNumeroPermisosPorOpcionAsync(int region, int anio, int mes)
+        {
+            var r = await _permisosContext.PermisosEdicionConduccion.Where(x => x.Regionssf == region && x.Anio == anio && x.Mes == mes).ToListAsync();
+
+            return r.Count;
         }
 
         public async Task AgregarPorOpcionAsync(int region, int anio, int mes)
