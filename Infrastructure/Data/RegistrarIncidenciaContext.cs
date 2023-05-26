@@ -6,7 +6,7 @@ namespace SqlServerAdapter.Data
 {
     public class RegistrarIncidenciaContext : DbContext
     {
-        public RegistrarIncidenciaContext(DbContextOptions<ItinerarioContext> options)
+        public RegistrarIncidenciaContext(DbContextOptions<RegistrarIncidenciaContext> options)
         : base(options)
         {
                     
