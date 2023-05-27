@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
@@ -36,17 +37,31 @@ namespace DomainServices.DomServ
             }            
         }
 
-        public async Task<List<PermisoEdicionProcesoConduccion>> ObtenerPermisosAsync(string usuario)
+        public async Task<List<PermisoEdicionConduccionDto>> ObtenerPermisosAsync(string usuario)
         {
+            var lp = new List<PermisoEdicionConduccionDto>();
             var l = new List<PermisoEdicionProcesoConduccion>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
             {
                 l = await _repo.ObtenerPermisosAsync();
+
+                foreach (var item in l) 
+                {
+
+                    var p = new PermisoEdicionConduccionDto()
+                    { 
+                        intAnio = item.Anio,
+                        intMes = item.Mes,
+                        intRSF = item.Regionssf
+                    };
+
+                    lp.Add(p);
+                }
             }
 
-            return l;
+            return lp;
         }
 
 /*        public async Task<PermisoEdicionProcesoConduccion?> ObtenerPermisosPorOpcionAsync(int region, int anio, int mes, string usuario)

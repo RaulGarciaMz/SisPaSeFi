@@ -34,7 +34,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<PermisoEdicionProcesoConduccion>>> ObtenerPermisos([Required]string usuario)
+        public async Task<ActionResult<IEnumerable<PermisoEdicionConduccionDto>>> ObtenerPermisos([Required]string usuario)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace WebApiSSF.Controllers
 
                 if (coms.Count <= 0)
                 {
-                    return NotFound(new List<PermisoEdicionProcesoConduccion>());
+                    return NotFound(new List<PermisoEdicionConduccionDto>());
                 }
 
                 return Ok(coms);

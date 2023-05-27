@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
 
 namespace Domain.Ports.Driving
 {
@@ -10,7 +10,7 @@ namespace Domain.Ports.Driving
 
     public interface IPermisoEdicionConduccionDtoQuery
     {
-        Task<List<PermisoEdicionProcesoConduccion>> ObtenerPermisosAsync(string usuario);
+        Task<List<PermisoEdicionConduccionDto>> ObtenerPermisosAsync(string usuario);
         Task<int> ObtenerNumeroDePermisosEspecificoPorOpcionAsync(int region, int anio, int mes, string usuario);
     }
 }
