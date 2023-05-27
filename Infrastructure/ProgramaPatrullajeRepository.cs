@@ -838,9 +838,10 @@ namespace SqlServerAdapter
               /*                  _programaContext.PropuestasVehiculos.AddRange(pp.Vehiculos);
                                 _programaContext.PropuestasLineas.AddRange(pp.Lineas);*/               
 
-                                await _programaContext.SaveChangesAsync();
                             }
                         }
+
+                        await _programaContext.SaveChangesAsync();
 
                         transaction.Commit();
                     }

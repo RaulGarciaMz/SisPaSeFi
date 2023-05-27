@@ -83,6 +83,8 @@ namespace SqlServerAdapter
                             AgregaListaDeAfectacionesIncidenciaEnMemoriaAsync(idReporte, i.TipoIncidencia, i.listaAfectaciones);
                         }
 
+                        await _regIncidenciaContext.SaveChangesAsync();
+
                         transaction.Commit();
                     }
                     catch (Exception)

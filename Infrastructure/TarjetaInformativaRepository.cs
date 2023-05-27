@@ -43,6 +43,7 @@ namespace SqlServerAdapter
                         }
                     }
 
+                    await _tarjetaContext.SaveChangesAsync();
                     transaction.Commit();
                 }
                 catch (Exception)
@@ -77,6 +78,7 @@ namespace SqlServerAdapter
                         _tarjetaContext.Programas.Update(programa);
                     }
 
+                    await _tarjetaContext.SaveChangesAsync();
                     transaction.Commit();
                 }
                 catch (Exception)
