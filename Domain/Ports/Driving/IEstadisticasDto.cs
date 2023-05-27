@@ -1,9 +1,10 @@
-﻿using Domain.Entities.Vistas;
+﻿using Domain.DTOs;
+using Domain.Entities.Vistas;
 
 namespace Domain.Ports.Driving
 {
     public interface IEstadisticasDtoQuery
     {
-        Task<List<EstadisticaSistemaVista>> ObtenerEstadisticasDeSistemaAsync(string usuario);
+        Task<List<EstadisticasSistemaDto>> ObtenerEstadisticasDeSistemaAsync(string usuario);
     }
 }

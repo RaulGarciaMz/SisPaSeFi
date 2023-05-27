@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Vistas;
+﻿using Domain.DTOs;
+using Domain.Entities.Vistas;
 using Domain.Ports.Driven;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
@@ -16,17 +17,37 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task<List<EstadisticaSistemaVista>> ObtenerEstadisticasDeSistemaAsync(string usuario)
-        {
+        public async Task<List<EstadisticasSistemaDto>> ObtenerEstadisticasDeSistemaAsync(string usuario)
+        { 
+            var ret = new List<EstadisticasSistemaDto>();
             var afect = new List<EstadisticaSistemaVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
             {
                 afect = await _repo.ObtenerEstadisticasDeSistemaAsync();
+                ret = ConvierteListaEstadisticasSistemaToDto(afect);
             }
 
-            return afect;
+            return ret;
+        }
+
+        private List<EstadisticasSistemaDto> ConvierteListaEstadisticasSistemaToDto(List<EstadisticaSistemaVista> e)
+        {
+
+            var ret = new List<EstadisticasSistemaDto>();
+
+            foreach (var estadistica in e)
+            {
+                var est = new EstadisticasSistemaDto()
+                {
+                    strDescripcion = estadistica.concepto,
+                    strValor = estadistica.total.ToString()
+                };
+
+                ret.Add(est);
+            }
+            return ret;
         }
     }
 }
