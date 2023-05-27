@@ -114,6 +114,14 @@ namespace DomainServices.DomServ
             {
                 var ni = new ItinerarioDto()
                 {
+                    intIdItinerario=item.id_itinerario,
+                    intIdRuta=item.id_ruta,
+                    intIdPunto=item.id_punto,
+                    intPosicion=item.posicion,
+                    strUbicacion = item.ubicacion,
+                    strCoordenadas = item.coordenadas,
+                    intIdProcesoResponsable = item.id_procesoresponsable,
+                    intIdGerenciaDivision = item.id_gerenciadivision
                 };
 
                 l.Add(ni);
