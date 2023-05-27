@@ -17,7 +17,7 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task AgregarEvidenciaPorTipoAsync(EvidenciaDto evidencia)
+        public async Task AgregarEvidenciaPorTipoAsync(EvidenciaDtoForCreate evidencia)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(evidencia.strUsuario);
 
@@ -64,8 +64,9 @@ namespace DomainServices.DomServ
                 }
             }
         }
-        public async Task<List<EvidenciaVista>> ObtenerEvidenciasPorTipoAsync( int idReporte, string tipo, string usuario)
+        public async Task<List<EvidenciaDto>> ObtenerEvidenciasPorTipoAsync( int idReporte, string tipo, string usuario)
         {
+            var ret = new List<EvidenciaDto>();
             var l = new List<EvidenciaVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
@@ -86,9 +87,32 @@ namespace DomainServices.DomServ
                         l = await _repo.ObtenerEvidenciaSeguimientoDeEstructuraAsync(idReporte);
                         break;
                 }
+
+                ret = ConvierteListaEvidenciaToDto(l);
             }
 
-            return l;
+            return ret;
+        }
+
+        private List<EvidenciaDto> ConvierteListaEvidenciaToDto(List<EvidenciaVista> evidencias)
+        {
+            var ret = new List<EvidenciaDto>();
+            foreach (var v in evidencias)
+            {
+                var ev = new EvidenciaDto()
+                {
+                    intIdEvidenciaIncidencia = v.IdEvidencia,
+                    intIdReporte = v.IdReporte,
+                    strRutaArchivo = v.RutaArchivo,
+                    strNombreArchivo = v.NombreArchivo,
+                    strDescripcion = v.Descripcion,
+                    strTipoIncidencia = v.TipoReporte
+
+                };
+
+                ret.Add(ev);
+            }
+            return ret;
         }
     }
 }

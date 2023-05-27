@@ -36,7 +36,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<EvidenciaVista>>> Get([Required]int idReporte, [Required] string opcion, [Required] string usuario)
+        public async Task<ActionResult<IEnumerable<EvidenciaDto>>> Get([Required]int idReporte, [Required] string opcion, [Required] string usuario)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace WebApiSSF.Controllers
 
                 if (evidencias == null || evidencias.Count() == 0) 
                 {
-                    return NotFound(new List<EvidenciaVista>());
+                    return NotFound(new List<EvidenciaDto>());
                 }
 
                 return Ok(evidencias);
@@ -77,7 +77,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PostEvidencia([FromBody] EvidenciaDto evidencia)
+        public async Task<ActionResult> PostEvidencia([FromBody] EvidenciaDtoForCreate evidencia)
         {
             try
             {
