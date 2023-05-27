@@ -78,7 +78,7 @@ namespace SqlServerAdapter
                    '' observaciones, 0 riesgopatrullaje, a.id_apoyopatrullaje,
                    COALESCE(a.solicitudoficioautorizacion, '') solicitudoficiocomision,
                    COALESCE(a.oficioautorizacion, '') as oficiocomision, 
-                   COALESCE((SELECT STRING_AGG(CAST(ubicacion as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
+                   COALESCE((SELECT STRING_AGG(CAST(CONCAT(g.ubicacion,'(',g.coordenadas,')') as nvarchar(MAX)), '-') WITHIN GROUP(ORDER BY f.posicion ASC)
                              FROM ssf.itinerario f join ssf.puntospatrullaje g on f.id_punto = g.id_punto
                              WHERE f.id_ruta = a.id_ruta),'') as itinerario,
                    COALESCE((SELECT top 1 f.inicio FROM ssf.programapatrullajes f
