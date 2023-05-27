@@ -17,8 +17,9 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task<List<PersonalParticipanteVista>> ObtenerPersonalParticipantePorOpcionAsync(string opcion, int idPrograma, int region, string usuario)
-        {
+        public async Task<List<PersonalParticipanteDto>> ObtenerPersonalParticipantePorOpcionAsync(string opcion, int idPrograma, int region, string usuario)
+        { 
+            var lp = new List<PersonalParticipanteDto>();
             var l = new List<PersonalParticipanteVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
@@ -34,13 +35,38 @@ namespace DomainServices.DomServ
                         l = await _repo.ObtenerPersonalNoAsignadoEnProgramaAsync(idPrograma, region);
                         break;
                 }
+
+                lp = ConvierteListaPersonalToDto(l);
             }
 
-            return l;
+            return lp;
         }
 
 
-        public async Task AgregarAsync(PersonalParticipanteDto u)
+        private List<PersonalParticipanteDto> ConvierteListaPersonalToDto(List<PersonalParticipanteVista> l)
+        {
+
+            var lp = new List<PersonalParticipanteDto>();
+            foreach ( var item in l ) 
+            {
+                var np = new PersonalParticipanteDto() 
+                {
+                    intIdUsuario = item.id_usuario,
+                    strNombreDeUsuario = item.usuario_nom,
+                    strNombre = item.nombre,
+                    strApellido1 = item.apellido1,
+                    strApellido2 = item.apellido2,
+                    strCorreoElectronico = item.correoelectronico,
+                    strCel = item.cel,
+                    intConfigurador = item.configurador.Value
+                
+                };
+            }
+
+            return lp;
+        }
+
+        public async Task AgregarAsync(PersonalParticipanteDtoForCreate u)
         {
             var l = new List<PersonalParticipanteVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(u.strNombreDeUsuario);
@@ -60,7 +86,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task BorrarAsync(PersonalParticipanteDto u)
+        public async Task BorrarAsync(PersonalParticipanteDtoForCreate u)
         {
             var l = new List<PersonalParticipanteVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(u.strNombreDeUsuario);

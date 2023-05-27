@@ -1,5 +1,4 @@
 ﻿using Domain.DTOs;
-using Domain.Entities.Vistas;
 using Domain.Ports.Driving;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -36,7 +35,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<PersonalParticipanteVista>>> ObtenerPersonalParticipantePorOpcion([Required]string opcion, [Required] int idPrograma, [Required] string usuario, int regionSSF = 0)
+        public async Task<ActionResult<List<PersonalParticipanteDto>>> ObtenerPersonalParticipantePorOpcion([Required]string opcion, [Required] int idPrograma, [Required] string usuario, int regionSSF = 0)
         {
             try
             {
@@ -44,12 +43,12 @@ namespace WebApiSSF.Controllers
 
                 if (user == null)
                 {
-                    return NotFound(new List<PersonalParticipanteVista>());
+                    return NotFound(new List<PersonalParticipanteDto>());
                 }
 
                 if (user.Count == 0) 
                 {
-                    return NotFound(new List<PersonalParticipanteVista>());
+                    return NotFound(new List<PersonalParticipanteDto>());
                 }
 
                 return Ok(user);
@@ -71,7 +70,7 @@ namespace WebApiSSF.Controllers
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Agregar([Required] int idPrograma, [FromBody] PersonalParticipanteDto u)
+        public async Task<ActionResult> Agregar([Required] int idPrograma, [FromBody] PersonalParticipanteDtoForCreate u)
         {
             try
             {
@@ -96,7 +95,7 @@ namespace WebApiSSF.Controllers
         [HttpDelete("{id}")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete(int id, [FromBody] PersonalParticipanteDto u)
+        public async Task<ActionResult> Delete(int id, [FromBody] PersonalParticipanteDtoForCreate u)
         {
             try
             {
