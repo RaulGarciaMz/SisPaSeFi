@@ -42,17 +42,20 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task<List<AfectacionIncidenciaVista>> ObtenerAfectacionIncidenciaPorOpcionAsync(int idReporte, string tipo, string usuario)
+        public async Task<List<AfectacionDto>> ObtenerAfectacionIncidenciaPorOpcionAsync(int idReporte, string tipo, string usuario)
         {
+            var retAfec = new List<AfectacionDto>();
             var afect = new List<AfectacionIncidenciaVista>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
             {
                 afect = await _repo.ObtenerAfectacionIncidenciaPorOpcionAsync(idReporte, tipo);
+
+                retAfec = ConvierteListaAfectacionVistaToDto(afect, tipo);
             }
 
-            return afect;
+            return retAfec;
         }
 
         private async Task<bool> ExisteAfectacionRegistrada(int idIncidencia, int idConcepto, string tipo)
@@ -69,6 +72,31 @@ namespace DomainServices.DomServ
             }
 
             return result;
+        }
+
+        private List<AfectacionDto> ConvierteListaAfectacionVistaToDto(List<AfectacionIncidenciaVista> a, string opcion)
+        {
+            var l = new List<AfectacionDto>();
+
+            foreach (var af in a) 
+            {
+                var nAf = new AfectacionDto()
+                { 
+                    intIdAfectacionIncidencia = af.id_afectacionIncidencia,
+                    intIdIncidencia = af.id_incidencia,
+                    intIdConceptoAfectacion = af.id_conceptoAfectacion,
+                    intCantidad = af.cantidad,
+                    sngPrecioUnitario = af.precioUnitario,
+                    intIdTipoIncidencia = af.tipo_incidencia,
+                    strDescripcion = af.descripcion,
+                    strUnidades = af.unidades,
+                    strTipoIncidencia = opcion
+                };
+            
+                l.Add(nAf);
+            }
+
+            return l;
         }
     }
 }

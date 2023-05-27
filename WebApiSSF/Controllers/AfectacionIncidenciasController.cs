@@ -36,7 +36,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<AfectacionIncidenciaVista>>> ObtenerAfectacionIncidenciaPorOpcion([Required]int idReporte, [Required] string opcion, [Required] string usuario)
+        public async Task<ActionResult<IEnumerable<AfectacionDto>>> ObtenerAfectacionIncidenciaPorOpcion([Required]int idReporte, [Required] string opcion, [Required] string usuario)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace WebApiSSF.Controllers
 
                 if (coms.Count <= 0)
                 {
-                    return NotFound(new List<AfectacionIncidenciaVista>());
+                    return NotFound(new List<AfectacionDto>());
                 }
 
                 return Ok(coms);
