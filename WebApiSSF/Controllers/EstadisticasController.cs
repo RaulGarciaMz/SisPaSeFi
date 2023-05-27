@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Vistas;
+﻿using Domain.DTOs;
+using Domain.Entities.Vistas;
 using Domain.Ports.Driving;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -31,7 +32,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<EstadisticaSistemaVista>>> ObtenerEstadisticasDeSistema([Required] string usuario)
+        public async Task<ActionResult<IEnumerable<EstadisticasSistemaDto>>> ObtenerEstadisticasDeSistema([Required] string usuario)
         {
             try
             {
@@ -39,7 +40,7 @@ namespace WebApiSSF.Controllers
 
                 if (stats == null || stats.Count == 0)
                 {
-                    return NotFound(new List<EstadisticaSistemaVista>());
+                    return NotFound(new List<EstadisticasSistemaDto>());
                 }
 
                 return Ok(stats);
