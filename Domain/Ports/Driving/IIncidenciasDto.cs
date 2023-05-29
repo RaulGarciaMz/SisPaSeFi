@@ -10,6 +10,6 @@ namespace Domain.Ports.Driving
 
     public interface IIncidenciasDtoQuery
     {
-        Task<List<IncidenciaGeneralDto>> ObtenerIncidenciasPorOpcionAsync(string opcion, int idActivo,  string criterio, string usuario);
+        Task<List<IncidenciaGeneralDto>> ObtenerIncidenciasPorOpcionAsync(string opcion, int? idActivo,  string criterio, string usuario);
     }
 }

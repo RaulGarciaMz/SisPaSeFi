@@ -17,7 +17,7 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task<List<IncidenciaGeneralDto>> ObtenerIncidenciasPorOpcionAsync(string opcion, int idActivo, string criterio, string usuario)
+        public async Task<List<IncidenciaGeneralDto>> ObtenerIncidenciasPorOpcionAsync(string opcion, int? idActivo, string criterio, string usuario)
         {
             var incids = new List<IncidenciaGeneralDto>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
@@ -36,11 +36,11 @@ namespace DomainServices.DomServ
                 switch(opcion) 
                 {
                     case "IncidenciaAbiertaEnINSTALACION":
-                        var abiertaInstalacion = await _repo.ObtenerIncidenciasAbiertasEnInstalacionAsync(idActivo);
+                        var abiertaInstalacion = await _repo.ObtenerIncidenciasAbiertasEnInstalacionAsync(idActivo.Value);
                         incids = ConvierteListaIncidenciasGeneralesToDto(abiertaInstalacion);
                         break;
                     case "IncidenciaAbiertaEnESTRUCTURA":
-                        var abiertaEstructura = await _repo.ObtenerIncidenciasAbiertasEnEstructuraAsync(idActivo);
+                        var abiertaEstructura = await _repo.ObtenerIncidenciasAbiertasEnEstructuraAsync(idActivo.Value);
                         incids = ConvierteListaIncidenciasGeneralesToDto(abiertaEstructura);
                         break;
                     case "IncidenciaSinAtenderPorVariosDiasEnESTRUCTURAS":

@@ -80,7 +80,7 @@ namespace SqlServerAdapter
                                  AND a.ultimoregistroenbitacora < DATEADD(day, @pDias, GETDATE()) 
                                  ORDER BY a.ultimaactualizacion DESC";
 
-            numeroDias = -numeroDias;
+            //numeroDias = -numeroDias;
 
             object[] parametros = new object[]
             {

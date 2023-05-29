@@ -35,7 +35,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<IncidenciaGeneralDto>>> ObtenerIncidenciasPorOpcion([Required]string opcion,  [Required] string usuario,int idActivo, string criterio = "")
+        public async Task<ActionResult<IEnumerable<IncidenciaGeneralDto>>> ObtenerIncidenciasPorOpcion([Required]string opcion,  [Required] string usuario,int? idActivo, string criterio = "")
         {//ByVal opcion As String, ByVal IdActivo As Integer, ByVal criterio As String, ByVal usuario As String
             try
             {
