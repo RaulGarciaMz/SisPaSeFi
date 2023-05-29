@@ -5,7 +5,7 @@ namespace Domain.Ports.Driving
     public interface ITarjetaDtoCommand
     {
         Task AgregaTarjetaTransaccionalAsync(TarjetaDtoForCreate tarjeta);
-        Task UpdateAsync(TarjetaDto tarjeta, string usuario);
+        Task UpdateAsync(TarjetaDtoForUpdate tarjeta, string usuario);
     }
 
     public interface ITarjetaDtoQuery

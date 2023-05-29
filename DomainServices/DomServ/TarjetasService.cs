@@ -36,7 +36,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task UpdateAsync(TarjetaDto tarjeta, string usuario) 
+        public async Task UpdateAsync(TarjetaDtoForUpdate tarjeta, string usuario) 
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
@@ -49,6 +49,7 @@ namespace DomainServices.DomServ
                     return;
                 }
 
+                t.IdUsuario = user.IdUsuario;
                 t.UltimaActualizacion = DateTime.UtcNow;
                 t.Inicio = TimeSpan.Parse(tarjeta.strInicio); // ":00" al final  representa segundos al final ??
                 t.Termino = TimeSpan.Parse(tarjeta.strTermino); // ":00" al final
@@ -58,14 +59,18 @@ namespace DomainServices.DomServ
                 t.ComandantesInstalacionSsf = tarjeta.intComandantesInstalacionSSF;
                 t.PersonalMilitarSedenaoficial = tarjeta.intPersonalMilitarSEDENAOficial;
                 t.KmRecorrido = tarjeta.intKmRecorrido;
-                //TODO revisar fecha de patrullaje (format)
-                //t.FechaPatrullaje = tarjeta.FechaPatrullaje; // En qué formato viene??
                 t.PersonalMilitarSedenatropa = tarjeta.intPersonalMilitarSEDENATropa;
                 t.Linieros = tarjeta.intLinieros;
                 t.ComandantesTurnoSsf = tarjeta.intComandantesTurnoSSF;
                 t.OficialesSsf = tarjeta.intOficialesSSF;
                 t.PersonalNavalSemaroficial = tarjeta.intPersonalNavalSEMAROficial;
                 t.PersonalNavalSemartropa = tarjeta.intPersonalNavalSEMARTropa;
+                t.IdEstadoTarjetaInformativa = tarjeta.intIdEstadoTarjetaInformativa;
+                t.FechaTermino = DateTime.Parse(tarjeta.strFechaTermino);
+                t.Idresultadopatrullaje = tarjeta.intIdResultadoPatrullaje;
+                t.Lineaestructurainstalacion = tarjeta.strLineaEstructuraInstalacion;
+                t.Responsablevuelo = tarjeta.strResponsableVuelo;
+                t.Fuerzareaccion = tarjeta.intFuerzaDeReaccion;
 
                 await _repo.UpdateTarjetaAndProgramaTransaccionalAsync(t, tarjeta.intIdEstadoPatrullaje, user.IdUsuario, tarjeta.intIdInstalacionResponsable);
             }    

@@ -56,8 +56,6 @@ namespace SqlServerAdapter
 
         public async Task UpdateTarjetaAndProgramaTransaccionalAsync(TarjetaInformativa tarjeta, int idEstadoPatrullaje, int usuarioId, int idPuntoResponsable) 
         {
-            tarjeta.IdUsuario= usuarioId;
-
             using (var transaction = _tarjetaContext.Database.BeginTransaction())
             {
                 try

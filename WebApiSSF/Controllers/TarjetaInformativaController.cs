@@ -125,7 +125,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Put([Required] string usuario, [FromBody] TarjetaDto tarjeta)
+        public async Task<ActionResult> Put([Required] string usuario, [FromBody] TarjetaDtoForUpdate tarjeta)
         {
             try
             {
