@@ -48,7 +48,7 @@ namespace SqlServerAdapter
                 IdMunicipio= idMunicipio,
                 Latitud = lat,
                 Longitud = longi,
-                Coordenadas = longitud + "," + longi,
+                Coordenadas = lat + "," + longi,
                 //Campos no nulos
                 Bloqueado = 0,
                 UltimaActualizacion = DateTime.UtcNow,
