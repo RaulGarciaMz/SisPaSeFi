@@ -151,7 +151,7 @@
         /// <summary>
         /// Nombre del usuario para la cuenta registrada
         /// </summary>
-        public string strNombreDeUsuario { get; set; }
+        public string? strNombreDeUsuario { get; set; }
         /// <summary>
         /// Número de sesiones del usuario
         /// </summary>
@@ -167,7 +167,7 @@
         /// <summary>
         /// Correo electrónico del usuario
         /// </summary>
-        public string strCorreoElectronico { get; set; }
+        public string? strCorreoElectronico { get; set; }
         /// <summary>
         /// Indicador de notificación de acceso del usuario
         /// </summary>
