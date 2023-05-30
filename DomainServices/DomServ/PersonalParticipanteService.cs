@@ -61,6 +61,8 @@ namespace DomainServices.DomServ
                     intConfigurador = item.configurador.Value
                 
                 };
+
+                lp.Add(np);
             }
 
             return lp;
