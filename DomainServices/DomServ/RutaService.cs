@@ -40,7 +40,7 @@ namespace DomainServices.DomServ
                 var rp = ConvierteRutaDto(pp);
                 var itinerarios = ConvierteRecorridosAItinearios(pp.objRecorridoRuta);
 
-                await _repo.AgregaAsync(rp, itinerarios);
+                await _repo.AgregaTransacionalAsync(rp, itinerarios);
             }
         }
 

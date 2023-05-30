@@ -29,17 +29,32 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>AgregaAsync</c> Implementa la interfaz para agregar una ruta junto con sus itinerarios
         /// </summary>
-        public async Task AgregaAsync(Ruta r, List<Itinerario> itin)
+        public async Task AgregaTransacionalAsync(Ruta r, List<Itinerario> itin)
         {
-            _rutaContext.Rutas.Add(r);
-
-            foreach (var item in itin)
+            using (var transaction = _rutaContext.Database.BeginTransaction())
             {
-                item.IdRuta = r.IdRuta;
-            }
+                try
+                {
+                    _rutaContext.Rutas.Add(r);
+                    await _rutaContext.SaveChangesAsync();
 
-            _rutaContext.Itinerarios.AddRange(itin);
-            await _rutaContext.SaveChangesAsync();
+                    foreach (var item in itin)
+                    {
+                        item.IdRuta = r.IdRuta;
+
+                    }
+
+                    _rutaContext.Itinerarios.AddRange(itin);
+                    await _rutaContext.SaveChangesAsync();
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         /// <summary>
