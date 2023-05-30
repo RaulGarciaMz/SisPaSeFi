@@ -22,6 +22,7 @@ namespace SqlServerAdapter
             int idReporte = -1;
             var fechaPatrullaje = DateTime.Parse(i.FechaPatrullaje);
             var programa = await ObtenerProgramaAndRegionPorRutaAndFechaAsync(i.IdRuta, fechaPatrullaje);
+            ReporteEstructura repEstruct = null;
 
             if (programa != null)
             {
@@ -36,25 +37,28 @@ namespace SqlServerAdapter
                             case "ESTRUCTURA":
                                 if (i.IdActivo == 999999)
                                 {
-                                    AgregaReporteEstructurasEnMemoria(idTarjeta.Value, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
+                                    repEstruct = CreaReporteEstructura(idTarjeta.Value, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
+                                    _regIncidenciaContext.ReportesEstructuras.Add(repEstruct);
+                                    await _regIncidenciaContext.SaveChangesAsync();
+                                    idReporte = repEstruct.IdReporte;
                                 }
                                 else
                                 {
                                     var rptes = await ObtenerReporteEstructuraPorEstructuraAndClasificacionAsync(i.IdActivo, i.IdClasificacion);
                                     if (rptes.Count > 0)
                                     {
+                                        idReporte = rptes[0].IdReporte;
                                         await ActualizaReporteEstructurasEnMemoriaAsync(i.IdActivo, i.IdClasificacion, i.IdPrioridad, i.DescripcionIncidencia);
+                                        await _regIncidenciaContext.SaveChangesAsync();
                                     }
                                     else
                                     {
-                                        AgregaReporteEstructurasEnMemoria(idTarjeta.Value, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
+                                        repEstruct = CreaReporteEstructura(idTarjeta.Value, i.IdActivo, i.DescripcionIncidencia, i.IdPrioridad, i.IdClasificacion);
+                                        _regIncidenciaContext.ReportesEstructuras.Add(repEstruct);
+                                        await _regIncidenciaContext.SaveChangesAsync();
+                                        idReporte = repEstruct.IdReporte;
                                     }
                                 }
-
-                                await _regIncidenciaContext.SaveChangesAsync();
-
-                                var nvosRptesE = await ObtenerReporteEstructuraPorEstructuraAndClasificacionAsync(i.IdActivo, i.IdClasificacion);
-                                idReporte = nvosRptesE[0].IdReporte;
 
                                 break;
 
@@ -79,8 +83,15 @@ namespace SqlServerAdapter
 
                         if (idReporte > -1)
                         {
-                            AgregaListaDeEvidenciasEnMemoriaConCopiaDeArchivoAsync(idReporte, programa.regionSSF, i.TipoIncidencia, i.listaEvidencia);
-                            AgregaListaDeAfectacionesIncidenciaEnMemoriaAsync(idReporte, i.TipoIncidencia, i.listaAfectaciones);
+                            if (i.listaEvidencia != null && i.listaEvidencia.Count > 0)
+                            {
+                                AgregaListaDeEvidenciasEnMemoriaConCopiaDeArchivoAsync(idReporte, programa.regionSSF, i.TipoIncidencia, i.listaEvidencia);
+                            }
+
+                            if (i.listaAfectaciones != null && i.listaAfectaciones.Count > 0)
+                            {
+                                AgregaListaDeAfectacionesIncidenciaEnMemoriaAsync(idReporte, i.TipoIncidencia, i.listaAfectaciones);
+                            }
                         }
 
                         await _regIncidenciaContext.SaveChangesAsync();
@@ -138,9 +149,24 @@ namespace SqlServerAdapter
 
             if (edo == null) throw new Exception("no se encontró el estado concluido en los estados de la incidencia");
 
-            return await _regIncidenciaContext.ReportesEstructuras.Where(x => x.IdEstructura == idEstructura && x.IdClasificacionIncidencia == idClasificacion && x.EstadoIncidencia == edo.IdEstadoIncidencia).ToListAsync();
+            return await _regIncidenciaContext.ReportesEstructuras.Where(x => x.IdEstructura == idEstructura && x.IdClasificacionIncidencia == idClasificacion && x.EstadoIncidencia < edo.IdEstadoIncidencia).ToListAsync();
         }
 
+        private ReporteEstructura CreaReporteEstructura(int idNota, int idEstructura, string descripcion, int prioridad, int idClasificacion)
+        { 
+            return new ReporteEstructura()
+            {
+                IdNota = idNota,
+                IdEstructura = idEstructura,
+                Incidencia = descripcion,
+                EstadoIncidencia = 5,
+                PrioridadIncidencia = prioridad,
+                UltimaActualizacion = DateTime.UtcNow,
+                IdClasificacionIncidencia = idClasificacion,
+                //Campos no nulos
+                UltimoRegistroEnBitacora = DateTime.UtcNow
+            };
+        }
         private void AgregaReporteEstructurasEnMemoria(int idNota, int idEstructura, string descripcion, int prioridad, int idClasificacion)
         {
             var r = new ReporteEstructura()
