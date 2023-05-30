@@ -137,7 +137,7 @@ namespace DomainServices.DomServ
         private async Task<bool> EstanCoordenadasDeEstructuraEnUso(int idEstructura, string coordenadas)
         {
 
-            var existen = await _repo.ObtenerEstructurasEnCoordenadasPorId(idEstructura,coordenadas);
+            var existen = await _repo.ObtenerOtrasEstructurasEnCoordenadasPorId(idEstructura,coordenadas);
 
             if (existen == null)
             {

@@ -36,16 +36,17 @@ namespace SqlServerAdapter
                 await _estructuraContext.SaveChangesAsync();
             }
         }
+
         public async Task AgregaAsync(int idLinea, string nombre, int idMunicipio, string latitud, string longitud)
         {
             var lat = latitud.Trim();
             var longi = longitud.Trim();
 
             var estruct = new Estructura()
-            { 
-                Nombre= nombre,
+            {
+                Nombre = nombre,
                 IdLinea = idLinea,
-                IdMunicipio= idMunicipio,
+                IdMunicipio = idMunicipio,
                 Latitud = lat,
                 Longitud = longi,
                 Coordenadas = lat + "," + longi,
@@ -146,7 +147,7 @@ namespace SqlServerAdapter
 
         public async Task<EstructurasVista?> ObtenerEstructuraPorIdAsync(int idEstructura)
         {
-            string sqlQuery = @"SELECT a.id_estructura, a.nombre, a.id_procesoresponsable, a.id_gerenciadivision
+            string sqlQuery = @"SELECT a.id_estructura, a.nombre, a.id_procesoresponsable, a.id_gerenciadivision,
                                        a.latitud, a.longitud, a.coordenadas, a.id_municipio,
                                        b.id_linea, b.clave, b.descripcion , c.nombre municipio,
                                        d.id_estado, d.nombre estado    
@@ -154,8 +155,8 @@ namespace SqlServerAdapter
                                 JOIN ssf.linea b ON a.id_linea = b.id_linea
                                 JOIN ssf.municipios c ON a.id_municipio = c.id_municipio
                                 JOIN ssf.estadospais d ON c.id_estado = d.id_estado
-                                WHERE a.id_estructura = @pEstructura
-                                ORDER BY a.nombre";
+                                WHERE a.id_estructura = @pEstructura";
+                                //ORDER BY a.nombre";
 
             object[] parametros = new object[]
             {
@@ -166,9 +167,9 @@ namespace SqlServerAdapter
             return await _estructuraContext.EstructurasVistas.FromSqlRaw(sqlQuery, parametros).SingleOrDefaultAsync();
         }
 
-        public async Task<List<Estructura>> ObtenerEstructurasEnCoordenadasPorId(int estructura, string coordenadas)
+        public async Task<List<Estructura>> ObtenerOtrasEstructurasEnCoordenadasPorId(int estructura, string coordenadas)
         {
-            return await _estructuraContext.Estructuras.Where(x => x.IdEstructura == estructura && x.Coordenadas != coordenadas).ToListAsync();
+            return await _estructuraContext.Estructuras.Where(x => x.IdEstructura != estructura && x.Coordenadas == coordenadas).ToListAsync();
         }
 
         public async Task<List<Estructura>> ObtenerEstructurasEnCoordenadas(string coordenadas)

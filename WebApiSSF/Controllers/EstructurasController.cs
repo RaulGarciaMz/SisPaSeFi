@@ -122,20 +122,16 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                if (estructura.Latitud == null || estructura.Longitud == null) 
-                {
                     if (estructura.strCoordenadas == null || estructura.strCoordenadas == "") 
                     { 
                         return BadRequest("faltan coordenadas para la estructura");
                     }
 
-                    var coord = estructura.strCoordenadas.Split(",");
+                var coord = estructura.strCoordenadas.Split(",");
+                var lat = coord[0].Trim();
+                var longi = coord[1].Trim();
 
-                    estructura.Latitud = coord[0].Trim();
-                    estructura.Longitud = coord[1].Trim();
-                }
-
-                await _pp.AgregaAsync(estructura.intIdLinea, estructura.strNombre, estructura.intIdMunicipio, estructura.Latitud, estructura.Longitud, estructura.strUsuario);
+                await _pp.AgregaAsync(estructura.intIdLinea, estructura.strNombre, estructura.intIdMunicipio, lat, longi, estructura.strUsuario);
   
                 return Ok();
             }
@@ -149,33 +145,26 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza la ubicación de una estructura
         /// </summary>
-        /// <param name="id">Identificador de la estructura</param>
         /// <param name="estructura">Valores a modificar de la estructura</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
-        [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Put(int id, [FromBody] EstructuraDtoForUbicacionUpdate estructura)
+        public async Task<ActionResult> Put([FromBody] EstructuraDtoForUbicacionUpdate estructura)
         {
             try
             {
 
-                if (estructura.Latitud == null || estructura.Latitud == "" || estructura.Longitud == null || estructura.Longitud == "")
+                if (estructura.strCoordenadas == null || estructura.strCoordenadas == "")
                 {
-                    if (estructura.strCoordenadas == null || estructura.strCoordenadas == "")
-                    {
-                        return BadRequest("faltan coordenadas para la estructura");
-                    }
-
-                    var coord = estructura.strCoordenadas.Split(",");
-
-                    estructura.Latitud = coord[0].Trim();
-                    estructura.Longitud = coord[1].Trim();
+                    return BadRequest("faltan coordenadas para la estructura");
                 }
 
-                await _pp.ActualizaUbicacionAsync(estructura.intIdEstructura, estructura.strNombre, estructura.intIdMunicipio, estructura.Latitud, estructura.Longitud, estructura.strUsuario);
+                var coord = estructura.strCoordenadas.Split(",");
+                var lat = coord[0].Trim();
+                var longi = coord[1].Trim();
+                await _pp.ActualizaUbicacionAsync(estructura.intIdEstructura, estructura.strNombre, estructura.intIdMunicipio, lat, longi, estructura.strUsuario);
 
                 return Ok();
             }

@@ -18,7 +18,7 @@ namespace Domain.Ports.Driven
     {
         Task<List<EstructurasVista>> ObtenerEstructuraPorLineaAsync(int idLinea);
         Task<List<EstructurasVista>> ObtenerEstructuraPorLineaEnRutaAsync(int idLinea, int idRuta);
-        Task<List<Estructura>> ObtenerEstructurasEnCoordenadasPorId(int estructura, string coordenadas);
+        Task<List<Estructura>> ObtenerOtrasEstructurasEnCoordenadasPorId(int estructura, string coordenadas);
         Task<List<Estructura>> ObtenerEstructurasEnCoordenadas(string coordenadas);
         Task<List<EstructurasVista>> ObtenerEstructuraAlrededorDeCoordenadaAsync(float coordX, float coordY);
         Task<EstructurasVista?> ObtenerEstructuraPorIdAsync(int idEstructura);

@@ -70,32 +70,18 @@ namespace Domain.DTOs
         /// <summary>
         /// Identificador de la estructura
         /// </summary>
-        [Required]
         public int intIdEstructura { get; set; }
         /// <summary>
         /// Nombre de la estructura
         /// </summary>
-        [Required]
         public string strNombre { get; set; }
         /// <summary>
         /// Identificador del municipio
         /// </summary>
-        [Required]
         public int intIdMunicipio { get; set; }
-        /// <summary>
-        ///  Latitud donde se ubica la estructura
-        /// </summary>
-        //[Required]
-        public string Latitud { get; set; }
-        /// <summary>
-        ///  Longitud donde se ubica la estructura
-        /// </summary>
-        //[Required]
-        public string Longitud { get; set; }
         /// <summary>
         /// Usuario (usuario_nom o alias) del usuario que realiza la operación
         /// </summary>
-        [Required]
         public string strUsuario { get; set; }
         public string strCoordenadas { get; set; }
     }
@@ -105,28 +91,15 @@ namespace Domain.DTOs
         /// <summary>
         /// Identificador de la línea
         /// </summary>
-        [Required]
         public int intIdLinea { get; set; }
         /// <summary>
         /// Nombre de la estructura
         /// </summary>
-        [Required]
         public string strNombre { get; set; }
         /// <summary>
         /// Identificador del municipio
         /// </summary>
-        [Required]
         public int intIdMunicipio { get; set; }
-        /// <summary>
-        /// Latitud donde se ubica la estructura
-        /// </summary>
-        //[Required]
-        public string? Latitud { get; set; }
-        /// <summary>
-        /// Longitud donde se ubica la estructura
-        /// </summary>
-        //[Required]
-        public string? Longitud { get; set; }
         public string? strCoordenadas { get; set; }
         /// <summary>
         /// Usuario (usuario_nom o alias) del usuario que realiza la operación
