@@ -91,7 +91,7 @@ namespace DomainServices.DomServ
             return incids;
         }
 
-        public async Task ActualizaIncidenciaAsync(IncidenciasDtoForCreate i)
+        public async Task ActualizaIncidenciaAsync(IncidenciasDtoForUpdate i)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(i.strUsuario);
 
@@ -100,25 +100,11 @@ namespace DomainServices.DomServ
                 switch (i.strTipoIncidencia)
                 {
                     case "INSTALACION":
-                        await _repo.ActualizaReporteEnInstalacionAsync(i.intIdReporte, i.strDescripcionIncidencia, i.intIdPrioridadIncidencia, i.intIdClasificacionIncidencia, i.intIdEstadoIncidencia);
+                        await _repo.ActualizaReporteEnInstalacionAsync(i);
                         break;
                     case "ESTRUCTURA":
-                        await _repo.ActualizaReporteEnEstructuraAsync(i.intIdReporte, i.strDescripcionIncidencia, i.intIdPrioridadIncidencia, i.intIdClasificacionIncidencia, i.intIdEstadoIncidencia);
+                        await _repo.ActualizaReporteEnEstructuraAsync(i);
                         break;
-                }
-
-                //TODO falta implementar la inserción en tarjetainformativa reporte
-                if (i.intIdReporte > 0 && i.intIdTarjeta > 0)
-                {
-                    /*                    strInstruccionSQL = "INSERT INTO tarjetainformativareporte (idtarjeta,idreporte,idtiporeporte)
-                                                                    SELECT " & objIncidencia.intIdTarjeta & "
-                                                                    ," & intIdReporte & "
-                                                                    ,(SELECT idtiporeporte FROM tiporeporte WHERE descripcion = '" & objIncidencia.strTipoIncidencia & "') FROM(SELECT 1, 2, 3) AS tmp_name
-                                                                    WHERE NOT EXISTS(
-                                                                        SELECT idtarjeta FROM tarjetainformativareporte WHERE idtarjeta = " & objIncidencia.intIdTarjeta & "
-                                                                            AND idreporte = " & intIdReporte & "
-                                                                            AND idtiporeporte = (SELECT idtiporeporte FROM tiporeporte WHERE descripcion = '" & objIncidencia.strTipoIncidencia & "')
-                                                                    ) LIMIT 1; "*/
                 }
             }
         }
@@ -138,12 +124,6 @@ namespace DomainServices.DomServ
                     case "ESTRUCTURA":
                         idReporte = await AgregaIncidenciaDeEstructuraAsync(i);
                         break;
-                }
-
-                //TODO falta revisar si es correcta esta funcionalidad
-                if (idReporte != -1 && i.intIdTarjeta > 0)
-                {
-                    await _repo.AgregaTarjetaInformativaReporteAsync(i.intIdTarjeta, idReporte, i.strTipoIncidencia);
                 }
             }
         }
@@ -186,7 +166,7 @@ namespace DomainServices.DomServ
                 {
                     case 0:
                         //No existe incidencia reportada
-                        var rnvo = await _repo.AgregaReporteEstructuraAsync(i.intIdActivo, i.intIdReporte, i.strDescripcionIncidencia, i.intIdEstadoIncidencia, i.intIdPrioridadIncidencia, i.intIdClasificacionIncidencia);
+                        var rnvo = await _repo.AgregaReporteEstructuraAsync(i);
                         idReporte = rnvo.IdReporte;
                         break;
                     default:
@@ -194,7 +174,7 @@ namespace DomainServices.DomServ
                         idReporte = abiertos[0].id_reporte;
                         var incidenciaActualizada = abiertos[0].incidencia + " / " + i.strDescripcionIncidencia;
 
-                        await _repo.ActualizaReporteEnEstructuraPorIncidenciaExistenteAsync(idReporte, incidenciaActualizada, i.intIdPrioridadIncidencia);
+                        await _repo.ActualizaReporteEnEstructuraPorIncidenciaExistenteAsync(idReporte, incidenciaActualizada, i.intIdPrioridadIncidencia, i.intIdTarjeta, i.strTipoIncidencia);
                         break;
                 }
             }

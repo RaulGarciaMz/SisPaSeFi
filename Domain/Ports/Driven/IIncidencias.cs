@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.Entities.Vistas;
 
 namespace Domain.Ports.Driven
@@ -6,12 +7,12 @@ namespace Domain.Ports.Driven
     public interface IIncidenciasCommand
     {
         Task<ReportePunto> AgregaReporteInstalacionAsync(int idPunto, int idNota, string incidencia, int edoIncidencia, int prioridad, int clasificacion);
-        Task<ReporteEstructura> AgregaReporteEstructuraAsync(int idEstructura, int idNota, string incidencia, int edoIncidencia, int prioridad, int clasificacion);
+        Task<ReporteEstructura> AgregaReporteEstructuraAsync(IncidenciasDtoForCreate incidencia);
         Task ActualizaReporteEnInstalacionPorIncidenciaExistenteAsync(int idReporte, string incidencia, int prioridad);
-        Task ActualizaReporteEnInstalacionAsync(int idReporte, string incidencia, int prioridad, int clasificacion, int estado);
-        Task ActualizaReporteEnEstructuraPorIncidenciaExistenteAsync(int idReporte, string incidencia, int prioridad);
-        Task ActualizaReporteEnEstructuraAsync(int idReporte, string incidencia, int prioridad, int clasificacion, int estado);
-        Task AgregaTarjetaInformativaReporteAsync(int idTarjeta, int idReporte, string tipoIncidencia);
+        Task ActualizaReporteEnInstalacionAsync(IncidenciasDtoForUpdate incidencia);
+        Task ActualizaReporteEnEstructuraPorIncidenciaExistenteAsync(int idReporte, string incidencia, int prioridad, int idTarjeta, string tipo);
+        Task ActualizaReporteEnEstructuraAsync(IncidenciasDtoForUpdate incidencia);
+        //Task AgregaTarjetaInformativaReporteAsync(int idTarjeta, int idReporte, string tipoIncidencia);
     }
 
     public interface IIncidenciasQuery

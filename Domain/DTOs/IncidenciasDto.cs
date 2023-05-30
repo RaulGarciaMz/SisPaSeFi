@@ -77,19 +77,19 @@
         public int intIdPrioridadIncidencia { get; set; }
         public int intIdClasificacionIncidencia { get; set; }
         public string strUsuario { get; set; }
-        public string strTipoIncidencia { get;}
-        public int intIdTarjeta { get; }
+        public string strTipoIncidencia { get; set; }
+        public int intIdTarjeta { get; set; }
     }
 
     public class IncidenciasDtoForUpdate
     {
-        public int IdReporte { get; set; }
-        public string DescripcionIncidencia { get; set; }
-        public int EstadoIncidencia { get; set; }
-        public int PrioridadIncidencia { get; set; }
-        public int IdClasificacionIncidencia { get; set; }
-        public string Usuario { get; set; }
-        public string TipoIncidencia { get; }
-        public int IdTarjeta { get; }
+        public int intIdReporte { get; set; }
+        public string strDescripcionIncidencia { get; set; }
+        public int intIdEstadoIncidencia { get; set; }
+        public int intIdPrioridadIncidencia { get; set; }
+        public int intIdClasificacionIncidencia { get; set; }
+        public string strUsuario { get; set; }
+        public string strTipoIncidencia { get; set; }
+        public int intIdTarjeta { get; set; }
     }
 }

@@ -92,7 +92,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> Put([FromBody] IncidenciasDtoForCreate v)
+        public async Task<ActionResult> Put([FromBody] IncidenciasDtoForUpdate v)
         {
             try
             {

@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTOs;
+using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
@@ -18,7 +19,7 @@ namespace SqlServerAdapter
 
         public async Task<List<IncidenciaGeneralVista>> ObtenerIncidenciasAbiertasEnInstalacionAsync(int idActivo)
         {
-            
+
             string sqlQuery = @"SELECT a.id_reportepunto id_reporte, a.id_nota, b.ubicacion, '' as estructura, 
                                        b.coordenadas, b.id_procesoresponsable, b.id_gerenciadivision, a.incidencia,
                                        a.estadoincidencia, d.descripcionestado, a.ultimaactualizacion, a.prioridadincidencia,
@@ -343,52 +344,66 @@ namespace SqlServerAdapter
                 await _incidenciaContext.SaveChangesAsync();
             }
         }
-
-        public async Task ActualizaReporteEnInstalacionAsync(int idReporte, string incidencia, int prioridad, int clasificacion, int estado)
+        
+        public async Task ActualizaReporteEnEstructuraPorIncidenciaExistenteAsync(int idReporte, string incidencia, int prioridad, int idTarjeta, string tipo)
         {
-            var reporte = await _incidenciaContext.ReportesInstalaciones.Where(x => x.IdReportePunto == idReporte).SingleOrDefaultAsync();   
+            var reporte = await _incidenciaContext.ReportesEstructuras.Where(x => x.IdReporte == idReporte).SingleOrDefaultAsync();
 
-            if (reporte != null) 
+            if (reporte != null)
             {
                 reporte.Incidencia = incidencia;
                 reporte.PrioridadIncidencia = prioridad;
-                reporte.IdClasificacionIncidencia = clasificacion;
-                reporte.EstadoIncidencia = estado;
+                reporte.UltimaActualizacion = DateTime.UtcNow;
+
+                _incidenciaContext.ReportesEstructuras.Update(reporte);
+
+                var up = new IncidenciasDtoForUpdate()
+                {
+                    intIdReporte = idReporte,
+                    intIdTarjeta = idTarjeta,
+                    strTipoIncidencia = tipo
+                };
+
+                await AgregaTarjetaInformativaReporteEnMemoriaAsync(up);
+
+                await _incidenciaContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task ActualizaReporteEnInstalacionAsync(IncidenciasDtoForUpdate i)
+        {
+            var reporte = await _incidenciaContext.ReportesInstalaciones.Where(x => x.IdReportePunto == i.intIdReporte).SingleOrDefaultAsync();
+
+            if (reporte != null)
+            {
+                reporte.Incidencia = i.strDescripcionIncidencia;
+                reporte.PrioridadIncidencia = i.intIdPrioridadIncidencia;
+                reporte.IdClasificacionIncidencia = i.intIdClasificacionIncidencia;
+                reporte.EstadoIncidencia = i.intIdEstadoIncidencia;
                 reporte.UltimaActualizacion = DateTime.UtcNow;
 
                 _incidenciaContext.ReportesInstalaciones.Update(reporte);
+                await AgregaTarjetaInformativaReporteEnMemoriaAsync(i);
+
                 await _incidenciaContext.SaveChangesAsync();
             }
         }
 
-        public async Task ActualizaReporteEnEstructuraPorIncidenciaExistenteAsync(int idReporte, string incidencia, int prioridad)
+        public async Task ActualizaReporteEnEstructuraAsync(IncidenciasDtoForUpdate i)
         {
-            var reporte = await _incidenciaContext.ReportesEstructuras.Where(x => x.IdReporte == idReporte).SingleOrDefaultAsync();
+            var reporte = await _incidenciaContext.ReportesEstructuras.Where(x => x.IdReporte == i.intIdReporte).SingleOrDefaultAsync();
 
             if (reporte != null)
             {
-                reporte.Incidencia = incidencia;
-                reporte.PrioridadIncidencia = prioridad;
+                reporte.Incidencia = i.strDescripcionIncidencia;
+                reporte.PrioridadIncidencia = i.intIdPrioridadIncidencia;
+                reporte.IdClasificacionIncidencia = i.intIdClasificacionIncidencia;
+                reporte.EstadoIncidencia = i.intIdEstadoIncidencia;
                 reporte.UltimaActualizacion = DateTime.UtcNow;
 
                 _incidenciaContext.ReportesEstructuras.Update(reporte);
-                await _incidenciaContext.SaveChangesAsync();
-            }
-        }
+                await AgregaTarjetaInformativaReporteEnMemoriaAsync(i);
 
-        public async Task ActualizaReporteEnEstructuraAsync(int idReporte, string incidencia, int prioridad, int clasificacion, int estado)
-        {
-            var reporte = await _incidenciaContext.ReportesEstructuras.Where(x => x.IdReporte == idReporte).SingleOrDefaultAsync();
-
-            if (reporte != null)
-            {
-                reporte.Incidencia = incidencia;
-                reporte.PrioridadIncidencia = prioridad;
-                reporte.IdClasificacionIncidencia = clasificacion;
-                reporte.EstadoIncidencia = estado;
-                reporte.UltimaActualizacion = DateTime.UtcNow;
-
-                _incidenciaContext.ReportesEstructuras.Update(reporte);
                 await _incidenciaContext.SaveChangesAsync();
             }
         }
@@ -415,16 +430,16 @@ namespace SqlServerAdapter
             return reporte;
         }
 
-        public async Task<ReporteEstructura> AgregaReporteEstructuraAsync(int idEstructura, int idNota, string incidencia, int edoIncidencia, int prioridad, int clasificacion)
+        public async Task<ReporteEstructura> AgregaReporteEstructuraAsync(IncidenciasDtoForCreate i)
         {
             var reporte = new ReporteEstructura()
             {
-                IdEstructura = idEstructura,
-                IdNota = idNota,
-                Incidencia = incidencia,
-                EstadoIncidencia = edoIncidencia,
-                PrioridadIncidencia = prioridad,
-                IdClasificacionIncidencia = clasificacion,
+                IdEstructura = i.intIdActivo,
+                IdNota = i.intIdTarjeta,
+                Incidencia = i.strDescripcionIncidencia,
+                EstadoIncidencia = i.intIdEstadoIncidencia,
+                PrioridadIncidencia = i.intIdPrioridadIncidencia,
+                IdClasificacionIncidencia = i.intIdClasificacionIncidencia,
                 UltimaActualizacion = DateTime.UtcNow,
                 //Campos no nulos
                 UltimoRegistroEnBitacora = DateTime.UtcNow
@@ -432,36 +447,48 @@ namespace SqlServerAdapter
 
             _incidenciaContext.ReportesEstructuras.Add(reporte);
 
+            var up = new IncidenciasDtoForUpdate() 
+            {
+                intIdReporte = i.intIdReporte,
+                intIdTarjeta = i.intIdTarjeta,
+                strTipoIncidencia = i.strTipoIncidencia,
+            };
+
+            await AgregaTarjetaInformativaReporteEnMemoriaAsync(up);
+
             await _incidenciaContext.SaveChangesAsync();
 
             return reporte;
         }
 
-
-        //TODO Revisar funcionalidad porque la consulta original está rara
-        public async Task AgregaTarjetaInformativaReporteAsync(int idTarjeta, int idReporte, string tipoIncidencia)
+        private async Task<bool> ExisteTarjetaInformativaReporte(int idTarjeta, int idReporte, int idTipo)
         {
-            var tr = await _incidenciaContext.TiposReporte.Where(x => x.Descripcion == tipoIncidencia).FirstOrDefaultAsync();
+            return await _incidenciaContext.TarjetaInformativaReportes.Where(x => x.Idtarjeta == idTarjeta && x.Idreporte == idReporte && x.Idtiporeporte == idTipo).AnyAsync();
+        }
 
-            if (tr != null)
+        private async Task AgregaTarjetaInformativaReporteEnMemoriaAsync(IncidenciasDtoForUpdate i)
+        {
+            if (i.intIdReporte > 0 && i.intIdTarjeta > 0)
             {
-                var existe = await _incidenciaContext.TarjetaInformativaReportes.AnyAsync(x => x.Idtarjeta == idTarjeta && x.Idreporte == idReporte && x.Idtiporeporte == tr.Idtiporeporte);
+                var t = await _incidenciaContext.TiposReporte.Where(x => x.Descripcion == i.strTipoIncidencia).FirstOrDefaultAsync();
 
-                if (!existe)
+                if (t != null)
                 {
-                    var tir = new TarjetaInformativaReporte() 
+                    var existe = await ExisteTarjetaInformativaReporte(i.intIdTarjeta, i.intIdReporte, t.Idtiporeporte);
+
+                    if (!existe)
                     {
-                        Idtarjeta = idTarjeta,
-                        Idreporte = idReporte,
-                        Idtiporeporte = tr.Idtiporeporte
-                    };
+                        var tir = new TarjetaInformativaReporte()
+                        {
+                            Idtarjeta = i.intIdTarjeta,
+                            Idreporte = i.intIdReporte,
+                            Idtiporeporte = t.Idtiporeporte
+                        };
 
-                    _incidenciaContext.TarjetaInformativaReportes.Add(tir);
-
-                    await _incidenciaContext.SaveChangesAsync();
+                        _incidenciaContext.TarjetaInformativaReportes.Add(tir);
+                    }
                 }
             }
         }
-
     }
 }
