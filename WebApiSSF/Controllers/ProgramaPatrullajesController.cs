@@ -34,7 +34,7 @@ namespace WebApiSSF.Controllers
         /// <param name="anio">Año</param>
         /// <param name="mes">Mes</param>
         /// <param name="dia">Día</param>
-        /// <param name="periodo">Indicador del tipo de período que se requiere (0 - Un día, 1 - Un mes, 2 - Todos). Sólo se usa si las opciones son 1, 2, 3, 4 u 11. Si la opción es 11, elvalor representa el identificador de la zona militar</param>
+        /// <param name="periodo">Indicador del tipo de período que se requiere (1 - Un día, 2 - Un mes, 3 - Todos). Sólo se usa si las opciones son 1, 2, 3, 4 u 11. Si la opción es 11, elvalor representa el identificador de la zona militar</param>
         /// <returns></returns>
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
