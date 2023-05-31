@@ -1,5 +1,4 @@
 ﻿using Domain.DTOs;
-using Domain.DTOs.catalogos;
 using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Enums;
@@ -21,9 +20,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>Agrega</c> Implementa la interfaz para el caso de uso de agregar una ruta junto con sus itinerarios
         /// </summary>
-        public async Task AgregaAsync(RutaDto pp, string usuario)
+        public async Task AgregaAsync(RutaDtoForCreate pp)
         {
-            if (await EsUsuarioConfiguradorAsync(usuario))
+            if (await EsUsuarioConfiguradorAsync(pp.strUsuario))
             {
                 var regionssf = pp.intRegionSSF.ToString();
                 var regionsMilsdn = pp.intRegionMilitarSDN.ToString();
@@ -34,10 +33,12 @@ namespace DomainServices.DomServ
                 }
 
                 int totalRutas = await CalculaTotalRutasAsync(pp.intIdTipoPatrullaje, regionsMilsdn);
-                pp.strClave = await GeneraClaveRutaAsync(pp.intIdTipoPatrullaje, regionsMilsdn, pp.intZonaMilitarSDN, totalRutas);
-                pp.intTotalRutasRegionMilitarSDN = totalRutas;
+                var clave = await GeneraClaveRutaAsync(pp.intIdTipoPatrullaje, regionsMilsdn, pp.intZonaMilitarSDN, totalRutas);
 
-                var rp = ConvierteRutaDto(pp);
+                var rp = ConvierteRutaDtoForCreate(pp);
+                rp.Clave = clave;
+                rp.TotalRutasRegionMilitarSdn = totalRutas;
+
                 var itinerarios = ConvierteRecorridosAItinearios(pp.objRecorridoRuta);
 
                 await _repo.AgregaTransacionalAsync(rp, itinerarios);
@@ -47,9 +48,9 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>Update</c> Implementa la interfaz para el caso de uso de actualizar una ruta
         /// </summary>
-        public async Task UpdateAsync(RutaDto pp, string usuario)
+        public async Task UpdateAsync(RutaDtoForUpdate pp)
         {
-            if (await EsUsuarioConfiguradorAsync(usuario))
+            if (await EsUsuarioConfiguradorAsync(pp.strUsuario))
             {
                 if (await ExisteRutaConMismaClaveAsync(pp.intIdRuta, pp.strClave))
                 {
@@ -346,7 +347,7 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>AsignaClaveRuta</c> cambia la clave de la ruta en caso de requerirse para una actualización
         /// </summary>
-        private async Task<string> AsignaClaveRutaAsync(RutaDto pp, int totalRutas)
+        private async Task<string> AsignaClaveRutaAsync(RutaDtoForUpdate pp, int totalRutas)
         {
             var clave = await GeneraPrefijoClaveAsync(pp.intIdTipoPatrullaje, totalRutas);
 
@@ -452,11 +453,10 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>ConvierteRutaDto</c> Convierte un objeto ruta de visualización (DTO) a un objeto Ruta del domino
         /// </summary>
-        private Ruta ConvierteRutaDto(RutaDto r)
+        private Ruta ConvierteRutaDtoForCreate(RutaDtoForCreate r)
         {
             return new Ruta()
             {
-                Clave = r.strClave,
                 RegionMilitarSdn = r.intRegionMilitarSDN.ToString(),
                 RegionSsf = r.intRegionSSF.ToString(),
                 IdTipoPatrullaje = r.intIdTipoPatrullaje,

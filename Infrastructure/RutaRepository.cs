@@ -1,19 +1,10 @@
 ﻿using Domain.DTOs;
-using Domain.DTOs.catalogos;
 using Domain.Entities;
 using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
-using Domain.Ports.Driving;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SqlServerAdapter.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Intrinsics.X86;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlServerAdapter
 {
@@ -60,7 +51,7 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>UpdateAsync</c> Implementa la interfaz para actualizar una ruta junto con sus itinerarios
         /// </summary>
-        public async Task UpdateAsync(RutaDto r)
+        public async Task UpdateAsync(RutaDtoForUpdate r)
         {
             var ruta = await _rutaContext.Rutas.Where(x => x.IdRuta == r.intIdRuta).SingleOrDefaultAsync();
 

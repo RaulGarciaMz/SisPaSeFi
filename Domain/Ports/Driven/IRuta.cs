@@ -7,7 +7,7 @@ namespace Domain.Ports.Driven
     public interface IRutaCommand
     {
         Task AgregaTransacionalAsync(Ruta r, List<Itinerario> itin);
-        Task UpdateAsync(RutaDto r);
+        Task UpdateAsync(RutaDtoForUpdate r);
         Task ReiniciaRegionMilitarAsync(string regionMilitar, string tipoPatrullaje);
         Task DeleteAsync(int id);
     }

@@ -4,8 +4,8 @@ namespace Domain.Ports.Driving
 {
     public interface IRutaDtoCommand
     {
-        Task AgregaAsync(RutaDto pp, string usuario);
-        Task UpdateAsync(RutaDto pp, string usuario);
+        Task AgregaAsync(RutaDtoForCreate pp);
+        Task UpdateAsync(RutaDtoForUpdate pp);
         Task ReiniciaRegionMilitarAsync(string opcion, string regionMilitar, string tipoPatrullaje, string usuario);
         Task DeleteAsync(int id, string usuario);
     }
