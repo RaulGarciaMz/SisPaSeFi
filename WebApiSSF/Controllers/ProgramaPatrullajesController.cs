@@ -104,18 +104,18 @@ namespace WebApiSSF.Controllers
         /// <param name="opcion">Tipo de elemento a registrar ("Propuesta" o "Programa") </param>
         /// <param name="clase">Clase de patrullaje a registrar ("EXTRAORDINARIO" o "PROGRAMADO") </param>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
-        /// <param name="p">Programa de patrullaje a registrar</param>
+        /// <param name="ProgramaPatrullaje">Programa de patrullaje a registrar</param>
         /// <returns></returns>   
         //[Route("programas")]
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PostProgramaOrPropuesta([Required] string opcion,  [Required] string clase,  [Required] string usuario, [FromBody] ProgramaDtoForCreateWithListas p)
+        public async Task<ActionResult> PostProgramaOrPropuesta([FromBody] ProgramaDtoForCreateWithListas ProgramaPatrullaje, [Required] string opcion,  [Required] string usuario,  string clase ="" )
         {
             try
             {
-                await _pp.AgregaProgramaAsync(opcion, clase, p);
+                await _pp.AgregaProgramaAsync(opcion, clase, ProgramaPatrullaje);
                 return StatusCode(201, "Ok");
             }
             catch (Exception ex)
@@ -129,18 +129,18 @@ namespace WebApiSSF.Controllers
         /// Registra una propuesta de patrullaje como programa de patrullaje
         /// </summary>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
-        /// <param name="p">Propuesta de patrullaje a registrar</param>
+        /// <param name="PropuestaPatrullaje">Propuesta de patrullaje a registrar</param>
         /// <returns></returns>
         [Route("propuestas")]
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PostPropuestas([Required] string usuario, [FromBody] List<ProgramaDtoForCreate> p)
+        public async Task<ActionResult> PostPropuestas([Required] string usuario, [FromBody] List<ProgramaDtoForCreate> PropuestaPatrullaje)
         {
             try
             {
-                await _pp.AgregaPropuestasComoProgramasAsync(p, usuario);
+                await _pp.AgregaPropuestasComoProgramasAsync(PropuestaPatrullaje, usuario);
                 return StatusCode(201, "Ok");
             }
             catch (Exception ex)
