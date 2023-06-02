@@ -23,7 +23,7 @@ namespace DomainServices.DomServ
 
             if (user != null)
             {
-                await _repo.AgregaAsync(uv.IdPrograma, uv.IdVehiculo, uv.IdUsuarioVehiculo, uv.KmInicio, uv.KmFin, uv.ConsumoCombustible, uv.EstadoVehiculo);
+                await _repo.AgregaAsync(uv.IdPrograma, uv.IdVehiculo, user.IdUsuario, uv.KmInicio, uv.KmFin, uv.ConsumoCombustible, uv.EstadoVehiculo);
             }
         }
 
