@@ -26,7 +26,7 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Obtiene los datos de un usuario registrado
         /// </summary>
-        /// <param name="u">Usuario a confirmar registro</param>
+        /// <param name="usuario">Usuario a confirmar registro</param>
         /// <param name="pathLdap">Ruta del directorio activo</param>
         /// <returns></returns>
         [HttpPost]
@@ -34,17 +34,17 @@ namespace WebApiSSF.Controllers
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UsuarioRegistradoDto>> ObtenerUsuarioRegistrado(UsuarioDtoForGet u, [Required] string pathLdap)
+        public async Task<ActionResult<UsuarioRegistradoDto>> ObtenerUsuarioRegistrado([FromBody] UsuarioDtoForGet usuario, [Required] string pathLdap)
         {
             try
             {
-                var us = await _pp.ObtenerUsuarioRegistradoAsync(u, pathLdap);
+                var us = await _pp.ObtenerUsuarioRegistradoAsync(usuario, pathLdap);
 
                 return Ok(us);
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener incidencias para el usuario: {u.strNombreDeUsuario} ", ex);
+                _log.LogError($"error al obtener incidencias para el usuario: {usuario.strNombreDeUsuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message );
             }
         }
@@ -52,23 +52,23 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Actualiza el registro de usuario y sus tablas asociadas acorde a la opción indicada
         /// </summary>
-        /// <param name="u">Usuario a actualizar</param>
+        /// <param name="objUsuario">Usuario a actualizar</param>
         /// <param name="opcion">Opción de actualización ("RegistrarIntentoFallido", "RegistrarAcceso", "RegistrarEvento", "RegistrarFinSesion", "RevisarAvisoLegal", "VerificarCorreoElectronico", "AceptarAvisoLegal", "RegistrarCorreoElectronico")</param>
         /// <returns></returns>
         [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<string>> ActualizaPorOpcion(UsuarioForPostDto u, [Required] string opcion)
+        public async Task<ActionResult<string>> ActualizaPorOpcion([FromBody] UsuarioForPostDto objUsuario, [Required] string opcion)
         {
             try
             {
-                var res = await _pp.ActualizaRegistroPorOpcionAsync(opcion, u);
+                var res = await _pp.ActualizaRegistroPorOpcionAsync(opcion, objUsuario);
                 return Ok(res);
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al obtener incidencias para el usuario: {u.strNombreDeUsuario} ", ex);
+                _log.LogError($"error al obtener incidencias para el usuario: {objUsuario.strNombreDeUsuario} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
