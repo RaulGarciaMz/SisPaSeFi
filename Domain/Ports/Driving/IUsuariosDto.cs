@@ -7,7 +7,7 @@ namespace Domain.Ports.Driving
 /*        Task BloqueaUsuarioAsync(string usuario);
         Task DesbloqueaUsuarioAsync(string usuario);
         Task ReiniciaClaveUsuarioAsync(string usuario);*/
-        Task ActualizaUsuariosPorOpcionAsync(string opcion, string usuario, List<UsuarioDto> users);
+        Task ActualizaUsuariosPorOpcionAsync(string opcion, string usuario, List<UsuarioDtoForUpdate> users);
         Task AgregaPorOpcionAsync(string opcion, string dato, string usuario, UsuarioDto useDto);
         Task BorraPorOpcionAsync(string opcion, string dato, string usuario);
     }

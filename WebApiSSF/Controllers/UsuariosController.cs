@@ -84,16 +84,17 @@ namespace WebApiSSF.Controllers
         /// </summary>
         /// <param name="opcion">Opción de actualización ("CambiarClave", "Desbloquear", "Bloquear", "ReiniciarClave", "Actualizar", "RegistrarComandancia", "QuitarComandancia", "RegistrarRol", "QuitarRol", "RegistrarGrupoCorreo", "QuitarGrupoCorreo")</param>
         /// <param name="usuario">Usuario (alias - usuario_nom) que realiza la actualización</param>
+        /// /// <param name="colUsuarios">Lista de usuarios</param>
         /// <returns></returns>
         [HttpPut]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> ActualizaUsuariosPorOpcion([Required] string opcion, string usuario, [FromBody] List<UsuarioDto> users)
+        public async Task<ActionResult> ActualizaUsuariosPorOpcion([Required] string opcion, string usuario, [FromBody] List<UsuarioDtoForUpdate> colUsuarios)
         {
             try
             {
-                await _pp.ActualizaUsuariosPorOpcionAsync(opcion, usuario, users);
+                await _pp.ActualizaUsuariosPorOpcionAsync(opcion, usuario, colUsuarios);
                 return Ok();
             }
             catch (Exception ex)

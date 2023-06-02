@@ -16,7 +16,7 @@ namespace DomainServices.DomServ
             _repo = repo;
         }
 
-        public async Task ActualizaUsuariosPorOpcionAsync(string opcion, string usuario, List<UsuarioDto> users)
+        public async Task ActualizaUsuariosPorOpcionAsync(string opcion, string usuario, List<UsuarioDtoForUpdate> users)
         {
             var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
             if (user != null)
@@ -69,7 +69,6 @@ namespace DomainServices.DomServ
                             break;
                     }
                 }
-
             }
         }
 
@@ -220,14 +219,14 @@ namespace DomainServices.DomServ
             return ConvierteListaUsuarioToDto(users);
         }
 
-        private async Task CambiaClaveDeUsuarioAsync(List<UsuarioDto> users, string usuario)
+        private async Task CambiaClaveDeUsuarioAsync(List<UsuarioDtoForUpdate> users, string usuario)
         { 
             if(users.Count() > 1) 
             {
                 var encr = new Encriptador();
 
-                var cveDesencriptada1 = encr.Desencriptar(users[0].strClave);
-                var cveDesencriptada2 = encr.Desencriptar(users[1].strClave);
+                var cveDesencriptada1 = encr.Desencriptar(users[0].strClaveEncriptada);
+                var cveDesencriptada2 = encr.Desencriptar(users[1].strClaveEncriptada);
 
                 var datosClave1 = cveDesencriptada1.Split("!#");
                 var datosClave2 = cveDesencriptada2.Split("!#");
@@ -250,7 +249,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        private async Task DesbloqueaListaDeUsuariosAsync(List<UsuarioDto> users)
+        private async Task DesbloqueaListaDeUsuariosAsync(List<UsuarioDtoForUpdate> users)
         {
             var desbloquear = new List<string>();
             foreach (var u in users)
@@ -261,7 +260,7 @@ namespace DomainServices.DomServ
             await _repo.ActualizaListasDeUsuariosDesbloquearAsync(desbloquear);
         }
 
-        private async Task BloqueaListaDeUsuariosAsync(List<UsuarioDto> users)
+        private async Task BloqueaListaDeUsuariosAsync(List<UsuarioDtoForUpdate> users)
         {
             var bloquear = new List<string>();
             foreach (var u in users)
@@ -272,7 +271,7 @@ namespace DomainServices.DomServ
             await _repo.ActualizaListasDeUsuariosBloquearAsync(bloquear);
         }
 
-        private async Task ReiniciarClaveDeListaUsuariosAsync(List<UsuarioDto> users)
+        private async Task ReiniciarClaveDeListaUsuariosAsync(List<UsuarioDtoForUpdate> users)
         {
             var bloquear = new List<string>();
             foreach (var u in users)
@@ -283,7 +282,7 @@ namespace DomainServices.DomServ
             await _repo.ActualizaListasDeUsuariosReiniciarClaveAsync(bloquear);
         }
 
-        private async Task RegistraListaDeUsuariosComandanciaAsync(List<UsuarioDto> users, int idComandancia)
+        private async Task RegistraListaDeUsuariosComandanciaAsync(List<UsuarioDtoForUpdate> users, int idComandancia)
         {
             var usToRegistrar = new List<UsuarioComandancia>();
             foreach (var u in users)
@@ -305,7 +304,7 @@ namespace DomainServices.DomServ
             await _repo.AgregaListaDeUsuariosComandanciaAsync(usToRegistrar);
         }
 
-        private async Task BorraListaDeUsuariosComandanciaAsync(List<UsuarioDto> users, int idComandancia)
+        private async Task BorraListaDeUsuariosComandanciaAsync(List<UsuarioDtoForUpdate> users, int idComandancia)
         {
             var usToBorrar = new List<UsuarioComandancia>();
             foreach (var u in users)
@@ -324,7 +323,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        private async Task RegistraListaDeUsuariosRolAsync(List<UsuarioDto> users, int idRol)
+        private async Task RegistraListaDeUsuariosRolAsync(List<UsuarioDtoForUpdate> users, int idRol)
         {
             var usToRegistrar = new List<UsuarioRol>();
             foreach (var u in users)
@@ -346,7 +345,7 @@ namespace DomainServices.DomServ
             await _repo.AgregaListaDeUsuariosRolAsync(usToRegistrar);
         }
 
-        private async Task BorraListaDeUsuariosRolAsync(List<UsuarioDto> users, int idComandancia)
+        private async Task BorraListaDeUsuariosRolAsync(List<UsuarioDtoForUpdate> users, int idComandancia)
         {
             var usToBorrar = new List<UsuarioRol>();
             foreach (var u in users)
@@ -365,7 +364,7 @@ namespace DomainServices.DomServ
             }
         }
 
-        private async Task RegistraListaDeUsuarioGrupoCorreoAsync(List<UsuarioDto> users, int idGrupo)
+        private async Task RegistraListaDeUsuarioGrupoCorreoAsync(List<UsuarioDtoForUpdate> users, int idGrupo)
         {
             var usToRegistrar = new List<UsuarioGrupoCorreoElectronico>();
             foreach (var u in users)
@@ -387,7 +386,7 @@ namespace DomainServices.DomServ
             await _repo.AgregaListaDeUsuariosGrupoCorreoElectronicoAsync(usToRegistrar);
         }
 
-        private async Task BorraListaDeUsuarioGrupoCorreoAsync(List<UsuarioDto> users, int idGrupo)
+        private async Task BorraListaDeUsuarioGrupoCorreoAsync(List<UsuarioDtoForUpdate> users, int idGrupo)
         {
             var usToBorrar = new List<UsuarioGrupoCorreoElectronico>();
             foreach (var u in users)

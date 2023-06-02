@@ -14,7 +14,7 @@ namespace Domain.Ports.Driven
         Task ActualizaListasDeUsuariosDesbloquearAsync(List<string> desbloquear);
         Task ActualizaListasDeUsuariosBloquearAsync(List<string> bloquear);
         Task ActualizaListasDeUsuariosReiniciarClaveAsync(List<string> reiniciar);
-        Task ActualizaListasDeUsuariosAsync(List<UsuarioDto> usuarios);
+        Task ActualizaListasDeUsuariosAsync(List<UsuarioDtoForUpdate> usuarios);
         Task ActualizaClaveDeUsuario(string usuario, string cveNueva, string cveAnterior);
 
     }

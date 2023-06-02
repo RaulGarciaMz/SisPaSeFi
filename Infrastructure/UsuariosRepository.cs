@@ -66,7 +66,7 @@ namespace SqlServerAdapter
             }
         }
 
-        public async Task ActualizaListasDeUsuariosAsync(List<UsuarioDto> lstUsuarios)
+        public async Task ActualizaListasDeUsuariosAsync(List<UsuarioDtoForUpdate> lstUsuarios)
         {
             if (lstUsuarios.Count > 0)
             {
