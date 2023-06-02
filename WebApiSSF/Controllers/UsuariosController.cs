@@ -50,7 +50,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al obtener los usuarios para opción: {opcion}, criterio: {criterio}, usuario: {usuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
 
@@ -75,7 +75,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al agregar el usuario ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
 
@@ -100,7 +100,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al actualizar el usuario ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
 
@@ -124,7 +124,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al eliminar usuario para la opcion: {opcion}, dato: {dato}, usuario: {usuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
 
