@@ -14,7 +14,7 @@ namespace Domain.Ports.Driving
 
     public interface IUsuariosDtoQuery
     {
-        Task<List<UsuarioDto>> ObtenerUsuarioPorOpcionAsync(string opcion, string criterio, string usuario);
+        Task<List<UsuarioDtoForGetListas>> ObtenerUsuarioPorOpcionAsync(string opcion, string criterio, string usuario);
         //Task<UsuarioDto?> ObtenerUsuarioPorCriterioAsync(string criterio);
         //Task<List<UsuarioDto>> ObtenerUsuariosPorCriterioAsync(string criterio);
         // Task<List<UsuarioDto>> ObtenerUsuarioPorOpcionAsync(string opcion, string criterio, string usuario);

@@ -55,6 +55,55 @@
         public string strClave { get; set; }
     }
 
+    public class UsuarioDtoForGetListas
+    {
+        /// <summary>
+        /// Identificador del usuario
+        /// </summary>
+        public int intIdUsuario { get; set; }
+        /// <summary>
+        /// Nombre del usuario para la cuenta registrada
+        /// </summary>
+        public string? strNombreDeUsuario { get; set; }
+        /// <summary>
+        /// Nombre real del usuario
+        /// </summary>
+        public string? strNombre { get; set; }
+        /// <summary>
+        /// Apellido paterno del usuario
+        /// </summary>
+        public string? strApellido1 { get; set; }
+        /// <summary>
+        /// Apellido materno del usuario
+        /// </summary>
+        public string? strApellido2 { get; set; }
+        /// <summary>
+        /// Correo electrónico del usuario
+        /// </summary>
+        public string? strCorreoElectronico { get; set; }
+        /// <summary>
+        /// Número de celular del usuario
+        /// </summary>
+        public string? strCel { get; set; }
+        /// <summary>
+        /// Indicador del estado como configurador del usuario (1 - es configurador)
+        /// </summary>
+        public int? intConfigurador { get; set; }
+
+        /// <summary>
+        /// Indicador del estado del usuario (bloqueado o desbloqueado)
+        /// </summary>
+        public int intDesbloquearRegistros { get; set; }
+        /// <summary>
+        /// Indicador de la región SSF
+        /// </summary>
+        public int intRegionSSF { get; set; }
+        /// <summary>
+        /// Tiempo de espera de la sesión del usuario
+        /// </summary>
+        public int intTiempoEspera { get; set; }
+    }
+
     public class UsuarioDtoForUpdate
     {
         /// <summary>

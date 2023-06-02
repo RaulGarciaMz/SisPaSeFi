@@ -166,10 +166,9 @@ namespace DomainServices.DomServ
             return usDto;
         }
 
-        public async Task<List<UsuarioDto>> ObtenerUsuarioPorOpcionAsync(string opcion, string criterio, string usuario)
+        public async Task<List<UsuarioDtoForGetListas>> ObtenerUsuarioPorOpcionAsync(string opcion, string criterio, string usuario)
         {
-            var l = new List<UsuarioDto>();
-            var usDto = new UsuarioDto();
+            var l = new List<UsuarioDtoForGetListas>();
             int idDocumento = 0;
 
             var user = await _repo.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
@@ -200,19 +199,19 @@ namespace DomainServices.DomServ
             return l;
         }
 
-        private async Task<List<UsuarioDto>> ObtenerUsuariosPorCriterioAsync(string criterio)
+        private async Task<List<UsuarioDtoForGetListas>> ObtenerUsuariosPorCriterioAsync(string criterio)
         {
             var users = await _repo.ObtenerUsuariosPorCriterioAsync(criterio);
             return ConvierteListaUsuarioToDto(users);
         }
 
-        private async Task<List<UsuarioDto>> ObtenerUsuariosDeDocumentoAsync(int idDocumento)
+        private async Task<List<UsuarioDtoForGetListas>> ObtenerUsuariosDeDocumentoAsync(int idDocumento)
         {
             var users = await _repo.ObtenerUsuariosDeDocumentoAsync(idDocumento);
             return ConvierteListaUsuarioToDto(users);
         }
 
-        private async Task<List<UsuarioDto>> ObtenerUsuariosNoIncluidosEnDocumentoAsync(string criterio, int idDocumento)
+        private async Task<List<UsuarioDtoForGetListas>> ObtenerUsuariosNoIncluidosEnDocumentoAsync(string criterio, int idDocumento)
         {
             var nvoCrit = "%" + criterio + "%";
             var users = await _repo.ObtenerUsuariosNoIncluidosEnDocumentoAsync(nvoCrit, idDocumento);
@@ -405,9 +404,9 @@ namespace DomainServices.DomServ
             }
         }
 
-        private UsuarioDto ConvierteUsuarioToDto(UsuarioVista user)
+        private UsuarioDtoForGetListas ConvierteUsuarioToDto(UsuarioVista user)
         {
-            return new UsuarioDto()
+            return new UsuarioDtoForGetListas()
             {
                 strApellido1 = user.apellido1,
                 strApellido2 = user.apellido2,
@@ -423,9 +422,9 @@ namespace DomainServices.DomServ
             };
         }
 
-        private List<UsuarioDto> ConvierteListaUsuarioToDto(List<UsuarioVista> users)
+        private List<UsuarioDtoForGetListas> ConvierteListaUsuarioToDto(List<UsuarioVista> users)
         {
-            var usersDto = new List<UsuarioDto>();
+            var usersDto = new List<UsuarioDtoForGetListas>();
 
             foreach (var user in users)
             {

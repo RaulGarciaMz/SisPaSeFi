@@ -34,7 +34,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<UsuarioDto>>> ObtenerUsuarioPorOpcion([Required] string opcion, string criterio, [Required] string usuario)
+        public async Task<ActionResult<List<UsuarioDtoForGetListas>>> ObtenerUsuarioPorOpcion([Required] string opcion, string criterio, [Required] string usuario)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace WebApiSSF.Controllers
 
                 if (user == null)
                 {
-                    return NotFound(new List<UsuarioDto>());
+                    return NotFound(new List<UsuarioDtoForGetListas>());
                 }
 
                 return Ok(user);
