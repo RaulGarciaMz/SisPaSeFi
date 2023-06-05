@@ -1,5 +1,6 @@
 ﻿using Domain.DTOs;
 using Domain.Entities;
+using Domain.Entities.Vistas;
 using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -19,31 +20,57 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ObtenerPorEstado</c> Obtiene puntos de patrullaje pertenecientes al estado indicado
         /// </summary>
-        public async Task<List<PuntoPatrullaje>> ObtenerPorEstadoAsync(int id_estado)
+        public async Task<List<PuntoPatrullajeVista>> ObtenerPorEstadoAsync(int id_estado)
         {
-            return await _patrullajeContext.puntospatrullaje
-                .Include(m => m.IdMunicipioNavigation.IdEstadoNavigation)
-                .Where(c => c.IdMunicipioNavigation.IdEstado == id_estado)
-                .ToListAsync();
+            string sqlQuery = @"SELECT a.id_punto,a.ubicacion,a.coordenadas,a.id_municipio,b.nombre municipio,b.id_estado,c.nombre estado
+                                       ,a.esinstalacion,a.id_nivelriesgo,a.id_comandancia,a.id_procesoresponsable,a.id_gerenciadivision
+                                       ,a.bloqueado
+                                FROM ssf.puntospatrullaje a
+                                JOIN ssf.municipios b ON a.id_municipio=b.id_municipio
+                                JOIN ssf.estadospais c ON b.id_estado=c.id_estado
+                                WHERE a.ubicacion = @pCriterio  
+                                ORDER BY a.ubicacion";
+
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pCriterio", id_estado)
+            };
+
+            return await _patrullajeContext.PuntosPatrullajeVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerPorUbicacion</c> Obtiene puntos de patrullaje cuya ubicación (nombre) coincida con el parámetro
         /// </summary>
-        public async Task<List<PuntoPatrullaje>> ObtenerPorUbicacionAsync(string ubicacion)
+        public async Task<List<PuntoPatrullajeVista>> ObtenerPorUbicacionAsync(string ubicacion)
         {
-            return await _patrullajeContext.puntospatrullaje
-                .Include(m => m.IdMunicipioNavigation.IdEstadoNavigation)
-                .Where(e => e.Ubicacion.Contains(ubicacion))
-                .ToListAsync();
+
+            string sqlQuery = @"SELECT a.id_punto,a.ubicacion,a.coordenadas,a.id_municipio,b.nombre municipio,b.id_estado,c.nombre estado
+                                       ,a.esinstalacion,a.id_nivelriesgo,a.id_comandancia,a.id_procesoresponsable,a.id_gerenciadivision
+                                       ,a.bloqueado
+                                FROM ssf.puntospatrullaje a
+                                JOIN ssf.municipios b ON a.id_municipio=b.id_municipio
+                                JOIN ssf.estadospais c ON b.id_estado=c.id_estado
+                                WHERE a.ubicacion like @pCriterio  
+                                ORDER BY a.ubicacion";
+
+            ubicacion = "%" + ubicacion + "%";
+            object[] parametros = new object[]
+            {
+                new SqlParameter("@pCriterio", ubicacion)
+            };
+
+            return await _patrullajeContext.PuntosPatrullajeVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerPorRutaAsync</c> Obtiene puntos de patrullaje cuya ruta coincida con el parámetro. se limita a  sólo instalaciones
         /// </summary>
-        public async Task<List<PuntoPatrullaje>> ObtenerPorRutaAsync(int ruta)
+        public async Task<List<PuntoPatrullajeVista>> ObtenerPorRutaAsync(int ruta)
         {
-            string sqlQuery = @" SELECT a.*
+            string sqlQuery = @" SELECT a.id_punto,a.ubicacion,a.coordenadas,a.id_municipio,b.nombre municipio,b.id_estado,c.nombre estado
+                                        ,a.esinstalacion,a.id_nivelriesgo,a.id_comandancia,a.id_procesoresponsable,a.id_gerenciadivision
+                                        ,a.bloqueado
                                  FROM ssf.puntospatrullaje a
                                  JOIN ssf.municipios b ON a.id_municipio=b.id_municipio
                                  JOIN ssf.estadospais c on b.id_estado=c.id_estado
@@ -65,21 +92,22 @@ namespace SqlServerAdapter
                 new SqlParameter("@pRuta", ruta)
             };
 
-
-            return await _patrullajeContext.puntospatrullaje.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _patrullajeContext.PuntosPatrullajeVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>
         /// Método <c>ObtenerPorRegionAsync</c> Obtiene puntos de patrullaje cuya comandancia coincida con el parámetro. se limita a sólo instalaciones estratégicas
         /// </summary>
-        public async Task<List<PuntoPatrullaje>> ObtenerPorRegionAsync(int region, int nivel)
+        public async Task<List<PuntoPatrullajeVista>> ObtenerPorRegionAsync(int region, int nivel)
         {
-            string sqlQuery = @"SELECT a.*
+            string sqlQuery = @"SELECT a.id_punto,a.ubicacion,a.coordenadas,a.id_municipio,b.nombre municipio,b.id_estado,c.nombre estado
+                                       ,a.esinstalacion,a.id_nivelriesgo,a.id_comandancia,a.id_procesoresponsable,a.id_gerenciadivision
+                                       ,a.bloqueado
                                 FROM ssf.puntospatrullaje a
                                 JOIN ssf.municipios b ON a.id_municipio=b.id_municipio
                                 JOIN ssf.estadospais c ON b.id_estado=c.id_estado
-                                WHERE  a.esInstalacion=1 AND a.id_comandancia= @pRegion
-                                AND a.id_nivelriesgo=@pNivel
+                                WHERE  a.esInstalacion = 1 AND a.id_comandancia = @pRegion
+                                AND a.id_nivelriesgo = @pNivel
                                 ORDER BY a.ubicacion";
 
             object[] parametros = new object[]
@@ -88,7 +116,7 @@ namespace SqlServerAdapter
                 new SqlParameter("@pNivel", nivel)
             };
 
-            return await _patrullajeContext.puntospatrullaje.FromSqlRaw(sqlQuery, parametros).ToListAsync();
+            return await _patrullajeContext.PuntosPatrullajeVista.FromSqlRaw(sqlQuery, parametros).ToListAsync();
         }
 
         /// <summary>

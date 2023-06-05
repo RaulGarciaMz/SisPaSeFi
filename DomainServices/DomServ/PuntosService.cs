@@ -1,5 +1,6 @@
 ﻿using Domain.DTOs;
 using Domain.Entities;
+using Domain.Entities.Vistas;
 using Domain.Enums;
 using Domain.Ports.Driven.Repositories;
 using Domain.Ports.Driving;
@@ -59,7 +60,7 @@ namespace DomainServices.DomServ
         /// </summary>
         public async Task<List<PuntoDto>> ObtenerPorOpcionAsync(FiltroPunto opcion, string criterio, string usuario)
         {
-            var puntos = new List<PuntoPatrullaje>();
+            var puntos = new List<PuntoPatrullajeVista>();
             var r = new List<PuntoDto>();
             var b = int.TryParse(criterio, out int j);
 
@@ -175,25 +176,25 @@ namespace DomainServices.DomServ
         /// <summary>
         /// Método <c>ConvierteDominioToDto</c> convierte objetos del dominio a objetos de transferencia de datos (DTO)
         /// </summary>
-        private PuntoDto ConvierteDominioToDto(PuntoPatrullaje p)
+        private PuntoDto ConvierteDominioToDto(PuntoPatrullajeVista p)
         {
             return new PuntoDto
             {
-                intIdPunto = p.IdPunto,
-                strUbicacion = p.Ubicacion,
-                strCoordenadas = p.Coordenadas.Trim(),
-                intEsInstalacion = p.EsInstalacion,
-                intIdNivelRiesgo = p.IdNivelRiesgo,
-                intIdComandancia = p.IdComandancia,
-                intIdProcesoResponsable = p.IdProcesoResponsable,
-                intIdGerenciaDivision = p.IdGerenciaDivision,
-                intBloqueado = p.Bloqueado,
+                intIdPunto = p.id_punto,
+                strUbicacion = p.ubicacion,
+                strCoordenadas = p.coordenadas.Trim(),
+                intEsInstalacion = p.esinstalacion,
+                intIdNivelRiesgo = p.id_nivelriesgo,
+                intIdComandancia = p.id_comandancia,
+                intIdProcesoResponsable = p.id_procesoresponsable,
+                intIdGerenciaDivision = p.id_gerenciadivision,
+                intBloqueado = p.bloqueado,
                 //Latitud =  p.Latitud,
                 //Longitud = ,
-                intIdMunicipio = p.IdMunicipio,
-                intIdEstado = p.IdMunicipioNavigation.IdEstado,
-                strNombreMunicipio = p.IdMunicipioNavigation.Nombre,
-                strNombreEstado = p.IdMunicipioNavigation.IdEstadoNavigation.Nombre  
+                intIdMunicipio = p.id_municipio,
+                intIdEstado = p.id_estado,
+                strNombreMunicipio = p.municipio,
+                strNombreEstado = p.estado  
             };
         }
 

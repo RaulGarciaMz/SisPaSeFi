@@ -1,10 +1,6 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Vistas;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SqlServerAdapter.Data
 {
@@ -16,6 +12,7 @@ namespace SqlServerAdapter.Data
         }
 
         public  DbSet<PuntoPatrullaje> puntospatrullaje { get; set; }
+        public DbSet<PuntoPatrullajeVista> PuntosPatrullajeVista { get; set; }
         public  DbSet<Municipio> Municipios { get; set; }
         public  DbSet<EstadoPais> Estados { get; set; }
         public DbSet<Itinerario> Itinerarios { get; set; }
