@@ -946,23 +946,18 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>ActualizaProgramaPorCambioDeRuta</c> implementa la interface para actualizar programas debido a cambio de ruta.
         /// </summary>
-        public async Task ActualizaProgramaPorCambioDeRutaAsync(int idPrograma, int idRuta, DateTime fecha, int usuarioId)
+        public async Task ActualizaProgramaPorCambioDeRutaAsync(int idPrograma, int idRuta, int usuarioId)
         {
-            var existeEnOtro = await _programaContext.ProgramasPatrullajes.Where(x => x.IdRuta == idRuta && x.FechaPatrullaje == fecha).AnyAsync();
+            var programa = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
 
-            if (! existeEnOtro ) 
+            if (programa != null)
             {
-                var programa = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).ToListAsync();
+                programa.IdRuta = idRuta;
+                programa.IdUsuario = usuarioId;
+                programa.UltimaActualizacion = DateTime.UtcNow;
 
-                if (programa.Count() == 1)
-                {
-                    var progamaActualizar = programa[0];
-                    progamaActualizar.IdRuta = idRuta;
-                    progamaActualizar.IdUsuario = usuarioId;
-
-                    _programaContext.ProgramasPatrullajes.Update(progamaActualizar);
-                    await _programaContext.SaveChangesAsync();
-                }
+                _programaContext.ProgramasPatrullajes.Update(programa);
+                await _programaContext.SaveChangesAsync();
             }
         }
 
@@ -995,7 +990,7 @@ namespace SqlServerAdapter
         /// </summary>
         public async Task ActualizaProgramasPorInicioPatrullajeAsync(int idPrograma, int idRiesgo, int idUsuario, int idEstadoPatrullaje, TimeSpan inicio)
         {
-            var pa = await _programaContext.ProgramasPatrullajes.Where(x => x.IdRuta == idPrograma).SingleOrDefaultAsync();
+            var pa = await _programaContext.ProgramasPatrullajes.Where(x => x.IdPrograma == idPrograma).SingleOrDefaultAsync();
             if (pa != null)
             {
                 pa.UltimaActualizacion = DateTime.UtcNow;

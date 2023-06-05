@@ -155,17 +155,17 @@ namespace WebApiSSF.Controllers
         /// </summary>
         /// <param name="opcion">Descripción de la opción para actualización ("CambioRuta", "InicioPatrullaje", "AutorizaPropuesta", "RegionalApruebaPropuesta", "RegistrarSolicitudOficioComision", "RegistrarSolicitudOficioAutorizacion", "RegistrarOficioComision", "RegistrarOficioAutorizacion", "ModificarFechaPatrullaje")</param>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
-        /// <param name="p">Programa o propuesta a actualizar acorde a la opción indicada</param>
+        /// <param name="objProgramaPatrullaje">Programa o propuesta a actualizar acorde a la opción indicada</param>
         /// <returns></returns>
         [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PutPorOpcion([Required] string opcion, [Required] string usuario, [FromBody] ProgramaDtoForUpdatePorOpcion p)
+        public async Task<ActionResult> PutPorOpcion([FromBody] ProgramaDtoForUpdatePorOpcion objProgramaPatrullaje, [Required] string opcion, [Required] string usuario )
         {
             try
             {
-                await _pp.ActualizaProgramasOrPropuestasPorOpcionAsync(p, opcion, usuario);
+                await _pp.ActualizaProgramasOrPropuestasPorOpcionAsync(objProgramaPatrullaje, opcion, usuario);
                 return Ok();
             }
             catch (Exception ex)
@@ -181,17 +181,17 @@ namespace WebApiSSF.Controllers
         /// <param name="opcion">Tipo de elemento a actualizar ("Propuesta" o "Programa")</param>
         /// <param name="accion">Tipo de acción a realizar 2 - Rechazar propuestas autorizadas, 3 - Cambiar propuestas aprobadas por comandancia a Pendiente de aprobación , 4 - Cambiar de propuesta autorizada a pendiente de autorización por SSF</param>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
-        /// <param name="p">Propuesta de patrullaje</param>
+        /// <param name="PropuestasPatrullaje">Propuesta de patrullaje</param>
         /// <returns></returns>        
         [HttpPut("propuestas")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> PutPropuestasToProgramas([Required] string opcion, [FromQuery] int accion, [Required] string usuario, [FromBody] List<PropuestaDtoForListaUpdate> p)
+        public async Task<ActionResult> PutPropuestasToProgramas([FromBody] List<PropuestaDtoForListaUpdate> PropuestasPatrullaje, [Required] string opcion, [FromQuery] int accion, [Required] string usuario )
         {
             try
             {
-                await _pp.ActualizaPropuestasOrProgramasPorOpcionAndAccionAsync(p, opcion, accion, usuario);
+                await _pp.ActualizaPropuestasOrProgramasPorOpcionAndAccionAsync(PropuestasPatrullaje, opcion, accion, usuario);
                 return Ok();
             }
             catch (Exception ex)
