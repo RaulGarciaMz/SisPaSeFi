@@ -2,35 +2,35 @@
 {
     public class ProgramaPatrullajeMensualDto
     {
-        public string Municipio { get; set; }
-        public string Estado { get; set; }
-        public string NombreResponsable { get; set; }
-        public string ApellidoResponsable1 { get; set; }
-        public string ApellidoResponsable2 { get; set; }
-        public string RegionesMilitares { get; set; }
-        public List<RutasProgramaPatrullajeMensualDto> RutasProgramaPatrullajeMensual { get; set; }
+        public string strMunicipio { get; set; }
+        public string strEstado { get; set; }
+        public string strNombreResponsable { get; set; }
+        public string strApellidoResponsable1 { get; set; }
+        public string strApellidoResponsable2 { get; set; }
+        public string strRegionesMilitares { get; set; }
+        public List<RutasProgramaPatrullajeMensualDto> objRutasProgramaPatrullajeMensual { get; set; }
     }
 
     public class RutasProgramaPatrullajeMensualDto
     {
-        public int IdRuta { get; set; }
-        public string RegionMilitar { get; set; }
-        public string RegionSSF { get; set; }
-        public int ZonaMilitar { get; set; }
-        public string Clave { get; set; }
-        public string ItinerarioRuta { get; set; }
-        public string Fechas { get; set; }
-        public string ObservacionesRuta { get; set; }
-        public List<RecorridoRutaDto> RecorridoRuta { get; set; }        
+        public int intIdRuta { get; set; }
+        public string intRegionMilitar { get; set; }
+        public string intRegionSSF { get; set; }
+        public int intZonaMilitar { get; set; }
+        public string strClave { get; set; }
+        public string strItinerarioRuta { get; set; }
+        public string strFechas { get; set; }
+        public string strObservacionesRuta { get; set; }
+        public List<RecorridoRutaDto> objRecorridoRuta { get; set; }        
     }
 
     public class RecorridoRutaDto
     {
-        public int IdItinerario { get; set; }
-        public int IdPunto { get; set; }
-        public int RegionSSF { get; set; }
-        public int Posicion { get; set; }
-        public string Ubicacion { get; set; }
-        public string Coordenadas { get; set; }
+        public int intIdItinerario { get; set; }
+        public int intIdPunto { get; set; }
+        //public int RegionSSF { get; set; }
+        public int intPosicion { get; set; }
+        public string strUbicacion { get; set; }
+        public string strCoordenadas { get; set; }
     }
 }

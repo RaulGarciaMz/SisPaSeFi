@@ -40,19 +40,19 @@ namespace SqlServerAdapter
 
         public async Task AgregaAsync(int idPrograma, int idVehiculo, int idUsuarioVehiculo, int kmInicio, int kmFin, int consumo, string? edoVehiculo)
         {
-            var uso = new UsoVehiculo()
-            {
-                IdPrograma = idPrograma,
-                IdVehiculo = idVehiculo,
-                IdUsuarioVehiculo = idUsuarioVehiculo,
-                KmInicio = kmInicio,
-                KmFin = kmFin,
-                ConsumoCombustible= consumo,
-                EstadoVehiculo = edoVehiculo
-            };
+           var uso = new UsoVehiculo()
+           {
+               IdPrograma = idPrograma,
+               IdVehiculo = idVehiculo,
+               IdUsuarioVehiculo = idUsuarioVehiculo,
+               KmInicio = kmInicio,
+               KmFin = kmFin,
+               ConsumoCombustible = consumo,
+               EstadoVehiculo = edoVehiculo
+           };
 
-            _usoVehiculoContext.UsosVehiculos.Add(uso);
-            await _usoVehiculoContext.SaveChangesAsync();
+           _usoVehiculoContext.UsosVehiculos.Add(uso);
+           await _usoVehiculoContext.SaveChangesAsync();
         }
 
         public async Task ActualizaAsync(int idPrograma, int idVehiculo, int idUsuarioVehiculo, int kmInicio, int kmFin, int consumo, string? edoVehiculo)

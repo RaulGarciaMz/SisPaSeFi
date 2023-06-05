@@ -50,7 +50,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al obtener bitácoras para la opcion: {opcion}, idReporte: {idReporte}, usuario: {usuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
 
@@ -73,7 +73,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al agregar bitácora de seguimiento para la opción: {r.strTipoIncidencia}, idReporte: {r.intIdReporte}, estado: {r.intIdEstadoIncidencia}, descripcion:{r.strDescripcion} , usuario: {r.strUsuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
     }

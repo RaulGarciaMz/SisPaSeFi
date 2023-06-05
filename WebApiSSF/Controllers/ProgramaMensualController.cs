@@ -37,7 +37,7 @@ namespace WebApiSSF.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<ProgramaPatrullajeMensualDto>>> ObtenerProgramaMensual([Required] string opcion, [Required]int anio, [Required] int mes, [Required] string region, [Required] string tipoPatrullaje, [Required] string usuario)
+        public async Task<ActionResult<ProgramaPatrullajeMensualDto>> ObtenerProgramaMensual([Required] string opcion, [Required]int anio, [Required] int mes, [Required] string region, [Required] string tipoPatrullaje, [Required] string usuario)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al obtener programa mensual para el año: {anio}, mes: {mes}, región: {region}, tipo: {tipoPatrullaje}, usuario: {usuario}", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
             }
         }
 

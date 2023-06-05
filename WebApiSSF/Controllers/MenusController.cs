@@ -51,7 +51,7 @@ namespace WebApiSSF.Controllers
             {
                 _log.LogError($"error al obtener las menus para la opción: {opcion}, padre: {criterio}, usuario: {usuario} ", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición - " + ex.Message;
-                //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                 return StatusCode(500, m);
             }
         }

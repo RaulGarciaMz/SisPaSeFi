@@ -156,7 +156,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener el usuario del catálogo, que cumpla con el criterio indicado ", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -187,7 +187,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al obtener al usuario configurador para el alias de usuario indicado ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
             }
         }
        
@@ -217,7 +217,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al obtener al usuario configurador por id ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
             }
         }
 
@@ -240,7 +240,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al bloquear usuario ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
             }
         }
 
@@ -263,7 +263,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al desbloquear usuario ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
             }
         }
 
@@ -286,7 +286,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al reiniciar la clave del usuario ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
             }
         }
         */

@@ -19,9 +19,9 @@ namespace DomainServices.DomServ
 
         public async Task AgregarAsync(DocumentoDtoForCreate d)
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(d.Usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(d.strUsuario);
 
-            await _repo.AgregarAsync(d.IdReferencia, d.IdTipoDocumento, d.IdComandancia, d.RutaArchivo, d.NombreArchivo, d.Descripcion, d.FechaReferencia, d.IdUsuario);
+            await _repo.AgregarAsync(d.intIdReferencia, d.intIdTipoDocumento, d.intIdComandancia, d.strRutaArchivo, d.strNombreArchivo, d.strDescripcionArchivo, d.strFechaReferencia, d.intIdUsuario);
         }
 
         public async Task<List<DocumentoDto>> ObtenerDocumentosAsync(string opcion, string criterio, int anio, int mes, string usuario) 
@@ -74,19 +74,19 @@ namespace DomainServices.DomServ
         {
             var doc = new DocumentoDto() 
             {
-                IdDocumentoPatrullaje = d.id_documentoPatrullaje,
-                IdReferencia= d.id_referencia,
-                IdTipoDocumento = d.id_tipoDocumento,
-                IdComandancia = d.id_comandancia,
-                FechaRegistro = d.fechaRegistro,
-                FechaReferencia = d.fechaReferencia,
-                RutaArchivo = d.rutaArchivo,
-                NombreArchivo = d.nombreArchivo,
-                Descripcion = d.descripcion,
-                IdUsuario = d.id_usuario,
-                DescripcionTipoDocumento = d.descripciontipodocumento,
-                Usuario = d.usuario,
-                CorreoElectronico = d.correoelectronico
+                intIdDocumento = d.id_documentoPatrullaje,
+                intIdReferencia= d.id_referencia,
+                intIdTipoDocumento = d.id_tipoDocumento,
+                intIdComandancia = d.id_comandancia,
+                strFechaRegistro = d.fechaRegistro,
+                strFechaReferencia = d.fechaReferencia,
+                strRutaArchivo = d.rutaArchivo,
+                strNombreArchivo = d.nombreArchivo,
+                strDescripcionArchivo = d.descripcion,
+                intIdUsuario = d.id_usuario,
+                strDescripcionTipoDocumento = d.descripciontipodocumento,
+                strNombreCompletoUsuario = d.usuario,
+                strCorreoElectronico = d.correoelectronico
             };
 
             return doc;

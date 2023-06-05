@@ -154,7 +154,7 @@
         /// <summary>
         /// Hora de inicio del patrullaje
         /// </summary>
-        public string strInicio { get; set; }
+        public string? strInicio { get; set; }
         /// <summary>
         /// Identificador de la ruta del programa de patrullaje
         /// </summary>
@@ -162,13 +162,7 @@
         /// <summary>
         /// Identificador del nivel de riesgo del programa de patrullaje
         /// </summary>
-        public int intIdRiesgoPatrullaje { get; set; }
-/*
-        /// <summary>
-        /// Identificador del usuario que regstró el programa de patrullaje
-        /// </summary>
-        public int IdUsuario { get; set; }
-*/
+        public int? intIdRiesgoPatrullaje { get; set; }
         /// <summary>
         /// Identificador del estado del patrullaje
         /// </summary>
@@ -176,16 +170,15 @@
         /// <summary>
         /// Descripción de la solicitud del oficio de comisión del programa de patrullaje
         /// </summary>
-        public string strSolicitudOficio { get; set; }
+        public string? strSolicitudOficio { get; set; }
         /// <summary>
         /// Descripción del oficio de comisión del programa de patrullaje
         /// </summary>
-        public string strOficio { get; set; }
+        public string? strOficio { get; set; }
         /// <summary>
         /// Fecha del patrullaje
         /// </summary>
-        public string strFechaPatrullaje { get; set; }
-
+        public string? strFechaPatrullaje { get; set; }
     }
 
     /// <summary>

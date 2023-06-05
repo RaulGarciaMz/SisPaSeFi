@@ -45,7 +45,7 @@ namespace WebApiSSF.Controllers
               
                 _log.LogError($"error al obtener el reporte de servicios mensual para el año: {anio}, mes: {mes}, tipo: {tipoPatrullaje}, usuario: {usuario} ", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
-                //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                 return StatusCode(500, m);
             }
         } 

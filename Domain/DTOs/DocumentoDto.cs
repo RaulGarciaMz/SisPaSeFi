@@ -8,55 +8,55 @@
         /// <summary>
         /// Identificador del documento de patrullaje
         /// </summary>
-        public long IdDocumentoPatrullaje { get; set; }
+        public long intIdDocumento { get; set; }
         /// <summary>
         /// Identificador de la referencia del documento
         /// </summary>
-        public long? IdReferencia { get; set; }
+        public long? intIdReferencia { get; set; }
         /// <summary>
         /// Identificador del tipo de documento
         /// </summary>
-        public long IdTipoDocumento { get; set; }
+        public long intIdTipoDocumento { get; set; }
         /// <summary>
         /// Identificador de la comandancia a donde pertenece el documento
         /// </summary>
-        public int IdComandancia { get; set; }
+        public int intIdComandancia { get; set; }
         /// <summary>
         /// Fecha de registro del documento
         /// </summary>
-        public DateTime FechaRegistro { get; set; }
+        public DateTime strFechaRegistro { get; set; }
         /// <summary>
         /// Fecha de referencia del documento
         /// </summary>
-        public DateTime FechaReferencia { get; set; }
+        public DateTime strFechaReferencia { get; set; }
         /// <summary>
         /// Ruta o ubicación (path) del archivo
         /// </summary>
-        public string RutaArchivo { get; set; }
+        public string strRutaArchivo { get; set; }
         /// <summary>
         /// Nombre del archivo
         /// </summary>
-        public string NombreArchivo { get; set; }
+        public string strNombreArchivo { get; set; }
         /// <summary>
         /// Descripción del documento
         /// </summary>
-        public string Descripcion { get; set; }
+        public string strDescripcionArchivo { get; set; }
         /// <summary>
         /// Identificador del usuario que registró el documento
         /// </summary>
-        public int IdUsuario { get; set; }
+        public int intIdUsuario { get; set; }
         /// <summary>
         /// Descripción del tipo de documento
         /// </summary>
-        public string DescripcionTipoDocumento { get; set; }
+        public string strDescripcionTipoDocumento { get; set; }
         /// <summary>
         /// Nombre y apellido del usuario que registró el documento
         /// </summary>
-        public string Usuario { get; set; }
+        public string strNombreCompletoUsuario { get; set; }
         /// <summary>
         /// Correo electrónico del usuario
         /// </summary>
-        public string CorreoElectronico { get; set; }
+        public string strCorreoElectronico { get; set; }
     }
 
     /// <summary>
@@ -67,64 +67,40 @@
         /// <summary>
         /// Identificador de la referencia del documento
         /// </summary>
-        public long IdReferencia { get; set; }
+        public long intIdReferencia { get; set; }
         /// <summary>
         /// Identificador del tipo de documento
         /// </summary>
-        public long IdTipoDocumento { get; set; }
+        public long intIdTipoDocumento { get; set; }
         /// <summary>
         /// Identificador de la comandancia a donde pertenece el documento
         /// </summary>
-        public int IdComandancia { get; set; }
+        public int intIdComandancia { get; set; }
 
         /// <summary>
         /// Fecha de referencia del documento
         /// </summary>
-        public DateTime FechaReferencia { get; set; }
+        public DateTime strFechaReferencia { get; set; }
         /// <summary>
         /// Ruta o ubicación (path) del archivo
         /// </summary>
-        public string RutaArchivo { get; set; }
+        public string strRutaArchivo { get; set; }
         /// <summary>
         /// Nombre del archivo
         /// </summary>
-        public string NombreArchivo { get; set; }
+        public string strNombreArchivo { get; set; }
         /// <summary>
         /// Descripción del documento
         /// </summary>
-        public string Descripcion { get; set; }
+        public string strDescripcionArchivo { get; set; }
         /// <summary>
         /// Identificador del usuario que registró el documento
         /// </summary>
-        public int IdUsuario { get; set; }
+        public int intIdUsuario { get; set; }
         /// <summary>
         /// Nombre del usuario que realiza la operación
         /// </summary>
-        public string Usuario { get; set; }
+        public string strUsuario { get; set; }
     }
-
-    /// <summary>
-    /// Documento de patrullaje
-    /// </summary>
-    public class DocumentoDtoForQuery
-    {
-        /// <summary>
-        /// Identificador de la comandancia
-        /// </summary>
-        public int IdComandancia { get; set; }
-        /// <summary>
-        /// Año de búsqueda
-        /// </summary>
-        public int Anio { get; set; }
-        /// <summary>
-        /// Mes de búsqueda
-        /// </summary>
-        public int Mes { get; set; }
-        /// <summary>
-        /// Nombre del usuario (usuario_nom) que realiza la consulta
-        /// </summary>
-        public string Usuario { get; set; }
-    }
-
 
 }

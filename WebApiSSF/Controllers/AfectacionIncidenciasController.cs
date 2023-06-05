@@ -55,8 +55,8 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al obtener las afectaciones incidencias para el id de incidencia: {idReporte}, tipo: {opcion}, usuario: {usuario} ", ex);
-                var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
-                //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                var m = "Ocurrió un problema mientras se procesaba la petición - " + ex.Message;
+                //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                 return StatusCode(500, m);
             }
         }
@@ -81,7 +81,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al agregar afectación para el usuario: {a.strUsuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
 
@@ -105,7 +105,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al actualizar afectación: {a.intIdAfectacionIncidencia} para el usuario: {a.strUsuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }
 

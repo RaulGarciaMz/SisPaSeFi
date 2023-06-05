@@ -42,7 +42,7 @@ namespace WebApiSSF.Controllers
             {
                 _log.LogError($"error al registrar incidencia para usuario: {incidencia.usuario}, ruta: {incidencia.IdRuta}, Fecha de patrullaje: {incidencia.FechaPatrullaje} - ", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición - " + ex.Message;
-                //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                //return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                 return StatusCode(500, ex.Message);
             }
         }

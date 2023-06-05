@@ -50,7 +50,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al obtener roles para el usuario: {usuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
             }
         }
 
@@ -74,7 +74,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al agregar el rol para nombre de rol: {rol.strNombre} , descripción : {rol.strDescripcion}, menu: {rol.intIdMenu} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
             }
         }
 
@@ -98,7 +98,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al actualizar el rol para id: {rol.intIdRol},  nombre: {rol.strNombre} , descripción : {rol.strDescripcion}, menu: {rol.intIdMenu} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
             }
         }
 

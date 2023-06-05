@@ -77,7 +77,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al obtener documentos de patrullaje para la opción: {opcion}, criterio: {criterio}, del Año: {anio} y Mes: {mes} para el usuario: {usuario} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
             }
         }
 
@@ -100,8 +100,8 @@ namespace WebApiSSF.Controllers
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al agregar documento de patrullaje para la referencia: {d.IdReferencia}, tipo de documento: {d.IdTipoDocumento}, del Año: {d.NombreArchivo} ", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                _log.LogError($"error al agregar documento de patrullaje para la referencia: {d.intIdReferencia}, tipo de documento: {d.intIdTipoDocumento}, del Año: {d.strNombreArchivo} ", ex);
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
             }
         }
     }

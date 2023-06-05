@@ -57,7 +57,7 @@ namespace WebApiSSF.Controllers
             catch (Exception ex)
             {
                 _log.LogError($"error al obtener el catálogo por opción", ex);
-                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
             }
         }
 
@@ -91,7 +91,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener comandancias por usuario del catálogo", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -124,7 +124,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener tipos de patrullaje del catálogo", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -157,7 +157,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener tipos de vehículo del catálogo", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -190,7 +190,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener clasificaciones de incidencia del catálogo", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -223,7 +223,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener niveles del catálogo", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -256,7 +256,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener conceptos de afectación del catálogo", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -292,7 +292,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener regiones militares en rutas del catálogo de rutas", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -328,7 +328,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener estados del país del catálogo", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -364,7 +364,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener estados del país del catálogo", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -401,7 +401,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener Municipios para el estado {id}", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -437,7 +437,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener los procesos responsables del catálogo", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -474,7 +474,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener la lista de gerencia división del catálogo", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
 
@@ -510,7 +510,7 @@ namespace WebApiSSF.Controllers
                     catch (Exception ex)
                     {
                         _log.LogError($"error al obtener los tipos de documentos del catálogo", ex);
-                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición");
+                        return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición " + ex.Message);
                     }
                 }
         */

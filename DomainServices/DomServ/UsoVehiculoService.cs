@@ -23,7 +23,7 @@ namespace DomainServices.DomServ
 
             if (user != null)
             {
-                await _repo.AgregaAsync(uv.IdPrograma, uv.IdVehiculo, user.IdUsuario, uv.KmInicio, uv.KmFin, uv.ConsumoCombustible, uv.EstadoVehiculo);
+                await _repo.AgregaAsync(uv.intIdPrograma, uv.intIdVehiculo, user.IdUsuario, uv.intKmInicio, uv.intKmFin, uv.intConsumoCombustible, uv.strEstadoVehiculo);
             }
         }
 
@@ -33,7 +33,7 @@ namespace DomainServices.DomServ
 
             if (user != null)
             {
-                await _repo.ActualizaAsync(uv.IdPrograma, uv.IdVehiculo, uv.IdUsuarioVehiculo, uv.KmInicio, uv.KmFin, uv.ConsumoCombustible, uv.EstadoVehiculo);
+                await _repo.ActualizaAsync(uv.intIdPrograma, uv.intIdVehiculo, uv.intIdUsuarioVehiculo, uv.intKmInicio, uv.intKmFin, uv.intConsumoCombustible, uv.strEstadoVehiculo);
             }
         }
 

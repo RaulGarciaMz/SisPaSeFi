@@ -328,12 +328,12 @@ namespace DomainServices.DomServ
                     switch (opcion)
                     {
                         case "CambioRuta":
-                            await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.intIdPrograma, p.intIdRuta, DateTime.Parse(p.strFechaPatrullaje), userId);
+                            await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.intIdPrograma, p.intIdRuta, userId);
                             break;
 
                         case "InicioPatrullaje":
                             TimeSpan ini = TimeSpan.Parse(p.strInicio);
-                            await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.intIdPrograma, p.intIdRiesgoPatrullaje, userId, p.intIdEstadoPatrullaje, ini);
+                            await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.intIdPrograma, p.intIdRiesgoPatrullaje.Value, userId, p.intIdEstadoPatrullaje, ini);
                             break;
 
                         case "AutorizaPropuesta":
@@ -378,7 +378,7 @@ namespace DomainServices.DomServ
                 var userId = usuarioId.Value;
                 if (EsUsuarioRegistrado(userId))
                 {
-                    await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.IdPrograma, p.IdRuta,p.Fecha, userId);
+                    await _repo.ActualizaProgramaPorCambioDeRutaAsync(p.IdPrograma, p.IdRuta, userId);
                 }
             }
         }

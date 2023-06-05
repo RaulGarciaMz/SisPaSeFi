@@ -44,14 +44,14 @@ namespace DomainServices.DomServ
                 {
                     var reg = regiones[0];
 
-                    prog.Municipio = reg.municipio;
-                    prog.Estado = reg.estado;
-                    prog.NombreResponsable = reg.nombre;
-                    prog.ApellidoResponsable1 = reg.apellido1;
-                    prog.ApellidoResponsable2 = reg.apellido2;
-                    prog.RegionesMilitares = reg.regionesmilitares;
+                    prog.strMunicipio = reg.municipio;
+                    prog.strEstado = reg.estado;
+                    prog.strNombreResponsable = reg.nombre;
+                    prog.strApellidoResponsable1 = reg.apellido1;
+                    prog.strApellidoResponsable2 = reg.apellido2;
+                    prog.strRegionesMilitares = reg.regionesmilitares;
 
-                    prog.RutasProgramaPatrullajeMensual = ConvierteListaProgramaItinerarioVistaToRutas(miProg);
+                    prog.objRutasProgramaPatrullajeMensual = ConvierteListaProgramaItinerarioVistaToRutas(miProg);
                 }
             }
 
@@ -66,14 +66,14 @@ namespace DomainServices.DomServ
             {
                 var v = new RutasProgramaPatrullajeMensualDto()
                 {
-                    IdRuta = p.id_ruta,
-                    Clave = p.clave,
-                    RegionMilitar = p.regionmilitarsdn,
-                    RegionSSF = p.regionssf,
-                    ZonaMilitar = p.zonamilitarsdn,
-                    ItinerarioRuta = p.itinerarioruta,
-                    Fechas = p.fechas,
-                    ObservacionesRuta = p.observacionesruta
+                    intIdRuta = p.id_ruta,
+                    strClave = p.clave,
+                    intRegionMilitar = p.regionmilitarsdn,
+                    intRegionSSF = p.regionssf,
+                    intZonaMilitar = p.zonamilitarsdn,
+                    strItinerarioRuta = p.itinerarioruta,
+                    strFechas = p.fechas,
+                    strObservacionesRuta = p.observacionesruta
                 };
 
                 var recorridos = new List<RecorridoRutaDto>();
@@ -86,15 +86,15 @@ namespace DomainServices.DomServ
                         var datoItinerario = pto.Split("¦");
                         var recorrido = new RecorridoRutaDto()
                         {
-                            Posicion = Int32.Parse(datoItinerario[0]),
-                            Ubicacion = datoItinerario[1],
-                            Coordenadas = datoItinerario[2]
+                            intPosicion = Int32.Parse(datoItinerario[0]),
+                            strUbicacion = datoItinerario[1],
+                            strCoordenadas = datoItinerario[2]
                         };
 
                         recorridos.Add(recorrido);
                     }
 
-                    v.RecorridoRuta = recorridos;
+                    v.objRecorridoRuta = recorridos;
                 }
 
                 rutas.Add(v);

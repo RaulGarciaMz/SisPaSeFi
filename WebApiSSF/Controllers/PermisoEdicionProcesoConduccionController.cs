@@ -88,24 +88,24 @@ namespace WebApiSSF.Controllers
         /// <summary>
         /// Agrega un permiso de edición
         /// </summary>
-        /// <param name="p">Permiso de edición a agregar</param>
+        /// <param name="objPermisoEdicionProcesoConduccion">Permiso de edición a agregar</param>
         /// <param name="usuario">Nombre del usuario (usuario_nom) que realiza la operación</param>
         /// <returns></returns>
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Agregar([FromBody] PermisoEdicionConduccionDto p, [Required] string usuario)
+        public async Task<ActionResult> Agregar([FromBody] PermisoEdicionConduccionDto objPermisoEdicionProcesoConduccion, [Required] string usuario)
         {
             try
             {
-                 await _pp.AgregarPorOpcionAsync(p.intRSF, p.intAnio, p.intMes, usuario);
+                 await _pp.AgregarPorOpcionAsync(objPermisoEdicionProcesoConduccion.intRSF, objPermisoEdicionProcesoConduccion.intAnio, objPermisoEdicionProcesoConduccion.intMes, usuario);
   
                 return Ok();
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al agregar el permiso de edición del proceso de conducción para el usuario: {usuario} region: {p.intRSF}, anio: {p.intAnio}, mes: {p.intMes}", ex);
+                _log.LogError($"error al agregar el permiso de edición del proceso de conducción para el usuario: {usuario} region: {objPermisoEdicionProcesoConduccion.intRSF}, anio: {objPermisoEdicionProcesoConduccion.intAnio}, mes: {objPermisoEdicionProcesoConduccion.intMes}", ex);
                 var m = "Ocurrió un problema mientras se procesaba la petición" + ex.Message;
                 return StatusCode(500, m);
             }
