@@ -17,7 +17,7 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task<List<IncidenciaGeneralDto>> ObtenerIncidenciasPorOpcionAsync(string opcion, int? idActivo, string criterio, string usuario)
+        public async Task<List<IncidenciaGeneralDto>> ObtenerIncidenciasPorOpcionAsync(string opcion, int? idActivo,  string usuario, string? criterio="")
         {
             var incids = new List<IncidenciaGeneralDto>();
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
@@ -44,10 +44,12 @@ namespace DomainServices.DomServ
                         incids = ConvierteListaIncidenciasGeneralesToDto(abiertaEstructura);
                         break;
                     case "IncidenciaSinAtenderPorVariosDiasEnESTRUCTURAS":
-                            var dias = Int32.Parse(criterio);
-                            var diasAtras = -dias;
-                            var noAtendidas = await _repo.ObtenerIncidenciasNoAtendidasPorDiasEnEstructurasAsync(diasAtras);
-                            incids = ConvierteListaIncidenciasGeneralesToDto(noAtendidas);                        
+
+                        if (criterio == null) throw new Exception("el campo criterio requiere valor para esta opción");
+                        var dias = Int32.Parse(criterio);
+                        var diasAtras = -dias;
+                        var noAtendidas = await _repo.ObtenerIncidenciasNoAtendidasPorDiasEnEstructurasAsync(diasAtras);
+                        incids = ConvierteListaIncidenciasGeneralesToDto(noAtendidas);                        
                         break;
                     case "IncidenciaReportadaEnProgramaINSTALACION":
                         var idProgInsta = Int32.Parse(criterio);
