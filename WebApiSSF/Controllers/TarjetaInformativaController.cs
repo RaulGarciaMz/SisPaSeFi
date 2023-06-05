@@ -125,16 +125,16 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Put([Required] string usuario, [FromBody] TarjetaDtoForUpdate tarjeta)
+        public async Task<ActionResult> Put([FromBody] TarjetaDtoForUpdate tarjeta)
         {
             try
             {
-                await _t.UpdateAsync(tarjeta, usuario);
+                await _t.UpdateAsync(tarjeta);
                 return Ok();
             }
             catch (Exception ex)
             {
-                _log.LogError($"error al actualizar la tarjeta informativa con id de nota: {tarjeta.intIdNota}, para el usuario: {usuario} ", ex);
+                _log.LogError($"error al actualizar la tarjeta informativa con id de nota: {tarjeta.intIdNota} ", ex);
                 return StatusCode(500, "Ocurrió un problema mientras se procesaba la petición - " + ex.Message);
             }
         }

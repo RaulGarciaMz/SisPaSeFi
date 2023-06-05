@@ -296,7 +296,7 @@
         /// <summary>
         /// Observaciones del patrullaje
         /// </summary>
-        public string strObservaciones { get; set; }
+        public string? strObservaciones { get; set; }
         /// <summary>
         /// Cantidad de comandantes de la instalación participante en el patrullaje
         /// </summary>

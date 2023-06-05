@@ -36,9 +36,9 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task UpdateAsync(TarjetaDtoForUpdate tarjeta, string usuario) 
+        public async Task UpdateAsync(TarjetaDtoForUpdate tarjeta) 
         {
-            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
+            var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(tarjeta.strIdUsuario);
 
             if (user != null)
             {
@@ -48,6 +48,8 @@ namespace DomainServices.DomServ
                 {
                     return;
                 }
+
+                if (tarjeta.strObservaciones == null) tarjeta.strObservaciones = "";
 
                 t.IdUsuario = user.IdUsuario;
                 t.UltimaActualizacion = DateTime.UtcNow;
@@ -244,6 +246,8 @@ namespace DomainServices.DomServ
 
         private TarjetaInformativa ConvierteTarjetaDtoForCreateToDomain(TarjetaDtoForCreate t, int idUsuario)
         {
+            if (t.strObservaciones == null) t.strObservaciones = "";
+
             var r = new TarjetaInformativa() 
             { 
                 IdPrograma= t.intIdPrograma,
@@ -271,7 +275,6 @@ namespace DomainServices.DomServ
                 IdEstadoTarjetaInformativa = 1,
                 Responsablevuelo="",
                 Fuerzareaccion=0
-                
             };
 
             return r;
