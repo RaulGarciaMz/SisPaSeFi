@@ -332,7 +332,16 @@ namespace DomainServices.DomServ
                             break;
 
                         case "InicioPatrullaje":
-                            TimeSpan ini = TimeSpan.Parse(p.strInicio);
+                            TimeSpan ini;
+                            if (p.strInicio == null || p.strInicio == "")
+                            {
+                                ini = TimeSpan.Zero;
+                            }
+                            else 
+                            {
+                                ini = TimeSpan.Parse(p.strInicio);
+                            }
+                            
                             await _repo.ActualizaProgramasPorInicioPatrullajeAsync(p.intIdPrograma, p.intIdRiesgoPatrullaje.Value, userId, p.intIdEstadoPatrullaje, ini);
                             break;
 
