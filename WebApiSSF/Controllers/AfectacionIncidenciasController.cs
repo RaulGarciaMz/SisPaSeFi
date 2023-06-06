@@ -40,7 +40,7 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                if (opcion != "INSTALACION" || opcion != "ESTRUCTURA")
+                if (!(opcion == "INSTALACION" || opcion == "ESTRUCTURA"))
                     return BadRequest("opción debe tener alguno de los valores: INSTALACION ó ESTRUCTURA");
 
                 var coms = await _pp.ObtenerAfectacionIncidenciaPorOpcionAsync(idReporte, opcion, usuario);
