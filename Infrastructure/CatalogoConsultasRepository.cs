@@ -145,9 +145,9 @@ namespace SqlServerAdapter
             return await _catalogosConsultaContext.EstadosIncidencia.OrderBy(x => x.IdEstadoIncidencia).ToListAsync();
         }
 
-        public async Task<List<UsuarioComandancia>> ObtenerComandanciasDeUnUsuarioAsync(int idMunicipio)
+        public async Task<List<UsuarioComandancia>> ObtenerComandanciasDeUnUsuarioAsync(int idUsuario)
         {
-            return await _catalogosConsultaContext.UsuariosComandancia.Where(x => x.IdUsuario == idMunicipio).Distinct().ToListAsync();
+            return await _catalogosConsultaContext.UsuariosComandancia.Where(x => x.IdUsuario == idUsuario).Distinct().ToListAsync();
         }
 
         public async Task<List<UsuarioGrupoCorreoElectronico>> ObtenerGruposCorreoDeUnUsuarioAsync(int idUsuario)

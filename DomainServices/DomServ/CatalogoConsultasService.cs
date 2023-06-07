@@ -661,11 +661,13 @@ namespace DomainServices.DomServ
             {
                 var clas = await _repo.ObtenerComandanciasDeUnUsuarioAsync(idUsuario);
 
-                foreach (var c in clas)
+                var unicos = clas.Select(x => x.IdUsuario).Distinct().ToList();
+
+                foreach (var c in unicos)
                 {
                     var row = new CatalogoGenerico()
                     {
-                        Id = c.IdUsuario,
+                        Id = c,
                         Descripcion = ""
                     };
 
