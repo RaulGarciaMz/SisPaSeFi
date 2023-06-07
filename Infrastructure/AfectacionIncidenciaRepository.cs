@@ -36,19 +36,24 @@ namespace SqlServerAdapter
 
         }
 
-        public async Task AgregaAsync(int idIncidencia, int idConcepto, int cantidad, float precio, int idTipo)
+        public async Task AgregaAsync(int idIncidencia, int idConcepto, int cantidad, float precio, string tipo)
         {
-            var afect = new AfectacionIncidencia() 
-            {
-                IdIncidencia = idIncidencia,
-                IdConceptoAfectacion = idConcepto,
-                Cantidad = cantidad,
-                PrecioUnitario = precio,
-                TipoIncidencia = idTipo
-            };
+            var t = await _afectacionContext.TiposReporte.Where(x => x.Descripcion == tipo).SingleOrDefaultAsync();
 
-            _afectacionContext.AfectacionesIncidencias.Add(afect);
-            await _afectacionContext.SaveChangesAsync();
+            if (t != null)
+            {
+                var afect = new AfectacionIncidencia()
+                {
+                    IdIncidencia = idIncidencia,
+                    IdConceptoAfectacion = idConcepto,
+                    Cantidad = cantidad,
+                    PrecioUnitario = precio,
+                    TipoIncidencia = t.Idtiporeporte
+                };
+
+                _afectacionContext.AfectacionesIncidencias.Add(afect);
+                await _afectacionContext.SaveChangesAsync();
+            }
         }
 
         public async Task ActualizaAsync(int idIncidencia, int cantidad, float precio)

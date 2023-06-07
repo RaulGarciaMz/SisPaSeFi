@@ -27,7 +27,7 @@ namespace DomainServices.DomServ
 
                 if (!existe)
                 {
-                    await _repo.AgregaAsync(a.intIdIncidencia, a.intIdConceptoAfectacion, a.intCantidad, a.sngPrecioUnitario, a.intIdTipoIncidencia);
+                    await _repo.AgregaAsync(a.intIdIncidencia, a.intIdConceptoAfectacion, a.intCantidad, a.sngPrecioUnitario, a.strTipoIncidencia);
                 }                
             }
         }

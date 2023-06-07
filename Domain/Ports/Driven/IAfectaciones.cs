@@ -5,7 +5,7 @@ namespace Domain.Ports.Driven
 {
     public interface IAfectacionesComand
     {
-        Task AgregaAsync(int idIncidencia, int idConcepto, int cantidad, float precio, int idTipo);
+        Task AgregaAsync(int idIncidencia, int idConcepto, int cantidad, float precio, string tipo);
         Task ActualizaAsync(int idIncidencia, int cantidad, float precio);
     }
 
