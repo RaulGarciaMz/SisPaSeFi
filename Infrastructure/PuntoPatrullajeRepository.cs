@@ -28,7 +28,7 @@ namespace SqlServerAdapter
                                 FROM ssf.puntospatrullaje a
                                 JOIN ssf.municipios b ON a.id_municipio=b.id_municipio
                                 JOIN ssf.estadospais c ON b.id_estado=c.id_estado
-                                WHERE a.ubicacion = @pCriterio  
+                                WHERE b.id_estado = @pCriterio  
                                 ORDER BY a.ubicacion";
 
             object[] parametros = new object[]
