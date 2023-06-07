@@ -31,7 +31,7 @@ namespace SqlServerAdapter
                     de.Bloqueado = 0;
                     de.Intentos = 0;
                 }
-                _userContext.Usuarios.AddRange(pDesbloq);
+                _userContext.Usuarios.UpdateRange(pDesbloq);
                 await _userContext.SaveChangesAsync();
             }
         }
@@ -46,7 +46,7 @@ namespace SqlServerAdapter
                     bl.Bloqueado = 1;
                 }
 
-                _userContext.Usuarios.AddRange(pBloq);
+                _userContext.Usuarios.UpdateRange(pBloq);
                 await _userContext.SaveChangesAsync();
             }
         }
@@ -61,7 +61,7 @@ namespace SqlServerAdapter
                     re.Pass = ComputeMD5(re.UsuarioNom);
                 }
 
-                _userContext.Usuarios.AddRange(pReini);
+                _userContext.Usuarios.UpdateRange(pReini);
                 await _userContext.SaveChangesAsync();
             }
         }
@@ -99,7 +99,7 @@ namespace SqlServerAdapter
 
                 if (lstUsuariosUpdate.Count > 0)
                 {
-                    _userContext.Usuarios.AddRange(lstUsuariosUpdate);
+                    _userContext.Usuarios.UpdateRange(lstUsuariosUpdate);
                     await _userContext.SaveChangesAsync();
                 }
             }
