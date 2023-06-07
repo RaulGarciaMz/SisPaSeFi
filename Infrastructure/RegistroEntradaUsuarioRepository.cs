@@ -115,11 +115,12 @@ namespace SqlServerAdapter
 
         public async Task RegistraEventoDeUsuarioAsync(int numSesion, string resultado)
         {
+
             var q = new Evento()
             {
                 IdSesion = numSesion,
                 DescripcionEvento = resultado,
-                EstampaTiempo = DateTime.Now
+                EstampaTiempo = DateTime.UtcNow
             };
 
             _registroContext.Eventos.Add(q);

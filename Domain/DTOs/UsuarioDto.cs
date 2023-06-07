@@ -109,7 +109,7 @@
         /// <summary>
         /// Clave de usuario encriptada
         /// </summary>
-        public string strClaveEncriptada { get; set; }
+        public string? strClaveEncriptada { get; set; }
         /// <summary>
         /// Nombre del usuario para la cuenta registrada
         /// </summary>
