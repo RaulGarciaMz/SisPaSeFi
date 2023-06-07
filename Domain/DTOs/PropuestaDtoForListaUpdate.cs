@@ -301,6 +301,10 @@
         /// Identificador del apoyo de patrullaje
         /// </summary>
         public int intApoyoPatrullaje { get; set; }
+        /// <summary>
+        /// Identificador del riesgo de patrullaje
+        /// </summary>
+        public int intIdRiesgoPatrullaje { get; set; }
     }
 
     public class PatrullajeSoloDto

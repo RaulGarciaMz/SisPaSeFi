@@ -463,8 +463,8 @@ namespace DomainServices.DomServ
                 strSolicitudOficio=p.solicitudoficiocomision,
                 strUltimaActualizacion= p.ultimaactualizacion.ToString("yyyy-MM-dd"),
                 intUsuarioResponsablePatrullaje=p.id_usuarioresponsablepatrullaje,
-                strInicio= p.inicio.ToString()
-                
+                strInicio= p.inicio.ToString(),
+                intIdRiesgoPatrullaje = p.riesgopatrullaje
             };
 
             if (p.id_apoyopatrullaje.HasValue)
