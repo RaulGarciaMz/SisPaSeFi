@@ -90,7 +90,7 @@ namespace WebApiSSF.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> ActualizaRol([FromBody] RolDto rol, [Required] string opcion, [Required] string usuario, string dato)
+        public async Task<ActionResult> ActualizaRol([FromBody] RolDto rol, [Required] string opcion, [Required] string usuario, string? dato)
         {
             try
             {
