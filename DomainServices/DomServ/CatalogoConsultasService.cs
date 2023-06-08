@@ -661,7 +661,7 @@ namespace DomainServices.DomServ
             {
                 var clas = await _repo.ObtenerComandanciasDeUnUsuarioAsync(idUsuario);
 
-                var unicos = clas.Select(x => x.IdUsuario).Distinct().ToList();
+                var unicos = clas.Select(x => x.IdComandancia).Distinct().ToList();
 
                 foreach (var c in unicos)
                 {
