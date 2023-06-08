@@ -104,8 +104,10 @@ namespace SqlServerAdapter
                                 JOIN ssf.estadospais g ON e.id_estado=g.id_estado
                                 JOIN ssf.estadospais h ON f.id_estado=h.id_estado
                                 ,(
-                                	SELECT MAX(TRY_CAST(c.latitud AS decimal(10,5)))+0.05 maxLatitud, MIN(TRY_CAST(c.latitud AS decimal(10,5)))-0.05 minLatitud, 
-                                	       MAX(TRY_CAST(c.longitud AS decimal(10,5)))-0.01 minLongitud, MIN(TRY_CAST(c.longitud AS decimal(10,5)))+0.01 maxLongitud 
+                                	SELECT MAX(TRY_CAST(c.latitud AS decimal(10,5)))+0.05 maxLatitud, 
+                                           MIN(TRY_CAST(c.latitud AS decimal(10,5)))-0.05 minLatitud, 
+                                	       MIN(TRY_CAST(c.longitud AS decimal(10,5)))-0.01 minLongitud, 
+                                           MAX(TRY_CAST(c.longitud AS decimal(10,5)))+0.01 maxLongitud 
                                 	FROM ssf.rutas a
                                 	JOIN ssf.itinerario b ON a.id_ruta=b.id_ruta
                                 	JOIN ssf.puntospatrullaje c ON b.id_punto=c.id_punto
@@ -136,8 +138,10 @@ namespace SqlServerAdapter
                                 JOIN ssf.estadospais g ON e.id_estado=g.id_estado
                                 JOIN ssf.estadospais h ON f.id_estado=h.id_estado
                                 ,(
-                                	SELECT MAX(TRY_CAST(c.latitud AS FLOAT))+0.05 maxLatitud, MIN(TRY_CAST(c.latitud AS FLOAT))-0.05 minLatitud, 
-                                	       MAX(TRY_CAST(c.longitud AS FLOAT))-0.01 minLongitud, MIN(TRY_CAST(c.longitud AS FLOAT))+0.01 maxLongitud 
+                                	SELECT MAX(TRY_CAST(c.latitud AS FLOAT))+0.05 maxLatitud, 
+                                           MIN(TRY_CAST(c.latitud AS FLOAT))-0.05 minLatitud, 
+                                	       MIN(TRY_CAST(c.longitud AS FLOAT))-0.01 minLongitud, 
+                                           MAX(TRY_CAST(c.longitud AS FLOAT))+0.01 maxLongitud 
                                 	FROM ssf.rutas a
                                 	JOIN ssf.itinerario b ON a.id_ruta=b.id_ruta
                                 	JOIN ssf.puntospatrullaje c ON b.id_punto=c.id_punto
@@ -168,8 +172,10 @@ namespace SqlServerAdapter
                                 JOIN ssf.estadospais g ON e.id_estado=g.id_estado
                                 JOIN ssf.estadospais h ON f.id_estado=h.id_estado
                                 ,(
-                                  SELECT CAST(@pLatitud AS FLOAT)+0.05 maxLatitud,  CAST(@pLatitud AS FLOAT)-0.05 minLatitud, 
-                                         CAST(@pLongitud AS FLOAT)-0.01 minLongitud, CAST(@pLongitud AS FLOAT)+0.01 maxLongitud 
+                                  SELECT CAST(@pLatitud AS FLOAT)+0.05 maxLatitud,  
+                                         CAST(@pLatitud AS FLOAT)-0.05 minLatitud, 
+                                         CAST(@pLongitud AS FLOAT)-0.01 minLongitud, 
+                                         CAST(@pLongitud AS FLOAT)+0.01 maxLongitud 
                                 ) cuadrante
                                 WHERE TRY_CAST(c.latitud AS FLOAT) BETWEEN cuadrante.minLatitud AND cuadrante.maxLatitud
                                 AND TRY_CAST(c.longitud AS FLOAT) BETWEEN cuadrante.minLongitud AND cuadrante.maxLongitud";

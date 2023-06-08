@@ -97,8 +97,8 @@ namespace SqlServerAdapter
                                 (
                                     SELECT MAX(TRY_CAST(c.latitud as decimal(10,5))) + 0.15 maxLatitud, 
                                            MIN(TRY_CAST(c.latitud as decimal(10,5))) - 0.15 minLatitud, 
-                                	       MAX(TRY_CAST(c.longitud as decimal(10,5))) - 0.11 minLongitud, 
-                                           MIN(TRY_CAST(c.longitud as decimal(10,5))) + 0.11 maxLongitud
+                                	       MIN(TRY_CAST(c.longitud as decimal(10,5))) - 0.11 minLongitud, 
+                                           MAX(TRY_CAST(c.longitud as decimal(10,5))) + 0.11 maxLongitud
                                     FROM ssf.rutas a                                
                                     JOIN ssf.itinerario b ON a.id_ruta = b.id_ruta                                
                                     JOIN ssf.puntospatrullaje c ON b.id_punto = c.id_punto                                
