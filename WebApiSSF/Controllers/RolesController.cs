@@ -82,17 +82,19 @@ namespace WebApiSSF.Controllers
         /// Actualiza un rol
         /// </summary>
         /// <param name="rol">Rol a actualizar</param>
+        /// <param name="opcion">Opción de actualización ("ActualizarRol", "QuitarMenuRol", "AgregarMenuRol")</param>
+        /// <param name="dato">Identificador para navegar</param>
         /// <param name="usuario">Nombre del usuario que realiza la operación</param>
         /// <returns></returns>
         [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> ActualizaRol([FromBody] RolDto rol, [Required] string usuario)
+        public async Task<ActionResult> ActualizaRol([FromBody] RolDto rol, [Required] string opcion, [Required] string usuario, string dato)
         {
             try
             {
-                await _rp.ActualizaRolAsync(rol.intIdRol, rol.strNombre, rol.strDescripcion, rol.intIdMenu, usuario);
+                await _rp.ActualizaRolPorOpcionAsync(rol.intIdRol, rol.strNombre, rol.strDescripcion, rol.intIdMenu, dato, opcion, usuario);
                 return Ok();
             }
             catch (Exception ex)

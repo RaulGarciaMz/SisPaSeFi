@@ -11,6 +11,6 @@ namespace SqlServerAdapter.Data
         }
 
         public DbSet<Rol> Roles { get; set; }
-
+        public DbSet<RolMenu> RolesMenus { get; set; }
     }
 }

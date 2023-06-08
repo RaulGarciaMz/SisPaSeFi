@@ -50,17 +50,31 @@ namespace DomainServices.DomServ
             }
         }
 
-        public async Task ActualizaRolAsync(int idRol, string nombre, string descripcion, int idMenu, string usuario)
+        public async Task ActualizaRolPorOpcionAsync(int idRol, string nombre, string descripcion, int idMenu, string dato, string opcion, string usuario)
         {
             var user = await _user.ObtenerUsuarioConfiguradorPorNombreAsync(usuario);
 
             if (user != null)
             {
-                var rol = await _repo.ObtenerRolPorNombreAndIdAsync(nombre, idRol);
-                if (rol == null)
+
+                switch (opcion)
                 {
-                    await _repo.ActualizaRolAsync(idRol, nombre, descripcion, idMenu);
+                    case "ActualizarRol":
+                        var rol = await _repo.ObtenerRolPorNombreAndIdAsync(nombre, idRol);
+                        if (rol == null)
+                        {
+                            await _repo.ActualizaRolAsync(idRol, nombre, descripcion, idMenu);
+                        }
+                        break;
+                    case "QuitarMenuRol":
+                        await _repo.EliminarRolMenuAsync(idRol, idMenu);
+                        break;
+                    case "AgregarMenuRol":
+                        var d = Int32.Parse(dato);
+                        await _repo.AgregaRolMenuAsync(idRol, idMenu, d);
+                        break;
                 }
+
             }
         }
 

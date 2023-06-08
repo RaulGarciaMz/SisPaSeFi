@@ -58,5 +58,40 @@ namespace SqlServerAdapter
                 await _rolesContext.SaveChangesAsync();
             }
         }
+
+        public async Task EliminarRolMenuAsync(int idRol, int idMenu)
+        {
+            var r = await _rolesContext.RolesMenus.Where(x => x.IdRol == idRol && x.IdMenu == idMenu).SingleOrDefaultAsync();
+            if (r != null)
+            {
+                _rolesContext.RolesMenus.Remove(r);
+
+                await _rolesContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task AgregaRolMenuAsync(int idRol, int idMenu, int dato)
+        {
+            var existe = await _rolesContext.RolesMenus.Where(x => x.IdRol == idRol && x.IdMenu == idMenu).FirstOrDefaultAsync();
+
+            if (existe != null)
+            {
+                existe.Navegar = dato;
+                _rolesContext.Update(existe);
+            }
+            else 
+            {
+                var rol = new RolMenu()
+                {
+                    IdRol = idRol,
+                    IdMenu = idMenu,
+                    Navegar = dato
+                };
+
+                _rolesContext.RolesMenus.Add(rol);
+            }
+
+            await _rolesContext.SaveChangesAsync();
+        }
     }
 }

@@ -5,7 +5,7 @@ namespace Domain.Ports.Driving
     public interface IRolesDtoCommand
     {
         Task AgregaRolAsync(string nombre, string descripcion, int idMenu, string usuario);
-        Task ActualizaRolAsync(int idRol, string nombre, string descripcion, int idMenu, string usuario);
+        Task ActualizaRolPorOpcionAsync(int idRol, string nombre, string descripcion, int idMenu, string dato, string opcion, string usuario);
     }
 
     public interface IRolesDtoQuery
