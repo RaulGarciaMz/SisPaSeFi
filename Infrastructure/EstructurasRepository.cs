@@ -86,7 +86,7 @@ namespace SqlServerAdapter
 
         public async Task<List<EstructurasVista>> ObtenerEstructuraPorLineaEnRutaAsync(int idLinea, int idRuta)
         {
-            string sqlQuery = @"SELECT a.id_estructura, a.nombre, a.id_procesoresponsable,a.id_gerenciadivision
+            string sqlQuery = @"SELECT a.id_estructura, a.nombre, a.id_procesoresponsable,a.id_gerenciadivision,
                                        a.latitud, a.longitud, a.coordenadas, a.id_municipio,
                                        b.id_linea, b.clave, b.descripcion, c.nombre municipio,
                                        d.id_estado,d.nombre estado
@@ -121,7 +121,7 @@ namespace SqlServerAdapter
 
         public async Task<List<EstructurasVista>> ObtenerEstructuraAlrededorDeCoordenadaAsync(float coordX, float coordY)
         {
-            string sqlQuery = @"SELECT a.id_estructura, a.nombre, a.id_procesoresponsable, a.id_gerenciadivision
+            string sqlQuery = @"SELECT a.id_estructura, a.nombre, a.id_procesoresponsable, a.id_gerenciadivision,
                                        a.latitud, a.longitud, a.coordenadas, a.id_municipio,
                                        b.id_linea, b.clave, b.descripcion , c.nombre municipio,
                                        d.id_estado, d.nombre estado    
