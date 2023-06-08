@@ -22,6 +22,10 @@ namespace SqlServerAdapter.Data
         public DbSet<ProgramaRegionVista> ProgramasRegionesVista { get; set; }
         public DbSet<EstadoIncidencia> EstadosIncidencia { get; set; }
         public DbSet<TipoReporte> TiposReporte { get; set; }
+        public DbSet<EstadoPatrullaje> EstadosPatrullaje { get; set; }
+
+        public DbSet<ProgramaPatrullaje> Programas { get; set; }
+        public DbSet<Ruta> Rutas { get; set; }
 
     }
 }

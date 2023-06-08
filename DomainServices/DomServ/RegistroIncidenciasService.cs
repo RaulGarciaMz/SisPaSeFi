@@ -16,16 +16,19 @@ namespace DomainServices.DomServ
             _user = u;
         }
 
-        public async Task AgregaIncidenciaTransaccionalAsync(RegistrarIncidenciaDto i)
+        public async Task AgregaIncidenciaTransaccionalAsync(RegistrarIncidenciaDto i, string imagenes, string repo)
         {
             
             var user = await _user.ObtenerUsuarioPorUsuarioNomAsync(i.usuario);
 
             if (user != null)
             {
-                await _repo.AgregaIncidenciaTransaccionalAsync(i, user.IdUsuario);
+                await _repo.AgregaIncidenciaTransaccionalAsync(i, user.IdUsuario, imagenes, repo);
             }
         }
 
     }
 }
+
+
+

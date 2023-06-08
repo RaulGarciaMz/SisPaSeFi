@@ -14,11 +14,13 @@ namespace WebApiSSF.Controllers
     {
         private readonly IRegistroIncidenciaService _pp;
         private readonly ILogger<RegistrarIncidenciaController> _log;
+        private readonly IConfiguration _configuration;
 
-        public RegistrarIncidenciaController(IRegistroIncidenciaService p, ILogger<RegistrarIncidenciaController> log)
+        public RegistrarIncidenciaController(IRegistroIncidenciaService p, ILogger<RegistrarIncidenciaController> log, IConfiguration configuration)
         {
             _pp = p ?? throw new ArgumentNullException(nameof(p));
             _log = log ?? throw new ArgumentNullException(nameof(log));
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -34,7 +36,10 @@ namespace WebApiSSF.Controllers
         {
             try
             {
-                await _pp.AgregaIncidenciaTransaccionalAsync(incidencia);
+                var imagenes = _configuration.GetValue<string>("PathImagenes");
+                var reposFile = _configuration.GetValue<string>("PathRepoIncidencias");
+
+                await _pp.AgregaIncidenciaTransaccionalAsync(incidencia, imagenes, reposFile);
 
                 return Ok("OK");
             }

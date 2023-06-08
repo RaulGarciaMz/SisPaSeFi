@@ -5,6 +5,7 @@ using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
+using System.Data;
 
 namespace SqlServerAdapter
 {
@@ -17,7 +18,7 @@ namespace SqlServerAdapter
             _regIncidenciaContext = regIncidenciaContext ?? throw new ArgumentNullException(nameof(regIncidenciaContext));
         }
 
-        public async Task AgregaIncidenciaTransaccionalAsync(RegistrarIncidenciaDto i, int idUsuario)
+        public async Task AgregaIncidenciaTransaccionalAsync(RegistrarIncidenciaDto i, int idUsuario, string rutaImagenes, string rutaRepoArchivos)
         {
             int idReporte = -1;
             var fechaPatrullaje = DateTime.Parse(i.FechaPatrullaje);
@@ -85,7 +86,7 @@ namespace SqlServerAdapter
                         {
                             if (i.listaEvidencia != null && i.listaEvidencia.Count > 0)
                             {
-                                AgregaListaDeEvidenciasEnMemoriaConCopiaDeArchivoAsync(idReporte, programa.regionSSF, i.TipoIncidencia, i.listaEvidencia);
+                                AgregaListaDeEvidenciasEnMemoriaConCopiaDeArchivoAsync(idReporte, programa.regionSSF, i.TipoIncidencia, rutaImagenes, rutaRepoArchivos,  i.listaEvidencia);
                             }
 
                             if (i.listaAfectaciones != null && i.listaAfectaciones.Count > 0)
@@ -109,6 +110,7 @@ namespace SqlServerAdapter
 
         private async Task<ProgramaRegionVista?> ObtenerProgramaAndRegionPorRutaAndFechaAsync(int idRuta, DateTime fecha)
         {
+
             string sqlQuery = @"SELECT a.id_programa, a.riesgopatrullaje, b.regionSSF
                                 FROM ssf.programapatrullajes a
                                 JOIN ssf.rutas b ON a.id_ruta = b.id_ruta
@@ -116,13 +118,14 @@ namespace SqlServerAdapter
                                 AND a.fechapatrullaje = @pFecha
                                 AND a.id_estadopatrullaje < (SELECT id_estadopatrullaje FROM ssf.estadopatrullaje WHERE descripcionestadopatrullaje = 'Concluido')";
 
+
             object[] parametros = new object[]
             {
                 new SqlParameter("@pIdRuta", idRuta),
                 new SqlParameter("@pFecha", fecha)
              };
 
-            return await _regIncidenciaContext.ProgramasRegionesVista.FromSqlRaw(sqlQuery, parametros).FirstOrDefaultAsync();
+            return await _regIncidenciaContext.ProgramasRegionesVista.FromSqlRaw(sqlQuery, parametros).SingleOrDefaultAsync();
         }
 
         private async Task<int?> ObtenerIdTarjetaInformativaPorProgramaAsync(int idPrograma)
@@ -266,14 +269,14 @@ namespace SqlServerAdapter
             _regIncidenciaContext.AfectacionesIncidencia.AddRange(lstAfectaciones);
         }
 
-        private void AgregaListaDeEvidenciasEnMemoriaConCopiaDeArchivoAsync(int idReporte,string region, string tipoIncidencia, List<EvidenciaIncidenciaMovilDto> evidencias)
+        private void AgregaListaDeEvidenciasEnMemoriaConCopiaDeArchivoAsync(int idReporte,string region, string tipoIncidencia, string pathImagenes, string pathRepo, List<EvidenciaIncidenciaMovilDto> evidencias)
         {
             var rom = ConvierteCadenaNumericaARomano(region);
             var now = DateTime.Now;
             var cadWebPath = rom + "/" + now.Year.ToString() + "/" + now.Month.ToString("D2") + "/" + now.Day.ToString("D2") + "/";
             var cadPath = cadWebPath.Replace("/", "\\");
             var wepageUbicacion = "~/Principal/ImagenesCargadas/Incidencias/" + cadWebPath;
-            var filesystemUbicacion = "C:\\inetpub\\wwwroot\\SSF\\Principal\\ImagenesCargadas\\Incidencias\\" + cadPath;
+            var filesystemUbicacion = pathImagenes + cadPath;
 
             foreach (var item in evidencias)
             {
@@ -307,7 +310,7 @@ namespace SqlServerAdapter
                         break;
                 }
 
-                var pthOrigen = "c:\\repoIncidencias\\" + nombreArchivo;
+                var pthOrigen = pathRepo + nombreArchivo;
                 var pthDestino = filesystemUbicacion + nombreArchivo;
                 if (!Directory.Exists(filesystemUbicacion))
                 {
