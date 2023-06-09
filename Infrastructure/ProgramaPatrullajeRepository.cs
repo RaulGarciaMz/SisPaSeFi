@@ -1163,7 +1163,7 @@ namespace SqlServerAdapter
                 foreach (var pa in propuestasActualizar)
                 {
                     pa.IdUsuario = usuarioId;
-                    pa.IdEstadoPropuesta = edoRechazada[0];
+                    pa.IdEstadoPropuesta = idEdoRechazada[0];
                 }
 
                 _programaContext.PropuestasPatrullajes.UpdateRange(propuestasActualizar);
@@ -1191,7 +1191,7 @@ namespace SqlServerAdapter
                 foreach (var pa in propuestasActualizar)
                 {
                     pa.IdUsuario = usuarioId;
-                    pa.IdEstadoPropuesta = edoPendiente[0];
+                    pa.IdEstadoPropuesta = idEdoPendiente[0];
                 }
 
                 _programaContext.PropuestasPatrullajes.UpdateRange(propuestasActualizar);
@@ -1219,7 +1219,7 @@ namespace SqlServerAdapter
                 foreach (var pa in propuestasActualizar)
                 {
                     pa.IdUsuario = usuarioId;
-                    pa.IdEstadoPropuesta = edoPendiente[0];
+                    pa.IdEstadoPropuesta = idEdoPendiente[0];
                 }
 
                 _programaContext.PropuestasPatrullajes.UpdateRange(propuestasActualizar);
