@@ -6,7 +6,7 @@ namespace Domain.Ports.Driven
     public interface IProgramaCommand
     {
         Task AgregaPropuestasComoProgramasActualizaPropuestasAsync(List<ProgramaPatrullaje> programas, int usuarioId);
-        Task AgregaPropuestaExtraordinariaAsync(PropuestaExtraordinariaAdd pp, string clase, int usuarioId);
+        Task AgregaPropuestaExtraordinariaAsync(PropuestaExtraordinariaAdd pp, string clase, int usuarioId, DateTime fechaTermino);
         Task AgregaPropuestasFechasMultiplesAsync(PropuestaPatrullaje pp, List<DateTime> fechas, string clase, int usuarioId);
         Task AgregaProgramaFechasMultiplesAsync(ProgramaPatrullaje pp, List<DateTime> fechas, int usuarioId);
         Task ActualizaProgramaPorCambioDeRutaAsync(int idPrograma, int idRuta, int usuarioId);

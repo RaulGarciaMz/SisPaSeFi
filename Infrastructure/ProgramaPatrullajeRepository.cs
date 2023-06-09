@@ -776,7 +776,7 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>AgregaPropuestaExtraordinaria</c> implementa la interface para agregar propuestas extraordinaria.
         /// </summary>
-        public async Task AgregaPropuestaExtraordinariaAsync(PropuestaExtraordinariaAdd pp, string clase, int usuarioId)
+        public async Task AgregaPropuestaExtraordinariaAsync(PropuestaExtraordinariaAdd pp, string clase, int usuarioId, DateTime fechaTermino)
         {
             var rutaNoExisteEnPropuesta = await _programaContext.PropuestasPatrullajes.
                                 Where(x => x.IdRuta == pp.Propuesta.IdRuta && x.FechaPatrullaje == pp.Propuesta.FechaPatrullaje).
@@ -816,7 +816,7 @@ namespace SqlServerAdapter
                             var complemento = new PropuestaPatrullajeComplementossf()
                             {
                                 IdPropuestaPatrullaje = propuesta,
-                                FechaTermino = pp.Propuesta.FechaPatrullaje
+                                FechaTermino = fechaTermino
                             };
 
                             _programaContext.PropuestasComplementosSsf.Add(complemento);

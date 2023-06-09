@@ -220,7 +220,8 @@ namespace DomainServices.DomServ
                                     Vehiculos = ConvierteListaVehiculosDtoToVehiculosDomain(p),
                                     Lineas = ConvierteListaLineasDtoToLineasDomain(p)
                                 };
-                                await _repo.AgregaPropuestaExtraordinariaAsync(pp, clase, user.IdUsuario);
+                                var fechaTermino = DateTime.Parse(p.strFechaTermino);
+                                await _repo.AgregaPropuestaExtraordinariaAsync(pp, clase, user.IdUsuario, fechaTermino);
 
                                 break;
 
