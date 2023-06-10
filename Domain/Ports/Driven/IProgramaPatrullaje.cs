@@ -22,7 +22,7 @@ namespace Domain.Ports.Driven
         Task ActualizaPropuestasAutorizadaToRechazadaAsync(List<int> propuestas, int usuarioId);
         Task ActualizaPropuestasAprobadaPorComandanciaToPendientoDeAprobacionComandanciaAsync(List<int> propuestas, int usuarioId);
         Task ActualizaPropuestasAutorizadaToPendientoDeAutorizacionSsfAsync(List<int> propuestas, int usuarioId);        
-        Task DeletePropuestaAsync(int id);
+        Task DeletePropuestaAsync(string id);
         Task DeleteProgramaAsync(int id);
     }
 

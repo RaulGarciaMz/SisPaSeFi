@@ -11,7 +11,7 @@ namespace Domain.Ports.Driving
         Task ActualizaPropuestasOrProgramasPorOpcionAndAccionAsync(List<PropuestaDtoForListaUpdate> p, string opcion, int accion, string usuario);
         Task ActualizaProgramaPorCambioDeRutaAsync(ProgramaDtoForUpdateRuta p, string usuario);
         Task ActualizaProgramasPorInicioPatrullajeAsync(ProgramaDtoForUpdateInicio p, string usuario);
-        Task DeletePorOpcionAsync(string opcion, int id, string usuario);
+        Task DeletePorOpcionAsync(string opcion, string id, string usuario);
     }
     public interface IProgramaDtoQuery
     {

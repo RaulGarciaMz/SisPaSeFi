@@ -409,7 +409,7 @@ namespace DomainServices.DomServ
 
         }
 
-        public async Task DeletePorOpcionAsync(string opcion, int id, string usuario)
+        public async Task DeletePorOpcionAsync(string opcion, string id, string usuario)
         {
             var usuarioId = await _user.ObtenerIdUsuarioPorUsuarioNomAsync(usuario);
 
@@ -421,7 +421,8 @@ namespace DomainServices.DomServ
                     switch (opcion)
                     {
                         case "Programa":
-                            await _repo.DeleteProgramaAsync(id);
+                            var intId = Int32.Parse(id);
+                            await _repo.DeleteProgramaAsync(intId);
                             break;
                         case "Propuesta":
                             await _repo.DeletePropuestaAsync(id);

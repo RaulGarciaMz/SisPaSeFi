@@ -4,6 +4,7 @@ using Domain.Ports.Driven.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SqlServerAdapter.Data;
+using System.Collections.Generic;
 
 namespace SqlServerAdapter
 {
@@ -870,7 +871,7 @@ namespace SqlServerAdapter
 
             foreach (var fecha in fechas)
             {
-                var numRutas = await _programaContext.PropuestasPatrullajes.Where(x => x.IdRuta == pp.IdRuta && x.FechaPatrullaje == pp.FechaPatrullaje).CountAsync();
+                var numRutas = await _programaContext.PropuestasPatrullajes.Where(x => x.IdRuta == pp.IdRuta && x.FechaPatrullaje == fecha).CountAsync();
 
                 if (numRutas == 0)
                 {
@@ -1230,25 +1231,33 @@ namespace SqlServerAdapter
         /// <summary>
         /// Método <c>DeletePropuesta</c> implementa la interface para eliminar una propuesta.
         /// </summary>
-        public async Task DeletePropuestaAsync(int id)
+        public async Task DeletePropuestaAsync(string ids)
         {
-            string estado = "Autorizada";
-            var edos = _programaContext.EstadosPropuesta.
-                Where(x => x.DescripcionEstadoPropuesta == estado).
-                Select(x => x.IdEstadoPropuesta);
-
-            var pro = _programaContext.PropuestasPatrullajes.
-                Where(x => x.IdPropuestaPatrullaje == id);
-
-            var aBorrar = await (from c in pro
-                                 where !edos.Any(o => o == c.IdEstadoPropuesta) //NOT IN
-                                 select c).ToListAsync();
-
-            if (aBorrar.Count > 0)
+            try
             {
-                _programaContext.PropuestasPatrullajes.Remove(aBorrar[0]);
-                await _programaContext.SaveChangesAsync();
+                string estado = "Autorizada";
+                var edos = _programaContext.EstadosPropuesta.
+                                   Where(x => x.DescripcionEstadoPropuesta == estado).
+                                   Select(x => x.IdEstadoPropuesta);
+
+                var lstIds = ids.Split(',').ToList();
+                var idsList = lstIds.ConvertAll(int.Parse);
+                var aBorrar = await (from c in _programaContext.PropuestasPatrullajes
+                                     where idsList.Any(o => o == c.IdPropuestaPatrullaje) && !edos.Any(o => o == c.IdEstadoPropuesta)
+                                     select c).ToListAsync();
+
+                if (aBorrar.Count > 0)
+                {
+                    _programaContext.PropuestasPatrullajes.RemoveRange(aBorrar);
+                    await _programaContext.SaveChangesAsync();
+                }
             }
+            catch (Exception ex)
+            {
+                var s = ex.Message;
+                throw;
+            }
+
         }
 
         public async Task DeleteProgramaAsync(int id)
