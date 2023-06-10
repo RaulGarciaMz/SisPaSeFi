@@ -78,10 +78,6 @@ namespace DomainServices.DomServ
             {
                 criterio = "";
             }
-            else
-            {
-                if (criterio != "") criterio = "%" + criterio + "%";
-            }
 
             if (user != null)
             {
@@ -94,6 +90,7 @@ namespace DomainServices.DomServ
                                 l = await _repo.ObtenerVehiculosPorRegionAsync(region);
                                 break;
                             default:
+                                criterio = "%" + criterio + "%";
                                 l = await _repo.ObtenerVehiculosPorRegionCriterioAsync(region, criterio);
                                 break;
                         }
@@ -105,6 +102,7 @@ namespace DomainServices.DomServ
                                 l = await _repo.ObtenerVehiculosPorRegionParaPatrullajeAereoAsync(region);
                                 break;
                             default:
+                                criterio = "%" + criterio + "%";
                                 l = await _repo.ObtenerVehiculosPorRegionCriterioParaPatrullajeAereoAsync(region, criterio);
                                 break;
                         }
@@ -116,6 +114,7 @@ namespace DomainServices.DomServ
                                 l = await _repo.ObtenerVehiculosPorRegionParaPatrullajeTerrestreAsync(region);
                                 break;
                             default:
+                                criterio = "%" + criterio + "%";
                                 l = await _repo.ObtenerVehiculosPorRegionCriterioParaPatrullajeTerrestreAsync(region, criterio);
                                 break;
                         }
@@ -134,6 +133,7 @@ namespace DomainServices.DomServ
                                 l = await _repo.ObtenerVehiculosHabilitadosPorRegionAereoAsync(region);
                                 break;
                             default:
+                                criterio = "%" + criterio + "%";
                                 l = await _repo.ObtenerVehiculosHabilitadosPorRegionCriterioAereoAsync(region, criterio);
                                 break;
                         }
@@ -147,6 +147,7 @@ namespace DomainServices.DomServ
                                 l = await _repo.ObtenerVehiculosHabilitadosPorRegionTerrestreAsync(region);
                                 break;
                             default:
+                                criterio = "%" + criterio + "%";
                                 l = await _repo.ObtenerVehiculosHabilitadosPorRegionCriterioTerrestreAsync(region, criterio);
                                 break;
                         }
